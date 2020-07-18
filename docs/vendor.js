@@ -1,6 +1,2445 @@
-!function(){"use strict";var r="undefined"==typeof global?self:global;if("function"!=typeof r.require){var e={},t={},n={},i={}.hasOwnProperty,a=/^\.\.?(\/|$)/,o=function(r,e){for(var t,n=[],i=(a.test(e)?r+"/"+e:e).split("/"),o=0,s=i.length;o<s;o++)t=i[o],".."===t?n.pop():"."!==t&&""!==t&&n.push(t);return n.join("/")},s=function(r){return r.split("/").slice(0,-1).join("/")},u=function(e){return function(t){var n=o(s(e),t);return r.require(n,e)}},c=function(r,e){var n=g&&g.createHot(r),i={id:r,exports:{},hot:n};return t[r]=i,e(i.exports,u(r),i),i.exports},l=function(r){var e=n[r];return e&&r!==e?l(e):r},f=function(r,e){return l(o(s(r),e))},p=function(r,n){null==n&&(n="/");var a=l(r);if(i.call(t,a))return t[a].exports;if(i.call(e,a))return c(a,e[a]);throw new Error("Cannot find module '"+r+"' from '"+n+"'")};p.alias=function(r,e){n[e]=r};var d=/\.[^.\/]+$/,h=/\/index(\.[^\/]+)?$/,m=function(r){if(d.test(r)){var e=r.replace(d,"");i.call(n,e)&&n[e].replace(d,"")!==e+"/index"||(n[e]=r)}if(h.test(r)){var t=r.replace(h,"");i.call(n,t)||(n[t]=r)}};p.register=p.define=function(r,n){if(r&&"object"==typeof r)for(var a in r)i.call(r,a)&&p.register(a,r[a]);else e[r]=n,delete t[r],m(r)},p.list=function(){var r=[];for(var t in e)i.call(e,t)&&r.push(t);return r};var g=r._hmr&&new r._hmr(f,p,e,t);p._cache=t,p.hmr=g&&g.wrap,p.brunch=!0,r.require=p}}(),function(){var r,e="undefined"==typeof window?this:window,t=function(r,e,t){var n={},i=function(e,t){var a;try{return a=r(t+"/node_modules/"+e)}catch(o){if(o.toString().indexOf("Cannot find module")===-1)throw o;if(t.indexOf("node_modules")!==-1){var s=t.split("/"),u=s.lastIndexOf("node_modules"),c=s.slice(0,u).join("/");return i(e,c)}}return n};return function(a){if(a in e&&(a=e[a]),a){if("."!==a[0]&&t){var o=i(a,t);if(o!==n)return o}return r(a)}}};require.register("data.task/lib/index.js",function(r,e,n){e=t(e,{},"data.task"),function(){n.exports=e("./task")}()}),require.register("data.task/lib/task.js",function(e,n,i){n=t(n,{},"data.task"),function(){"use strict";function e(r,e){this.fork=r,this.cleanup=e||function(){}}var t="undefined"!=typeof setImmediate?setImmediate:"undefined"!=typeof r?r.nextTick:setTimeout;i.exports=e,e.prototype.of=function(r){return new e(function(e,t){return t(r)})},e.of=e.prototype.of,e.prototype.rejected=function(r){return new e(function(e){return e(r)})},e.rejected=e.prototype.rejected,e.prototype.map=function(r){var t=this.fork,n=this.cleanup;return new e(function(e,n){return t(function(r){return e(r)},function(e){return n(r(e))})},n)},e.prototype.chain=function(r){var t=this.fork,n=this.cleanup;return new e(function(e,n){return t(function(r){return e(r)},function(t){return r(t).fork(e,n)})},n)},e.prototype.ap=function(r){function n(r){o(r[0]),s(r[1])}var i=this.fork,a=r.fork,o=this.cleanup,s=r.cleanup;return new e(function(r,e){function o(r){return function(i){if(!d)return r(i),f&&p?(t(function(){n(l)}),e(u(c))):i}}function s(e){if(!d)return d=!0,r(e)}var u,c,l,f=!1,p=!1,d=!1,h=i(s,o(function(r){f=!0,u=r})),m=a(s,o(function(r){p=!0,c=r}));return l=[h,m]},n)},e.prototype.concat=function(r){function n(r){o(r[0]),s(r[1])}var i=this.fork,a=r.fork,o=this.cleanup,s=r.cleanup;return new e(function(r,e){function o(r){return function(e){if(!u)return u=!0,t(function(){n(s)}),r(e)}}var s,u=!1,c=i(o(r),o(e)),l=a(o(r),o(e));return s=[c,l]},n)},e.empty=function(){return new e(function(){})},e.prototype.empty=e.empty,e.prototype.toString=function(){return"Task"},e.prototype.orElse=function(r){var t=this.fork,n=this.cleanup;return new e(function(e,n){return t(function(t){return r(t).fork(e,n)},function(r){return n(r)})},n)},e.prototype.fold=function(r,t){var n=this.fork,i=this.cleanup;return new e(function(e,i){return n(function(e){return i(r(e))},function(r){return i(t(r))})},i)},e.prototype.cata=function(r){return this.fold(r.Rejected,r.Resolved)},e.prototype.swap=function(){var r=this.fork,t=this.cleanup;return new e(function(e,t){return r(function(r){return t(r)},function(r){return e(r)})},t)},e.prototype.bimap=function(r,t){var n=this.fork,i=this.cleanup;return new e(function(e,i){return n(function(t){return e(r(t))},function(r){return i(t(r))})},i)},e.prototype.rejectedMap=function(r){var t=this.fork,n=this.cleanup;return new e(function(e,n){return t(function(t){return e(r(t))},function(r){return n(r)})},n)}}()}),require.register("marked/lib/marked.js",function(r,e,n){e=t(e,{},"marked"),function(){!function(e,t){"object"==typeof r&&"undefined"!=typeof n?n.exports=t():"function"==typeof define&&define.amd?define(t):(e=e||self,e.marked=t())}(this,function(){"use strict";function r(r,e){for(var t=0;t<e.length;t++){var n=e[t];n.enumerable=n.enumerable||!1,n.configurable=!0,"value"in n&&(n.writable=!0),Object.defineProperty(r,n.key,n)}}function e(e,t,n){return t&&r(e.prototype,t),n&&r(e,n),e}function t(r,e){if(r){if("string"==typeof r)return n(r,e);var t=Object.prototype.toString.call(r).slice(8,-1);return"Object"===t&&r.constructor&&(t=r.constructor.name),"Map"===t||"Set"===t?Array.from(r):"Arguments"===t||/^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(t)?n(r,e):void 0}}function n(r,e){(null==e||e>r.length)&&(e=r.length);for(var t=0,n=new Array(e);t<e;t++)n[t]=r[t];return n}function i(r){var e=0;if("undefined"==typeof Symbol||null==r[Symbol.iterator]){if(Array.isArray(r)||(r=t(r)))return function(){return e>=r.length?{done:!0}:{done:!1,value:r[e++]}};throw new TypeError("Invalid attempt to iterate non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method.")}return e=r[Symbol.iterator](),e.next.bind(e)}function a(r,e){return e={exports:{}},r(e,e.exports),e.exports}function o(r,e){if(e){if(b.test(r))return r.replace(w,S)}else if(q.test(r))return r.replace(k,S);return r}function s(r){return r.replace(O,function(r,e){return e=e.toLowerCase(),"colon"===e?":":"#"===e.charAt(0)?"x"===e.charAt(1)?String.fromCharCode(parseInt(e.substring(2),16)):String.fromCharCode(+e.substring(1)):""})}function u(r,e){r=r.source||r,e=e||"";var t={replace:function(e,n){return n=n.source||n,n=n.replace(z,"$1"),r=r.replace(e,n),t},getRegex:function(){return new RegExp(r,e)}};return t}function c(r,e,t){if(r){var n;try{n=decodeURIComponent(s(t)).replace(E,"").toLowerCase()}catch(i){return null}if(0===n.indexOf("javascript:")||0===n.indexOf("vbscript:")||0===n.indexOf("data:"))return null}e&&!T.test(t)&&(t=l(e,t));try{t=encodeURI(t).replace(/%25/g,"%")}catch(i){return null}return t}function l(r,e){I[" "+r]||(N.test(r)?I[" "+r]=r+"/":I[" "+r]=d(r,"/",!0)),r=I[" "+r];var t=r.indexOf(":")===-1;return"//"===e.substring(0,2)?t?e:r.replace(P,"$1")+e:"/"===e.charAt(0)?t?e:r.replace(W,"$1")+e:r+e}function f(r){for(var e,t,n=1;n<arguments.length;n++){e=arguments[n];for(t in e)Object.prototype.hasOwnProperty.call(e,t)&&(r[t]=e[t])}return r}function p(r,e){var t=r.replace(/\|/g,function(r,e,t){for(var n=!1,i=e;--i>=0&&"\\"===t[i];)n=!n;return n?"|":" |"}),n=t.split(/ \|/),i=0;if(n.length>e)n.splice(e);else for(;n.length<e;)n.push("");for(;i<n.length;i++)n[i]=n[i].trim().replace(/\\\|/g,"|");return n}function d(r,e,t){var n=r.length;if(0===n)return"";for(var i=0;i<n;){var a=r.charAt(n-i-1);if(a!==e||t){if(a===e||!t)break;i++}else i++}return r.substr(0,n-i)}function h(r,e){if(r.indexOf(e[1])===-1)return-1;for(var t=r.length,n=0,i=0;i<t;i++)if("\\"===r[i])i++;else if(r[i]===e[0])n++;else if(r[i]===e[1]&&(n--,n<0))return i;return-1}function m(r){r&&r.sanitize&&!r.silent&&console.warn("marked(): sanitize and sanitizer parameters are deprecated since version 0.7.0, should not be used and will be removed in the future. Read more here: https://marked.js.org/#/USING_ADVANCED.md#options")}function g(r,e,t){var n=e.href,i=e.title?D(e.title):null;return"!"!==r[0].charAt(0)?{type:"link",raw:t,href:n,title:i,text:r[1]}:{type:"image",raw:t,text:D(r[1]),href:n,title:i}}function y(r,e){var t=r.match(/^(\s+)(?:```)/);if(null===t)return e;var n=t[1];return e.split("\n").map(function(r){var e=r.match(/^\s+/);if(null===e)return r;var t=e[0];return t.length>=n.length?r.slice(n.length):r}).join("\n")}function x(r){return r.replace(/---/g,"—").replace(/--/g,"–").replace(/(^|[-\u2014/(\[{"\s])'/g,"$1‘").replace(/'/g,"’").replace(/(^|[-\u2014/(\[{\u2018\s])"/g,"$1“").replace(/"/g,"”").replace(/\.{3}/g,"…")}function v(r){var e,t,n="",i=r.length;for(e=0;e<i;e++)t=r.charCodeAt(e),Math.random()>.5&&(t="x"+t.toString(16)),n+="&#"+t+";";return n}function _(r,e,t){if("undefined"==typeof r||null===r)throw new Error("marked(): input parameter is undefined or null");if("string"!=typeof r)throw new Error("marked(): input parameter is of type "+Object.prototype.toString.call(r)+", string expected");if("function"==typeof e&&(t=e,e=null),e=cr({},_.defaults,e||{}),lr(e),t){var n,i=e.highlight;try{n=Y.lex(r,e)}catch(a){return t(a)}var o=function(r){var a;if(!r)try{a=ur.parse(n,e)}catch(o){r=o}return e.highlight=i,r?t(r):t(null,a)};if(!i||i.length<3)return o();if(delete e.highlight,!n.length)return o();var s=0;return _.walkTokens(n,function(r){"code"===r.type&&(s++,i(r.text,r.lang,function(e,t){return e?o(e):(null!=t&&t!==r.text&&(r.text=t,r.escaped=!0),s--,void(0===s&&o()))}))}),void(0===s&&o())}try{var u=Y.lex(r,e);return e.walkTokens&&_.walkTokens(u,e.walkTokens),ur.parse(u,e)}catch(a){if(a.message+="\nPlease report this to https://github.com/markedjs/marked.",e.silent)return"<p>An error occurred:</p><pre>"+fr(a.message+"",!0)+"</pre>";throw a}}var j=a(function(r){function e(){return{baseUrl:null,breaks:!1,gfm:!0,headerIds:!0,headerPrefix:"",highlight:null,langPrefix:"language-",mangle:!0,pedantic:!1,renderer:null,sanitize:!1,sanitizer:null,silent:!1,smartLists:!1,smartypants:!1,tokenizer:null,walkTokens:null,xhtml:!1}}function t(e){r.exports.defaults=e}r.exports={defaults:e(),getDefaults:e,changeDefaults:t}}),b=(j.defaults,j.getDefaults,j.changeDefaults,/[&<>"']/),w=/[&<>"']/g,q=/[<>"']|&(?!#?\w+;)/,k=/[<>"']|&(?!#?\w+;)/g,A={"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"},S=function(r){return A[r]},O=/&(#(?:\d+)|(?:#x[0-9A-Fa-f]+)|(?:\w+));?/gi,z=/(^|[^\[])\^/g,E=/[^\w:]/g,T=/^$|^[a-z][a-z0-9+.-]*:|^[?#]/i,I={},N=/^[^:]+:\/*[^/]*$/,P=/^([^:]+:)[\s\S]*$/,W=/^([^:]+:\/*[^/]*)[\s\S]*$/,$={exec:function(){}},R={escape:o,unescape:s,edit:u,cleanUrl:c,resolveUrl:l,noopTest:$,merge:f,splitCells:p,rtrim:d,findClosingBracket:h,checkSanitizeDeprecation:m},C=j.defaults,L=R.rtrim,B=R.splitCells,D=R.escape,F=R.findClosingBracket,U=function(){function r(r){this.options=r||C}var e=r.prototype;return e.space=function(r){var e=this.rules.block.newline.exec(r);if(e)return e[0].length>1?{type:"space",raw:e[0]}:{raw:"\n"}},e.code=function(r,e){var t=this.rules.block.code.exec(r);if(t){var n=e[e.length-1];if(n&&"paragraph"===n.type)return{raw:t[0],text:t[0].trimRight()};var i=t[0].replace(/^ {4}/gm,"");return{type:"code",raw:t[0],codeBlockStyle:"indented",text:this.options.pedantic?i:L(i,"\n")}}},e.fences=function(r){var e=this.rules.block.fences.exec(r);if(e){var t=e[0],n=y(t,e[3]||"");return{type:"code",raw:t,lang:e[2]?e[2].trim():e[2],text:n}}},e.heading=function(r){var e=this.rules.block.heading.exec(r);if(e)return{type:"heading",raw:e[0],depth:e[1].length,text:e[2]}},e.nptable=function(r){var e=this.rules.block.nptable.exec(r);if(e){var t={type:"table",header:B(e[1].replace(/^ *| *\| *$/g,"")),align:e[2].replace(/^ *|\| *$/g,"").split(/ *\| */),cells:e[3]?e[3].replace(/\n$/,"").split("\n"):[],raw:e[0]};if(t.header.length===t.align.length){var n,i=t.align.length;for(n=0;n<i;n++)/^ *-+: *$/.test(t.align[n])?t.align[n]="right":/^ *:-+: *$/.test(t.align[n])?t.align[n]="center":/^ *:-+ *$/.test(t.align[n])?t.align[n]="left":t.align[n]=null;for(i=t.cells.length,n=0;n<i;n++)t.cells[n]=B(t.cells[n],t.header.length);return t}}},e.hr=function(r){var e=this.rules.block.hr.exec(r);if(e)return{type:"hr",raw:e[0]}},e.blockquote=function(r){var e=this.rules.block.blockquote.exec(r);if(e){var t=e[0].replace(/^ *> ?/gm,"");return{type:"blockquote",raw:e[0],text:t}}},e.list=function t(r){var e=this.rules.block.list.exec(r);if(e){for(var n,i,a,o,s,u,c,l=e[0],f=e[2],p=f.length>1,t={type:"list",raw:l,ordered:p,start:p?+f:"",loose:!1,items:[]},d=e[0].match(this.rules.block.item),h=!1,m=d.length,g=0;g<m;g++)n=d[g],l=n,i=n.length,n=n.replace(/^ *([*+-]|\d+\.) */,""),~n.indexOf("\n ")&&(i-=n.length,n=this.options.pedantic?n.replace(/^ {1,4}/gm,""):n.replace(new RegExp("^ {1,"+i+"}","gm"),"")),g!==m-1&&(a=this.rules.block.bullet.exec(d[g+1])[0],(f.length>1?1===a.length:a.length>1||this.options.smartLists&&a!==f)&&(o=d.slice(g+1).join("\n"),t.raw=t.raw.substring(0,t.raw.length-o.length),g=m-1)),s=h||/\n\n(?!\s*$)/.test(n),g!==m-1&&(h="\n"===n.charAt(n.length-1),s||(s=h)),s&&(t.loose=!0),u=/^\[[ xX]\] /.test(n),c=void 0,u&&(c=" "!==n[1],n=n.replace(/^\[[ xX]\] +/,"")),t.items.push({type:"list_item",raw:l,task:u,checked:c,loose:s,text:n});return t}},e.html=function(r){var e=this.rules.block.html.exec(r);if(e)return{type:this.options.sanitize?"paragraph":"html",raw:e[0],pre:!this.options.sanitizer&&("pre"===e[1]||"script"===e[1]||"style"===e[1]),text:this.options.sanitize?this.options.sanitizer?this.options.sanitizer(e[0]):D(e[0]):e[0]}},e.def=function(r){var e=this.rules.block.def.exec(r);if(e){e[3]&&(e[3]=e[3].substring(1,e[3].length-1));var t=e[1].toLowerCase().replace(/\s+/g," ");return{tag:t,raw:e[0],href:e[2],title:e[3]}}},e.table=function(r){var e=this.rules.block.table.exec(r);if(e){var t={type:"table",header:B(e[1].replace(/^ *| *\| *$/g,"")),align:e[2].replace(/^ *|\| *$/g,"").split(/ *\| */),cells:e[3]?e[3].replace(/\n$/,"").split("\n"):[]};if(t.header.length===t.align.length){t.raw=e[0];var n,i=t.align.length;for(n=0;n<i;n++)/^ *-+: *$/.test(t.align[n])?t.align[n]="right":/^ *:-+: *$/.test(t.align[n])?t.align[n]="center":/^ *:-+ *$/.test(t.align[n])?t.align[n]="left":t.align[n]=null;for(i=t.cells.length,n=0;n<i;n++)t.cells[n]=B(t.cells[n].replace(/^ *\| *| *\| *$/g,""),t.header.length);return t}}},e.lheading=function(r){var e=this.rules.block.lheading.exec(r);if(e)return{type:"heading",raw:e[0],depth:"="===e[2].charAt(0)?1:2,text:e[1]}},e.paragraph=function(r){var e=this.rules.block.paragraph.exec(r);if(e)return{type:"paragraph",raw:e[0],text:"\n"===e[1].charAt(e[1].length-1)?e[1].slice(0,-1):e[1]}},e.text=function(r,e){var t=this.rules.block.text.exec(r);if(t){var n=e[e.length-1];return n&&"text"===n.type?{raw:t[0],text:t[0]}:{type:"text",raw:t[0],text:t[0]}}},e.escape=function(r){var e=this.rules.inline.escape.exec(r);if(e)return{type:"escape",raw:e[0],text:D(e[1])}},e.tag=function(r,e,t){var n=this.rules.inline.tag.exec(r);if(n)return!e&&/^<a /i.test(n[0])?e=!0:e&&/^<\/a>/i.test(n[0])&&(e=!1),!t&&/^<(pre|code|kbd|script)(\s|>)/i.test(n[0])?t=!0:t&&/^<\/(pre|code|kbd|script)(\s|>)/i.test(n[0])&&(t=!1),{type:this.options.sanitize?"text":"html",raw:n[0],inLink:e,inRawBlock:t,text:this.options.sanitize?this.options.sanitizer?this.options.sanitizer(n[0]):D(n[0]):n[0]}},e.link=function n(r){var e=this.rules.inline.link.exec(r);if(e){var t=F(e[2],"()");if(t>-1){var i=0===e[0].indexOf("!")?5:4,a=i+e[1].length+t;e[2]=e[2].substring(0,t),e[0]=e[0].substring(0,a).trim(),e[3]=""}var o=e[2],s="";if(this.options.pedantic){var n=/^([^'"]*[^\s])\s+(['"])(.*)\2/.exec(o);n?(o=n[1],s=n[3]):s=""}else s=e[3]?e[3].slice(1,-1):"";o=o.trim().replace(/^<([\s\S]*)>$/,"$1");var u=g(e,{href:o?o.replace(this.rules.inline._escapes,"$1"):o,title:s?s.replace(this.rules.inline._escapes,"$1"):s},e[0]);return u}},e.reflink=function(r,e){var t;if((t=this.rules.inline.reflink.exec(r))||(t=this.rules.inline.nolink.exec(r))){var n=(t[2]||t[1]).replace(/\s+/g," ");if(n=e[n.toLowerCase()],!n||!n.href){var i=t[0].charAt(0);return{type:"text",raw:i,text:i}}var a=g(t,n,t[0]);return a}},e.strong=function(r){var e=this.rules.inline.strong.exec(r);if(e)return{type:"strong",raw:e[0],text:e[4]||e[3]||e[2]||e[1]}},e.em=function(r){var e=this.rules.inline.em.exec(r);if(e)return{type:"em",raw:e[0],text:e[6]||e[5]||e[4]||e[3]||e[2]||e[1]}},e.codespan=function(r){var e=this.rules.inline.code.exec(r);if(e){var t=e[2].replace(/\n/g," "),n=/[^ ]/.test(t),i=t.startsWith(" ")&&t.endsWith(" ");return n&&i&&(t=t.substring(1,t.length-1)),t=D(t,!0),{type:"codespan",raw:e[0],text:t}}},e.br=function(r){var e=this.rules.inline.br.exec(r);if(e)return{type:"br",raw:e[0]}},e.del=function(r){var e=this.rules.inline.del.exec(r);if(e)return{type:"del",raw:e[0],text:e[1]}},e.autolink=function(r,e){var t=this.rules.inline.autolink.exec(r);if(t){var n,i;return"@"===t[2]?(n=D(this.options.mangle?e(t[1]):t[1]),i="mailto:"+n):(n=D(t[1]),i=n),{type:"link",raw:t[0],text:n,href:i,tokens:[{type:"text",raw:n,text:n}]}}},e.url=function(r,e){var t;if(t=this.rules.inline.url.exec(r)){var n,i;if("@"===t[2])n=D(this.options.mangle?e(t[0]):t[0]),i="mailto:"+n;else{var a;do a=t[0],t[0]=this.rules.inline._backpedal.exec(t[0])[0];while(a!==t[0]);n=D(t[0]),i="www."===t[1]?"http://"+n:n}return{type:"link",raw:t[0],text:n,href:i,tokens:[{type:"text",raw:n,text:n}]}}},e.inlineText=function(r,e,t){var n=this.rules.inline.text.exec(r);if(n){var i;return i=e?this.options.sanitize?this.options.sanitizer?this.options.sanitizer(n[0]):D(n[0]):n[0]:D(this.options.smartypants?t(n[0]):n[0]),{type:"text",raw:n[0],text:i}}},r}(),M=R.noopTest,K=R.edit,Z=R.merge,V={newline:/^\n+/,code:/^( {4}[^\n]+\n*)+/,fences:/^ {0,3}(`{3,}(?=[^`\n]*\n)|~{3,})([^\n]*)\n(?:|([\s\S]*?)\n)(?: {0,3}\1[~`]* *(?:\n+|$)|$)/,hr:/^ {0,3}((?:- *){3,}|(?:_ *){3,}|(?:\* *){3,})(?:\n+|$)/,heading:/^ {0,3}(#{1,6}) +([^\n]*?)(?: +#+)? *(?:\n+|$)/,blockquote:/^( {0,3}> ?(paragraph|[^\n]*)(?:\n|$))+/,list:/^( {0,3})(bull) [\s\S]+?(?:hr|def|\n{2,}(?! )(?!\1bull )\n*|\s*$)/,html:"^ {0,3}(?:<(script|pre|style)[\\s>][\\s\\S]*?(?:</\\1>[^\\n]*\\n+|$)|comment[^\\n]*(\\n+|$)|<\\?[\\s\\S]*?\\?>\\n*|<![A-Z][\\s\\S]*?>\\n*|<!\\[CDATA\\[[\\s\\S]*?\\]\\]>\\n*|</?(tag)(?: +|\\n|/?>)[\\s\\S]*?(?:\\n{2,}|$)|<(?!script|pre|style)([a-z][\\w-]*)(?:attribute)*? */?>(?=[ \\t]*(?:\\n|$))[\\s\\S]*?(?:\\n{2,}|$)|</(?!script|pre|style)[a-z][\\w-]*\\s*>(?=[ \\t]*(?:\\n|$))[\\s\\S]*?(?:\\n{2,}|$))",def:/^ {0,3}\[(label)\]: *\n? *<?([^\s>]+)>?(?:(?: +\n? *| *\n *)(title))? *(?:\n+|$)/,nptable:M,table:M,lheading:/^([^\n]+)\n {0,3}(=+|-+) *(?:\n+|$)/,_paragraph:/^([^\n]+(?:\n(?!hr|heading|lheading|blockquote|fences|list|html)[^\n]+)*)/,text:/^[^\n]+/};V._label=/(?!\s*\])(?:\\[\[\]]|[^\[\]])+/,V._title=/(?:"(?:\\"?|[^"\\])*"|'[^'\n]*(?:\n[^'\n]+)*\n?'|\([^()]*\))/,V.def=K(V.def).replace("label",V._label).replace("title",V._title).getRegex(),V.bullet=/(?:[*+-]|\d{1,9}\.)/,V.item=/^( *)(bull) ?[^\n]*(?:\n(?!\1bull ?)[^\n]*)*/,V.item=K(V.item,"gm").replace(/bull/g,V.bullet).getRegex(),V.list=K(V.list).replace(/bull/g,V.bullet).replace("hr","\\n+(?=\\1?(?:(?:- *){3,}|(?:_ *){3,}|(?:\\* *){3,})(?:\\n+|$))").replace("def","\\n+(?="+V.def.source+")").getRegex(),V._tag="address|article|aside|base|basefont|blockquote|body|caption|center|col|colgroup|dd|details|dialog|dir|div|dl|dt|fieldset|figcaption|figure|footer|form|frame|frameset|h[1-6]|head|header|hr|html|iframe|legend|li|link|main|menu|menuitem|meta|nav|noframes|ol|optgroup|option|p|param|section|source|summary|table|tbody|td|tfoot|th|thead|title|tr|track|ul",V._comment=/<!--(?!-?>)[\s\S]*?-->/,V.html=K(V.html,"i").replace("comment",V._comment).replace("tag",V._tag).replace("attribute",/ +[a-zA-Z:_][\w.:-]*(?: *= *"[^"\n]*"| *= *'[^'\n]*'| *= *[^\s"'=<>`]+)?/).getRegex(),V.paragraph=K(V._paragraph).replace("hr",V.hr).replace("heading"," {0,3}#{1,6} ").replace("|lheading","").replace("blockquote"," {0,3}>").replace("fences"," {0,3}(?:`{3,}(?=[^`\\n]*\\n)|~{3,})[^\\n]*\\n").replace("list"," {0,3}(?:[*+-]|1[.)]) ").replace("html","</?(?:tag)(?: +|\\n|/?>)|<(?:script|pre|style|!--)").replace("tag",V._tag).getRegex(),V.blockquote=K(V.blockquote).replace("paragraph",V.paragraph).getRegex(),V.normal=Z({},V),V.gfm=Z({},V.normal,{nptable:"^ *([^|\\n ].*\\|.*)\\n *([-:]+ *\\|[-| :]*)(?:\\n((?:(?!\\n|hr|heading|blockquote|code|fences|list|html).*(?:\\n|$))*)\\n*|$)",table:"^ *\\|(.+)\\n *\\|?( *[-:]+[-| :]*)(?:\\n *((?:(?!\\n|hr|heading|blockquote|code|fences|list|html).*(?:\\n|$))*)\\n*|$)"}),V.gfm.nptable=K(V.gfm.nptable).replace("hr",V.hr).replace("heading"," {0,3}#{1,6} ").replace("blockquote"," {0,3}>").replace("code"," {4}[^\\n]").replace("fences"," {0,3}(?:`{3,}(?=[^`\\n]*\\n)|~{3,})[^\\n]*\\n").replace("list"," {0,3}(?:[*+-]|1[.)]) ").replace("html","</?(?:tag)(?: +|\\n|/?>)|<(?:script|pre|style|!--)").replace("tag",V._tag).getRegex(),V.gfm.table=K(V.gfm.table).replace("hr",V.hr).replace("heading"," {0,3}#{1,6} ").replace("blockquote"," {0,3}>").replace("code"," {4}[^\\n]").replace("fences"," {0,3}(?:`{3,}(?=[^`\\n]*\\n)|~{3,})[^\\n]*\\n").replace("list"," {0,3}(?:[*+-]|1[.)]) ").replace("html","</?(?:tag)(?: +|\\n|/?>)|<(?:script|pre|style|!--)").replace("tag",V._tag).getRegex(),V.pedantic=Z({},V.normal,{html:K("^ *(?:comment *(?:\\n|\\s*$)|<(tag)[\\s\\S]+?</\\1> *(?:\\n{2,}|\\s*$)|<tag(?:\"[^\"]*\"|'[^']*'|\\s[^'\"/>\\s]*)*?/?> *(?:\\n{2,}|\\s*$))").replace("comment",V._comment).replace(/tag/g,"(?!(?:a|em|strong|small|s|cite|q|dfn|abbr|data|time|code|var|samp|kbd|sub|sup|i|b|u|mark|ruby|rt|rp|bdi|bdo|span|br|wbr|ins|del|img)\\b)\\w+(?!:|[^\\w\\s@]*@)\\b").getRegex(),def:/^ *\[([^\]]+)\]: *<?([^\s>]+)>?(?: +(["(][^\n]+[")]))? *(?:\n+|$)/,heading:/^ *(#{1,6}) *([^\n]+?) *(?:#+ *)?(?:\n+|$)/,fences:M,paragraph:K(V.normal._paragraph).replace("hr",V.hr).replace("heading"," *#{1,6} *[^\n]").replace("lheading",V.lheading).replace("blockquote"," {0,3}>").replace("|fences","").replace("|list","").replace("|html","").getRegex()});var H={escape:/^\\([!"#$%&'()*+,\-./:;<=>?@\[\]\\^_`{|}~])/,autolink:/^<(scheme:[^\s\x00-\x1f<>]*|email)>/,url:M,tag:"^comment|^</[a-zA-Z][\\w:-]*\\s*>|^<[a-zA-Z][\\w-]*(?:attribute)*?\\s*/?>|^<\\?[\\s\\S]*?\\?>|^<![a-zA-Z]+\\s[\\s\\S]*?>|^<!\\[CDATA\\[[\\s\\S]*?\\]\\]>",link:/^!?\[(label)\]\(\s*(href)(?:\s+(title))?\s*\)/,reflink:/^!?\[(label)\]\[(?!\s*\])((?:\\[\[\]]?|[^\[\]\\])+)\]/,nolink:/^!?\[(?!\s*\])((?:\[[^\[\]]*\]|\\[\[\]]|[^\[\]])*)\](?:\[\])?/,strong:/^__([^\s_])__(?!_)|^\*\*([^\s*])\*\*(?!\*)|^__([^\s][\s\S]*?[^\s])__(?!_)|^\*\*([^\s][\s\S]*?[^\s])\*\*(?!\*)/,em:/^_([^\s_])_(?!_)|^_([^\s_<][\s\S]*?[^\s_])_(?!_|[^\s,punctuation])|^_([^\s_<][\s\S]*?[^\s])_(?!_|[^\s,punctuation])|^\*([^\s*<\[])\*(?!\*)|^\*([^\s<"][\s\S]*?[^\s\[\*])\*(?![\]`punctuation])|^\*([^\s*"<\[][\s\S]*[^\s])\*(?!\*)/,code:/^(`+)([^`]|[^`][\s\S]*?[^`])\1(?!`)/,br:/^( {2,}|\\)\n(?!\s*$)/,del:M,text:/^(`+|[^`])(?:[\s\S]*?(?:(?=[\\<!\[`*]|\b_|$)|[^ ](?= {2,}\n))|(?= {2,}\n))/};H._punctuation="!\"#$%&'()*+\\-./:;<=>?@\\[^_{|}~",H.em=K(H.em).replace(/punctuation/g,H._punctuation).getRegex(),H._escapes=/\\([!"#$%&'()*+,\-./:;<=>?@\[\]\\^_`{|}~])/g,H._scheme=/[a-zA-Z][a-zA-Z0-9+.-]{1,31}/,H._email=/[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+(@)[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)+(?![-_])/,H.autolink=K(H.autolink).replace("scheme",H._scheme).replace("email",H._email).getRegex(),H._attribute=/\s+[a-zA-Z:_][\w.:-]*(?:\s*=\s*"[^"]*"|\s*=\s*'[^']*'|\s*=\s*[^\s"'=<>`]+)?/,H.tag=K(H.tag).replace("comment",V._comment).replace("attribute",H._attribute).getRegex(),H._label=/(?:\[[^\[\]]*\]|\\.|`[^`]*`|[^\[\]\\`])*?/,H._href=/<(?:\\[<>]?|[^\s<>\\])*>|[^\s\x00-\x1f]*/,H._title=/"(?:\\"?|[^"\\])*"|'(?:\\'?|[^'\\])*'|\((?:\\\)?|[^)\\])*\)/,H.link=K(H.link).replace("label",H._label).replace("href",H._href).replace("title",H._title).getRegex(),H.reflink=K(H.reflink).replace("label",H._label).getRegex(),H.normal=Z({},H),H.pedantic=Z({},H.normal,{strong:/^__(?=\S)([\s\S]*?\S)__(?!_)|^\*\*(?=\S)([\s\S]*?\S)\*\*(?!\*)/,em:/^_(?=\S)([\s\S]*?\S)_(?!_)|^\*(?=\S)([\s\S]*?\S)\*(?!\*)/,link:K(/^!?\[(label)\]\((.*?)\)/).replace("label",H._label).getRegex(),reflink:K(/^!?\[(label)\]\s*\[([^\]]*)\]/).replace("label",H._label).getRegex()}),H.gfm=Z({},H.normal,{escape:K(H.escape).replace("])","~|])").getRegex(),_extended_email:/[A-Za-z0-9._+-]+(@)[a-zA-Z0-9-_]+(?:\.[a-zA-Z0-9-_]*[a-zA-Z0-9])+(?![-_])/,url:/^((?:ftp|https?):\/\/|www\.)(?:[a-zA-Z0-9\-]+\.?)+[^\s<]*|^email/,_backpedal:/(?:[^?!.,:;*_~()&]+|\([^)]*\)|&(?![a-zA-Z0-9]+;$)|[?!.,:;*_~)]+(?!$))+/,del:/^~+(?=\S)([\s\S]*?\S)~+/,text:/^(`+|[^`])(?:[\s\S]*?(?:(?=[\\<!\[`*~]|\b_|https?:\/\/|ftp:\/\/|www\.|$)|[^ ](?= {2,}\n)|[^a-zA-Z0-9.!#$%&'*+\/=?_`{\|}~-](?=[a-zA-Z0-9.!#$%&'*+\/=?_`{\|}~-]+@))|(?= {2,}\n|[a-zA-Z0-9.!#$%&'*+\/=?_`{\|}~-]+@))/}),H.gfm.url=K(H.gfm.url,"i").replace("email",H.gfm._extended_email).getRegex(),H.breaks=Z({},H.gfm,{br:K(H.br).replace("{2,}","*").getRegex(),text:K(H.gfm.text).replace("\\b_","\\b_| {2,}\\n").replace(/\{2,\}/g,"*").getRegex()});var J={block:V,inline:H},G=j.defaults,X=J.block,Q=J.inline,Y=function(){function r(r){this.tokens=[],this.tokens.links=Object.create(null),this.options=r||G,this.options.tokenizer=this.options.tokenizer||new U,this.tokenizer=this.options.tokenizer,this.tokenizer.options=this.options;var e={block:X.normal,inline:Q.normal};this.options.pedantic?(e.block=X.pedantic,e.inline=Q.pedantic):this.options.gfm&&(e.block=X.gfm,this.options.breaks?e.inline=Q.breaks:e.inline=Q.gfm),this.tokenizer.rules=e}r.lex=function(e,t){var n=new r(t);return n.lex(e)};var t=r.prototype;return t.lex=function(r){return r=r.replace(/\r\n|\r/g,"\n").replace(/\t/g,"    "),this.blockTokens(r,this.tokens,!0),this.inline(this.tokens),this.tokens},t.blockTokens=function(r,e,t){void 0===e&&(e=[]),void 0===t&&(t=!0),r=r.replace(/^ +$/gm,"");for(var n,i,a,o;r;)if(n=this.tokenizer.space(r))r=r.substring(n.raw.length),n.type&&e.push(n);else if(n=this.tokenizer.code(r,e))r=r.substring(n.raw.length),n.type?e.push(n):(o=e[e.length-1],o.raw+="\n"+n.raw,o.text+="\n"+n.text);else if(n=this.tokenizer.fences(r))r=r.substring(n.raw.length),e.push(n);else if(n=this.tokenizer.heading(r))r=r.substring(n.raw.length),e.push(n);else if(n=this.tokenizer.nptable(r))r=r.substring(n.raw.length),e.push(n);else if(n=this.tokenizer.hr(r))r=r.substring(n.raw.length),e.push(n);else if(n=this.tokenizer.blockquote(r))r=r.substring(n.raw.length),n.tokens=this.blockTokens(n.text,[],t),e.push(n);else if(n=this.tokenizer.list(r)){for(r=r.substring(n.raw.length),a=n.items.length,i=0;i<a;i++)n.items[i].tokens=this.blockTokens(n.items[i].text,[],!1);e.push(n)}else if(n=this.tokenizer.html(r))r=r.substring(n.raw.length),e.push(n);else if(t&&(n=this.tokenizer.def(r)))r=r.substring(n.raw.length),this.tokens.links[n.tag]||(this.tokens.links[n.tag]={href:n.href,title:n.title});else if(n=this.tokenizer.table(r))r=r.substring(n.raw.length),e.push(n);else if(n=this.tokenizer.lheading(r))r=r.substring(n.raw.length),e.push(n);else if(t&&(n=this.tokenizer.paragraph(r)))r=r.substring(n.raw.length),e.push(n);else if(n=this.tokenizer.text(r,e))r=r.substring(n.raw.length),n.type?e.push(n):(o=e[e.length-1],o.raw+="\n"+n.raw,o.text+="\n"+n.text);else if(r){var s="Infinite loop on byte: "+r.charCodeAt(0);if(this.options.silent){console.error(s);break}throw new Error(s)}return e},t.inline=function(r){var e,t,n,i,a,o,s=r.length;for(e=0;e<s;e++)switch(o=r[e],o.type){case"paragraph":case"text":case"heading":o.tokens=[],this.inlineTokens(o.text,o.tokens);break;case"table":for(o.tokens={header:[],cells:[]},i=o.header.length,t=0;t<i;t++)o.tokens.header[t]=[],this.inlineTokens(o.header[t],o.tokens.header[t]);for(i=o.cells.length,t=0;t<i;t++)for(a=o.cells[t],o.tokens.cells[t]=[],n=0;n<a.length;n++)o.tokens.cells[t][n]=[],this.inlineTokens(a[n],o.tokens.cells[t][n]);break;case"blockquote":this.inline(o.tokens);break;case"list":for(i=o.items.length,t=0;t<i;t++)this.inline(o.items[t].tokens)}return r},t.inlineTokens=function(r,e,t,n){void 0===e&&(e=[]),void 0===t&&(t=!1),void 0===n&&(n=!1);for(var i;r;)if(i=this.tokenizer.escape(r))r=r.substring(i.raw.length),e.push(i);else if(i=this.tokenizer.tag(r,t,n))r=r.substring(i.raw.length),t=i.inLink,n=i.inRawBlock,e.push(i);else if(i=this.tokenizer.link(r))r=r.substring(i.raw.length),"link"===i.type&&(i.tokens=this.inlineTokens(i.text,[],!0,n)),e.push(i);else if(i=this.tokenizer.reflink(r,this.tokens.links))r=r.substring(i.raw.length),"link"===i.type&&(i.tokens=this.inlineTokens(i.text,[],!0,n)),e.push(i);else if(i=this.tokenizer.strong(r))r=r.substring(i.raw.length),i.tokens=this.inlineTokens(i.text,[],t,n),e.push(i);else if(i=this.tokenizer.em(r))r=r.substring(i.raw.length),i.tokens=this.inlineTokens(i.text,[],t,n),e.push(i);else if(i=this.tokenizer.codespan(r))r=r.substring(i.raw.length),e.push(i);else if(i=this.tokenizer.br(r))r=r.substring(i.raw.length),e.push(i);else if(i=this.tokenizer.del(r))r=r.substring(i.raw.length),i.tokens=this.inlineTokens(i.text,[],t,n),e.push(i);else if(i=this.tokenizer.autolink(r,v))r=r.substring(i.raw.length),e.push(i);else if(t||!(i=this.tokenizer.url(r,v))){if(i=this.tokenizer.inlineText(r,n,x))r=r.substring(i.raw.length),e.push(i);else if(r){var a="Infinite loop on byte: "+r.charCodeAt(0);if(this.options.silent){console.error(a);break}throw new Error(a)}}else r=r.substring(i.raw.length),e.push(i);return e},e(r,null,[{key:"rules",get:function(){return{block:X,inline:Q}}}]),r}(),rr=j.defaults,er=R.cleanUrl,tr=R.escape,nr=function(){function r(r){this.options=r||rr}var e=r.prototype;return e.code=function(r,e,t){var n=(e||"").match(/\S*/)[0];if(this.options.highlight){var i=this.options.highlight(r,n);null!=i&&i!==r&&(t=!0,r=i)}return n?'<pre><code class="'+this.options.langPrefix+tr(n,!0)+'">'+(t?r:tr(r,!0))+"</code></pre>\n":"<pre><code>"+(t?r:tr(r,!0))+"</code></pre>\n"},e.blockquote=function(r){return"<blockquote>\n"+r+"</blockquote>\n"},e.html=function(r){return r},e.heading=function(r,e,t,n){return this.options.headerIds?"<h"+e+' id="'+this.options.headerPrefix+n.slug(t)+'">'+r+"</h"+e+">\n":"<h"+e+">"+r+"</h"+e+">\n"},e.hr=function(){return this.options.xhtml?"<hr/>\n":"<hr>\n"},e.list=function(r,e,t){var n=e?"ol":"ul",i=e&&1!==t?' start="'+t+'"':"";return"<"+n+i+">\n"+r+"</"+n+">\n"},e.listitem=function(r){return"<li>"+r+"</li>\n"},e.checkbox=function(r){return"<input "+(r?'checked="" ':"")+'disabled="" type="checkbox"'+(this.options.xhtml?" /":"")+"> "},e.paragraph=function(r){return"<p>"+r+"</p>\n"},e.table=function(r,e){return e&&(e="<tbody>"+e+"</tbody>"),"<table>\n<thead>\n"+r+"</thead>\n"+e+"</table>\n"},e.tablerow=function(r){return"<tr>\n"+r+"</tr>\n"},e.tablecell=function(r,e){var t=e.header?"th":"td",n=e.align?"<"+t+' align="'+e.align+'">':"<"+t+">";return n+r+"</"+t+">\n"},e.strong=function(r){return"<strong>"+r+"</strong>"},e.em=function(r){return"<em>"+r+"</em>"},e.codespan=function(r){return"<code>"+r+"</code>"},e.br=function(){return this.options.xhtml?"<br/>":"<br>"},e.del=function(r){return"<del>"+r+"</del>"},e.link=function(r,e,t){if(r=er(this.options.sanitize,this.options.baseUrl,r),null===r)return t;var n='<a href="'+tr(r)+'"';return e&&(n+=' title="'+e+'"'),n+=">"+t+"</a>"},e.image=function(r,e,t){if(r=er(this.options.sanitize,this.options.baseUrl,r),null===r)return t;var n='<img src="'+r+'" alt="'+t+'"';return e&&(n+=' title="'+e+'"'),n+=this.options.xhtml?"/>":">"},e.text=function(r){return r},r}(),ir=function(){function r(){}var e=r.prototype;return e.strong=function(r){return r},e.em=function(r){return r},e.codespan=function(r){return r},e.del=function(r){return r},e.html=function(r){return r},e.text=function(r){return r},e.link=function(r,e,t){return""+t},e.image=function(r,e,t){return""+t},e.br=function(){return""},r}(),ar=function(){function r(){this.seen={}}var e=r.prototype;return e.slug=function t(r){var t=r.toLowerCase().trim().replace(/<[!\/a-z].*?>/gi,"").replace(/[\u2000-\u206F\u2E00-\u2E7F\\'!"#$%&()*+,./:;<=>?@[\]^`{|}~]/g,"").replace(/\s/g,"-");if(this.seen.hasOwnProperty(t)){var e=t;do this.seen[e]++,t=e+"-"+this.seen[e];while(this.seen.hasOwnProperty(t))}return this.seen[t]=0,t},r}(),or=j.defaults,sr=R.unescape,ur=function(){function r(r){this.options=r||or,this.options.renderer=this.options.renderer||new nr,this.renderer=this.options.renderer,this.renderer.options=this.options,
-this.textRenderer=new ir,this.slugger=new ar}r.parse=function(e,t){var n=new r(t);return n.parse(e)};var e=r.prototype;return e.parse=function(r,e){void 0===e&&(e=!0);var t,n,i,a,o,s,u,c,l,f,p,d,h,m,g,y,x,v,_="",j=r.length;for(t=0;t<j;t++)switch(f=r[t],f.type){case"space":continue;case"hr":_+=this.renderer.hr();continue;case"heading":_+=this.renderer.heading(this.parseInline(f.tokens),f.depth,sr(this.parseInline(f.tokens,this.textRenderer)),this.slugger);continue;case"code":_+=this.renderer.code(f.text,f.lang,f.escaped);continue;case"table":for(c="",u="",a=f.header.length,n=0;n<a;n++)u+=this.renderer.tablecell(this.parseInline(f.tokens.header[n]),{header:!0,align:f.align[n]});for(c+=this.renderer.tablerow(u),l="",a=f.cells.length,n=0;n<a;n++){for(s=f.tokens.cells[n],u="",o=s.length,i=0;i<o;i++)u+=this.renderer.tablecell(this.parseInline(s[i]),{header:!1,align:f.align[i]});l+=this.renderer.tablerow(u)}_+=this.renderer.table(c,l);continue;case"blockquote":l=this.parse(f.tokens),_+=this.renderer.blockquote(l);continue;case"list":for(p=f.ordered,d=f.start,h=f.loose,a=f.items.length,l="",n=0;n<a;n++)g=f.items[n],y=g.checked,x=g.task,m="",g.task&&(v=this.renderer.checkbox(y),h?g.tokens.length>0&&"text"===g.tokens[0].type?(g.tokens[0].text=v+" "+g.tokens[0].text,g.tokens[0].tokens&&g.tokens[0].tokens.length>0&&"text"===g.tokens[0].tokens[0].type&&(g.tokens[0].tokens[0].text=v+" "+g.tokens[0].tokens[0].text)):g.tokens.unshift({type:"text",text:v}):m+=v),m+=this.parse(g.tokens,h),l+=this.renderer.listitem(m,x,y);_+=this.renderer.list(l,p,d);continue;case"html":_+=this.renderer.html(f.text);continue;case"paragraph":_+=this.renderer.paragraph(this.parseInline(f.tokens));continue;case"text":for(l=f.tokens?this.parseInline(f.tokens):f.text;t+1<j&&"text"===r[t+1].type;)f=r[++t],l+="\n"+(f.tokens?this.parseInline(f.tokens):f.text);_+=e?this.renderer.paragraph(l):l;continue;default:var b='Token with "'+f.type+'" type was not found.';if(this.options.silent)return void console.error(b);throw new Error(b)}return _},e.parseInline=function(r,e){e=e||this.renderer;var t,n,i="",a=r.length;for(t=0;t<a;t++)switch(n=r[t],n.type){case"escape":i+=e.text(n.text);break;case"html":i+=e.html(n.text);break;case"link":i+=e.link(n.href,n.title,this.parseInline(n.tokens,e));break;case"image":i+=e.image(n.href,n.title,n.text);break;case"strong":i+=e.strong(this.parseInline(n.tokens,e));break;case"em":i+=e.em(this.parseInline(n.tokens,e));break;case"codespan":i+=e.codespan(n.text);break;case"br":i+=e.br();break;case"del":i+=e.del(this.parseInline(n.tokens,e));break;case"text":i+=e.text(n.text);break;default:var o='Token with "'+n.type+'" type was not found.';if(this.options.silent)return void console.error(o);throw new Error(o)}return i},r}(),cr=R.merge,lr=R.checkSanitizeDeprecation,fr=R.escape,pr=j.getDefaults,dr=j.changeDefaults,hr=j.defaults;_.options=_.setOptions=function(r){return cr(_.defaults,r),dr(_.defaults),_},_.getDefaults=pr,_.defaults=hr,_.use=function(r){var e=cr({},r);if(r.renderer&&!function(){var t=_.defaults.renderer||new nr,n=function(e){var n=t[e];t[e]=function(){for(var i=arguments.length,a=new Array(i),o=0;o<i;o++)a[o]=arguments[o];var s=r.renderer[e].apply(t,a);return s===!1&&(s=n.apply(t,a)),s}};for(var i in r.renderer)n(i);e.renderer=t}(),r.tokenizer&&!function(){var t=_.defaults.tokenizer||new U,n=function(e){var n=t[e];t[e]=function(){for(var i=arguments.length,a=new Array(i),o=0;o<i;o++)a[o]=arguments[o];var s=r.tokenizer[e].apply(t,a);return s===!1&&(s=n.apply(t,a)),s}};for(var i in r.tokenizer)n(i);e.tokenizer=t}(),r.walkTokens){var t=_.defaults.walkTokens;e.walkTokens=function(e){r.walkTokens(e),t&&t(e)}}_.setOptions(e)},_.walkTokens=function(r,e){for(var t,n=i(r);!(t=n()).done;){var a=t.value;switch(e(a),a.type){case"table":for(var o,s=i(a.tokens.header);!(o=s()).done;){var u=o.value;_.walkTokens(u,e)}for(var c,l=i(a.tokens.cells);!(c=l()).done;)for(var f,p=c.value,d=i(p);!(f=d()).done;){var h=f.value;_.walkTokens(h,e)}break;case"list":_.walkTokens(a.items,e);break;default:a.tokens&&_.walkTokens(a.tokens,e)}}},_.Parser=ur,_.parser=ur.parse,_.Renderer=nr,_.TextRenderer=ir,_.Lexer=Y,_.lexer=Y.lex,_.Tokenizer=U,_.Slugger=ar,_.parse=_;var mr=_;return mr})}()}),require.register("mithril/api/mount-redraw.js",function(r,e,n){e=t(e,{},"mithril"),function(){"use strict";var r=e("../render/vnode");n.exports=function(e,t,n){function i(){if(u)throw new Error("Nested m.redraw.sync() call");u=!0;for(var t=0;t<s.length;t+=2)try{e(s[t],r(s[t+1]),a)}catch(i){n.error(i)}u=!1}function a(){c||(c=!0,t(function(){c=!1,i()}))}function o(t,n){if(null!=n&&null==n.view&&"function"!=typeof n)throw new TypeError("m.mount(element, component) expects a component, not a vnode");var i=s.indexOf(t);i>=0&&(s.splice(i,2),e(t,[],a)),null!=n&&(s.push(t,n),e(t,r(n),a))}var s=[],u=!1,c=!1;return a.sync=i,{mount:o,redraw:a}}}()}),require.register("mithril/api/router.js",function(r,e,n){e=t(e,{},"mithril"),function(){"use strict";var r=e("../render/vnode"),t=e("../render/hyperscript"),i=e("../promise/promise"),a=e("../pathname/build"),o=e("../pathname/parse"),s=e("../pathname/compileTemplate"),u=e("../pathname/assign"),c={};n.exports=function(e,n){function l(r,t,n){if(r=a(r,t),null!=p){p();var i=n?n.state:null,o=n?n.title:null;n&&n.replace?e.history.replaceState(i,o,f.prefix+r):e.history.pushState(i,o,f.prefix+r)}else e.location.href=f.prefix+r}function f(t,a,v){function _(){function r(){if(s===a)throw new Error("Could not resolve default route "+a);l(a,null,{replace:!0})}function t(e){for(;e<w.length;e++)if(w[e].check(c)){var i=w[e].component,a=w[e].route,o=i,u=g=function(r){if(u===g){if(r===x)return t(e+1);d=null==r||"function"!=typeof r.view&&"function"!=typeof r?"div":r,h=c.params,m=s,g=null,y=i.render?i:null,2===b?n.redraw():(b=2,n.redraw.sync())}};return void(i.view||"function"==typeof i?(i={},u(o)):i.onmatch?k.then(function(){return i.onmatch(c.params,s,a)}).then(u,r):u("div"))}r()}A=!1;var i=e.location.hash;"#"!==f.prefix[0]&&(i=e.location.search+i,"?"!==f.prefix[0]&&(i=e.location.pathname+i,"/"!==i[0]&&(i="/"+i)));var s=i.concat().replace(/(?:%[a-f89][a-f0-9])+/gim,decodeURIComponent).slice(f.prefix.length),c=o(s);u(c.params,e.history.state),t(0)}if(null==t)throw new Error("Ensure the DOM element that was passed to `m.route` is not undefined");var j,b=0,w=Object.keys(v).map(function(r){if("/"!==r[0])throw new SyntaxError("Routes must start with a `/`");if(/:([^\/\.-]+)(\.{3})?:/.test(r))throw new SyntaxError("Route parameter names must be separated with either `/`, `.`, or `-`");return{route:r,component:v[r],check:s(r)}}),q="function"==typeof setImmediate?setImmediate:setTimeout,k=i.resolve(),A=!1;if(p=null,null!=a){var S=o(a);if(!w.some(function(r){return r.check(S)}))throw new ReferenceError("Default route doesn't match any known routes")}return p=function(){A||(A=!0,q(_))},"function"==typeof e.history.pushState?(j=function(){e.removeEventListener("popstate",p,!1)},e.addEventListener("popstate",p,!1)):"#"===f.prefix[0]&&(p=null,j=function(){e.removeEventListener("hashchange",_,!1)},e.addEventListener("hashchange",_,!1)),n.mount(t,{onbeforeupdate:function(){return b=b?2:1,!(!b||c===y)},oncreate:_,onremove:j,view:function(){if(b&&c!==y){var e=[r(d,h.key,h)];return y&&(e=y.render(e[0])),e}}})}var p,d,h,m,g,y=c,x=f.SKIP={};return f.set=function(r,e,t){null!=g&&(t=t||{},t.replace=!0),g=null,l(r,e,t)},f.get=function(){return m},f.prefix="#!",f.Link={view:function(r){var e,n,i=r.attrs.options,a={};u(a,r.attrs),a.selector=a.options=a.key=a.oninit=a.oncreate=a.onbeforeupdate=a.onupdate=a.onbeforeremove=a.onremove=null;var o=t(r.attrs.selector||"a",a,r.children);return(o.attrs.disabled=Boolean(o.attrs.disabled))?(o.attrs.href=null,o.attrs["aria-disabled"]="true",o.attrs.onclick=null):(e=o.attrs.onclick,n=o.attrs.href,o.attrs.href=f.prefix+n,o.attrs.onclick=function(r){var t;"function"==typeof e?t=e.call(r.currentTarget,r):null==e||"object"!=typeof e||"function"==typeof e.handleEvent&&e.handleEvent(r),t===!1||r.defaultPrevented||0!==r.button&&0!==r.which&&1!==r.which||r.currentTarget.target&&"_self"!==r.currentTarget.target||r.ctrlKey||r.metaKey||r.shiftKey||r.altKey||(r.preventDefault(),r.redraw=!1,f.set(n,null,i))}),o}},f.param=function(r){return h&&null!=r?h[r]:h},f}}()}),require.register("mithril/hyperscript.js",function(r,e,n){e=t(e,{},"mithril"),function(){"use strict";var r=e("./render/hyperscript");r.trust=e("./render/trust"),r.fragment=e("./render/fragment"),n.exports=r}()}),require.register("mithril/index.js",function(r,e,n){e=t(e,{},"mithril"),function(){"use strict";var r=e("./hyperscript"),t=e("./request"),i=e("./mount-redraw"),a=function(){return r.apply(this,arguments)};a.m=r,a.trust=r.trust,a.fragment=r.fragment,a.mount=i.mount,a.route=e("./route"),a.render=e("./render"),a.redraw=i.redraw,a.request=t.request,a.jsonp=t.jsonp,a.parseQueryString=e("./querystring/parse"),a.buildQueryString=e("./querystring/build"),a.parsePathname=e("./pathname/parse"),a.buildPathname=e("./pathname/build"),a.vnode=e("./render/vnode"),a.PromisePolyfill=e("./promise/polyfill"),n.exports=a}()}),require.register("mithril/mount-redraw.js",function(r,e,n){e=t(e,{},"mithril"),function(){"use strict";var r=e("./render");n.exports=e("./api/mount-redraw")(r,requestAnimationFrame,console)}()}),require.register("mithril/pathname/assign.js",function(r,e,n){e=t(e,{},"mithril"),function(){"use strict";n.exports=Object.assign||function(r,e){e&&Object.keys(e).forEach(function(t){r[t]=e[t]})}}()}),require.register("mithril/pathname/build.js",function(r,e,n){e=t(e,{},"mithril"),function(){"use strict";var r=e("../querystring/build"),t=e("./assign");n.exports=function(e,n){if(/:([^\/\.-]+)(\.{3})?:/.test(e))throw new SyntaxError("Template parameter names *must* be separated");if(null==n)return e;var i=e.indexOf("?"),a=e.indexOf("#"),o=a<0?e.length:a,s=i<0?o:i,u=e.slice(0,s),c={};t(c,n);var l=u.replace(/:([^\/\.-]+)(\.{3})?/g,function(r,e,t){return delete c[e],null==n[e]?r:t?n[e]:encodeURIComponent(String(n[e]))}),f=l.indexOf("?"),p=l.indexOf("#"),d=p<0?l.length:p,h=f<0?d:f,m=l.slice(0,h);i>=0&&(m+=e.slice(i,o)),f>=0&&(m+=(i<0?"?":"&")+l.slice(f,d));var g=r(c);return g&&(m+=(i<0&&f<0?"?":"&")+g),a>=0&&(m+=e.slice(a)),p>=0&&(m+=(a<0?"":"&")+l.slice(p)),m}}()}),require.register("mithril/pathname/compileTemplate.js",function(r,e,n){e=t(e,{},"mithril"),function(){"use strict";var r=e("./parse");n.exports=function(e){var t=r(e),n=Object.keys(t.params),i=[],a=new RegExp("^"+t.path.replace(/:([^\/.-]+)(\.{3}|\.(?!\.)|-)?|[\\^$*+.()|\[\]{}]/g,function(r,e,t){return null==e?"\\"+r:(i.push({k:e,r:"..."===t}),"..."===t?"(.*)":"."===t?"([^/]+)\\.":"([^/]+)"+(t||""))})+"$");return function(r){for(var e=0;e<n.length;e++)if(t.params[n[e]]!==r.params[n[e]])return!1;if(!i.length)return a.test(r.path);var o=a.exec(r.path);if(null==o)return!1;for(var e=0;e<i.length;e++)r.params[i[e].k]=i[e].r?o[e+1]:decodeURIComponent(o[e+1]);return!0}}}()}),require.register("mithril/pathname/parse.js",function(r,e,n){e=t(e,{},"mithril"),function(){"use strict";var r=e("../querystring/parse");n.exports=function(e){var t=e.indexOf("?"),n=e.indexOf("#"),i=n<0?e.length:n,a=t<0?i:t,o=e.slice(0,a).replace(/\/{2,}/g,"/");return o?("/"!==o[0]&&(o="/"+o),o.length>1&&"/"===o[o.length-1]&&(o=o.slice(0,-1))):o="/",{path:o,params:t<0?{}:r(e.slice(t+1,i))}}}()}),require.register("mithril/promise/polyfill.js",function(r,e,n){e=t(e,{},"mithril"),function(){"use strict";var r=function(e){function t(r,e){return function t(s){var f;try{if(!e||null==s||"object"!=typeof s&&"function"!=typeof s||"function"!=typeof(f=s.then))l(function(){e||0!==r.length||console.error("Possible unhandled promise rejection:",s);for(var n=0;n<r.length;n++)r[n](s);a.length=0,o.length=0,c.state=e,c.retry=function(){t(s)}});else{if(s===i)throw new TypeError("Promise can't be resolved w/ itself");n(f.bind(s))}}catch(p){u(p)}}}function n(r){function e(r){return function(e){t++>0||r(e)}}var t=0,n=e(u);try{r(e(s),n)}catch(i){n(i)}}if(!(this instanceof r))throw new Error("Promise must be called with `new`");if("function"!=typeof e)throw new TypeError("executor must be a function");var i=this,a=[],o=[],s=t(a,!0),u=t(o,!1),c=i._instance={resolvers:a,rejectors:o},l="function"==typeof setImmediate?setImmediate:setTimeout;n(e)};r.prototype.then=function(e,t){function n(r,e,t,n){e.push(function(e){if("function"!=typeof r)t(e);else try{i(r(e))}catch(n){a&&a(n)}}),"function"==typeof s.retry&&n===s.state&&s.retry()}var i,a,o=this,s=o._instance,u=new r(function(r,e){i=r,a=e});return n(e,s.resolvers,i,!0),n(t,s.rejectors,a,!1),u},r.prototype["catch"]=function(r){return this.then(null,r)},r.prototype["finally"]=function(e){return this.then(function(t){return r.resolve(e()).then(function(){return t})},function(t){return r.resolve(e()).then(function(){return r.reject(t)})})},r.resolve=function(e){return e instanceof r?e:new r(function(r){r(e)})},r.reject=function(e){return new r(function(r,t){t(e)})},r.all=function(e){return new r(function(r,t){var n=e.length,i=0,a=[];if(0===e.length)r([]);else for(var o=0;o<e.length;o++)!function(o){function s(e){i++,a[o]=e,i===n&&r(a)}null==e[o]||"object"!=typeof e[o]&&"function"!=typeof e[o]||"function"!=typeof e[o].then?s(e[o]):e[o].then(s,t)}(o)})},r.race=function(e){return new r(function(r,t){for(var n=0;n<e.length;n++)e[n].then(r,t)})},n.exports=r}()}),require.register("mithril/promise/promise.js",function(r,n,i){n=t(n,{},"mithril"),function(){"use strict";var r=n("./polyfill");"undefined"!=typeof window?("undefined"==typeof window.Promise?window.Promise=r:window.Promise.prototype["finally"]||(window.Promise.prototype["finally"]=r.prototype["finally"]),i.exports=window.Promise):"undefined"!=typeof e?("undefined"==typeof e.Promise?e.Promise=r:e.Promise.prototype["finally"]||(e.Promise.prototype["finally"]=r.prototype["finally"]),i.exports=e.Promise):i.exports=r}()}),require.register("mithril/querystring/build.js",function(r,e,n){e=t(e,{},"mithril"),function(){"use strict";n.exports=function(r){function e(r,n){if(Array.isArray(n))for(var i=0;i<n.length;i++)e(r+"["+i+"]",n[i]);else if("[object Object]"===Object.prototype.toString.call(n))for(var i in n)e(r+"["+i+"]",n[i]);else t.push(encodeURIComponent(r)+(null!=n&&""!==n?"="+encodeURIComponent(n):""))}if("[object Object]"!==Object.prototype.toString.call(r))return"";var t=[];for(var n in r)e(n,r[n]);return t.join("&")}}()}),require.register("mithril/querystring/parse.js",function(r,e,n){e=t(e,{},"mithril"),function(){"use strict";n.exports=function(r){if(""===r||null==r)return{};"?"===r.charAt(0)&&(r=r.slice(1));for(var e=r.split("&"),t={},n={},i=0;i<e.length;i++){var a=e[i].split("="),o=decodeURIComponent(a[0]),s=2===a.length?decodeURIComponent(a[1]):"";"true"===s?s=!0:"false"===s&&(s=!1);var u=o.split(/\]\[?|\[/),c=n;o.indexOf("[")>-1&&u.pop();for(var l=0;l<u.length;l++){var f=u[l],p=u[l+1],d=""==p||!isNaN(parseInt(p,10));if(""===f){var o=u.slice(0,l).join();null==t[o]&&(t[o]=Array.isArray(c)?c.length:0),f=t[o]++}else if("__proto__"===f)break;if(l===u.length-1)c[f]=s;else{var h=Object.getOwnPropertyDescriptor(c,f);null!=h&&(h=h.value),null==h&&(c[f]=h=d?[]:{}),c=h}}}return n}}()}),require.register("mithril/render.js",function(r,e,n){e=t(e,{},"mithril"),function(){"use strict";n.exports=e("./render/render")(window)}()}),require.register("mithril/render/fragment.js",function(r,e,n){e=t(e,{},"mithril"),function(){"use strict";var r=e("../render/vnode"),t=e("./hyperscriptVnode");n.exports=function(){var e=t.apply(0,arguments);return e.tag="[",e.children=r.normalizeChildren(e.children),e}}()}),require.register("mithril/render/hyperscript.js",function(r,e,n){e=t(e,{},"mithril"),function(){"use strict";function r(r){for(var e in r)if(l.call(r,e))return!1;return!0}function t(r){for(var e,t="div",n=[],i={};e=u.exec(r);){var a=e[1],o=e[2];if(""===a&&""!==o)t=o;else if("#"===a)i.id=o;else if("."===a)n.push(o);else if("["===e[3][0]){var s=e[6];s&&(s=s.replace(/\\(["'])/g,"$1").replace(/\\\\/g,"\\")),"class"===e[4]?n.push(s):i[e[4]]=""===s?s:s||!0}}return n.length>0&&(i.className=n.join(" ")),c[r]={tag:t,attrs:i}}function i(e,t){var n=t.attrs,i=o.normalizeChildren(t.children),a=l.call(n,"class"),s=a?n["class"]:n.className;if(t.tag=e.tag,t.attrs=null,t.children=void 0,!r(e.attrs)&&!r(n)){var u={};for(var c in n)l.call(n,c)&&(u[c]=n[c]);n=u}for(var c in e.attrs)l.call(e.attrs,c)&&"className"!==c&&!l.call(n,c)&&(n[c]=e.attrs[c]);null==s&&null==e.attrs.className||(n.className=null!=s?null!=e.attrs.className?String(e.attrs.className)+" "+String(s):s:null!=e.attrs.className?e.attrs.className:null),a&&(n["class"]=null);for(var c in n)if(l.call(n,c)&&"key"!==c){t.attrs=n;break}return Array.isArray(i)&&1===i.length&&null!=i[0]&&"#"===i[0].tag?t.text=i[0].children:t.children=i,t}function a(r){if(null==r||"string"!=typeof r&&"function"!=typeof r&&"function"!=typeof r.view)throw Error("The selector must be either a string or a component.");var e=s.apply(1,arguments);return"string"==typeof r&&(e.children=o.normalizeChildren(e.children),"["!==r)?i(c[r]||t(r),e):(e.tag=r,e)}var o=e("../render/vnode"),s=e("./hyperscriptVnode"),u=/(?:(^|#|\.)([^#\.\[\]]+))|(\[(.+?)(?:\s*=\s*("|'|)((?:\\["'\]]|.)*?)\5)?\])/g,c={},l={}.hasOwnProperty;n.exports=a}()}),require.register("mithril/render/hyperscriptVnode.js",function(r,e,n){e=t(e,{},"mithril"),function(){"use strict";var r=e("../render/vnode");n.exports=function(){var e,t=arguments[this],n=this+1;if(null==t?t={}:("object"!=typeof t||null!=t.tag||Array.isArray(t))&&(t={},n=this),arguments.length===n+1)e=arguments[n],Array.isArray(e)||(e=[e]);else for(e=[];n<arguments.length;)e.push(arguments[n++]);return r("",t.key,t,e)}}()}),require.register("mithril/render/render.js",function(r,e,n){e=t(e,{},"mithril"),function(){"use strict";var r=e("../render/vnode");n.exports=function(e){function t(r){return r.attrs&&r.attrs.xmlns||X[r.tag]}function n(r,e){if(r.state!==e)throw new Error("`vnode.state` must not be modified")}function i(r){var e=r.state;try{return this.apply(e,arguments)}finally{n(r,e)}}function a(){try{return G.activeElement}catch(r){return null}}function o(r,e,t,n,i,a,o){for(var u=t;u<n;u++){var c=e[u];null!=c&&s(r,c,i,o,a)}}function s(r,e,t,n,i){var a=e.tag;if("string"==typeof a)switch(e.state={},null!=e.attrs&&Z(e.attrs,e,t),a){case"#":u(r,e,i);break;case"<":c(r,e,n,i);break;case"[":l(r,e,t,n,i);break;default:f(r,e,t,n,i)}else d(r,e,t,n,i)}function u(r,e,t){e.dom=G.createTextNode(e.children),A(r,e.dom,t)}function c(r,e,t,n){var i=e.children.match(/^\s*?<(\w+)/im)||[],a=G.createElement(Q[i[1]]||"div");"http://www.w3.org/2000/svg"===t?(a.innerHTML='<svg xmlns="http://www.w3.org/2000/svg">'+e.children+"</svg>",a=a.firstChild):a.innerHTML=e.children,e.dom=a.firstChild,e.domSize=a.childNodes.length,e.instance=[];for(var o,s=G.createDocumentFragment();o=a.firstChild;)e.instance.push(o),s.appendChild(o);A(r,s,n)}function l(r,e,t,n,i){var a=G.createDocumentFragment();if(null!=e.children){var s=e.children;o(a,s,0,s.length,t,null,n)}e.dom=a.firstChild,e.domSize=a.childNodes.length,A(r,a,i)}function f(e,n,i,a,s){var u=n.tag,c=n.attrs,l=c&&c.is;a=t(n)||a;var f=a?l?G.createElementNS(a,u,{is:l}):G.createElementNS(a,u):l?G.createElement(u,{is:l}):G.createElement(u);if(n.dom=f,null!=c&&N(n,c,a),A(e,f,s),!S(n)&&(null!=n.text&&(""!==n.text?f.textContent=n.text:n.children=[r("#",void 0,void 0,n.text,void 0,void 0)]),null!=n.children)){var p=n.children;o(f,p,0,p.length,i,null,a),"select"===n.tag&&null!=c&&$(n,c)}}function p(e,t){var n;if("function"==typeof e.tag.view){if(e.state=Object.create(e.tag),n=e.state.view,null!=n.$$reentrantLock$$)return;n.$$reentrantLock$$=!0}else{if(e.state=void 0,n=e.tag,null!=n.$$reentrantLock$$)return;n.$$reentrantLock$$=!0,e.state=null!=e.tag.prototype&&"function"==typeof e.tag.prototype.view?new e.tag(e):e.tag(e)}if(Z(e.state,e,t),null!=e.attrs&&Z(e.attrs,e,t),e.instance=r.normalize(i.call(e.state.view,e)),e.instance===e)throw Error("A view cannot return the vnode it received as argument");n.$$reentrantLock$$=null}function d(r,e,t,n,i){p(e,t),null!=e.instance?(s(r,e.instance,t,n,i),e.dom=e.instance.dom,e.domSize=null!=e.dom?e.instance.domSize:0):e.domSize=0}function h(r,e,t,n,i,a){if(e!==t&&(null!=e||null!=t))if(null==e||0===e.length)o(r,t,0,t.length,n,i,a);else if(null==t||0===t.length)O(r,e,0,e.length);else{var u=null!=e[0]&&null!=e[0].key,c=null!=t[0]&&null!=t[0].key,l=0,f=0;if(!u)for(;f<e.length&&null==e[f];)f++;if(!c)for(;l<t.length&&null==t[l];)l++;if(null===c&&null==u)return;if(u!==c)O(r,e,f,e.length),o(r,t,l,t.length,n,i,a);else if(c){for(var p,d,h,g,y,x,v=e.length-1,_=t.length-1;v>=f&&_>=l&&(g=e[v],y=t[_],g.key===y.key);)g!==y&&m(r,g,y,n,i,a),null!=y.dom&&(i=y.dom),v--,_--;for(;v>=f&&_>=l&&(d=e[f],h=t[l],d.key===h.key);)f++,l++,d!==h&&m(r,d,h,n,w(e,f,i),a);for(;v>=f&&_>=l&&l!==_&&d.key===y.key&&g.key===h.key;)x=w(e,f,i),q(r,g,x),g!==h&&m(r,g,h,n,x,a),++l<=--_&&q(r,d,i),d!==y&&m(r,d,y,n,i,a),null!=y.dom&&(i=y.dom),f++,v--,g=e[v],y=t[_],d=e[f],h=t[l];for(;v>=f&&_>=l&&g.key===y.key;)g!==y&&m(r,g,y,n,i,a),null!=y.dom&&(i=y.dom),v--,_--,g=e[v],y=t[_];if(l>_)O(r,e,f,v+1);else if(f>v)o(r,t,l,_+1,n,i,a);else{var p,k,A=i,S=_-l+1,E=new Array(S),T=0,I=0,N=2147483647,P=0;for(I=0;I<S;I++)E[I]=-1;for(I=_;I>=l;I--){null==p&&(p=j(e,f,v+1)),y=t[I];var W=p[y.key];null!=W&&(N=W<N?W:-1,E[I-l]=W,g=e[W],e[W]=null,g!==y&&m(r,g,y,n,i,a),null!=y.dom&&(i=y.dom),P++)}if(i=A,P!==v-f+1&&O(r,e,f,v+1),0===P)o(r,t,l,_+1,n,i,a);else if(N===-1)for(k=b(E),T=k.length-1,I=_;I>=l;I--)h=t[I],E[I-l]===-1?s(r,h,n,a,i):k[T]===I-l?T--:q(r,h,i),null!=h.dom&&(i=t[I].dom);else for(I=_;I>=l;I--)h=t[I],E[I-l]===-1&&s(r,h,n,a,i),null!=h.dom&&(i=t[I].dom)}}else{var $=e.length<t.length?e.length:t.length;for(l=l<f?l:f;l<$;l++)d=e[l],h=t[l],d===h||null==d&&null==h||(null==d?s(r,h,n,a,w(e,l+1,i)):null==h?z(r,d):m(r,d,h,n,w(e,l+1,i),a));e.length>$&&O(r,e,l,e.length),t.length>$&&o(r,t,l,t.length,n,i,a)}}}function m(r,e,t,n,i,a){var o=e.tag,u=t.tag;if(o===u){if(t.state=e.state,t.events=e.events,H(t,e))return;if("string"==typeof o)switch(null!=t.attrs&&V(t.attrs,t,n),o){case"#":g(e,t);break;case"<":y(r,e,t,a,i);break;case"[":x(r,e,t,n,i,a);break;default:v(e,t,n,a)}else _(r,e,t,n,i,a)}else z(r,e),s(r,t,n,a,i)}function g(r,e){r.children.toString()!==e.children.toString()&&(r.dom.nodeValue=e.children),e.dom=r.dom}function y(r,e,t,n,i){e.children!==t.children?(E(r,e),c(r,t,n,i)):(t.dom=e.dom,t.domSize=e.domSize,t.instance=e.instance)}function x(r,e,t,n,i,a){h(r,e.children,t.children,n,i,a);var o=0,s=t.children;if(t.dom=null,null!=s){for(var u=0;u<s.length;u++){var c=s[u];null!=c&&null!=c.dom&&(null==t.dom&&(t.dom=c.dom),o+=c.domSize||1)}1!==o&&(t.domSize=o)}}function v(e,n,i,a){var o=n.dom=e.dom;a=t(n)||a,"textarea"===n.tag&&(null==n.attrs&&(n.attrs={}),null!=n.text&&(n.attrs.value=n.text,n.text=void 0)),R(n,e.attrs,n.attrs,a),S(n)||(null!=e.text&&null!=n.text&&""!==n.text?e.text.toString()!==n.text.toString()&&(e.dom.firstChild.nodeValue=n.text):(null!=e.text&&(e.children=[r("#",void 0,void 0,e.text,void 0,e.dom.firstChild)]),null!=n.text&&(n.children=[r("#",void 0,void 0,n.text,void 0,void 0)]),h(o,e.children,n.children,i,null,a)))}function _(e,t,n,a,o,u){if(n.instance=r.normalize(i.call(n.state.view,n)),n.instance===n)throw Error("A view cannot return the vnode it received as argument");V(n.state,n,a),null!=n.attrs&&V(n.attrs,n,a),null!=n.instance?(null==t.instance?s(e,n.instance,a,u,o):m(e,t.instance,n.instance,a,o,u),n.dom=n.instance.dom,n.domSize=n.instance.domSize):null!=t.instance?(z(e,t.instance),n.dom=void 0,n.domSize=0):(n.dom=t.dom,n.domSize=t.domSize)}function j(r,e,t){for(var n=Object.create(null);e<t;e++){var i=r[e];if(null!=i){var a=i.key;null!=a&&(n[a]=e)}}return n}function b(r){for(var e=[0],t=0,n=0,i=0,a=Y.length=r.length,i=0;i<a;i++)Y[i]=r[i];for(var i=0;i<a;++i)if(r[i]!==-1){var o=e[e.length-1];if(r[o]<r[i])Y[i]=o,e.push(i);else{for(t=0,n=e.length-1;t<n;){var s=(t>>>1)+(n>>>1)+(t&n&1);r[e[s]]<r[i]?t=s+1:n=s}r[i]<r[e[t]]&&(t>0&&(Y[i]=e[t-1]),e[t]=i)}}for(t=e.length,n=e[t-1];t-- >0;)e[t]=n,n=Y[n];return Y.length=0,e}function w(r,e,t){for(;e<r.length;e++)if(null!=r[e]&&null!=r[e].dom)return r[e].dom;return t}function q(r,e,t){var n=G.createDocumentFragment();k(r,n,e),A(r,n,t)}function k(r,e,t){for(;null!=t.dom&&t.dom.parentNode===r;){if("string"!=typeof t.tag){if(t=t.instance,null!=t)continue}else if("<"===t.tag)for(var n=0;n<t.instance.length;n++)e.appendChild(t.instance[n]);else if("["!==t.tag)e.appendChild(t.dom);else if(1===t.children.length){if(t=t.children[0],null!=t)continue}else for(var n=0;n<t.children.length;n++){var i=t.children[n];null!=i&&k(r,e,i)}break}}function A(r,e,t){null!=t?r.insertBefore(e,t):r.appendChild(e)}function S(r){if(null==r.attrs||null==r.attrs.contenteditable&&null==r.attrs.contentEditable)return!1;var e=r.children;if(null!=e&&1===e.length&&"<"===e[0].tag){var t=e[0].children;r.dom.innerHTML!==t&&(r.dom.innerHTML=t)}else if(null!=r.text||null!=e&&0!==e.length)throw new Error("Child node of a contenteditable must be trusted");return!0}function O(r,e,t,n){for(var i=t;i<n;i++){var a=e[i];null!=a&&z(r,a)}}function z(r,e){function t(){n(e,u),I(e),T(r,e)}var a,o,s=0,u=e.state;if("string"!=typeof e.tag&&"function"==typeof e.state.onbeforeremove){var c=i.call(e.state.onbeforeremove,e);null!=c&&"function"==typeof c.then&&(s=1,a=c)}if(e.attrs&&"function"==typeof e.attrs.onbeforeremove){var c=i.call(e.attrs.onbeforeremove,e);null!=c&&"function"==typeof c.then&&(s|=2,o=c)}if(n(e,u),s){if(null!=a){var l=function(){1&s&&(s&=2,s||t())};a.then(l,l)}if(null!=o){var l=function(){2&s&&(s&=1,s||t())};o.then(l,l)}}else I(e),T(r,e)}function E(r,e){for(var t=0;t<e.instance.length;t++)r.removeChild(e.instance[t])}function T(r,e){for(;null!=e.dom&&e.dom.parentNode===r;){if("string"!=typeof e.tag){if(e=e.instance,null!=e)continue}else if("<"===e.tag)E(r,e);else{if("["!==e.tag&&(r.removeChild(e.dom),!Array.isArray(e.children)))break;if(1===e.children.length){if(e=e.children[0],null!=e)continue}else for(var t=0;t<e.children.length;t++){var n=e.children[t];null!=n&&T(r,n)}}break}}function I(r){if("string"!=typeof r.tag&&"function"==typeof r.state.onremove&&i.call(r.state.onremove,r),r.attrs&&"function"==typeof r.attrs.onremove&&i.call(r.attrs.onremove,r),"string"!=typeof r.tag)null!=r.instance&&I(r.instance);else{var e=r.children;if(Array.isArray(e))for(var t=0;t<e.length;t++){var n=e[t];null!=n&&I(n)}}}function N(r,e,t){for(var n in e)P(r,n,null,e[n],t)}function P(r,e,t,n,i){if("key"!==e&&"is"!==e&&null!=n&&!L(e)&&(t!==n||C(r,e)||"object"==typeof n)){if("o"===e[0]&&"n"===e[1])return K(r,e,n);if("xlink:"===e.slice(0,6))r.dom.setAttributeNS("http://www.w3.org/1999/xlink",e.slice(6),n);else if("style"===e)U(r.dom,t,n);else if(B(r,e,i)){if("value"===e){if(("input"===r.tag||"textarea"===r.tag)&&r.dom.value===""+n&&r.dom===a())return;if("select"===r.tag&&null!==t&&r.dom.value===""+n)return;if("option"===r.tag&&null!==t&&r.dom.value===""+n)return}"input"===r.tag&&"type"===e?r.dom.setAttribute(e,n):r.dom[e]=n}else"boolean"==typeof n?n?r.dom.setAttribute(e,""):r.dom.removeAttribute(e):r.dom.setAttribute("className"===e?"class":e,n)}}function W(r,e,t,n){if("key"!==e&&"is"!==e&&null!=t&&!L(e))if("o"!==e[0]||"n"!==e[1]||L(e))if("style"===e)U(r.dom,t,null);else if(!B(r,e,n)||"className"===e||"value"===e&&("option"===r.tag||"select"===r.tag&&r.dom.selectedIndex===-1&&r.dom===a())||"input"===r.tag&&"type"===e){var i=e.indexOf(":");i!==-1&&(e=e.slice(i+1)),t!==!1&&r.dom.removeAttribute("className"===e?"class":e)}else r.dom[e]=null;else K(r,e,void 0)}function $(r,e){if("value"in e)if(null===e.value)r.dom.selectedIndex!==-1&&(r.dom.value=null);else{var t=""+e.value;r.dom.value===t&&r.dom.selectedIndex!==-1||(r.dom.value=t)}"selectedIndex"in e&&P(r,"selectedIndex",null,e.selectedIndex,void 0)}function R(r,e,t,n){if(null!=t)for(var i in t)P(r,i,e&&e[i],t[i],n);var a;if(null!=e)for(var i in e)null==(a=e[i])||null!=t&&null!=t[i]||W(r,i,a,n)}function C(r,e){return"value"===e||"checked"===e||"selectedIndex"===e||"selected"===e&&r.dom===a()||"option"===r.tag&&r.dom.parentNode===G.activeElement}function L(r){return"oninit"===r||"oncreate"===r||"onupdate"===r||"onremove"===r||"onbeforeremove"===r||"onbeforeupdate"===r}function B(r,e,t){return void 0===t&&(r.tag.indexOf("-")>-1||null!=r.attrs&&r.attrs.is||"href"!==e&&"list"!==e&&"form"!==e&&"width"!==e&&"height"!==e)&&e in r.dom}function D(r){return"-"+r.toLowerCase()}function F(r){return"-"===r[0]&&"-"===r[1]?r:"cssFloat"===r?"float":r.replace(rr,D)}function U(r,e,t){if(e===t);else if(null==t)r.style.cssText="";else if("object"!=typeof t)r.style.cssText=t;else if(null==e||"object"!=typeof e){r.style.cssText="";for(var n in t){var i=t[n];null!=i&&r.style.setProperty(F(n),String(i))}}else{for(var n in t){var i=t[n];null!=i&&(i=String(i))!==String(e[n])&&r.style.setProperty(F(n),i)}for(var n in e)null!=e[n]&&null==t[n]&&r.style.removeProperty(F(n))}}function M(){this._=J}function K(r,e,t){if(null!=r.events){if(r.events[e]===t)return;null==t||"function"!=typeof t&&"object"!=typeof t?(null!=r.events[e]&&r.dom.removeEventListener(e.slice(2),r.events,!1),r.events[e]=void 0):(null==r.events[e]&&r.dom.addEventListener(e.slice(2),r.events,!1),r.events[e]=t)}else null==t||"function"!=typeof t&&"object"!=typeof t||(r.events=new M,r.dom.addEventListener(e.slice(2),r.events,!1),r.events[e]=t)}function Z(r,e,t){"function"==typeof r.oninit&&i.call(r.oninit,e),"function"==typeof r.oncreate&&t.push(i.bind(r.oncreate,e))}function V(r,e,t){"function"==typeof r.onupdate&&t.push(i.bind(r.onupdate,e))}function H(r,e){do{if(null!=r.attrs&&"function"==typeof r.attrs.onbeforeupdate){var t=i.call(r.attrs.onbeforeupdate,r,e);if(void 0!==t&&!t)break}if("string"!=typeof r.tag&&"function"==typeof r.state.onbeforeupdate){var t=i.call(r.state.onbeforeupdate,r,e);if(void 0!==t&&!t)break}return!1}while(!1);return r.dom=e.dom,r.domSize=e.domSize,r.instance=e.instance,r.attrs=e.attrs,r.children=e.children,r.text=e.text,!0}var J,G=e&&e.document,X={svg:"http://www.w3.org/2000/svg",math:"http://www.w3.org/1998/Math/MathML"},Q={caption:"table",thead:"table",tbody:"table",tfoot:"table",tr:"tbody",th:"tr",td:"tr",colgroup:"table",col:"colgroup"},Y=[],rr=/[A-Z]/g;return M.prototype=Object.create(null),M.prototype.handleEvent=function(r){var e,t=this["on"+r.type];"function"==typeof t?e=t.call(r.currentTarget,r):"function"==typeof t.handleEvent&&t.handleEvent(r),this._&&r.redraw!==!1&&(0,this._)(),e===!1&&(r.preventDefault(),r.stopPropagation())},function(e,t,n){if(!e)throw new TypeError("Ensure the DOM element being passed to m.route/m.mount/m.render is not undefined.");var i=[],o=a(),s=e.namespaceURI;null==e.vnodes&&(e.textContent=""),t=r.normalizeChildren(Array.isArray(t)?t:[t]);var u=J;try{J="function"==typeof n?n:void 0,h(e,e.vnodes,t,i,null,"http://www.w3.org/1999/xhtml"===s?void 0:s)}finally{J=u}e.vnodes=t,null!=o&&a()!==o&&"function"==typeof o.focus&&o.focus();for(var c=0;c<i.length;c++)i[c]()}}}()}),require.register("mithril/render/trust.js",function(r,e,n){e=t(e,{},"mithril"),function(){"use strict";var r=e("../render/vnode");n.exports=function(e){return null==e&&(e=""),r("<",void 0,void 0,e,void 0,void 0)}}()}),require.register("mithril/render/vnode.js",function(r,e,n){e=t(e,{},"mithril"),function(){"use strict";function r(r,e,t,n,i,a){return{tag:r,key:e,attrs:t,children:n,text:i,dom:a,domSize:void 0,state:void 0,events:void 0,instance:void 0}}r.normalize=function(e){return Array.isArray(e)?r("[",void 0,void 0,r.normalizeChildren(e),void 0,void 0):null==e||"boolean"==typeof e?null:"object"==typeof e?e:r("#",void 0,void 0,String(e),void 0,void 0)},r.normalizeChildren=function(e){var t=[];if(e.length){for(var n=null!=e[0]&&null!=e[0].key,i=1;i<e.length;i++)if((null!=e[i]&&null!=e[i].key)!==n)throw new TypeError("Vnodes must either always have keys or never have keys!");for(var i=0;i<e.length;i++)t[i]=r.normalize(e[i])}return t},n.exports=r}()}),require.register("mithril/request.js",function(r,e,n){
-e=t(e,{},"mithril"),function(){"use strict";var r=e("./promise/promise"),t=e("./mount-redraw");n.exports=e("./request/request")(window,r,t.redraw)}()}),require.register("mithril/request/request.js",function(r,e,n){e=t(e,{},"mithril"),function(){"use strict";var r=e("../pathname/build");n.exports=function(e,t,n){function i(r){return new t(r)}function a(e){return function(a,o){function s(){0===--l&&"function"==typeof n&&n()}function u(r){var e=r.then;return r.constructor=i,r.then=function(){l++;var t=e.apply(r,arguments);return t.then(s,function(r){if(s(),0===l)throw r}),u(t)},r}"string"!=typeof a?(o=a,a=a.url):null==o&&(o={});var c=new t(function(t,n){e(r(a,o.params),o,function(r){if("function"==typeof o.type)if(Array.isArray(r))for(var e=0;e<r.length;e++)r[e]=new o.type(r[e]);else r=new o.type(r);t(r)},n)});if(o.background===!0)return c;var l=0;return u(c)}}function o(r,e){for(var t in r.headers)if({}.hasOwnProperty.call(r.headers,t)&&e.test(t))return!0;return!1}var s=0;return i.prototype=t.prototype,i.__proto__=t,{request:a(function(r,t,n,i){var a,s=null!=t.method?t.method.toUpperCase():"GET",u=t.body,c=!(null!=t.serialize&&t.serialize!==JSON.serialize||u instanceof e.FormData),l=t.responseType||("function"==typeof t.extract?"":"json"),f=new e.XMLHttpRequest,p=!1,d=f,h=f.abort;f.abort=function(){p=!0,h.call(this)},f.open(s,r,t.async!==!1,"string"==typeof t.user?t.user:void 0,"string"==typeof t.password?t.password:void 0),c&&null!=u&&!o(t,/^content-type$/i)&&f.setRequestHeader("Content-Type","application/json; charset=utf-8"),"function"==typeof t.deserialize||o(t,/^accept$/i)||f.setRequestHeader("Accept","application/json, text/*"),t.withCredentials&&(f.withCredentials=t.withCredentials),t.timeout&&(f.timeout=t.timeout),f.responseType=l;for(var m in t.headers)({}).hasOwnProperty.call(t.headers,m)&&f.setRequestHeader(m,t.headers[m]);f.onreadystatechange=function(e){if(!p&&4===e.target.readyState)try{var a,o=e.target.status>=200&&e.target.status<300||304===e.target.status||/^file:\/\//i.test(r),s=e.target.response;if("json"===l?e.target.responseType||"function"==typeof t.extract||(s=JSON.parse(e.target.responseText)):l&&"text"!==l||null==s&&(s=e.target.responseText),"function"==typeof t.extract?(s=t.extract(e.target,t),o=!0):"function"==typeof t.deserialize&&(s=t.deserialize(s)),o)n(s);else{try{a=e.target.responseText}catch(u){a=s}var c=new Error(a);c.code=e.target.status,c.response=s,i(c)}}catch(u){i(u)}},"function"==typeof t.config&&(f=t.config(f,t,r)||f,f!==d&&(a=f.abort,f.abort=function(){p=!0,a.call(this)})),null==u?f.send():"function"==typeof t.serialize?f.send(t.serialize(u)):u instanceof e.FormData?f.send(u):f.send(JSON.stringify(u))}),jsonp:a(function(r,t,n,i){var a=t.callbackName||"_mithril_"+Math.round(1e16*Math.random())+"_"+s++,o=e.document.createElement("script");e[a]=function(r){delete e[a],o.parentNode.removeChild(o),n(r)},o.onerror=function(){delete e[a],o.parentNode.removeChild(o),i(new Error("JSONP request failed"))},o.src=r+(r.indexOf("?")<0?"?":"&")+encodeURIComponent(t.callbackKey||"callback")+"="+encodeURIComponent(a),e.document.documentElement.appendChild(o)})}}}()}),require.register("mithril/route.js",function(r,e,n){e=t(e,{},"mithril"),function(){"use strict";var r=e("./mount-redraw");n.exports=e("./api/router")(window,r)}()}),require.register("process/browser.js",function(r,e,n){e=t(e,{},"process"),function(){function r(){throw new Error("setTimeout has not been defined")}function e(){throw new Error("clearTimeout has not been defined")}function t(e){if(c===setTimeout)return setTimeout(e,0);if((c===r||!c)&&setTimeout)return c=setTimeout,setTimeout(e,0);try{return c(e,0)}catch(t){try{return c.call(null,e,0)}catch(t){return c.call(this,e,0)}}}function i(r){if(l===clearTimeout)return clearTimeout(r);if((l===e||!l)&&clearTimeout)return l=clearTimeout,clearTimeout(r);try{return l(r)}catch(t){try{return l.call(null,r)}catch(t){return l.call(this,r)}}}function a(){h&&p&&(h=!1,p.length?d=p.concat(d):m=-1,d.length&&o())}function o(){if(!h){var r=t(a);h=!0;for(var e=d.length;e;){for(p=d,d=[];++m<e;)p&&p[m].run();m=-1,e=d.length}p=null,h=!1,i(r)}}function s(r,e){this.fun=r,this.array=e}function u(){}var c,l,f=n.exports={};!function(){try{c="function"==typeof setTimeout?setTimeout:r}catch(t){c=r}try{l="function"==typeof clearTimeout?clearTimeout:e}catch(t){l=e}}();var p,d=[],h=!1,m=-1;f.nextTick=function(r){var e=new Array(arguments.length-1);if(arguments.length>1)for(var n=1;n<arguments.length;n++)e[n-1]=arguments[n];d.push(new s(r,e)),1!==d.length||h||t(o)},s.prototype.run=function(){this.fun.apply(null,this.array)},f.title="browser",f.browser=!0,f.env={},f.argv=[],f.version="",f.versions={},f.on=u,f.addListener=u,f.once=u,f.off=u,f.removeListener=u,f.removeAllListeners=u,f.emit=u,f.prependListener=u,f.prependOnceListener=u,f.listeners=function(r){return[]},f.binding=function(r){throw new Error("process.binding is not supported")},f.cwd=function(){return"/"},f.chdir=function(r){throw new Error("process.chdir is not supported")},f.umask=function(){return 0}}()}),require.register("ramda/src/F.js",function(r,e,n){e=t(e,{},"ramda"),function(){var r=function(){return!1};n.exports=r}()}),require.register("ramda/src/T.js",function(r,e,n){e=t(e,{},"ramda"),function(){var r=function(){return!0};n.exports=r}()}),require.register("ramda/src/__.js",function(r,e,n){e=t(e,{},"ramda"),function(){n.exports={"@@functional/placeholder":!0}}()}),require.register("ramda/src/add.js",function(r,e,n){e=t(e,{},"ramda"),function(){var r=e("./internal/_curry2"),t=r(function(r,e){return Number(r)+Number(e)});n.exports=t}()}),require.register("ramda/src/addIndex.js",function(r,e,n){e=t(e,{},"ramda"),function(){var r=e("./internal/_concat"),t=e("./internal/_curry1"),i=e("./curryN"),a=t(function(e){return i(e.length,function(){var t=0,n=arguments[0],i=arguments[arguments.length-1],a=Array.prototype.slice.call(arguments,0);return a[0]=function(){var e=n.apply(this,r(arguments,[t,i]));return t+=1,e},e.apply(this,a)})});n.exports=a}()}),require.register("ramda/src/adjust.js",function(r,e,n){e=t(e,{},"ramda"),function(){var r=e("./internal/_concat"),t=e("./internal/_curry3"),i=t(function(e,t,n){if(e>=n.length||e<-n.length)return n;var i=e<0?n.length:0,a=i+e,o=r(n);return o[a]=t(n[a]),o});n.exports=i}()}),require.register("ramda/src/all.js",function(r,e,n){e=t(e,{},"ramda"),function(){var r=e("./internal/_curry2"),t=e("./internal/_dispatchable"),i=e("./internal/_xall"),a=r(t(["all"],i,function(r,e){for(var t=0;t<e.length;){if(!r(e[t]))return!1;t+=1}return!0}));n.exports=a}()}),require.register("ramda/src/allPass.js",function(r,e,n){e=t(e,{},"ramda"),function(){var r=e("./internal/_curry1"),t=e("./curryN"),i=e("./max"),a=e("./pluck"),o=e("./reduce"),s=r(function(r){return t(o(i,0,a("length",r)),function(){for(var e=0,t=r.length;e<t;){if(!r[e].apply(this,arguments))return!1;e+=1}return!0})});n.exports=s}()}),require.register("ramda/src/always.js",function(r,e,n){e=t(e,{},"ramda"),function(){var r=e("./internal/_curry1"),t=r(function(r){return function(){return r}});n.exports=t}()}),require.register("ramda/src/and.js",function(r,e,n){e=t(e,{},"ramda"),function(){var r=e("./internal/_curry2"),t=r(function(r,e){return r&&e});n.exports=t}()}),require.register("ramda/src/andThen.js",function(r,e,n){e=t(e,{},"ramda"),function(){var r=e("./internal/_curry2"),t=e("./internal/_assertPromise"),i=r(function(r,e){return t("andThen",e),e.then(r)});n.exports=i}()}),require.register("ramda/src/any.js",function(r,e,n){e=t(e,{},"ramda"),function(){var r=e("./internal/_curry2"),t=e("./internal/_dispatchable"),i=e("./internal/_xany"),a=r(t(["any"],i,function(r,e){for(var t=0;t<e.length;){if(r(e[t]))return!0;t+=1}return!1}));n.exports=a}()}),require.register("ramda/src/anyPass.js",function(r,e,n){e=t(e,{},"ramda"),function(){var r=e("./internal/_curry1"),t=e("./curryN"),i=e("./max"),a=e("./pluck"),o=e("./reduce"),s=r(function(r){return t(o(i,0,a("length",r)),function(){for(var e=0,t=r.length;e<t;){if(r[e].apply(this,arguments))return!0;e+=1}return!1})});n.exports=s}()}),require.register("ramda/src/ap.js",function(r,e,n){e=t(e,{},"ramda"),function(){var r=e("./internal/_concat"),t=e("./internal/_curry2"),i=e("./internal/_reduce"),a=e("./map"),o=t(function(e,t){return"function"==typeof t["fantasy-land/ap"]?t["fantasy-land/ap"](e):"function"==typeof e.ap?e.ap(t):"function"==typeof e?function(r){return e(r)(t(r))}:i(function(e,n){return r(e,a(n,t))},[],e)});n.exports=o}()}),require.register("ramda/src/aperture.js",function(r,e,n){e=t(e,{},"ramda"),function(){var r=e("./internal/_aperture"),t=e("./internal/_curry2"),i=e("./internal/_dispatchable"),a=e("./internal/_xaperture"),o=t(i([],a,r));n.exports=o}()}),require.register("ramda/src/append.js",function(r,e,n){e=t(e,{},"ramda"),function(){var r=e("./internal/_concat"),t=e("./internal/_curry2"),i=t(function(e,t){return r(t,[e])});n.exports=i}()}),require.register("ramda/src/apply.js",function(r,e,n){e=t(e,{},"ramda"),function(){var r=e("./internal/_curry2"),t=r(function(r,e){return r.apply(this,e)});n.exports=t}()}),require.register("ramda/src/applySpec.js",function(r,e,n){e=t(e,{},"ramda"),function(){function r(r,e){return c(e).reduce(function(t,n){return t[n]=r(e[n]),t},{})}var t=e("./internal/_curry1"),i=e("./apply"),a=e("./curryN"),o=e("./max"),s=e("./pluck"),u=e("./reduce"),c=e("./keys"),l=e("./values"),f=t(function p(e){return e=r(function(r){return"function"==typeof r?r:p(r)},e),a(u(o,0,s("length",l(e))),function(){var t=arguments;return r(function(r){return i(r,t)},e)})});n.exports=f}()}),require.register("ramda/src/applyTo.js",function(r,e,n){e=t(e,{},"ramda"),function(){var r=e("./internal/_curry2"),t=r(function(r,e){return e(r)});n.exports=t}()}),require.register("ramda/src/ascend.js",function(r,e,n){e=t(e,{},"ramda"),function(){var r=e("./internal/_curry3"),t=r(function(r,e,t){var n=r(e),i=r(t);return n<i?-1:n>i?1:0});n.exports=t}()}),require.register("ramda/src/assoc.js",function(r,e,n){e=t(e,{},"ramda"),function(){var r=e("./internal/_curry3"),t=r(function(r,e,t){var n={};for(var i in t)n[i]=t[i];return n[r]=e,n});n.exports=t}()}),require.register("ramda/src/assocPath.js",function(r,e,n){e=t(e,{},"ramda"),function(){var r=e("./internal/_curry3"),t=e("./internal/_has"),i=e("./internal/_isArray"),a=e("./internal/_isInteger"),o=e("./assoc"),s=e("./isNil"),u=r(function c(r,e,n){if(0===r.length)return e;var u=r[0];if(r.length>1){var l=!s(n)&&t(u,n)?n[u]:a(r[1])?[]:{};e=c(Array.prototype.slice.call(r,1),e,l)}if(a(u)&&i(n)){var f=[].concat(n);return f[u]=e,f}return o(u,e,n)});n.exports=u}()}),require.register("ramda/src/binary.js",function(r,e,n){e=t(e,{},"ramda"),function(){var r=e("./internal/_curry1"),t=e("./nAry"),i=r(function(r){return t(2,r)});n.exports=i}()}),require.register("ramda/src/bind.js",function(r,e,n){e=t(e,{},"ramda"),function(){var r=e("./internal/_arity"),t=e("./internal/_curry2"),i=t(function(e,t){return r(e.length,function(){return e.apply(t,arguments)})});n.exports=i}()}),require.register("ramda/src/both.js",function(r,e,n){e=t(e,{},"ramda"),function(){var r=e("./internal/_curry2"),t=e("./internal/_isFunction"),i=e("./and"),a=e("./lift"),o=r(function(r,e){return t(r)?function(){return r.apply(this,arguments)&&e.apply(this,arguments)}:a(i)(r,e)});n.exports=o}()}),require.register("ramda/src/call.js",function(r,e,n){e=t(e,{},"ramda"),function(){var r=e("./curry"),t=r(function(r){return r.apply(this,Array.prototype.slice.call(arguments,1))});n.exports=t}()}),require.register("ramda/src/chain.js",function(r,e,n){e=t(e,{},"ramda"),function(){var r=e("./internal/_curry2"),t=e("./internal/_dispatchable"),i=e("./internal/_makeFlat"),a=e("./internal/_xchain"),o=e("./map"),s=r(t(["fantasy-land/chain","chain"],a,function(r,e){return"function"==typeof e?function(t){return r(e(t))(t)}:i(!1)(o(r,e))}));n.exports=s}()}),require.register("ramda/src/clamp.js",function(r,e,n){e=t(e,{},"ramda"),function(){var r=e("./internal/_curry3"),t=r(function(r,e,t){if(r>e)throw new Error("min must not be greater than max in clamp(min, max, value)");return t<r?r:t>e?e:t});n.exports=t}()}),require.register("ramda/src/clone.js",function(r,e,n){e=t(e,{},"ramda"),function(){var r=e("./internal/_clone"),t=e("./internal/_curry1"),i=t(function(e){return null!=e&&"function"==typeof e.clone?e.clone():r(e,[],[],!0)});n.exports=i}()}),require.register("ramda/src/comparator.js",function(r,e,n){e=t(e,{},"ramda"),function(){var r=e("./internal/_curry1"),t=r(function(r){return function(e,t){return r(e,t)?-1:r(t,e)?1:0}});n.exports=t}()}),require.register("ramda/src/complement.js",function(r,e,n){e=t(e,{},"ramda"),function(){var r=e("./lift"),t=e("./not"),i=r(t);n.exports=i}()}),require.register("ramda/src/compose.js",function(r,e,n){e=t(e,{},"ramda"),function(){function r(){if(0===arguments.length)throw new Error("compose requires at least one argument");return t.apply(this,i(arguments))}var t=e("./pipe"),i=e("./reverse");n.exports=r}()}),require.register("ramda/src/composeK.js",function(r,e,n){e=t(e,{},"ramda"),function(){function r(){if(0===arguments.length)throw new Error("composeK requires at least one argument");var r=Array.prototype.slice.call(arguments),e=r.pop();return i(i.apply(this,a(t,r)),e)}var t=e("./chain"),i=e("./compose"),a=e("./map");n.exports=r}()}),require.register("ramda/src/composeP.js",function(r,e,n){e=t(e,{},"ramda"),function(){function r(){if(0===arguments.length)throw new Error("composeP requires at least one argument");return t.apply(this,i(arguments))}var t=e("./pipeP"),i=e("./reverse");n.exports=r}()}),require.register("ramda/src/composeWith.js",function(r,e,n){e=t(e,{},"ramda"),function(){var r=e("./internal/_curry2"),t=e("./pipeWith"),i=e("./reverse"),a=r(function(r,e){return t.apply(this,[r,i(e)])});n.exports=a}()}),require.register("ramda/src/concat.js",function(r,e,n){e=t(e,{},"ramda"),function(){var r=e("./internal/_curry2"),t=e("./internal/_isArray"),i=e("./internal/_isFunction"),a=e("./internal/_isString"),o=e("./toString"),s=r(function(r,e){if(t(r)){if(t(e))return r.concat(e);throw new TypeError(o(e)+" is not an array")}if(a(r)){if(a(e))return r+e;throw new TypeError(o(e)+" is not a string")}if(null!=r&&i(r["fantasy-land/concat"]))return r["fantasy-land/concat"](e);if(null!=r&&i(r.concat))return r.concat(e);throw new TypeError(o(r)+' does not have a method named "concat" or "fantasy-land/concat"')});n.exports=s}()}),require.register("ramda/src/cond.js",function(r,e,n){e=t(e,{},"ramda"),function(){var r=e("./internal/_arity"),t=e("./internal/_curry1"),i=e("./map"),a=e("./max"),o=e("./reduce"),s=t(function(e){var t=o(a,0,i(function(r){return r[0].length},e));return r(t,function(){for(var r=0;r<e.length;){if(e[r][0].apply(this,arguments))return e[r][1].apply(this,arguments);r+=1}})});n.exports=s}()}),require.register("ramda/src/construct.js",function(r,e,n){e=t(e,{},"ramda"),function(){var r=e("./internal/_curry1"),t=e("./constructN"),i=r(function(r){return t(r.length,r)});n.exports=i}()}),require.register("ramda/src/constructN.js",function(r,e,n){e=t(e,{},"ramda"),function(){var r=e("./internal/_curry2"),t=e("./curry"),i=e("./nAry"),a=r(function(r,e){if(r>10)throw new Error("Constructor with greater than ten arguments");return 0===r?function(){return new e}:t(i(r,function(r,t,n,i,a,o,s,u,c,l){switch(arguments.length){case 1:return new e(r);case 2:return new e(r,t);case 3:return new e(r,t,n);case 4:return new e(r,t,n,i);case 5:return new e(r,t,n,i,a);case 6:return new e(r,t,n,i,a,o);case 7:return new e(r,t,n,i,a,o,s);case 8:return new e(r,t,n,i,a,o,s,u);case 9:return new e(r,t,n,i,a,o,s,u,c);case 10:return new e(r,t,n,i,a,o,s,u,c,l)}}))});n.exports=a}()}),require.register("ramda/src/contains.js",function(r,e,n){e=t(e,{},"ramda"),function(){var r=e("./internal/_includes"),t=e("./internal/_curry2"),i=t(r);n.exports=i}()}),require.register("ramda/src/converge.js",function(r,e,n){e=t(e,{},"ramda"),function(){var r=e("./internal/_curry2"),t=e("./internal/_map"),i=e("./curryN"),a=e("./max"),o=e("./pluck"),s=e("./reduce"),u=r(function(r,e){return i(s(a,0,o("length",e)),function(){var n=arguments,i=this;return r.apply(i,t(function(r){return r.apply(i,n)},e))})});n.exports=u}()}),require.register("ramda/src/countBy.js",function(r,e,n){e=t(e,{},"ramda"),function(){var r=e("./reduceBy"),t=r(function(r,e){return r+1},0);n.exports=t}()}),require.register("ramda/src/curry.js",function(r,e,n){e=t(e,{},"ramda"),function(){var r=e("./internal/_curry1"),t=e("./curryN"),i=r(function(r){return t(r.length,r)});n.exports=i}()}),require.register("ramda/src/curryN.js",function(r,e,n){e=t(e,{},"ramda"),function(){var r=e("./internal/_arity"),t=e("./internal/_curry1"),i=e("./internal/_curry2"),a=e("./internal/_curryN"),o=i(function(e,n){return 1===e?t(n):r(e,a(e,[],n))});n.exports=o}()}),require.register("ramda/src/dec.js",function(r,e,n){e=t(e,{},"ramda"),function(){var r=e("./add"),t=r(-1);n.exports=t}()}),require.register("ramda/src/defaultTo.js",function(r,e,n){e=t(e,{},"ramda"),function(){var r=e("./internal/_curry2"),t=r(function(r,e){return null==e||e!==e?r:e});n.exports=t}()}),require.register("ramda/src/descend.js",function(r,e,n){e=t(e,{},"ramda"),function(){var r=e("./internal/_curry3"),t=r(function(r,e,t){var n=r(e),i=r(t);return n>i?-1:n<i?1:0});n.exports=t}()}),require.register("ramda/src/difference.js",function(r,e,n){e=t(e,{},"ramda"),function(){var r=e("./internal/_curry2"),t=e("./internal/_Set"),i=r(function(r,e){for(var n=[],i=0,a=r.length,o=e.length,s=new t,u=0;u<o;u+=1)s.add(e[u]);for(;i<a;)s.add(r[i])&&(n[n.length]=r[i]),i+=1;return n});n.exports=i}()}),require.register("ramda/src/differenceWith.js",function(r,e,n){e=t(e,{},"ramda"),function(){var r=e("./internal/_includesWith"),t=e("./internal/_curry3"),i=t(function(e,t,n){for(var i=[],a=0,o=t.length;a<o;)r(e,t[a],n)||r(e,t[a],i)||i.push(t[a]),a+=1;return i});n.exports=i}()}),require.register("ramda/src/dissoc.js",function(r,e,n){e=t(e,{},"ramda"),function(){var r=e("./internal/_curry2"),t=r(function(r,e){var t={};for(var n in e)t[n]=e[n];return delete t[r],t});n.exports=t}()}),require.register("ramda/src/dissocPath.js",function(r,e,n){e=t(e,{},"ramda"),function(){var r=e("./internal/_curry2"),t=e("./internal/_isInteger"),i=e("./internal/_isArray"),a=e("./assoc"),o=e("./dissoc"),s=e("./remove"),u=e("./update"),c=r(function l(r,e){switch(r.length){case 0:return e;case 1:return t(r[0])&&i(e)?s(r[0],1,e):o(r[0],e);default:var n=r[0],c=Array.prototype.slice.call(r,1);return null==e[n]?e:t(n)&&i(e)?u(n,l(c,e[n]),e):a(n,l(c,e[n]),e)}});n.exports=c}()}),require.register("ramda/src/divide.js",function(r,e,n){e=t(e,{},"ramda"),function(){var r=e("./internal/_curry2"),t=r(function(r,e){return r/e});n.exports=t}()}),require.register("ramda/src/drop.js",function(r,e,n){e=t(e,{},"ramda"),function(){var r=e("./internal/_curry2"),t=e("./internal/_dispatchable"),i=e("./internal/_xdrop"),a=e("./slice"),o=r(t(["drop"],i,function(r,e){return a(Math.max(0,r),1/0,e)}));n.exports=o}()}),require.register("ramda/src/dropLast.js",function(r,e,n){e=t(e,{},"ramda"),function(){var r=e("./internal/_curry2"),t=e("./internal/_dispatchable"),i=e("./internal/_dropLast"),a=e("./internal/_xdropLast"),o=r(t([],a,i));n.exports=o}()}),require.register("ramda/src/dropLastWhile.js",function(r,e,n){e=t(e,{},"ramda"),function(){var r=e("./internal/_curry2"),t=e("./internal/_dispatchable"),i=e("./internal/_dropLastWhile"),a=e("./internal/_xdropLastWhile"),o=r(t([],a,i));n.exports=o}()}),require.register("ramda/src/dropRepeats.js",function(r,e,n){e=t(e,{},"ramda"),function(){var r=e("./internal/_curry1"),t=e("./internal/_dispatchable"),i=e("./internal/_xdropRepeatsWith"),a=e("./dropRepeatsWith"),o=e("./equals"),s=r(t([],i(o),a(o)));n.exports=s}()}),require.register("ramda/src/dropRepeatsWith.js",function(r,e,n){e=t(e,{},"ramda"),function(){var r=e("./internal/_curry2"),t=e("./internal/_dispatchable"),i=e("./internal/_xdropRepeatsWith"),a=e("./last"),o=r(t([],i,function(r,e){var t=[],n=1,i=e.length;if(0!==i)for(t[0]=e[0];n<i;)r(a(t),e[n])||(t[t.length]=e[n]),n+=1;return t}));n.exports=o}()}),require.register("ramda/src/dropWhile.js",function(r,e,n){e=t(e,{},"ramda"),function(){var r=e("./internal/_curry2"),t=e("./internal/_dispatchable"),i=e("./internal/_xdropWhile"),a=e("./slice"),o=r(t(["dropWhile"],i,function(r,e){for(var t=0,n=e.length;t<n&&r(e[t]);)t+=1;return a(t,1/0,e)}));n.exports=o}()}),require.register("ramda/src/either.js",function(r,e,n){e=t(e,{},"ramda"),function(){var r=e("./internal/_curry2"),t=e("./internal/_isFunction"),i=e("./lift"),a=e("./or"),o=r(function(r,e){return t(r)?function(){return r.apply(this,arguments)||e.apply(this,arguments)}:i(a)(r,e)});n.exports=o}()}),require.register("ramda/src/empty.js",function(r,e,n){e=t(e,{},"ramda"),function(){var r=e("./internal/_curry1"),t=e("./internal/_isArguments"),i=e("./internal/_isArray"),a=e("./internal/_isObject"),o=e("./internal/_isString"),s=r(function(r){return null!=r&&"function"==typeof r["fantasy-land/empty"]?r["fantasy-land/empty"]():null!=r&&null!=r.constructor&&"function"==typeof r.constructor["fantasy-land/empty"]?r.constructor["fantasy-land/empty"]():null!=r&&"function"==typeof r.empty?r.empty():null!=r&&null!=r.constructor&&"function"==typeof r.constructor.empty?r.constructor.empty():i(r)?[]:o(r)?"":a(r)?{}:t(r)?function(){return arguments}():void 0});n.exports=s}()}),require.register("ramda/src/endsWith.js",function(r,e,n){e=t(e,{},"ramda"),function(){var r=e("./internal/_curry2"),t=e("./equals"),i=e("./takeLast"),a=r(function(r,e){return t(i(r.length,e),r)});n.exports=a}()}),require.register("ramda/src/eqBy.js",function(r,e,n){e=t(e,{},"ramda"),function(){var r=e("./internal/_curry3"),t=e("./equals"),i=r(function(r,e,n){return t(r(e),r(n))});n.exports=i}()}),require.register("ramda/src/eqProps.js",function(r,e,n){e=t(e,{},"ramda"),function(){var r=e("./internal/_curry3"),t=e("./equals"),i=r(function(r,e,n){return t(e[r],n[r])});n.exports=i}()}),require.register("ramda/src/equals.js",function(r,e,n){e=t(e,{},"ramda"),function(){var r=e("./internal/_curry2"),t=e("./internal/_equals"),i=r(function(r,e){return t(r,e,[],[])});n.exports=i}()}),require.register("ramda/src/evolve.js",function(r,e,n){e=t(e,{},"ramda"),function(){var r=e("./internal/_curry2"),t=r(function i(r,e){var t,n,a,o=e instanceof Array?[]:{};for(n in e)t=r[n],a=typeof t,o[n]="function"===a?t(e[n]):t&&"object"===a?i(t,e[n]):e[n];return o});n.exports=t}()}),require.register("ramda/src/filter.js",function(r,e,n){e=t(e,{},"ramda"),function(){var r=e("./internal/_curry2"),t=e("./internal/_dispatchable"),i=e("./internal/_filter"),a=e("./internal/_isObject"),o=e("./internal/_reduce"),s=e("./internal/_xfilter"),u=e("./keys"),c=r(t(["filter"],s,function(r,e){return a(e)?o(function(t,n){return r(e[n])&&(t[n]=e[n]),t},{},u(e)):i(r,e)}));n.exports=c}()}),require.register("ramda/src/find.js",function(r,e,n){e=t(e,{},"ramda"),function(){var r=e("./internal/_curry2"),t=e("./internal/_dispatchable"),i=e("./internal/_xfind"),a=r(t(["find"],i,function(r,e){for(var t=0,n=e.length;t<n;){if(r(e[t]))return e[t];t+=1}}));n.exports=a}()}),require.register("ramda/src/findIndex.js",function(r,e,n){e=t(e,{},"ramda"),function(){var r=e("./internal/_curry2"),t=e("./internal/_dispatchable"),i=e("./internal/_xfindIndex"),a=r(t([],i,function(r,e){for(var t=0,n=e.length;t<n;){if(r(e[t]))return t;t+=1}return-1}));n.exports=a}()}),require.register("ramda/src/findLast.js",function(r,e,n){e=t(e,{},"ramda"),function(){var r=e("./internal/_curry2"),t=e("./internal/_dispatchable"),i=e("./internal/_xfindLast"),a=r(t([],i,function(r,e){for(var t=e.length-1;t>=0;){if(r(e[t]))return e[t];t-=1}}));n.exports=a}()}),require.register("ramda/src/findLastIndex.js",function(r,e,n){e=t(e,{},"ramda"),function(){var r=e("./internal/_curry2"),t=e("./internal/_dispatchable"),i=e("./internal/_xfindLastIndex"),a=r(t([],i,function(r,e){for(var t=e.length-1;t>=0;){if(r(e[t]))return t;t-=1}return-1}));n.exports=a}()}),require.register("ramda/src/flatten.js",function(r,e,n){e=t(e,{},"ramda"),function(){var r=e("./internal/_curry1"),t=e("./internal/_makeFlat"),i=r(t(!0));n.exports=i}()}),require.register("ramda/src/flip.js",function(r,e,n){e=t(e,{},"ramda"),function(){var r=e("./internal/_curry1"),t=e("./curryN"),i=r(function(r){return t(r.length,function(e,t){var n=Array.prototype.slice.call(arguments,0);return n[0]=t,n[1]=e,r.apply(this,n)})});n.exports=i}()}),require.register("ramda/src/forEach.js",function(r,e,n){e=t(e,{},"ramda"),function(){var r=e("./internal/_checkForMethod"),t=e("./internal/_curry2"),i=t(r("forEach",function(r,e){for(var t=e.length,n=0;n<t;)r(e[n]),n+=1;return e}));n.exports=i}()}),require.register("ramda/src/forEachObjIndexed.js",function(r,e,n){e=t(e,{},"ramda"),function(){var r=e("./internal/_curry2"),t=e("./keys"),i=r(function(r,e){for(var n=t(e),i=0;i<n.length;){var a=n[i];r(e[a],a,e),i+=1}return e});n.exports=i}()}),require.register("ramda/src/fromPairs.js",function(r,e,n){e=t(e,{},"ramda"),function(){var r=e("./internal/_curry1"),t=r(function(r){for(var e={},t=0;t<r.length;)e[r[t][0]]=r[t][1],t+=1;return e});n.exports=t}()}),require.register("ramda/src/groupBy.js",function(r,e,n){e=t(e,{},"ramda"),function(){var r=e("./internal/_checkForMethod"),t=e("./internal/_curry2"),i=e("./reduceBy"),a=t(r("groupBy",i(function(r,e){return null==r&&(r=[]),r.push(e),r},null)));n.exports=a}()}),require.register("ramda/src/groupWith.js",function(r,e,n){e=t(e,{},"ramda"),function(){var r=e("./internal/_curry2"),t=r(function(r,e){for(var t=[],n=0,i=e.length;n<i;){for(var a=n+1;a<i&&r(e[a-1],e[a]);)a+=1;t.push(e.slice(n,a)),n=a}return t});n.exports=t}()}),require.register("ramda/src/gt.js",function(r,e,n){e=t(e,{},"ramda"),function(){var r=e("./internal/_curry2"),t=r(function(r,e){return r>e});n.exports=t}()}),require.register("ramda/src/gte.js",function(r,e,n){e=t(e,{},"ramda"),function(){var r=e("./internal/_curry2"),t=r(function(r,e){return r>=e});n.exports=t}()}),require.register("ramda/src/has.js",function(r,e,n){e=t(e,{},"ramda"),function(){var r=e("./internal/_curry2"),t=e("./hasPath"),i=r(function(r,e){return t([r],e)});n.exports=i}()}),require.register("ramda/src/hasIn.js",function(r,e,n){e=t(e,{},"ramda"),function(){var r=e("./internal/_curry2"),t=r(function(r,e){return r in e});n.exports=t}()}),require.register("ramda/src/hasPath.js",function(r,e,n){e=t(e,{},"ramda"),function(){var r=e("./internal/_curry2"),t=e("./internal/_has"),i=e("./isNil"),a=r(function(r,e){if(0===r.length||i(e))return!1;for(var n=e,a=0;a<r.length;){if(i(n)||!t(r[a],n))return!1;n=n[r[a]],a+=1}return!0});n.exports=a}()}),require.register("ramda/src/head.js",function(r,e,n){e=t(e,{},"ramda"),function(){var r=e("./nth"),t=r(0);n.exports=t}()}),require.register("ramda/src/identical.js",function(r,e,n){e=t(e,{},"ramda"),function(){var r=e("./internal/_objectIs"),t=e("./internal/_curry2"),i=t(r);n.exports=i}()}),require.register("ramda/src/identity.js",function(r,e,n){e=t(e,{},"ramda"),function(){var r=e("./internal/_curry1"),t=e("./internal/_identity"),i=r(t);n.exports=i}()}),require.register("ramda/src/ifElse.js",function(r,e,n){e=t(e,{},"ramda"),function(){var r=e("./internal/_curry3"),t=e("./curryN"),i=r(function(r,e,n){return t(Math.max(r.length,e.length,n.length),function(){return r.apply(this,arguments)?e.apply(this,arguments):n.apply(this,arguments)})});n.exports=i}()}),require.register("ramda/src/inc.js",function(r,e,n){e=t(e,{},"ramda"),function(){var r=e("./add"),t=r(1);n.exports=t}()}),require.register("ramda/src/includes.js",function(r,e,n){e=t(e,{},"ramda"),function(){var r=e("./internal/_includes"),t=e("./internal/_curry2"),i=t(r);n.exports=i}()}),require.register("ramda/src/index.js",function(r,e,n){e=t(e,{},"ramda"),function(){n.exports={},n.exports.F=e("./F"),n.exports.T=e("./T"),n.exports.__=e("./__"),n.exports.add=e("./add"),n.exports.addIndex=e("./addIndex"),n.exports.adjust=e("./adjust"),n.exports.all=e("./all"),n.exports.allPass=e("./allPass"),n.exports.always=e("./always"),n.exports.and=e("./and"),n.exports.any=e("./any"),n.exports.anyPass=e("./anyPass"),n.exports.ap=e("./ap"),n.exports.aperture=e("./aperture"),n.exports.append=e("./append"),n.exports.apply=e("./apply"),n.exports.applySpec=e("./applySpec"),n.exports.applyTo=e("./applyTo"),n.exports.ascend=e("./ascend"),n.exports.assoc=e("./assoc"),n.exports.assocPath=e("./assocPath"),n.exports.binary=e("./binary"),n.exports.bind=e("./bind"),n.exports.both=e("./both"),n.exports.call=e("./call"),n.exports.chain=e("./chain"),n.exports.clamp=e("./clamp"),n.exports.clone=e("./clone"),n.exports.comparator=e("./comparator"),n.exports.complement=e("./complement"),n.exports.compose=e("./compose"),n.exports.composeK=e("./composeK"),n.exports.composeP=e("./composeP"),n.exports.composeWith=e("./composeWith"),n.exports.concat=e("./concat"),n.exports.cond=e("./cond"),n.exports.construct=e("./construct"),n.exports.constructN=e("./constructN"),n.exports.contains=e("./contains"),n.exports.converge=e("./converge"),n.exports.countBy=e("./countBy"),n.exports.curry=e("./curry"),n.exports.curryN=e("./curryN"),n.exports.dec=e("./dec"),n.exports.defaultTo=e("./defaultTo"),n.exports.descend=e("./descend"),n.exports.difference=e("./difference"),n.exports.differenceWith=e("./differenceWith"),n.exports.dissoc=e("./dissoc"),n.exports.dissocPath=e("./dissocPath"),n.exports.divide=e("./divide"),n.exports.drop=e("./drop"),n.exports.dropLast=e("./dropLast"),n.exports.dropLastWhile=e("./dropLastWhile"),n.exports.dropRepeats=e("./dropRepeats"),n.exports.dropRepeatsWith=e("./dropRepeatsWith"),n.exports.dropWhile=e("./dropWhile"),n.exports.either=e("./either"),n.exports.empty=e("./empty"),n.exports.endsWith=e("./endsWith"),n.exports.eqBy=e("./eqBy"),n.exports.eqProps=e("./eqProps"),n.exports.equals=e("./equals"),n.exports.evolve=e("./evolve"),n.exports.filter=e("./filter"),n.exports.find=e("./find"),n.exports.findIndex=e("./findIndex"),n.exports.findLast=e("./findLast"),n.exports.findLastIndex=e("./findLastIndex"),n.exports.flatten=e("./flatten"),n.exports.flip=e("./flip"),n.exports.forEach=e("./forEach"),n.exports.forEachObjIndexed=e("./forEachObjIndexed"),n.exports.fromPairs=e("./fromPairs"),n.exports.groupBy=e("./groupBy"),n.exports.groupWith=e("./groupWith"),n.exports.gt=e("./gt"),n.exports.gte=e("./gte"),n.exports.has=e("./has"),n.exports.hasIn=e("./hasIn"),n.exports.hasPath=e("./hasPath"),n.exports.head=e("./head"),n.exports.identical=e("./identical"),n.exports.identity=e("./identity"),n.exports.ifElse=e("./ifElse"),n.exports.inc=e("./inc"),n.exports.includes=e("./includes"),n.exports.indexBy=e("./indexBy"),n.exports.indexOf=e("./indexOf"),n.exports.init=e("./init"),n.exports.innerJoin=e("./innerJoin"),n.exports.insert=e("./insert"),n.exports.insertAll=e("./insertAll"),n.exports.intersection=e("./intersection"),n.exports.intersperse=e("./intersperse"),n.exports.into=e("./into"),n.exports.invert=e("./invert"),n.exports.invertObj=e("./invertObj"),n.exports.invoker=e("./invoker"),n.exports.is=e("./is"),n.exports.isEmpty=e("./isEmpty"),n.exports.isNil=e("./isNil"),n.exports.join=e("./join"),n.exports.juxt=e("./juxt"),n.exports.keys=e("./keys"),n.exports.keysIn=e("./keysIn"),n.exports.last=e("./last"),n.exports.lastIndexOf=e("./lastIndexOf"),n.exports.length=e("./length"),n.exports.lens=e("./lens"),n.exports.lensIndex=e("./lensIndex"),n.exports.lensPath=e("./lensPath"),n.exports.lensProp=e("./lensProp"),n.exports.lift=e("./lift"),n.exports.liftN=e("./liftN"),n.exports.lt=e("./lt"),n.exports.lte=e("./lte"),n.exports.map=e("./map"),n.exports.mapAccum=e("./mapAccum"),n.exports.mapAccumRight=e("./mapAccumRight"),n.exports.mapObjIndexed=e("./mapObjIndexed"),n.exports.match=e("./match"),n.exports.mathMod=e("./mathMod"),n.exports.max=e("./max"),n.exports.maxBy=e("./maxBy"),n.exports.mean=e("./mean"),n.exports.median=e("./median"),n.exports.memoizeWith=e("./memoizeWith"),n.exports.merge=e("./merge"),n.exports.mergeAll=e("./mergeAll"),n.exports.mergeDeepLeft=e("./mergeDeepLeft"),
-n.exports.mergeDeepRight=e("./mergeDeepRight"),n.exports.mergeDeepWith=e("./mergeDeepWith"),n.exports.mergeDeepWithKey=e("./mergeDeepWithKey"),n.exports.mergeLeft=e("./mergeLeft"),n.exports.mergeRight=e("./mergeRight"),n.exports.mergeWith=e("./mergeWith"),n.exports.mergeWithKey=e("./mergeWithKey"),n.exports.min=e("./min"),n.exports.minBy=e("./minBy"),n.exports.modulo=e("./modulo"),n.exports.move=e("./move"),n.exports.multiply=e("./multiply"),n.exports.nAry=e("./nAry"),n.exports.negate=e("./negate"),n.exports.none=e("./none"),n.exports.not=e("./not"),n.exports.nth=e("./nth"),n.exports.nthArg=e("./nthArg"),n.exports.o=e("./o"),n.exports.objOf=e("./objOf"),n.exports.of=e("./of"),n.exports.omit=e("./omit"),n.exports.once=e("./once"),n.exports.or=e("./or"),n.exports.otherwise=e("./otherwise"),n.exports.over=e("./over"),n.exports.pair=e("./pair"),n.exports.partial=e("./partial"),n.exports.partialRight=e("./partialRight"),n.exports.partition=e("./partition"),n.exports.path=e("./path"),n.exports.paths=e("./paths"),n.exports.pathEq=e("./pathEq"),n.exports.pathOr=e("./pathOr"),n.exports.pathSatisfies=e("./pathSatisfies"),n.exports.pick=e("./pick"),n.exports.pickAll=e("./pickAll"),n.exports.pickBy=e("./pickBy"),n.exports.pipe=e("./pipe"),n.exports.pipeK=e("./pipeK"),n.exports.pipeP=e("./pipeP"),n.exports.pipeWith=e("./pipeWith"),n.exports.pluck=e("./pluck"),n.exports.prepend=e("./prepend"),n.exports.product=e("./product"),n.exports.project=e("./project"),n.exports.prop=e("./prop"),n.exports.propEq=e("./propEq"),n.exports.propIs=e("./propIs"),n.exports.propOr=e("./propOr"),n.exports.propSatisfies=e("./propSatisfies"),n.exports.props=e("./props"),n.exports.range=e("./range"),n.exports.reduce=e("./reduce"),n.exports.reduceBy=e("./reduceBy"),n.exports.reduceRight=e("./reduceRight"),n.exports.reduceWhile=e("./reduceWhile"),n.exports.reduced=e("./reduced"),n.exports.reject=e("./reject"),n.exports.remove=e("./remove"),n.exports.repeat=e("./repeat"),n.exports.replace=e("./replace"),n.exports.reverse=e("./reverse"),n.exports.scan=e("./scan"),n.exports.sequence=e("./sequence"),n.exports.set=e("./set"),n.exports.slice=e("./slice"),n.exports.sort=e("./sort"),n.exports.sortBy=e("./sortBy"),n.exports.sortWith=e("./sortWith"),n.exports.split=e("./split"),n.exports.splitAt=e("./splitAt"),n.exports.splitEvery=e("./splitEvery"),n.exports.splitWhen=e("./splitWhen"),n.exports.startsWith=e("./startsWith"),n.exports.subtract=e("./subtract"),n.exports.sum=e("./sum"),n.exports.symmetricDifference=e("./symmetricDifference"),n.exports.symmetricDifferenceWith=e("./symmetricDifferenceWith"),n.exports.tail=e("./tail"),n.exports.take=e("./take"),n.exports.takeLast=e("./takeLast"),n.exports.takeLastWhile=e("./takeLastWhile"),n.exports.takeWhile=e("./takeWhile"),n.exports.tap=e("./tap"),n.exports.test=e("./test"),n.exports.andThen=e("./andThen"),n.exports.times=e("./times"),n.exports.toLower=e("./toLower"),n.exports.toPairs=e("./toPairs"),n.exports.toPairsIn=e("./toPairsIn"),n.exports.toString=e("./toString"),n.exports.toUpper=e("./toUpper"),n.exports.transduce=e("./transduce"),n.exports.transpose=e("./transpose"),n.exports.traverse=e("./traverse"),n.exports.trim=e("./trim"),n.exports.tryCatch=e("./tryCatch"),n.exports.type=e("./type"),n.exports.unapply=e("./unapply"),n.exports.unary=e("./unary"),n.exports.uncurryN=e("./uncurryN"),n.exports.unfold=e("./unfold"),n.exports.union=e("./union"),n.exports.unionWith=e("./unionWith"),n.exports.uniq=e("./uniq"),n.exports.uniqBy=e("./uniqBy"),n.exports.uniqWith=e("./uniqWith"),n.exports.unless=e("./unless"),n.exports.unnest=e("./unnest"),n.exports.until=e("./until"),n.exports.update=e("./update"),n.exports.useWith=e("./useWith"),n.exports.values=e("./values"),n.exports.valuesIn=e("./valuesIn"),n.exports.view=e("./view"),n.exports.when=e("./when"),n.exports.where=e("./where"),n.exports.whereEq=e("./whereEq"),n.exports.without=e("./without"),n.exports.xor=e("./xor"),n.exports.xprod=e("./xprod"),n.exports.zip=e("./zip"),n.exports.zipObj=e("./zipObj"),n.exports.zipWith=e("./zipWith"),n.exports.thunkify=e("./thunkify")}()}),require.register("ramda/src/indexBy.js",function(r,e,n){e=t(e,{},"ramda"),function(){var r=e("./reduceBy"),t=r(function(r,e){return e},null);n.exports=t}()}),require.register("ramda/src/indexOf.js",function(r,e,n){e=t(e,{},"ramda"),function(){var r=e("./internal/_curry2"),t=e("./internal/_indexOf"),i=e("./internal/_isArray"),a=r(function(r,e){return"function"!=typeof e.indexOf||i(e)?t(e,r,0):e.indexOf(r)});n.exports=a}()}),require.register("ramda/src/init.js",function(r,e,n){e=t(e,{},"ramda"),function(){var r=e("./slice"),t=r(0,-1);n.exports=t}()}),require.register("ramda/src/innerJoin.js",function(r,e,n){e=t(e,{},"ramda"),function(){var r=e("./internal/_includesWith"),t=e("./internal/_curry3"),i=e("./internal/_filter"),a=t(function(e,t,n){return i(function(t){return r(e,t,n)},t)});n.exports=a}()}),require.register("ramda/src/insert.js",function(r,e,n){e=t(e,{},"ramda"),function(){var r=e("./internal/_curry3"),t=r(function(r,e,t){r=r<t.length&&r>=0?r:t.length;var n=Array.prototype.slice.call(t,0);return n.splice(r,0,e),n});n.exports=t}()}),require.register("ramda/src/insertAll.js",function(r,e,n){e=t(e,{},"ramda"),function(){var r=e("./internal/_curry3"),t=r(function(r,e,t){return r=r<t.length&&r>=0?r:t.length,[].concat(Array.prototype.slice.call(t,0,r),e,Array.prototype.slice.call(t,r))});n.exports=t}()}),require.register("ramda/src/internal/_Set.js",function(r,e,n){e=t(e,{},"ramda"),function(){function r(r,e,n){var i,a,o=typeof r;switch(o){case"string":case"number":return 0===r&&1/r===-(1/0)?!!n._items["-0"]||(e&&(n._items["-0"]=!0),!1):null!==n._nativeSet?e?(i=n._nativeSet.size,n._nativeSet.add(r),a=n._nativeSet.size,a===i):n._nativeSet.has(r):o in n._items?r in n._items[o]||(e&&(n._items[o][r]=!0),!1):(e&&(n._items[o]={},n._items[o][r]=!0),!1);case"boolean":if(o in n._items){var s=r?1:0;return!!n._items[o][s]||(e&&(n._items[o][s]=!0),!1)}return e&&(n._items[o]=r?[!1,!0]:[!0,!1]),!1;case"function":return null!==n._nativeSet?e?(i=n._nativeSet.size,n._nativeSet.add(r),a=n._nativeSet.size,a===i):n._nativeSet.has(r):o in n._items?!!t(r,n._items[o])||(e&&n._items[o].push(r),!1):(e&&(n._items[o]=[r]),!1);case"undefined":return!!n._items[o]||(e&&(n._items[o]=!0),!1);case"object":if(null===r)return!!n._items["null"]||(e&&(n._items["null"]=!0),!1);default:return o=Object.prototype.toString.call(r),o in n._items?!!t(r,n._items[o])||(e&&n._items[o].push(r),!1):(e&&(n._items[o]=[r]),!1)}}var t=e("./_includes"),i=function(){function e(){this._nativeSet="function"==typeof Set?new Set:null,this._items={}}return e.prototype.add=function(e){return!r(e,!0,this)},e.prototype.has=function(e){return r(e,!1,this)},e}();n.exports=i}()}),require.register("ramda/src/internal/_aperture.js",function(r,e,n){e=t(e,{},"ramda"),function(){function r(r,e){for(var t=0,n=e.length-(r-1),i=new Array(n>=0?n:0);t<n;)i[t]=Array.prototype.slice.call(e,t,t+r),t+=1;return i}n.exports=r}()}),require.register("ramda/src/internal/_arity.js",function(r,e,n){e=t(e,{},"ramda"),function(){function r(r,e){switch(r){case 0:return function(){return e.apply(this,arguments)};case 1:return function(r){return e.apply(this,arguments)};case 2:return function(r,t){return e.apply(this,arguments)};case 3:return function(r,t,n){return e.apply(this,arguments)};case 4:return function(r,t,n,i){return e.apply(this,arguments)};case 5:return function(r,t,n,i,a){return e.apply(this,arguments)};case 6:return function(r,t,n,i,a,o){return e.apply(this,arguments)};case 7:return function(r,t,n,i,a,o,s){return e.apply(this,arguments)};case 8:return function(r,t,n,i,a,o,s,u){return e.apply(this,arguments)};case 9:return function(r,t,n,i,a,o,s,u,c){return e.apply(this,arguments)};case 10:return function(r,t,n,i,a,o,s,u,c,l){return e.apply(this,arguments)};default:throw new Error("First argument to _arity must be a non-negative integer no greater than ten")}}n.exports=r}()}),require.register("ramda/src/internal/_arrayFromIterator.js",function(r,e,n){e=t(e,{},"ramda"),function(){function r(r){for(var e,t=[];!(e=r.next()).done;)t.push(e.value);return t}n.exports=r}()}),require.register("ramda/src/internal/_assertPromise.js",function(r,e,n){e=t(e,{},"ramda"),function(){function r(r,e){if(null==e||!t(e.then))throw new TypeError("`"+r+"` expected a Promise, received "+i(e,[]))}var t=e("./_isFunction"),i=e("./_toString");n.exports=r}()}),require.register("ramda/src/internal/_checkForMethod.js",function(r,e,n){e=t(e,{},"ramda"),function(){function r(r,e){return function(){var n=arguments.length;if(0===n)return e();var i=arguments[n-1];return t(i)||"function"!=typeof i[r]?e.apply(this,arguments):i[r].apply(i,Array.prototype.slice.call(arguments,0,n-1))}}var t=e("./_isArray");n.exports=r}()}),require.register("ramda/src/internal/_clone.js",function(r,e,n){e=t(e,{},"ramda"),function(){function r(e,n,a,o){var s=function(t){for(var i=n.length,s=0;s<i;){if(e===n[s])return a[s];s+=1}n[s+1]=e,a[s+1]=t;for(var u in e)t[u]=o?r(e[u],n,a,!0):e[u];return t};switch(i(e)){case"Object":return s({});case"Array":return s([]);case"Date":return new Date(e.valueOf());case"RegExp":return t(e);default:return e}}var t=e("./_cloneRegExp"),i=e("../type");n.exports=r}()}),require.register("ramda/src/internal/_cloneRegExp.js",function(r,e,n){e=t(e,{},"ramda"),function(){function r(r){return new RegExp(r.source,(r.global?"g":"")+(r.ignoreCase?"i":"")+(r.multiline?"m":"")+(r.sticky?"y":"")+(r.unicode?"u":""))}n.exports=r}()}),require.register("ramda/src/internal/_complement.js",function(r,e,n){e=t(e,{},"ramda"),function(){function r(r){return function(){return!r.apply(this,arguments)}}n.exports=r}()}),require.register("ramda/src/internal/_concat.js",function(r,e,n){e=t(e,{},"ramda"),function(){function r(r,e){r=r||[],e=e||[];var t,n=r.length,i=e.length,a=[];for(t=0;t<n;)a[a.length]=r[t],t+=1;for(t=0;t<i;)a[a.length]=e[t],t+=1;return a}n.exports=r}()}),require.register("ramda/src/internal/_createPartialApplicator.js",function(r,e,n){e=t(e,{},"ramda"),function(){function r(r){return i(function(e,n){return t(Math.max(0,e.length-n.length),function(){return e.apply(this,r(n,arguments))})})}var t=e("./_arity"),i=e("./_curry2");n.exports=r}()}),require.register("ramda/src/internal/_curry1.js",function(r,e,n){e=t(e,{},"ramda"),function(){function r(r){return function e(n){return 0===arguments.length||t(n)?e:r.apply(this,arguments)}}var t=e("./_isPlaceholder");n.exports=r}()}),require.register("ramda/src/internal/_curry2.js",function(r,e,n){e=t(e,{},"ramda"),function(){function r(r){return function e(n,a){switch(arguments.length){case 0:return e;case 1:return i(n)?e:t(function(e){return r(n,e)});default:return i(n)&&i(a)?e:i(n)?t(function(e){return r(e,a)}):i(a)?t(function(e){return r(n,e)}):r(n,a)}}}var t=e("./_curry1"),i=e("./_isPlaceholder");n.exports=r}()}),require.register("ramda/src/internal/_curry3.js",function(r,e,n){e=t(e,{},"ramda"),function(){function r(r){return function e(n,o,s){switch(arguments.length){case 0:return e;case 1:return a(n)?e:i(function(e,t){return r(n,e,t)});case 2:return a(n)&&a(o)?e:a(n)?i(function(e,t){return r(e,o,t)}):a(o)?i(function(e,t){return r(n,e,t)}):t(function(e){return r(n,o,e)});default:return a(n)&&a(o)&&a(s)?e:a(n)&&a(o)?i(function(e,t){return r(e,t,s)}):a(n)&&a(s)?i(function(e,t){return r(e,o,t)}):a(o)&&a(s)?i(function(e,t){return r(n,e,t)}):a(n)?t(function(e){return r(e,o,s)}):a(o)?t(function(e){return r(n,e,s)}):a(s)?t(function(e){return r(n,o,e)}):r(n,o,s)}}}var t=e("./_curry1"),i=e("./_curry2"),a=e("./_isPlaceholder");n.exports=r}()}),require.register("ramda/src/internal/_curryN.js",function(r,e,n){e=t(e,{},"ramda"),function(){function r(e,n,a){return function(){for(var o=[],s=0,u=e,c=0;c<n.length||s<arguments.length;){var l;c<n.length&&(!i(n[c])||s>=arguments.length)?l=n[c]:(l=arguments[s],s+=1),o[c]=l,i(l)||(u-=1),c+=1}return u<=0?a.apply(this,o):t(u,r(e,o,a))}}var t=e("./_arity"),i=e("./_isPlaceholder");n.exports=r}()}),require.register("ramda/src/internal/_dispatchable.js",function(r,e,n){e=t(e,{},"ramda"),function(){function r(r,e,n){return function(){if(0===arguments.length)return n();var a=Array.prototype.slice.call(arguments,0),o=a.pop();if(!t(o)){for(var s=0;s<r.length;){if("function"==typeof o[r[s]])return o[r[s]].apply(o,a);s+=1}if(i(o)){var u=e.apply(null,a);return u(o)}}return n.apply(this,arguments)}}var t=e("./_isArray"),i=e("./_isTransformer");n.exports=r}()}),require.register("ramda/src/internal/_dropLast.js",function(r,e,n){e=t(e,{},"ramda"),function(){function r(r,e){return t(r<e.length?e.length-r:0,e)}var t=e("../take");n.exports=r}()}),require.register("ramda/src/internal/_dropLastWhile.js",function(r,e,n){e=t(e,{},"ramda"),function(){function r(r,e){for(var n=e.length-1;n>=0&&r(e[n]);)n-=1;return t(0,n+1,e)}var t=e("../slice");n.exports=r}()}),require.register("ramda/src/internal/_equals.js",function(r,e,n){e=t(e,{},"ramda"),function(){function r(r,e,n,o){function s(r,e){return t(r,e,n.slice(),o.slice())}var u=i(r),c=i(e);return!a(function(r,e){return!a(s,e,r)},c,u)}function t(e,n,i,a){if(u(e,n))return!0;var f=l(e);if(f!==l(n))return!1;if(null==e||null==n)return!1;if("function"==typeof e["fantasy-land/equals"]||"function"==typeof n["fantasy-land/equals"])return"function"==typeof e["fantasy-land/equals"]&&e["fantasy-land/equals"](n)&&"function"==typeof n["fantasy-land/equals"]&&n["fantasy-land/equals"](e);if("function"==typeof e.equals||"function"==typeof n.equals)return"function"==typeof e.equals&&e.equals(n)&&"function"==typeof n.equals&&n.equals(e);switch(f){case"Arguments":case"Array":case"Object":if("function"==typeof e.constructor&&"Promise"===o(e.constructor))return e===n;break;case"Boolean":case"Number":case"String":if(typeof e!=typeof n||!u(e.valueOf(),n.valueOf()))return!1;break;case"Date":if(!u(e.valueOf(),n.valueOf()))return!1;break;case"Error":return e.name===n.name&&e.message===n.message;case"RegExp":if(e.source!==n.source||e.global!==n.global||e.ignoreCase!==n.ignoreCase||e.multiline!==n.multiline||e.sticky!==n.sticky||e.unicode!==n.unicode)return!1}for(var p=i.length-1;p>=0;){if(i[p]===e)return a[p]===n;p-=1}switch(f){case"Map":return e.size===n.size&&r(e.entries(),n.entries(),i.concat([e]),a.concat([n]));case"Set":return e.size===n.size&&r(e.values(),n.values(),i.concat([e]),a.concat([n]));case"Arguments":case"Array":case"Object":case"Boolean":case"Number":case"String":case"Date":case"Error":case"RegExp":case"Int8Array":case"Uint8Array":case"Uint8ClampedArray":case"Int16Array":case"Uint16Array":case"Int32Array":case"Uint32Array":case"Float32Array":case"Float64Array":case"ArrayBuffer":break;default:return!1}var d=c(e);if(d.length!==c(n).length)return!1;var h=i.concat([e]),m=a.concat([n]);for(p=d.length-1;p>=0;){var g=d[p];if(!s(g,n)||!t(n[g],e[g],h,m))return!1;p-=1}return!0}var i=e("./_arrayFromIterator"),a=e("./_includesWith"),o=e("./_functionName"),s=e("./_has"),u=e("./_objectIs"),c=e("../keys"),l=e("../type");n.exports=t}()}),require.register("ramda/src/internal/_filter.js",function(r,e,n){e=t(e,{},"ramda"),function(){function r(r,e){for(var t=0,n=e.length,i=[];t<n;)r(e[t])&&(i[i.length]=e[t]),t+=1;return i}n.exports=r}()}),require.register("ramda/src/internal/_flatCat.js",function(r,e,n){e=t(e,{},"ramda"),function(){var r=e("./_forceReduced"),t=e("./_isArrayLike"),i=e("./_reduce"),a=e("./_xfBase"),o=function(e){return{"@@transducer/init":a.init,"@@transducer/result":function(r){return e["@@transducer/result"](r)},"@@transducer/step":function(t,n){var i=e["@@transducer/step"](t,n);return i["@@transducer/reduced"]?r(i):i}}},s=function(r){var e=o(r);return{"@@transducer/init":a.init,"@@transducer/result":function(r){return e["@@transducer/result"](r)},"@@transducer/step":function(r,n){return t(n)?i(e,r,n):i(e,r,[n])}}};n.exports=s}()}),require.register("ramda/src/internal/_forceReduced.js",function(r,e,n){e=t(e,{},"ramda"),function(){function r(r){return{"@@transducer/value":r,"@@transducer/reduced":!0}}n.exports=r}()}),require.register("ramda/src/internal/_functionName.js",function(r,e,n){e=t(e,{},"ramda"),function(){function r(r){var e=String(r).match(/^function (\w*)/);return null==e?"":e[1]}n.exports=r}()}),require.register("ramda/src/internal/_has.js",function(r,e,n){e=t(e,{},"ramda"),function(){function r(r,e){return Object.prototype.hasOwnProperty.call(e,r)}n.exports=r}()}),require.register("ramda/src/internal/_identity.js",function(r,e,n){e=t(e,{},"ramda"),function(){function r(r){return r}n.exports=r}()}),require.register("ramda/src/internal/_includes.js",function(r,e,n){e=t(e,{},"ramda"),function(){function r(r,e){return t(e,r,0)>=0}var t=e("./_indexOf");n.exports=r}()}),require.register("ramda/src/internal/_includesWith.js",function(r,e,n){e=t(e,{},"ramda"),function(){function r(r,e,t){for(var n=0,i=t.length;n<i;){if(r(e,t[n]))return!0;n+=1}return!1}n.exports=r}()}),require.register("ramda/src/internal/_indexOf.js",function(r,e,n){e=t(e,{},"ramda"),function(){function r(r,e,n){var i,a;if("function"==typeof r.indexOf)switch(typeof e){case"number":if(0===e){for(i=1/e;n<r.length;){if(a=r[n],0===a&&1/a===i)return n;n+=1}return-1}if(e!==e){for(;n<r.length;){if(a=r[n],"number"==typeof a&&a!==a)return n;n+=1}return-1}return r.indexOf(e,n);case"string":case"boolean":case"function":case"undefined":return r.indexOf(e,n);case"object":if(null===e)return r.indexOf(e,n)}for(;n<r.length;){if(t(r[n],e))return n;n+=1}return-1}var t=e("../equals");n.exports=r}()}),require.register("ramda/src/internal/_isArguments.js",function(r,e,n){e=t(e,{},"ramda"),function(){var r=e("./_has"),t=Object.prototype.toString,i=function(){return"[object Arguments]"===t.call(arguments)?function(r){return"[object Arguments]"===t.call(r)}:function(e){return r("callee",e)}}();n.exports=i}()}),require.register("ramda/src/internal/_isArray.js",function(r,e,n){e=t(e,{},"ramda"),function(){n.exports=Array.isArray||function(r){return null!=r&&r.length>=0&&"[object Array]"===Object.prototype.toString.call(r)}}()}),require.register("ramda/src/internal/_isArrayLike.js",function(r,e,n){e=t(e,{},"ramda"),function(){var r=e("./_curry1"),t=e("./_isArray"),i=e("./_isString"),a=r(function(r){return!!t(r)||!!r&&("object"==typeof r&&(!i(r)&&(1===r.nodeType?!!r.length:0===r.length||r.length>0&&(r.hasOwnProperty(0)&&r.hasOwnProperty(r.length-1)))))});n.exports=a}()}),require.register("ramda/src/internal/_isFunction.js",function(r,e,n){e=t(e,{},"ramda"),function(){function r(r){var e=Object.prototype.toString.call(r);return"[object Function]"===e||"[object AsyncFunction]"===e||"[object GeneratorFunction]"===e||"[object AsyncGeneratorFunction]"===e}n.exports=r}()}),require.register("ramda/src/internal/_isInteger.js",function(r,e,n){e=t(e,{},"ramda"),function(){n.exports=Number.isInteger||function(r){return r<<0===r}}()}),require.register("ramda/src/internal/_isNumber.js",function(r,e,n){e=t(e,{},"ramda"),function(){function r(r){return"[object Number]"===Object.prototype.toString.call(r)}n.exports=r}()}),require.register("ramda/src/internal/_isObject.js",function(r,e,n){e=t(e,{},"ramda"),function(){function r(r){return"[object Object]"===Object.prototype.toString.call(r)}n.exports=r}()}),require.register("ramda/src/internal/_isPlaceholder.js",function(r,e,n){e=t(e,{},"ramda"),function(){function r(r){return null!=r&&"object"==typeof r&&r["@@functional/placeholder"]===!0}n.exports=r}()}),require.register("ramda/src/internal/_isRegExp.js",function(r,e,n){e=t(e,{},"ramda"),function(){function r(r){return"[object RegExp]"===Object.prototype.toString.call(r)}n.exports=r}()}),require.register("ramda/src/internal/_isString.js",function(r,e,n){e=t(e,{},"ramda"),function(){function r(r){return"[object String]"===Object.prototype.toString.call(r)}n.exports=r}()}),require.register("ramda/src/internal/_isTransformer.js",function(r,e,n){e=t(e,{},"ramda"),function(){function r(r){return null!=r&&"function"==typeof r["@@transducer/step"]}n.exports=r}()}),require.register("ramda/src/internal/_makeFlat.js",function(r,e,n){e=t(e,{},"ramda"),function(){function r(r){return function e(n){for(var i,a,o,s=[],u=0,c=n.length;u<c;){if(t(n[u]))for(i=r?e(n[u]):n[u],o=0,a=i.length;o<a;)s[s.length]=i[o],o+=1;else s[s.length]=n[u];u+=1}return s}}var t=e("./_isArrayLike");n.exports=r}()}),require.register("ramda/src/internal/_map.js",function(r,e,n){e=t(e,{},"ramda"),function(){function r(r,e){for(var t=0,n=e.length,i=Array(n);t<n;)i[t]=r(e[t]),t+=1;return i}n.exports=r}()}),require.register("ramda/src/internal/_objectAssign.js",function(r,e,n){e=t(e,{},"ramda"),function(){function r(r){if(null==r)throw new TypeError("Cannot convert undefined or null to object");for(var e=Object(r),n=1,i=arguments.length;n<i;){var a=arguments[n];if(null!=a)for(var o in a)t(o,a)&&(e[o]=a[o]);n+=1}return e}var t=e("./_has");n.exports="function"==typeof Object.assign?Object.assign:r}()}),require.register("ramda/src/internal/_objectIs.js",function(r,e,n){e=t(e,{},"ramda"),function(){function r(r,e){return r===e?0!==r||1/r===1/e:r!==r&&e!==e}n.exports="function"==typeof Object.is?Object.is:r}()}),require.register("ramda/src/internal/_of.js",function(r,e,n){e=t(e,{},"ramda"),function(){function r(r){return[r]}n.exports=r}()}),require.register("ramda/src/internal/_pipe.js",function(r,e,n){e=t(e,{},"ramda"),function(){function r(r,e){return function(){return e.call(this,r.apply(this,arguments))}}n.exports=r}()}),require.register("ramda/src/internal/_pipeP.js",function(r,e,n){e=t(e,{},"ramda"),function(){function r(r,e){return function(){var t=this;return r.apply(t,arguments).then(function(r){return e.call(t,r)})}}n.exports=r}()}),require.register("ramda/src/internal/_quote.js",function(r,e,n){e=t(e,{},"ramda"),function(){function r(r){var e=r.replace(/\\/g,"\\\\").replace(/[\b]/g,"\\b").replace(/\f/g,"\\f").replace(/\n/g,"\\n").replace(/\r/g,"\\r").replace(/\t/g,"\\t").replace(/\v/g,"\\v").replace(/\0/g,"\\0");return'"'+e.replace(/"/g,'\\"')+'"'}n.exports=r}()}),require.register("ramda/src/internal/_reduce.js",function(r,e,n){e=t(e,{},"ramda"),function(){function r(r,e,t){for(var n=0,i=t.length;n<i;){if(e=r["@@transducer/step"](e,t[n]),e&&e["@@transducer/reduced"]){e=e["@@transducer/value"];break}n+=1}return r["@@transducer/result"](e)}function t(r,e,t){for(var n=t.next();!n.done;){if(e=r["@@transducer/step"](e,n.value),e&&e["@@transducer/reduced"]){e=e["@@transducer/value"];break}n=t.next()}return r["@@transducer/result"](e)}function i(r,e,t,n){return r["@@transducer/result"](t[n](u(r["@@transducer/step"],r),e))}function a(e,n,a){if("function"==typeof e&&(e=s(e)),o(a))return r(e,n,a);if("function"==typeof a["fantasy-land/reduce"])return i(e,n,a,"fantasy-land/reduce");if(null!=a[c])return t(e,n,a[c]());if("function"==typeof a.next)return t(e,n,a);if("function"==typeof a.reduce)return i(e,n,a,"reduce");throw new TypeError("reduce: list must be array or iterable")}var o=e("./_isArrayLike"),s=e("./_xwrap"),u=e("../bind"),c="undefined"!=typeof Symbol?Symbol.iterator:"@@iterator";n.exports=a}()}),require.register("ramda/src/internal/_reduced.js",function(r,e,n){e=t(e,{},"ramda"),function(){function r(r){return r&&r["@@transducer/reduced"]?r:{"@@transducer/value":r,"@@transducer/reduced":!0}}n.exports=r}()}),require.register("ramda/src/internal/_stepCat.js",function(r,e,n){e=t(e,{},"ramda"),function(){function r(r){if(o(r))return r;if(a(r))return u;if("string"==typeof r)return c;if("object"==typeof r)return l;throw new Error("Cannot create transformer for "+r)}var t=e("./_objectAssign"),i=e("./_identity"),a=e("./_isArrayLike"),o=e("./_isTransformer"),s=e("../objOf"),u={"@@transducer/init":Array,"@@transducer/step":function(r,e){return r.push(e),r},"@@transducer/result":i},c={"@@transducer/init":String,"@@transducer/step":function(r,e){return r+e},"@@transducer/result":i},l={"@@transducer/init":Object,"@@transducer/step":function(r,e){return t(r,a(e)?s(e[0],e[1]):e)},"@@transducer/result":i};n.exports=r}()}),require.register("ramda/src/internal/_toISOString.js",function(r,e,n){e=t(e,{},"ramda"),function(){var r=function(r){return(r<10?"0":"")+r},e="function"==typeof Date.prototype.toISOString?function(r){return r.toISOString()}:function(e){return e.getUTCFullYear()+"-"+r(e.getUTCMonth()+1)+"-"+r(e.getUTCDate())+"T"+r(e.getUTCHours())+":"+r(e.getUTCMinutes())+":"+r(e.getUTCSeconds())+"."+(e.getUTCMilliseconds()/1e3).toFixed(3).slice(2,5)+"Z"};n.exports=e}()}),require.register("ramda/src/internal/_toString.js",function(r,e,n){e=t(e,{},"ramda"),function(){function r(e,n){var c=function(i){var a=n.concat([e]);return t(i,a)?"<Circular>":r(i,a)},l=function(r,e){return i(function(e){return a(e)+": "+c(r[e])},e.slice().sort())};switch(Object.prototype.toString.call(e)){case"[object Arguments]":return"(function() { return arguments; }("+i(c,e).join(", ")+"))";case"[object Array]":return"["+i(c,e).concat(l(e,u(function(r){return/^\d+$/.test(r)},s(e)))).join(", ")+"]";case"[object Boolean]":return"object"==typeof e?"new Boolean("+c(e.valueOf())+")":e.toString();case"[object Date]":return"new Date("+(isNaN(e.valueOf())?c(NaN):a(o(e)))+")";case"[object Null]":return"null";case"[object Number]":return"object"==typeof e?"new Number("+c(e.valueOf())+")":1/e===-(1/0)?"-0":e.toString(10);case"[object String]":return"object"==typeof e?"new String("+c(e.valueOf())+")":a(e);case"[object Undefined]":return"undefined";default:if("function"==typeof e.toString){var f=e.toString();if("[object Object]"!==f)return f}return"{"+l(e,s(e)).join(", ")+"}"}}var t=e("./_includes"),i=e("./_map"),a=e("./_quote"),o=e("./_toISOString"),s=e("../keys"),u=e("../reject");n.exports=r}()}),require.register("ramda/src/internal/_xall.js",function(r,e,n){e=t(e,{},"ramda"),function(){var r=e("./_curry2"),t=e("./_reduced"),i=e("./_xfBase"),a=function(){function r(r,e){this.xf=e,this.f=r,this.all=!0}return r.prototype["@@transducer/init"]=i.init,r.prototype["@@transducer/result"]=function(r){return this.all&&(r=this.xf["@@transducer/step"](r,!0)),this.xf["@@transducer/result"](r)},r.prototype["@@transducer/step"]=function(r,e){return this.f(e)||(this.all=!1,r=t(this.xf["@@transducer/step"](r,!1))),r},r}(),o=r(function(r,e){return new a(r,e)});n.exports=o}()}),require.register("ramda/src/internal/_xany.js",function(r,e,n){e=t(e,{},"ramda"),function(){var r=e("./_curry2"),t=e("./_reduced"),i=e("./_xfBase"),a=function(){function r(r,e){this.xf=e,this.f=r,this.any=!1}return r.prototype["@@transducer/init"]=i.init,r.prototype["@@transducer/result"]=function(r){return this.any||(r=this.xf["@@transducer/step"](r,!1)),this.xf["@@transducer/result"](r)},r.prototype["@@transducer/step"]=function(r,e){return this.f(e)&&(this.any=!0,r=t(this.xf["@@transducer/step"](r,!0))),r},r}(),o=r(function(r,e){return new a(r,e)});n.exports=o}()}),require.register("ramda/src/internal/_xaperture.js",function(r,e,n){e=t(e,{},"ramda"),function(){var r=e("./_concat"),t=e("./_curry2"),i=e("./_xfBase"),a=function(){function e(r,e){this.xf=e,this.pos=0,this.full=!1,this.acc=new Array(r)}return e.prototype["@@transducer/init"]=i.init,e.prototype["@@transducer/result"]=function(r){return this.acc=null,this.xf["@@transducer/result"](r)},e.prototype["@@transducer/step"]=function(r,e){return this.store(e),this.full?this.xf["@@transducer/step"](r,this.getCopy()):r},e.prototype.store=function(r){this.acc[this.pos]=r,this.pos+=1,this.pos===this.acc.length&&(this.pos=0,this.full=!0)},e.prototype.getCopy=function(){return r(Array.prototype.slice.call(this.acc,this.pos),Array.prototype.slice.call(this.acc,0,this.pos))},e}(),o=t(function(r,e){return new a(r,e)});n.exports=o}()}),require.register("ramda/src/internal/_xchain.js",function(r,e,n){e=t(e,{},"ramda"),function(){var r=e("./_curry2"),t=e("./_flatCat"),i=e("../map"),a=r(function(r,e){return i(r,t(e))});n.exports=a}()}),require.register("ramda/src/internal/_xdrop.js",function(r,e,n){e=t(e,{},"ramda"),function(){var r=e("./_curry2"),t=e("./_xfBase"),i=function(){function r(r,e){this.xf=e,this.n=r}return r.prototype["@@transducer/init"]=t.init,r.prototype["@@transducer/result"]=t.result,r.prototype["@@transducer/step"]=function(r,e){return this.n>0?(this.n-=1,r):this.xf["@@transducer/step"](r,e)},r}(),a=r(function(r,e){return new i(r,e)});n.exports=a}()}),require.register("ramda/src/internal/_xdropLast.js",function(r,e,n){e=t(e,{},"ramda"),function(){var r=e("./_curry2"),t=e("./_xfBase"),i=function(){function r(r,e){this.xf=e,this.pos=0,this.full=!1,this.acc=new Array(r)}return r.prototype["@@transducer/init"]=t.init,r.prototype["@@transducer/result"]=function(r){return this.acc=null,this.xf["@@transducer/result"](r)},r.prototype["@@transducer/step"]=function(r,e){return this.full&&(r=this.xf["@@transducer/step"](r,this.acc[this.pos])),this.store(e),r},r.prototype.store=function(r){this.acc[this.pos]=r,this.pos+=1,this.pos===this.acc.length&&(this.pos=0,this.full=!0)},r}(),a=r(function(r,e){return new i(r,e)});n.exports=a}()}),require.register("ramda/src/internal/_xdropLastWhile.js",function(r,e,n){e=t(e,{},"ramda"),function(){var r=e("./_curry2"),t=e("./_reduce"),i=e("./_xfBase"),a=function(){function r(r,e){this.f=r,this.retained=[],this.xf=e}return r.prototype["@@transducer/init"]=i.init,r.prototype["@@transducer/result"]=function(r){return this.retained=null,this.xf["@@transducer/result"](r)},r.prototype["@@transducer/step"]=function(r,e){return this.f(e)?this.retain(r,e):this.flush(r,e)},r.prototype.flush=function(r,e){return r=t(this.xf["@@transducer/step"],r,this.retained),this.retained=[],this.xf["@@transducer/step"](r,e)},r.prototype.retain=function(r,e){return this.retained.push(e),r},r}(),o=r(function(r,e){return new a(r,e)});n.exports=o}()}),require.register("ramda/src/internal/_xdropRepeatsWith.js",function(r,e,n){e=t(e,{},"ramda"),function(){var r=e("./_curry2"),t=e("./_xfBase"),i=function(){function r(r,e){this.xf=e,this.pred=r,this.lastValue=void 0,this.seenFirstValue=!1}return r.prototype["@@transducer/init"]=t.init,r.prototype["@@transducer/result"]=t.result,r.prototype["@@transducer/step"]=function(r,e){var t=!1;return this.seenFirstValue?this.pred(this.lastValue,e)&&(t=!0):this.seenFirstValue=!0,this.lastValue=e,t?r:this.xf["@@transducer/step"](r,e)},r}(),a=r(function(r,e){return new i(r,e)});n.exports=a}()}),require.register("ramda/src/internal/_xdropWhile.js",function(r,e,n){e=t(e,{},"ramda"),function(){var r=e("./_curry2"),t=e("./_xfBase"),i=function(){function r(r,e){this.xf=e,this.f=r}return r.prototype["@@transducer/init"]=t.init,r.prototype["@@transducer/result"]=t.result,r.prototype["@@transducer/step"]=function(r,e){if(this.f){if(this.f(e))return r;this.f=null}return this.xf["@@transducer/step"](r,e)},r}(),a=r(function(r,e){return new i(r,e)});n.exports=a}()}),require.register("ramda/src/internal/_xfBase.js",function(r,e,n){e=t(e,{},"ramda"),function(){n.exports={init:function(){return this.xf["@@transducer/init"]()},result:function(r){return this.xf["@@transducer/result"](r)}}}()}),require.register("ramda/src/internal/_xfilter.js",function(r,e,n){e=t(e,{},"ramda"),function(){var r=e("./_curry2"),t=e("./_xfBase"),i=function(){function r(r,e){this.xf=e,this.f=r}return r.prototype["@@transducer/init"]=t.init,r.prototype["@@transducer/result"]=t.result,r.prototype["@@transducer/step"]=function(r,e){return this.f(e)?this.xf["@@transducer/step"](r,e):r},r}(),a=r(function(r,e){return new i(r,e)});n.exports=a}()}),require.register("ramda/src/internal/_xfind.js",function(r,e,n){e=t(e,{},"ramda"),function(){var r=e("./_curry2"),t=e("./_reduced"),i=e("./_xfBase"),a=function(){function r(r,e){this.xf=e,this.f=r,this.found=!1}return r.prototype["@@transducer/init"]=i.init,r.prototype["@@transducer/result"]=function(r){return this.found||(r=this.xf["@@transducer/step"](r,void 0)),this.xf["@@transducer/result"](r)},r.prototype["@@transducer/step"]=function(r,e){return this.f(e)&&(this.found=!0,r=t(this.xf["@@transducer/step"](r,e))),r},r}(),o=r(function(r,e){return new a(r,e)});n.exports=o}()}),require.register("ramda/src/internal/_xfindIndex.js",function(r,e,n){
-e=t(e,{},"ramda"),function(){var r=e("./_curry2"),t=e("./_reduced"),i=e("./_xfBase"),a=function(){function r(r,e){this.xf=e,this.f=r,this.idx=-1,this.found=!1}return r.prototype["@@transducer/init"]=i.init,r.prototype["@@transducer/result"]=function(r){return this.found||(r=this.xf["@@transducer/step"](r,-1)),this.xf["@@transducer/result"](r)},r.prototype["@@transducer/step"]=function(r,e){return this.idx+=1,this.f(e)&&(this.found=!0,r=t(this.xf["@@transducer/step"](r,this.idx))),r},r}(),o=r(function(r,e){return new a(r,e)});n.exports=o}()}),require.register("ramda/src/internal/_xfindLast.js",function(r,e,n){e=t(e,{},"ramda"),function(){var r=e("./_curry2"),t=e("./_xfBase"),i=function(){function r(r,e){this.xf=e,this.f=r}return r.prototype["@@transducer/init"]=t.init,r.prototype["@@transducer/result"]=function(r){return this.xf["@@transducer/result"](this.xf["@@transducer/step"](r,this.last))},r.prototype["@@transducer/step"]=function(r,e){return this.f(e)&&(this.last=e),r},r}(),a=r(function(r,e){return new i(r,e)});n.exports=a}()}),require.register("ramda/src/internal/_xfindLastIndex.js",function(r,e,n){e=t(e,{},"ramda"),function(){var r=e("./_curry2"),t=e("./_xfBase"),i=function(){function r(r,e){this.xf=e,this.f=r,this.idx=-1,this.lastIdx=-1}return r.prototype["@@transducer/init"]=t.init,r.prototype["@@transducer/result"]=function(r){return this.xf["@@transducer/result"](this.xf["@@transducer/step"](r,this.lastIdx))},r.prototype["@@transducer/step"]=function(r,e){return this.idx+=1,this.f(e)&&(this.lastIdx=this.idx),r},r}(),a=r(function(r,e){return new i(r,e)});n.exports=a}()}),require.register("ramda/src/internal/_xmap.js",function(r,e,n){e=t(e,{},"ramda"),function(){var r=e("./_curry2"),t=e("./_xfBase"),i=function(){function r(r,e){this.xf=e,this.f=r}return r.prototype["@@transducer/init"]=t.init,r.prototype["@@transducer/result"]=t.result,r.prototype["@@transducer/step"]=function(r,e){return this.xf["@@transducer/step"](r,this.f(e))},r}(),a=r(function(r,e){return new i(r,e)});n.exports=a}()}),require.register("ramda/src/internal/_xreduceBy.js",function(r,e,n){e=t(e,{},"ramda"),function(){var r=e("./_curryN"),t=e("./_has"),i=e("./_xfBase"),a=function(){function r(r,e,t,n){this.valueFn=r,this.valueAcc=e,this.keyFn=t,this.xf=n,this.inputs={}}return r.prototype["@@transducer/init"]=i.init,r.prototype["@@transducer/result"]=function(r){var e;for(e in this.inputs)if(t(e,this.inputs)&&(r=this.xf["@@transducer/step"](r,this.inputs[e]),r["@@transducer/reduced"])){r=r["@@transducer/value"];break}return this.inputs=null,this.xf["@@transducer/result"](r)},r.prototype["@@transducer/step"]=function(r,e){var t=this.keyFn(e);return this.inputs[t]=this.inputs[t]||[t,this.valueAcc],this.inputs[t][1]=this.valueFn(this.inputs[t][1],e),r},r}(),o=r(4,[],function(r,e,t,n){return new a(r,e,t,n)});n.exports=o}()}),require.register("ramda/src/internal/_xtake.js",function(r,e,n){e=t(e,{},"ramda"),function(){var r=e("./_curry2"),t=e("./_reduced"),i=e("./_xfBase"),a=function(){function r(r,e){this.xf=e,this.n=r,this.i=0}return r.prototype["@@transducer/init"]=i.init,r.prototype["@@transducer/result"]=i.result,r.prototype["@@transducer/step"]=function(r,e){this.i+=1;var n=0===this.n?r:this.xf["@@transducer/step"](r,e);return this.n>=0&&this.i>=this.n?t(n):n},r}(),o=r(function(r,e){return new a(r,e)});n.exports=o}()}),require.register("ramda/src/internal/_xtakeWhile.js",function(r,e,n){e=t(e,{},"ramda"),function(){var r=e("./_curry2"),t=e("./_reduced"),i=e("./_xfBase"),a=function(){function r(r,e){this.xf=e,this.f=r}return r.prototype["@@transducer/init"]=i.init,r.prototype["@@transducer/result"]=i.result,r.prototype["@@transducer/step"]=function(r,e){return this.f(e)?this.xf["@@transducer/step"](r,e):t(r)},r}(),o=r(function(r,e){return new a(r,e)});n.exports=o}()}),require.register("ramda/src/internal/_xtap.js",function(r,e,n){e=t(e,{},"ramda"),function(){var r=e("./_curry2"),t=e("./_xfBase"),i=function(){function r(r,e){this.xf=e,this.f=r}return r.prototype["@@transducer/init"]=t.init,r.prototype["@@transducer/result"]=t.result,r.prototype["@@transducer/step"]=function(r,e){return this.f(e),this.xf["@@transducer/step"](r,e)},r}(),a=r(function(r,e){return new i(r,e)});n.exports=a}()}),require.register("ramda/src/internal/_xwrap.js",function(r,e,n){e=t(e,{},"ramda"),function(){function r(r){return new e(r)}var e=function(){function r(r){this.f=r}return r.prototype["@@transducer/init"]=function(){throw new Error("init not implemented on XWrap")},r.prototype["@@transducer/result"]=function(r){return r},r.prototype["@@transducer/step"]=function(r,e){return this.f(r,e)},r}();n.exports=r}()}),require.register("ramda/src/intersection.js",function(r,e,n){e=t(e,{},"ramda"),function(){var r=e("./internal/_includes"),t=e("./internal/_curry2"),i=e("./internal/_filter"),a=e("./flip"),o=e("./uniq"),s=t(function(e,t){var n,s;return e.length>t.length?(n=e,s=t):(n=t,s=e),o(i(a(r)(n),s))});n.exports=s}()}),require.register("ramda/src/intersperse.js",function(r,e,n){e=t(e,{},"ramda"),function(){var r=e("./internal/_checkForMethod"),t=e("./internal/_curry2"),i=t(r("intersperse",function(r,e){for(var t=[],n=0,i=e.length;n<i;)n===i-1?t.push(e[n]):t.push(e[n],r),n+=1;return t}));n.exports=i}()}),require.register("ramda/src/into.js",function(r,e,n){e=t(e,{},"ramda"),function(){var r=e("./internal/_clone"),t=e("./internal/_curry3"),i=e("./internal/_isTransformer"),a=e("./internal/_reduce"),o=e("./internal/_stepCat"),s=t(function(e,t,n){return i(e)?a(t(e),e["@@transducer/init"](),n):a(t(o(e)),r(e,[],[],!1),n)});n.exports=s}()}),require.register("ramda/src/invert.js",function(r,e,n){e=t(e,{},"ramda"),function(){var r=e("./internal/_curry1"),t=e("./internal/_has"),i=e("./keys"),a=r(function(r){for(var e=i(r),n=e.length,a=0,o={};a<n;){var s=e[a],u=r[s],c=t(u,o)?o[u]:o[u]=[];c[c.length]=s,a+=1}return o});n.exports=a}()}),require.register("ramda/src/invertObj.js",function(r,e,n){e=t(e,{},"ramda"),function(){var r=e("./internal/_curry1"),t=e("./keys"),i=r(function(r){for(var e=t(r),n=e.length,i=0,a={};i<n;){var o=e[i];a[r[o]]=o,i+=1}return a});n.exports=i}()}),require.register("ramda/src/invoker.js",function(r,e,n){e=t(e,{},"ramda"),function(){var r=e("./internal/_curry2"),t=e("./internal/_isFunction"),i=e("./curryN"),a=e("./toString"),o=r(function(r,e){return i(r+1,function(){var n=arguments[r];if(null!=n&&t(n[e]))return n[e].apply(n,Array.prototype.slice.call(arguments,0,r));throw new TypeError(a(n)+' does not have a method named "'+e+'"')})});n.exports=o}()}),require.register("ramda/src/is.js",function(r,e,n){e=t(e,{},"ramda"),function(){var r=e("./internal/_curry2"),t=r(function(r,e){return null!=e&&e.constructor===r||e instanceof r});n.exports=t}()}),require.register("ramda/src/isEmpty.js",function(r,e,n){e=t(e,{},"ramda"),function(){var r=e("./internal/_curry1"),t=e("./empty"),i=e("./equals"),a=r(function(r){return null!=r&&i(r,t(r))});n.exports=a}()}),require.register("ramda/src/isNil.js",function(r,e,n){e=t(e,{},"ramda"),function(){var r=e("./internal/_curry1"),t=r(function(r){return null==r});n.exports=t}()}),require.register("ramda/src/join.js",function(r,e,n){e=t(e,{},"ramda"),function(){var r=e("./invoker"),t=r(1,"join");n.exports=t}()}),require.register("ramda/src/juxt.js",function(r,e,n){e=t(e,{},"ramda"),function(){var r=e("./internal/_curry1"),t=e("./converge"),i=r(function(r){return t(function(){return Array.prototype.slice.call(arguments,0)},r)});n.exports=i}()}),require.register("ramda/src/keys.js",function(r,e,n){e=t(e,{},"ramda"),function(){var r=e("./internal/_curry1"),t=e("./internal/_has"),i=e("./internal/_isArguments"),a=!{toString:null}.propertyIsEnumerable("toString"),o=["constructor","valueOf","isPrototypeOf","toString","propertyIsEnumerable","hasOwnProperty","toLocaleString"],s=function(){"use strict";return arguments.propertyIsEnumerable("length")}(),u=function(r,e){for(var t=0;t<r.length;){if(r[t]===e)return!0;t+=1}return!1},c=r("function"!=typeof Object.keys||s?function(r){if(Object(r)!==r)return[];var e,n,c=[],l=s&&i(r);for(e in r)!t(e,r)||l&&"length"===e||(c[c.length]=e);if(a)for(n=o.length-1;n>=0;)e=o[n],t(e,r)&&!u(c,e)&&(c[c.length]=e),n-=1;return c}:function(r){return Object(r)!==r?[]:Object.keys(r)});n.exports=c}()}),require.register("ramda/src/keysIn.js",function(r,e,n){e=t(e,{},"ramda"),function(){var r=e("./internal/_curry1"),t=r(function(r){var e,t=[];for(e in r)t[t.length]=e;return t});n.exports=t}()}),require.register("ramda/src/last.js",function(r,e,n){e=t(e,{},"ramda"),function(){var r=e("./nth"),t=r(-1);n.exports=t}()}),require.register("ramda/src/lastIndexOf.js",function(r,e,n){e=t(e,{},"ramda"),function(){var r=e("./internal/_curry2"),t=e("./internal/_isArray"),i=e("./equals"),a=r(function(r,e){if("function"!=typeof e.lastIndexOf||t(e)){for(var n=e.length-1;n>=0;){if(i(e[n],r))return n;n-=1}return-1}return e.lastIndexOf(r)});n.exports=a}()}),require.register("ramda/src/length.js",function(r,e,n){e=t(e,{},"ramda"),function(){var r=e("./internal/_curry1"),t=e("./internal/_isNumber"),i=r(function(r){return null!=r&&t(r.length)?r.length:NaN});n.exports=i}()}),require.register("ramda/src/lens.js",function(r,e,n){e=t(e,{},"ramda"),function(){var r=e("./internal/_curry2"),t=e("./map"),i=r(function(r,e){return function(n){return function(i){return t(function(r){return e(r,i)},n(r(i)))}}});n.exports=i}()}),require.register("ramda/src/lensIndex.js",function(r,e,n){e=t(e,{},"ramda"),function(){var r=e("./internal/_curry1"),t=e("./lens"),i=e("./nth"),a=e("./update"),o=r(function(r){return t(i(r),a(r))});n.exports=o}()}),require.register("ramda/src/lensPath.js",function(r,e,n){e=t(e,{},"ramda"),function(){var r=e("./internal/_curry1"),t=e("./assocPath"),i=e("./lens"),a=e("./path"),o=r(function(r){return i(a(r),t(r))});n.exports=o}()}),require.register("ramda/src/lensProp.js",function(r,e,n){e=t(e,{},"ramda"),function(){var r=e("./internal/_curry1"),t=e("./assoc"),i=e("./lens"),a=e("./prop"),o=r(function(r){return i(a(r),t(r))});n.exports=o}()}),require.register("ramda/src/lift.js",function(r,e,n){e=t(e,{},"ramda"),function(){var r=e("./internal/_curry1"),t=e("./liftN"),i=r(function(r){return t(r.length,r)});n.exports=i}()}),require.register("ramda/src/liftN.js",function(r,e,n){e=t(e,{},"ramda"),function(){var r=e("./internal/_curry2"),t=e("./internal/_reduce"),i=e("./ap"),a=e("./curryN"),o=e("./map"),s=r(function(r,e){var n=a(r,e);return a(r,function(){return t(i,o(n,arguments[0]),Array.prototype.slice.call(arguments,1))})});n.exports=s}()}),require.register("ramda/src/lt.js",function(r,e,n){e=t(e,{},"ramda"),function(){var r=e("./internal/_curry2"),t=r(function(r,e){return r<e});n.exports=t}()}),require.register("ramda/src/lte.js",function(r,e,n){e=t(e,{},"ramda"),function(){var r=e("./internal/_curry2"),t=r(function(r,e){return r<=e});n.exports=t}()}),require.register("ramda/src/map.js",function(r,e,n){e=t(e,{},"ramda"),function(){var r=e("./internal/_curry2"),t=e("./internal/_dispatchable"),i=e("./internal/_map"),a=e("./internal/_reduce"),o=e("./internal/_xmap"),s=e("./curryN"),u=e("./keys"),c=r(t(["fantasy-land/map","map"],o,function(r,e){switch(Object.prototype.toString.call(e)){case"[object Function]":return s(e.length,function(){return r.call(this,e.apply(this,arguments))});case"[object Object]":return a(function(t,n){return t[n]=r(e[n]),t},{},u(e));default:return i(r,e)}}));n.exports=c}()}),require.register("ramda/src/mapAccum.js",function(r,e,n){e=t(e,{},"ramda"),function(){var r=e("./internal/_curry3"),t=r(function(r,e,t){for(var n=0,i=t.length,a=[],o=[e];n<i;)o=r(o[0],t[n]),a[n]=o[1],n+=1;return[o[0],a]});n.exports=t}()}),require.register("ramda/src/mapAccumRight.js",function(r,e,n){e=t(e,{},"ramda"),function(){var r=e("./internal/_curry3"),t=r(function(r,e,t){for(var n=t.length-1,i=[],a=[e];n>=0;)a=r(a[0],t[n]),i[n]=a[1],n-=1;return[a[0],i]});n.exports=t}()}),require.register("ramda/src/mapObjIndexed.js",function(r,e,n){e=t(e,{},"ramda"),function(){var r=e("./internal/_curry2"),t=e("./internal/_reduce"),i=e("./keys"),a=r(function(r,e){return t(function(t,n){return t[n]=r(e[n],n,e),t},{},i(e))});n.exports=a}()}),require.register("ramda/src/match.js",function(r,e,n){e=t(e,{},"ramda"),function(){var r=e("./internal/_curry2"),t=r(function(r,e){return e.match(r)||[]});n.exports=t}()}),require.register("ramda/src/mathMod.js",function(r,e,n){e=t(e,{},"ramda"),function(){var r=e("./internal/_curry2"),t=e("./internal/_isInteger"),i=r(function(r,e){return t(r)?!t(e)||e<1?NaN:(r%e+e)%e:NaN});n.exports=i}()}),require.register("ramda/src/max.js",function(r,e,n){e=t(e,{},"ramda"),function(){var r=e("./internal/_curry2"),t=r(function(r,e){return e>r?e:r});n.exports=t}()}),require.register("ramda/src/maxBy.js",function(r,e,n){e=t(e,{},"ramda"),function(){var r=e("./internal/_curry3"),t=r(function(r,e,t){return r(t)>r(e)?t:e});n.exports=t}()}),require.register("ramda/src/mean.js",function(r,e,n){e=t(e,{},"ramda"),function(){var r=e("./internal/_curry1"),t=e("./sum"),i=r(function(r){return t(r)/r.length});n.exports=i}()}),require.register("ramda/src/median.js",function(r,e,n){e=t(e,{},"ramda"),function(){var r=e("./internal/_curry1"),t=e("./mean"),i=r(function(r){var e=r.length;if(0===e)return NaN;var n=2-e%2,i=(e-n)/2;return t(Array.prototype.slice.call(r,0).sort(function(r,e){return r<e?-1:r>e?1:0}).slice(i,i+n))});n.exports=i}()}),require.register("ramda/src/memoizeWith.js",function(r,e,n){e=t(e,{},"ramda"),function(){var r=e("./internal/_arity"),t=e("./internal/_curry2"),i=e("./internal/_has"),a=t(function(e,t){var n={};return r(t.length,function(){var r=e.apply(this,arguments);return i(r,n)||(n[r]=t.apply(this,arguments)),n[r]})});n.exports=a}()}),require.register("ramda/src/merge.js",function(r,e,n){e=t(e,{},"ramda"),function(){var r=e("./internal/_objectAssign"),t=e("./internal/_curry2"),i=t(function(e,t){return r({},e,t)});n.exports=i}()}),require.register("ramda/src/mergeAll.js",function(r,e,n){e=t(e,{},"ramda"),function(){var r=e("./internal/_objectAssign"),t=e("./internal/_curry1"),i=t(function(e){return r.apply(null,[{}].concat(e))});n.exports=i}()}),require.register("ramda/src/mergeDeepLeft.js",function(r,e,n){e=t(e,{},"ramda"),function(){var r=e("./internal/_curry2"),t=e("./mergeDeepWithKey"),i=r(function(r,e){return t(function(r,e,t){return e},r,e)});n.exports=i}()}),require.register("ramda/src/mergeDeepRight.js",function(r,e,n){e=t(e,{},"ramda"),function(){var r=e("./internal/_curry2"),t=e("./mergeDeepWithKey"),i=r(function(r,e){return t(function(r,e,t){return t},r,e)});n.exports=i}()}),require.register("ramda/src/mergeDeepWith.js",function(r,e,n){e=t(e,{},"ramda"),function(){var r=e("./internal/_curry3"),t=e("./mergeDeepWithKey"),i=r(function(r,e,n){return t(function(e,t,n){return r(t,n)},e,n)});n.exports=i}()}),require.register("ramda/src/mergeDeepWithKey.js",function(r,e,n){e=t(e,{},"ramda"),function(){var r=e("./internal/_curry3"),t=e("./internal/_isObject"),i=e("./mergeWithKey"),a=r(function o(r,e,n){return i(function(e,n,i){return t(n)&&t(i)?o(r,n,i):r(e,n,i)},e,n)});n.exports=a}()}),require.register("ramda/src/mergeLeft.js",function(r,e,n){e=t(e,{},"ramda"),function(){var r=e("./internal/_objectAssign"),t=e("./internal/_curry2"),i=t(function(e,t){return r({},t,e)});n.exports=i}()}),require.register("ramda/src/mergeRight.js",function(r,e,n){e=t(e,{},"ramda"),function(){var r=e("./internal/_objectAssign"),t=e("./internal/_curry2"),i=t(function(e,t){return r({},e,t)});n.exports=i}()}),require.register("ramda/src/mergeWith.js",function(r,e,n){e=t(e,{},"ramda"),function(){var r=e("./internal/_curry3"),t=e("./mergeWithKey"),i=r(function(r,e,n){return t(function(e,t,n){return r(t,n)},e,n)});n.exports=i}()}),require.register("ramda/src/mergeWithKey.js",function(r,e,n){e=t(e,{},"ramda"),function(){var r=e("./internal/_curry3"),t=e("./internal/_has"),i=r(function(r,e,n){var i,a={};for(i in e)t(i,e)&&(a[i]=t(i,n)?r(i,e[i],n[i]):e[i]);for(i in n)t(i,n)&&!t(i,a)&&(a[i]=n[i]);return a});n.exports=i}()}),require.register("ramda/src/min.js",function(r,e,n){e=t(e,{},"ramda"),function(){var r=e("./internal/_curry2"),t=r(function(r,e){return e<r?e:r});n.exports=t}()}),require.register("ramda/src/minBy.js",function(r,e,n){e=t(e,{},"ramda"),function(){var r=e("./internal/_curry3"),t=r(function(r,e,t){return r(t)<r(e)?t:e});n.exports=t}()}),require.register("ramda/src/modulo.js",function(r,e,n){e=t(e,{},"ramda"),function(){var r=e("./internal/_curry2"),t=r(function(r,e){return r%e});n.exports=t}()}),require.register("ramda/src/move.js",function(r,e,n){e=t(e,{},"ramda"),function(){var r=e("./internal/_curry3"),t=r(function(r,e,t){var n=t.length,i=t.slice(),a=r<0?n+r:r,o=e<0?n+e:e,s=i.splice(a,1);return a<0||a>=t.length||o<0||o>=t.length?t:[].concat(i.slice(0,o)).concat(s).concat(i.slice(o,t.length))});n.exports=t}()}),require.register("ramda/src/multiply.js",function(r,e,n){e=t(e,{},"ramda"),function(){var r=e("./internal/_curry2"),t=r(function(r,e){return r*e});n.exports=t}()}),require.register("ramda/src/nAry.js",function(r,e,n){e=t(e,{},"ramda"),function(){var r=e("./internal/_curry2"),t=r(function(r,e){switch(r){case 0:return function(){return e.call(this)};case 1:return function(r){return e.call(this,r)};case 2:return function(r,t){return e.call(this,r,t)};case 3:return function(r,t,n){return e.call(this,r,t,n)};case 4:return function(r,t,n,i){return e.call(this,r,t,n,i)};case 5:return function(r,t,n,i,a){return e.call(this,r,t,n,i,a)};case 6:return function(r,t,n,i,a,o){return e.call(this,r,t,n,i,a,o)};case 7:return function(r,t,n,i,a,o,s){return e.call(this,r,t,n,i,a,o,s)};case 8:return function(r,t,n,i,a,o,s,u){return e.call(this,r,t,n,i,a,o,s,u)};case 9:return function(r,t,n,i,a,o,s,u,c){return e.call(this,r,t,n,i,a,o,s,u,c)};case 10:return function(r,t,n,i,a,o,s,u,c,l){return e.call(this,r,t,n,i,a,o,s,u,c,l)};default:throw new Error("First argument to nAry must be a non-negative integer no greater than ten")}});n.exports=t}()}),require.register("ramda/src/negate.js",function(r,e,n){e=t(e,{},"ramda"),function(){var r=e("./internal/_curry1"),t=r(function(r){return-r});n.exports=t}()}),require.register("ramda/src/none.js",function(r,e,n){e=t(e,{},"ramda"),function(){var r=e("./internal/_complement"),t=e("./internal/_curry2"),i=e("./all"),a=t(function(e,t){return i(r(e),t)});n.exports=a}()}),require.register("ramda/src/not.js",function(r,e,n){e=t(e,{},"ramda"),function(){var r=e("./internal/_curry1"),t=r(function(r){return!r});n.exports=t}()}),require.register("ramda/src/nth.js",function(r,e,n){e=t(e,{},"ramda"),function(){var r=e("./internal/_curry2"),t=e("./internal/_isString"),i=r(function(r,e){var n=r<0?e.length+r:r;return t(e)?e.charAt(n):e[n]});n.exports=i}()}),require.register("ramda/src/nthArg.js",function(r,e,n){e=t(e,{},"ramda"),function(){var r=e("./internal/_curry1"),t=e("./curryN"),i=e("./nth"),a=r(function(r){var e=r<0?1:r+1;return t(e,function(){return i(r,arguments)})});n.exports=a}()}),require.register("ramda/src/o.js",function(r,e,n){e=t(e,{},"ramda"),function(){var r=e("./internal/_curry3"),t=r(function(r,e,t){return r(e(t))});n.exports=t}()}),require.register("ramda/src/objOf.js",function(r,e,n){e=t(e,{},"ramda"),function(){var r=e("./internal/_curry2"),t=r(function(r,e){var t={};return t[r]=e,t});n.exports=t}()}),require.register("ramda/src/of.js",function(r,e,n){e=t(e,{},"ramda"),function(){var r=e("./internal/_curry1"),t=e("./internal/_of"),i=r(t);n.exports=i}()}),require.register("ramda/src/omit.js",function(r,e,n){e=t(e,{},"ramda"),function(){var r=e("./internal/_curry2"),t=r(function(r,e){for(var t={},n={},i=0,a=r.length;i<a;)n[r[i]]=1,i+=1;for(var o in e)n.hasOwnProperty(o)||(t[o]=e[o]);return t});n.exports=t}()}),require.register("ramda/src/once.js",function(r,e,n){e=t(e,{},"ramda"),function(){var r=e("./internal/_arity"),t=e("./internal/_curry1"),i=t(function(e){var t,n=!1;return r(e.length,function(){return n?t:(n=!0,t=e.apply(this,arguments))})});n.exports=i}()}),require.register("ramda/src/or.js",function(r,e,n){e=t(e,{},"ramda"),function(){var r=e("./internal/_curry2"),t=r(function(r,e){return r||e});n.exports=t}()}),require.register("ramda/src/otherwise.js",function(r,e,n){e=t(e,{},"ramda"),function(){var r=e("./internal/_curry2"),t=e("./internal/_assertPromise"),i=r(function(r,e){return t("otherwise",e),e.then(null,r)});n.exports=i}()}),require.register("ramda/src/over.js",function(r,e,n){e=t(e,{},"ramda"),function(){var r=e("./internal/_curry3"),t=function(r){return{value:r,map:function(e){return t(e(r))}}},i=r(function(r,e,n){return r(function(r){return t(e(r))})(n).value});n.exports=i}()}),require.register("ramda/src/pair.js",function(r,e,n){e=t(e,{},"ramda"),function(){var r=e("./internal/_curry2"),t=r(function(r,e){return[r,e]});n.exports=t}()}),require.register("ramda/src/partial.js",function(r,e,n){e=t(e,{},"ramda"),function(){var r=e("./internal/_concat"),t=e("./internal/_createPartialApplicator"),i=t(r);n.exports=i}()}),require.register("ramda/src/partialRight.js",function(r,e,n){e=t(e,{},"ramda"),function(){var r=e("./internal/_concat"),t=e("./internal/_createPartialApplicator"),i=e("./flip"),a=t(i(r));n.exports=a}()}),require.register("ramda/src/partition.js",function(r,e,n){e=t(e,{},"ramda"),function(){var r=e("./filter"),t=e("./juxt"),i=e("./reject"),a=t([r,i]);n.exports=a}()}),require.register("ramda/src/path.js",function(r,e,n){e=t(e,{},"ramda"),function(){var r=e("./internal/_curry2"),t=e("./paths"),i=r(function(r,e){return t([r],e)[0]});n.exports=i}()}),require.register("ramda/src/pathEq.js",function(r,e,n){e=t(e,{},"ramda"),function(){var r=e("./internal/_curry3"),t=e("./equals"),i=e("./path"),a=r(function(r,e,n){return t(i(r,n),e)});n.exports=a}()}),require.register("ramda/src/pathOr.js",function(r,e,n){e=t(e,{},"ramda"),function(){var r=e("./internal/_curry3"),t=e("./defaultTo"),i=e("./path"),a=r(function(r,e,n){return t(r,i(e,n))});n.exports=a}()}),require.register("ramda/src/pathSatisfies.js",function(r,e,n){e=t(e,{},"ramda"),function(){var r=e("./internal/_curry3"),t=e("./path"),i=r(function(r,e,n){return r(t(e,n))});n.exports=i}()}),require.register("ramda/src/paths.js",function(r,e,n){e=t(e,{},"ramda"),function(){var r=e("./internal/_curry2"),t=e("./internal/_isInteger"),i=e("./nth"),a=r(function(r,e){return r.map(function(r){for(var n,a=e,o=0;o<r.length;){if(null==a)return;n=r[o],a=t(n)?i(n,a):a[n],o+=1}return a})});n.exports=a}()}),require.register("ramda/src/pick.js",function(r,e,n){e=t(e,{},"ramda"),function(){var r=e("./internal/_curry2"),t=r(function(r,e){for(var t={},n=0;n<r.length;)r[n]in e&&(t[r[n]]=e[r[n]]),n+=1;return t});n.exports=t}()}),require.register("ramda/src/pickAll.js",function(r,e,n){e=t(e,{},"ramda"),function(){var r=e("./internal/_curry2"),t=r(function(r,e){for(var t={},n=0,i=r.length;n<i;){var a=r[n];t[a]=e[a],n+=1}return t});n.exports=t}()}),require.register("ramda/src/pickBy.js",function(r,e,n){e=t(e,{},"ramda"),function(){var r=e("./internal/_curry2"),t=r(function(r,e){var t={};for(var n in e)r(e[n],n,e)&&(t[n]=e[n]);return t});n.exports=t}()}),require.register("ramda/src/pipe.js",function(r,e,n){e=t(e,{},"ramda"),function(){function r(){if(0===arguments.length)throw new Error("pipe requires at least one argument");return t(arguments[0].length,a(i,arguments[0],o(arguments)))}var t=e("./internal/_arity"),i=e("./internal/_pipe"),a=e("./reduce"),o=e("./tail");n.exports=r}()}),require.register("ramda/src/pipeK.js",function(r,e,n){e=t(e,{},"ramda"),function(){function r(){if(0===arguments.length)throw new Error("pipeK requires at least one argument");return t.apply(this,i(arguments))}var t=e("./composeK"),i=e("./reverse");n.exports=r}()}),require.register("ramda/src/pipeP.js",function(r,e,n){e=t(e,{},"ramda"),function(){function r(){if(0===arguments.length)throw new Error("pipeP requires at least one argument");return t(arguments[0].length,a(i,arguments[0],o(arguments)))}var t=e("./internal/_arity"),i=e("./internal/_pipeP"),a=e("./reduce"),o=e("./tail");n.exports=r}()}),require.register("ramda/src/pipeWith.js",function(r,e,n){e=t(e,{},"ramda"),function(){var r=e("./internal/_arity"),t=e("./internal/_curry2"),i=e("./head"),a=e("./internal/_reduce"),o=e("./tail"),s=e("./identity"),u=t(function(e,t){if(t.length<=0)return s;var n=i(t),u=o(t);return r(n.length,function(){return a(function(r,t){return e.call(this,t,r)},n.apply(this,arguments),u)})});n.exports=u}()}),require.register("ramda/src/pluck.js",function(r,e,n){e=t(e,{},"ramda"),function(){var r=e("./internal/_curry2"),t=e("./map"),i=e("./prop"),a=r(function(r,e){return t(i(r),e)});n.exports=a}()}),require.register("ramda/src/prepend.js",function(r,e,n){e=t(e,{},"ramda"),function(){var r=e("./internal/_concat"),t=e("./internal/_curry2"),i=t(function(e,t){return r([e],t)});n.exports=i}()}),require.register("ramda/src/product.js",function(r,e,n){e=t(e,{},"ramda"),function(){var r=e("./multiply"),t=e("./reduce"),i=t(r,1);n.exports=i}()}),require.register("ramda/src/project.js",function(r,e,n){e=t(e,{},"ramda"),function(){var r=e("./internal/_map"),t=e("./identity"),i=e("./pickAll"),a=e("./useWith"),o=a(r,[i,t]);n.exports=o}()}),require.register("ramda/src/prop.js",function(r,e,n){e=t(e,{},"ramda"),function(){var r=e("./internal/_curry2"),t=e("./path"),i=r(function(r,e){return t([r],e)});n.exports=i}()}),require.register("ramda/src/propEq.js",function(r,e,n){e=t(e,{},"ramda"),function(){var r=e("./internal/_curry3"),t=e("./equals"),i=r(function(r,e,n){return t(e,n[r])});n.exports=i}()}),require.register("ramda/src/propIs.js",function(r,e,n){e=t(e,{},"ramda"),function(){var r=e("./internal/_curry3"),t=e("./is"),i=r(function(r,e,n){return t(r,n[e])});n.exports=i}()}),require.register("ramda/src/propOr.js",function(r,e,n){e=t(e,{},"ramda"),function(){var r=e("./internal/_curry3"),t=e("./pathOr"),i=r(function(r,e,n){return t(r,[e],n)});n.exports=i}()}),require.register("ramda/src/propSatisfies.js",function(r,e,n){e=t(e,{},"ramda"),function(){var r=e("./internal/_curry3"),t=r(function(r,e,t){return r(t[e])});n.exports=t}()}),require.register("ramda/src/props.js",function(r,e,n){e=t(e,{},"ramda"),function(){var r=e("./internal/_curry2"),t=e("./path"),i=r(function(r,e){return r.map(function(r){return t([r],e)})});n.exports=i}()}),require.register("ramda/src/range.js",function(r,e,n){e=t(e,{},"ramda"),function(){var r=e("./internal/_curry2"),t=e("./internal/_isNumber"),i=r(function(r,e){if(!t(r)||!t(e))throw new TypeError("Both arguments to range must be numbers");for(var n=[],i=r;i<e;)n.push(i),i+=1;return n});n.exports=i}()}),require.register("ramda/src/reduce.js",function(r,e,n){e=t(e,{},"ramda"),function(){var r=e("./internal/_curry3"),t=e("./internal/_reduce"),i=r(t);n.exports=i}()}),require.register("ramda/src/reduceBy.js",function(r,e,n){e=t(e,{},"ramda"),function(){var r=e("./internal/_clone"),t=e("./internal/_curryN"),i=e("./internal/_dispatchable"),a=e("./internal/_has"),o=e("./internal/_reduce"),s=e("./internal/_xreduceBy"),u=t(4,[],i([],s,function(e,t,n,i){return o(function(i,o){var s=n(o);return i[s]=e(a(s,i)?i[s]:r(t,[],[],!1),o),i},{},i)}));n.exports=u}()}),require.register("ramda/src/reduceRight.js",function(r,e,n){e=t(e,{},"ramda"),function(){var r=e("./internal/_curry3"),t=r(function(r,e,t){for(var n=t.length-1;n>=0;)e=r(t[n],e),n-=1;return e});n.exports=t}()}),require.register("ramda/src/reduceWhile.js",function(r,e,n){e=t(e,{},"ramda"),function(){var r=e("./internal/_curryN"),t=e("./internal/_reduce"),i=e("./internal/_reduced"),a=r(4,[],function(r,e,n,a){return t(function(t,n){return r(t,n)?e(t,n):i(t)},n,a)});n.exports=a}()}),require.register("ramda/src/reduced.js",function(r,e,n){e=t(e,{},"ramda"),function(){var r=e("./internal/_curry1"),t=e("./internal/_reduced"),i=r(t);n.exports=i}()}),require.register("ramda/src/reject.js",function(r,e,n){e=t(e,{},"ramda"),function(){var r=e("./internal/_complement"),t=e("./internal/_curry2"),i=e("./filter"),a=t(function(e,t){return i(r(e),t)});n.exports=a}()}),require.register("ramda/src/remove.js",function(r,e,n){e=t(e,{},"ramda"),function(){var r=e("./internal/_curry3"),t=r(function(r,e,t){var n=Array.prototype.slice.call(t,0);return n.splice(r,e),n});n.exports=t}()}),require.register("ramda/src/repeat.js",function(r,e,n){e=t(e,{},"ramda"),function(){var r=e("./internal/_curry2"),t=e("./always"),i=e("./times"),a=r(function(r,e){return i(t(r),e)});n.exports=a}()}),require.register("ramda/src/replace.js",function(r,e,n){e=t(e,{},"ramda"),function(){var r=e("./internal/_curry3"),t=r(function(r,e,t){return t.replace(r,e)});n.exports=t}()}),require.register("ramda/src/reverse.js",function(r,e,n){e=t(e,{},"ramda"),function(){var r=e("./internal/_curry1"),t=e("./internal/_isString"),i=r(function(r){return t(r)?r.split("").reverse().join(""):Array.prototype.slice.call(r,0).reverse()});n.exports=i}()}),require.register("ramda/src/scan.js",function(r,e,n){e=t(e,{},"ramda"),function(){var r=e("./internal/_curry3"),t=r(function(r,e,t){for(var n=0,i=t.length,a=[e];n<i;)e=r(e,t[n]),a[n+1]=e,n+=1;return a});n.exports=t}()}),require.register("ramda/src/sequence.js",function(r,e,n){e=t(e,{},"ramda"),function(){var r=e("./internal/_curry2"),t=e("./ap"),i=e("./map"),a=e("./prepend"),o=e("./reduceRight"),s=r(function(r,e){return"function"==typeof e.sequence?e.sequence(r):o(function(r,e){return t(i(a,r),e)},r([]),e)});n.exports=s}()}),require.register("ramda/src/set.js",function(r,e,n){e=t(e,{},"ramda"),function(){var r=e("./internal/_curry3"),t=e("./always"),i=e("./over"),a=r(function(r,e,n){return i(r,t(e),n)});n.exports=a}()}),require.register("ramda/src/slice.js",function(r,e,n){e=t(e,{},"ramda"),function(){var r=e("./internal/_checkForMethod"),t=e("./internal/_curry3"),i=t(r("slice",function(r,e,t){return Array.prototype.slice.call(t,r,e)}));n.exports=i}()}),require.register("ramda/src/sort.js",function(r,e,n){e=t(e,{},"ramda"),function(){var r=e("./internal/_curry2"),t=r(function(r,e){return Array.prototype.slice.call(e,0).sort(r)});n.exports=t}()}),require.register("ramda/src/sortBy.js",function(r,e,n){e=t(e,{},"ramda"),function(){var r=e("./internal/_curry2"),t=r(function(r,e){return Array.prototype.slice.call(e,0).sort(function(e,t){var n=r(e),i=r(t);return n<i?-1:n>i?1:0})});n.exports=t}()}),require.register("ramda/src/sortWith.js",function(r,e,n){e=t(e,{},"ramda"),function(){var r=e("./internal/_curry2"),t=r(function(r,e){return Array.prototype.slice.call(e,0).sort(function(e,t){for(var n=0,i=0;0===n&&i<r.length;)n=r[i](e,t),i+=1;return n})});n.exports=t}()}),require.register("ramda/src/split.js",function(r,e,n){e=t(e,{},"ramda"),function(){var r=e("./invoker"),t=r(1,"split");n.exports=t}()}),require.register("ramda/src/splitAt.js",function(r,e,n){e=t(e,{},"ramda"),function(){var r=e("./internal/_curry2"),t=e("./length"),i=e("./slice"),a=r(function(r,e){return[i(0,r,e),i(r,t(e),e)]});n.exports=a}()}),require.register("ramda/src/splitEvery.js",function(r,e,n){e=t(e,{},"ramda"),function(){var r=e("./internal/_curry2"),t=e("./slice"),i=r(function(r,e){if(r<=0)throw new Error("First argument to splitEvery must be a positive integer");for(var n=[],i=0;i<e.length;)n.push(t(i,i+=r,e));return n});n.exports=i}()}),require.register("ramda/src/splitWhen.js",function(r,e,n){e=t(e,{},"ramda"),function(){var r=e("./internal/_curry2"),t=r(function(r,e){for(var t=0,n=e.length,i=[];t<n&&!r(e[t]);)i.push(e[t]),t+=1;return[i,Array.prototype.slice.call(e,t)]});n.exports=t}()}),require.register("ramda/src/startsWith.js",function(r,e,n){e=t(e,{},"ramda"),function(){var r=e("./internal/_curry2"),t=e("./equals"),i=e("./take"),a=r(function(r,e){return t(i(r.length,e),r)});n.exports=a}()}),require.register("ramda/src/subtract.js",function(r,e,n){e=t(e,{},"ramda"),function(){var r=e("./internal/_curry2"),t=r(function(r,e){return Number(r)-Number(e)});n.exports=t}()}),require.register("ramda/src/sum.js",function(r,e,n){e=t(e,{},"ramda"),function(){var r=e("./add"),t=e("./reduce"),i=t(r,0);n.exports=i}()}),require.register("ramda/src/symmetricDifference.js",function(r,e,n){
-e=t(e,{},"ramda"),function(){var r=e("./internal/_curry2"),t=e("./concat"),i=e("./difference"),a=r(function(r,e){return t(i(r,e),i(e,r))});n.exports=a}()}),require.register("ramda/src/symmetricDifferenceWith.js",function(r,e,n){e=t(e,{},"ramda"),function(){var r=e("./internal/_curry3"),t=e("./concat"),i=e("./differenceWith"),a=r(function(r,e,n){return t(i(r,e,n),i(r,n,e))});n.exports=a}()}),require.register("ramda/src/tail.js",function(r,e,n){e=t(e,{},"ramda"),function(){var r=e("./internal/_checkForMethod"),t=e("./internal/_curry1"),i=e("./slice"),a=t(r("tail",i(1,1/0)));n.exports=a}()}),require.register("ramda/src/take.js",function(r,e,n){e=t(e,{},"ramda"),function(){var r=e("./internal/_curry2"),t=e("./internal/_dispatchable"),i=e("./internal/_xtake"),a=e("./slice"),o=r(t(["take"],i,function(r,e){return a(0,r<0?1/0:r,e)}));n.exports=o}()}),require.register("ramda/src/takeLast.js",function(r,e,n){e=t(e,{},"ramda"),function(){var r=e("./internal/_curry2"),t=e("./drop"),i=r(function(r,e){return t(r>=0?e.length-r:0,e)});n.exports=i}()}),require.register("ramda/src/takeLastWhile.js",function(r,e,n){e=t(e,{},"ramda"),function(){var r=e("./internal/_curry2"),t=e("./slice"),i=r(function(r,e){for(var n=e.length-1;n>=0&&r(e[n]);)n-=1;return t(n+1,1/0,e)});n.exports=i}()}),require.register("ramda/src/takeWhile.js",function(r,e,n){e=t(e,{},"ramda"),function(){var r=e("./internal/_curry2"),t=e("./internal/_dispatchable"),i=e("./internal/_xtakeWhile"),a=e("./slice"),o=r(t(["takeWhile"],i,function(r,e){for(var t=0,n=e.length;t<n&&r(e[t]);)t+=1;return a(0,t,e)}));n.exports=o}()}),require.register("ramda/src/tap.js",function(r,e,n){e=t(e,{},"ramda"),function(){var r=e("./internal/_curry2"),t=e("./internal/_dispatchable"),i=e("./internal/_xtap"),a=r(t([],i,function(r,e){return r(e),e}));n.exports=a}()}),require.register("ramda/src/test.js",function(r,e,n){e=t(e,{},"ramda"),function(){var r=e("./internal/_cloneRegExp"),t=e("./internal/_curry2"),i=e("./internal/_isRegExp"),a=e("./toString"),o=t(function(e,t){if(!i(e))throw new TypeError("‘test’ requires a value of type RegExp as its first argument; received "+a(e));return r(e).test(t)});n.exports=o}()}),require.register("ramda/src/thunkify.js",function(r,e,n){e=t(e,{},"ramda"),function(){var r=e("./curryN"),t=e("./internal/_curry1"),i=t(function(e){return r(e.length,function(){var r=arguments;return function(){return e.apply(this,r)}})});n.exports=i}()}),require.register("ramda/src/times.js",function(r,e,n){e=t(e,{},"ramda"),function(){var r=e("./internal/_curry2"),t=r(function(r,e){var t,n=Number(e),i=0;if(n<0||isNaN(n))throw new RangeError("n must be a non-negative number");for(t=new Array(n);i<n;)t[i]=r(i),i+=1;return t});n.exports=t}()}),require.register("ramda/src/toLower.js",function(r,e,n){e=t(e,{},"ramda"),function(){var r=e("./invoker"),t=r(0,"toLowerCase");n.exports=t}()}),require.register("ramda/src/toPairs.js",function(r,e,n){e=t(e,{},"ramda"),function(){var r=e("./internal/_curry1"),t=e("./internal/_has"),i=r(function(r){var e=[];for(var n in r)t(n,r)&&(e[e.length]=[n,r[n]]);return e});n.exports=i}()}),require.register("ramda/src/toPairsIn.js",function(r,e,n){e=t(e,{},"ramda"),function(){var r=e("./internal/_curry1"),t=r(function(r){var e=[];for(var t in r)e[e.length]=[t,r[t]];return e});n.exports=t}()}),require.register("ramda/src/toString.js",function(r,e,n){e=t(e,{},"ramda"),function(){var r=e("./internal/_curry1"),t=e("./internal/_toString"),i=r(function(r){return t(r,[])});n.exports=i}()}),require.register("ramda/src/toUpper.js",function(r,e,n){e=t(e,{},"ramda"),function(){var r=e("./invoker"),t=r(0,"toUpperCase");n.exports=t}()}),require.register("ramda/src/transduce.js",function(r,e,n){e=t(e,{},"ramda"),function(){var r=e("./internal/_reduce"),t=e("./internal/_xwrap"),i=e("./curryN"),a=i(4,function(e,n,i,a){return r(e("function"==typeof n?t(n):n),i,a)});n.exports=a}()}),require.register("ramda/src/transpose.js",function(r,e,n){e=t(e,{},"ramda"),function(){var r=e("./internal/_curry1"),t=r(function(r){for(var e=0,t=[];e<r.length;){for(var n=r[e],i=0;i<n.length;)"undefined"==typeof t[i]&&(t[i]=[]),t[i].push(n[i]),i+=1;e+=1}return t});n.exports=t}()}),require.register("ramda/src/traverse.js",function(r,e,n){e=t(e,{},"ramda"),function(){var r=e("./internal/_curry3"),t=e("./map"),i=e("./sequence"),a=r(function(r,e,n){return"function"==typeof n["fantasy-land/traverse"]?n["fantasy-land/traverse"](e,r):i(r,t(e,n))});n.exports=a}()}),require.register("ramda/src/trim.js",function(r,e,n){e=t(e,{},"ramda"),function(){var r=e("./internal/_curry1"),t="\t\n\x0B\f\r   ᠎             　\u2028\u2029\ufeff",i="​",a="function"==typeof String.prototype.trim,o=r(a&&!t.trim()&&i.trim()?function(r){return r.trim()}:function(r){var e=new RegExp("^["+t+"]["+t+"]*"),n=new RegExp("["+t+"]["+t+"]*$");return r.replace(e,"").replace(n,"")});n.exports=o}()}),require.register("ramda/src/tryCatch.js",function(r,e,n){e=t(e,{},"ramda"),function(){var r=e("./internal/_arity"),t=e("./internal/_concat"),i=e("./internal/_curry2"),a=i(function(e,n){return r(e.length,function(){try{return e.apply(this,arguments)}catch(r){return n.apply(this,t([r],arguments))}})});n.exports=a}()}),require.register("ramda/src/type.js",function(r,e,n){e=t(e,{},"ramda"),function(){var r=e("./internal/_curry1"),t=r(function(r){return null===r?"Null":void 0===r?"Undefined":Object.prototype.toString.call(r).slice(8,-1)});n.exports=t}()}),require.register("ramda/src/unapply.js",function(r,e,n){e=t(e,{},"ramda"),function(){var r=e("./internal/_curry1"),t=r(function(r){return function(){return r(Array.prototype.slice.call(arguments,0))}});n.exports=t}()}),require.register("ramda/src/unary.js",function(r,e,n){e=t(e,{},"ramda"),function(){var r=e("./internal/_curry1"),t=e("./nAry"),i=r(function(r){return t(1,r)});n.exports=i}()}),require.register("ramda/src/uncurryN.js",function(r,e,n){e=t(e,{},"ramda"),function(){var r=e("./internal/_curry2"),t=e("./curryN"),i=r(function(r,e){return t(r,function(){for(var t,n=1,i=e,a=0;n<=r&&"function"==typeof i;)t=n===r?arguments.length:a+i.length,i=i.apply(this,Array.prototype.slice.call(arguments,a,t)),n+=1,a=t;return i})});n.exports=i}()}),require.register("ramda/src/unfold.js",function(r,e,n){e=t(e,{},"ramda"),function(){var r=e("./internal/_curry2"),t=r(function(r,e){for(var t=r(e),n=[];t&&t.length;)n[n.length]=t[0],t=r(t[1]);return n});n.exports=t}()}),require.register("ramda/src/union.js",function(r,e,n){e=t(e,{},"ramda"),function(){var r=e("./internal/_concat"),t=e("./internal/_curry2"),i=e("./compose"),a=e("./uniq"),o=t(i(a,r));n.exports=o}()}),require.register("ramda/src/unionWith.js",function(r,e,n){e=t(e,{},"ramda"),function(){var r=e("./internal/_concat"),t=e("./internal/_curry3"),i=e("./uniqWith"),a=t(function(e,t,n){return i(e,r(t,n))});n.exports=a}()}),require.register("ramda/src/uniq.js",function(r,e,n){e=t(e,{},"ramda"),function(){var r=e("./identity"),t=e("./uniqBy"),i=t(r);n.exports=i}()}),require.register("ramda/src/uniqBy.js",function(r,e,n){e=t(e,{},"ramda"),function(){var r=e("./internal/_Set"),t=e("./internal/_curry2"),i=t(function(e,t){for(var n,i,a=new r,o=[],s=0;s<t.length;)i=t[s],n=e(i),a.add(n)&&o.push(i),s+=1;return o});n.exports=i}()}),require.register("ramda/src/uniqWith.js",function(r,e,n){e=t(e,{},"ramda"),function(){var r=e("./internal/_includesWith"),t=e("./internal/_curry2"),i=t(function(e,t){for(var n,i=0,a=t.length,o=[];i<a;)n=t[i],r(e,n,o)||(o[o.length]=n),i+=1;return o});n.exports=i}()}),require.register("ramda/src/unless.js",function(r,e,n){e=t(e,{},"ramda"),function(){var r=e("./internal/_curry3"),t=r(function(r,e,t){return r(t)?t:e(t)});n.exports=t}()}),require.register("ramda/src/unnest.js",function(r,e,n){e=t(e,{},"ramda"),function(){var r=e("./internal/_identity"),t=e("./chain"),i=t(r);n.exports=i}()}),require.register("ramda/src/until.js",function(r,e,n){e=t(e,{},"ramda"),function(){var r=e("./internal/_curry3"),t=r(function(r,e,t){for(var n=t;!r(n);)n=e(n);return n});n.exports=t}()}),require.register("ramda/src/update.js",function(r,e,n){e=t(e,{},"ramda"),function(){var r=e("./internal/_curry3"),t=e("./adjust"),i=e("./always"),a=r(function(r,e,n){return t(r,i(e),n)});n.exports=a}()}),require.register("ramda/src/useWith.js",function(r,e,n){e=t(e,{},"ramda"),function(){var r=e("./internal/_curry2"),t=e("./curryN"),i=r(function(r,e){return t(e.length,function(){for(var t=[],n=0;n<e.length;)t.push(e[n].call(this,arguments[n])),n+=1;return r.apply(this,t.concat(Array.prototype.slice.call(arguments,e.length)))})});n.exports=i}()}),require.register("ramda/src/values.js",function(r,e,n){e=t(e,{},"ramda"),function(){var r=e("./internal/_curry1"),t=e("./keys"),i=r(function(r){for(var e=t(r),n=e.length,i=[],a=0;a<n;)i[a]=r[e[a]],a+=1;return i});n.exports=i}()}),require.register("ramda/src/valuesIn.js",function(r,e,n){e=t(e,{},"ramda"),function(){var r=e("./internal/_curry1"),t=r(function(r){var e,t=[];for(e in r)t[t.length]=r[e];return t});n.exports=t}()}),require.register("ramda/src/view.js",function(r,e,n){e=t(e,{},"ramda"),function(){var r=e("./internal/_curry2"),t=function(r){return{value:r,"fantasy-land/map":function(){return this}}},i=r(function(r,e){return r(t)(e).value});n.exports=i}()}),require.register("ramda/src/when.js",function(r,e,n){e=t(e,{},"ramda"),function(){var r=e("./internal/_curry3"),t=r(function(r,e,t){return r(t)?e(t):t});n.exports=t}()}),require.register("ramda/src/where.js",function(r,e,n){e=t(e,{},"ramda"),function(){var r=e("./internal/_curry2"),t=e("./internal/_has"),i=r(function(r,e){for(var n in r)if(t(n,r)&&!r[n](e[n]))return!1;return!0});n.exports=i}()}),require.register("ramda/src/whereEq.js",function(r,e,n){e=t(e,{},"ramda"),function(){var r=e("./internal/_curry2"),t=e("./equals"),i=e("./map"),a=e("./where"),o=r(function(r,e){return a(i(t,r),e)});n.exports=o}()}),require.register("ramda/src/without.js",function(r,e,n){e=t(e,{},"ramda"),function(){var r=e("./internal/_includes"),t=e("./internal/_curry2"),i=e("./flip"),a=e("./reject"),o=t(function(e,t){return a(i(r)(e),t)});n.exports=o}()}),require.register("ramda/src/xor.js",function(r,e,n){e=t(e,{},"ramda"),function(){var r=e("./internal/_curry2"),t=r(function(r,e){return Boolean(!r^!e)});n.exports=t}()}),require.register("ramda/src/xprod.js",function(r,e,n){e=t(e,{},"ramda"),function(){var r=e("./internal/_curry2"),t=r(function(r,e){for(var t,n=0,i=r.length,a=e.length,o=[];n<i;){for(t=0;t<a;)o[o.length]=[r[n],e[t]],t+=1;n+=1}return o});n.exports=t}()}),require.register("ramda/src/zip.js",function(r,e,n){e=t(e,{},"ramda"),function(){var r=e("./internal/_curry2"),t=r(function(r,e){for(var t=[],n=0,i=Math.min(r.length,e.length);n<i;)t[n]=[r[n],e[n]],n+=1;return t});n.exports=t}()}),require.register("ramda/src/zipObj.js",function(r,e,n){e=t(e,{},"ramda"),function(){var r=e("./internal/_curry2"),t=r(function(r,e){for(var t=0,n=Math.min(r.length,e.length),i={};t<n;)i[r[t]]=e[t],t+=1;return i});n.exports=t}()}),require.register("ramda/src/zipWith.js",function(r,e,n){e=t(e,{},"ramda"),function(){var r=e("./internal/_curry3"),t=r(function(r,e,t){for(var n=[],i=0,a=Math.min(e.length,t.length);i<a;)n[i]=r(e[i],t[i]),i+=1;return n});n.exports=t}()}),require.alias("data.task/lib/index.js","data.task"),require.alias("marked/lib/marked.js","marked"),require.alias("process/browser.js","process"),require.alias("ramda/src/index.js","ramda"),r=require("process"),require.register("___globals___",function(r,e,t){window.m=e("mithril"),window.Task=e("data.task")})}(),require("___globals___");
+(function() {
+  'use strict';
+
+  var globals = typeof global === 'undefined' ? self : global;
+  if (typeof globals.require === 'function') return;
+
+  var modules = {};
+  var cache = {};
+  var aliases = {};
+  var has = {}.hasOwnProperty;
+
+  var expRe = /^\.\.?(\/|$)/;
+  var expand = function(root, name) {
+    var results = [], part;
+    var parts = (expRe.test(name) ? root + '/' + name : name).split('/');
+    for (var i = 0, length = parts.length; i < length; i++) {
+      part = parts[i];
+      if (part === '..') {
+        results.pop();
+      } else if (part !== '.' && part !== '') {
+        results.push(part);
+      }
+    }
+    return results.join('/');
+  };
+
+  var dirname = function(path) {
+    return path.split('/').slice(0, -1).join('/');
+  };
+
+  var localRequire = function(path) {
+    return function expanded(name) {
+      var absolute = expand(dirname(path), name);
+      return globals.require(absolute, path);
+    };
+  };
+
+  var initModule = function(name, definition) {
+    var hot = hmr && hmr.createHot(name);
+    var module = {id: name, exports: {}, hot: hot};
+    cache[name] = module;
+    definition(module.exports, localRequire(name), module);
+    return module.exports;
+  };
+
+  var expandAlias = function(name) {
+    var val = aliases[name];
+    return (val && name !== val) ? expandAlias(val) : name;
+  };
+
+  var _resolve = function(name, dep) {
+    return expandAlias(expand(dirname(name), dep));
+  };
+
+  var require = function(name, loaderPath) {
+    if (loaderPath == null) loaderPath = '/';
+    var path = expandAlias(name);
+
+    if (has.call(cache, path)) return cache[path].exports;
+    if (has.call(modules, path)) return initModule(path, modules[path]);
+
+    throw new Error("Cannot find module '" + name + "' from '" + loaderPath + "'");
+  };
+
+  require.alias = function(from, to) {
+    aliases[to] = from;
+  };
+
+  var extRe = /\.[^.\/]+$/;
+  var indexRe = /\/index(\.[^\/]+)?$/;
+  var addExtensions = function(bundle) {
+    if (extRe.test(bundle)) {
+      var alias = bundle.replace(extRe, '');
+      if (!has.call(aliases, alias) || aliases[alias].replace(extRe, '') === alias + '/index') {
+        aliases[alias] = bundle;
+      }
+    }
+
+    if (indexRe.test(bundle)) {
+      var iAlias = bundle.replace(indexRe, '');
+      if (!has.call(aliases, iAlias)) {
+        aliases[iAlias] = bundle;
+      }
+    }
+  };
+
+  require.register = require.define = function(bundle, fn) {
+    if (bundle && typeof bundle === 'object') {
+      for (var key in bundle) {
+        if (has.call(bundle, key)) {
+          require.register(key, bundle[key]);
+        }
+      }
+    } else {
+      modules[bundle] = fn;
+      delete cache[bundle];
+      addExtensions(bundle);
+    }
+  };
+
+  require.list = function() {
+    var list = [];
+    for (var item in modules) {
+      if (has.call(modules, item)) {
+        list.push(item);
+      }
+    }
+    return list;
+  };
+
+  var hmr = globals._hmr && new globals._hmr(_resolve, require, modules, cache);
+  require._cache = cache;
+  require.hmr = hmr && hmr.wrap;
+  require.brunch = true;
+  globals.require = require;
+})();
+
+(function() {
+var global = typeof window === 'undefined' ? this : window;
+var __makeRelativeRequire = function(require, mappings, pref) {
+  var none = {};
+  var tryReq = function(name, pref) {
+    var val;
+    try {
+      val = require(pref + '/node_modules/' + name);
+      return val;
+    } catch (e) {
+      if (e.toString().indexOf('Cannot find module') === -1) {
+        throw e;
+      }
+
+      if (pref.indexOf('node_modules') !== -1) {
+        var s = pref.split('/');
+        var i = s.lastIndexOf('node_modules');
+        var newPref = s.slice(0, i).join('/');
+        return tryReq(name, newPref);
+      }
+    }
+    return none;
+  };
+  return function(name) {
+    if (name in mappings) name = mappings[name];
+    if (!name) return;
+    if (name[0] !== '.' && pref) {
+      var val = tryReq(name, pref);
+      if (val !== none) return val;
+    }
+    return require(name);
+  }
+};
+
+require.register("mithril/api/mount-redraw.js", function(exports, require, module) {
+  require = __makeRelativeRequire(require, {}, "mithril");
+  (function() {
+    "use strict"
+
+var Vnode = require("../render/vnode")
+
+module.exports = function(render, schedule, console) {
+	var subscriptions = []
+	var rendering = false
+	var pending = false
+
+	function sync() {
+		if (rendering) throw new Error("Nested m.redraw.sync() call")
+		rendering = true
+		for (var i = 0; i < subscriptions.length; i += 2) {
+			try { render(subscriptions[i], Vnode(subscriptions[i + 1]), redraw) }
+			catch (e) { console.error(e) }
+		}
+		rendering = false
+	}
+
+	function redraw() {
+		if (!pending) {
+			pending = true
+			schedule(function() {
+				pending = false
+				sync()
+			})
+		}
+	}
+
+	redraw.sync = sync
+
+	function mount(root, component) {
+		if (component != null && component.view == null && typeof component !== "function") {
+			throw new TypeError("m.mount(element, component) expects a component, not a vnode")
+		}
+
+		var index = subscriptions.indexOf(root)
+		if (index >= 0) {
+			subscriptions.splice(index, 2)
+			render(root, [], redraw)
+		}
+
+		if (component != null) {
+			subscriptions.push(root, component)
+			render(root, Vnode(component), redraw)
+		}
+	}
+
+	return {mount: mount, redraw: redraw}
+}
+  })();
+});
+
+require.register("mithril/api/router.js", function(exports, require, module) {
+  require = __makeRelativeRequire(require, {}, "mithril");
+  (function() {
+    "use strict"
+
+var Vnode = require("../render/vnode")
+var m = require("../render/hyperscript")
+var Promise = require("../promise/promise")
+
+var buildPathname = require("../pathname/build")
+var parsePathname = require("../pathname/parse")
+var compileTemplate = require("../pathname/compileTemplate")
+var assign = require("../pathname/assign")
+
+var sentinel = {}
+
+module.exports = function($window, mountRedraw) {
+	var fireAsync
+
+	function setPath(path, data, options) {
+		path = buildPathname(path, data)
+		if (fireAsync != null) {
+			fireAsync()
+			var state = options ? options.state : null
+			var title = options ? options.title : null
+			if (options && options.replace) $window.history.replaceState(state, title, route.prefix + path)
+			else $window.history.pushState(state, title, route.prefix + path)
+		}
+		else {
+			$window.location.href = route.prefix + path
+		}
+	}
+
+	var currentResolver = sentinel, component, attrs, currentPath, lastUpdate
+
+	var SKIP = route.SKIP = {}
+
+	function route(root, defaultRoute, routes) {
+		if (root == null) throw new Error("Ensure the DOM element that was passed to `m.route` is not undefined")
+		// 0 = start
+		// 1 = init
+		// 2 = ready
+		var state = 0
+
+		var compiled = Object.keys(routes).map(function(route) {
+			if (route[0] !== "/") throw new SyntaxError("Routes must start with a `/`")
+			if ((/:([^\/\.-]+)(\.{3})?:/).test(route)) {
+				throw new SyntaxError("Route parameter names must be separated with either `/`, `.`, or `-`")
+			}
+			return {
+				route: route,
+				component: routes[route],
+				check: compileTemplate(route),
+			}
+		})
+		var callAsync = typeof setImmediate === "function" ? setImmediate : setTimeout
+		var p = Promise.resolve()
+		var scheduled = false
+		var onremove
+
+		fireAsync = null
+
+		if (defaultRoute != null) {
+			var defaultData = parsePathname(defaultRoute)
+
+			if (!compiled.some(function (i) { return i.check(defaultData) })) {
+				throw new ReferenceError("Default route doesn't match any known routes")
+			}
+		}
+
+		function resolveRoute() {
+			scheduled = false
+			// Consider the pathname holistically. The prefix might even be invalid,
+			// but that's not our problem.
+			var prefix = $window.location.hash
+			if (route.prefix[0] !== "#") {
+				prefix = $window.location.search + prefix
+				if (route.prefix[0] !== "?") {
+					prefix = $window.location.pathname + prefix
+					if (prefix[0] !== "/") prefix = "/" + prefix
+				}
+			}
+			// This seemingly useless `.concat()` speeds up the tests quite a bit,
+			// since the representation is consistently a relatively poorly
+			// optimized cons string.
+			var path = prefix.concat()
+				.replace(/(?:%[a-f89][a-f0-9])+/gim, decodeURIComponent)
+				.slice(route.prefix.length)
+			var data = parsePathname(path)
+
+			assign(data.params, $window.history.state)
+
+			function fail() {
+				if (path === defaultRoute) throw new Error("Could not resolve default route " + defaultRoute)
+				setPath(defaultRoute, null, {replace: true})
+			}
+
+			loop(0)
+			function loop(i) {
+				// 0 = init
+				// 1 = scheduled
+				// 2 = done
+				for (; i < compiled.length; i++) {
+					if (compiled[i].check(data)) {
+						var payload = compiled[i].component
+						var matchedRoute = compiled[i].route
+						var localComp = payload
+						var update = lastUpdate = function(comp) {
+							if (update !== lastUpdate) return
+							if (comp === SKIP) return loop(i + 1)
+							component = comp != null && (typeof comp.view === "function" || typeof comp === "function")? comp : "div"
+							attrs = data.params, currentPath = path, lastUpdate = null
+							currentResolver = payload.render ? payload : null
+							if (state === 2) mountRedraw.redraw()
+							else {
+								state = 2
+								mountRedraw.redraw.sync()
+							}
+						}
+						// There's no understating how much I *wish* I could
+						// use `async`/`await` here...
+						if (payload.view || typeof payload === "function") {
+							payload = {}
+							update(localComp)
+						}
+						else if (payload.onmatch) {
+							p.then(function () {
+								return payload.onmatch(data.params, path, matchedRoute)
+							}).then(update, fail)
+						}
+						else update("div")
+						return
+					}
+				}
+				fail()
+			}
+		}
+
+		// Set it unconditionally so `m.route.set` and `m.route.Link` both work,
+		// even if neither `pushState` nor `hashchange` are supported. It's
+		// cleared if `hashchange` is used, since that makes it automatically
+		// async.
+		fireAsync = function() {
+			if (!scheduled) {
+				scheduled = true
+				callAsync(resolveRoute)
+			}
+		}
+
+		if (typeof $window.history.pushState === "function") {
+			onremove = function() {
+				$window.removeEventListener("popstate", fireAsync, false)
+			}
+			$window.addEventListener("popstate", fireAsync, false)
+		} else if (route.prefix[0] === "#") {
+			fireAsync = null
+			onremove = function() {
+				$window.removeEventListener("hashchange", resolveRoute, false)
+			}
+			$window.addEventListener("hashchange", resolveRoute, false)
+		}
+
+		return mountRedraw.mount(root, {
+			onbeforeupdate: function() {
+				state = state ? 2 : 1
+				return !(!state || sentinel === currentResolver)
+			},
+			oncreate: resolveRoute,
+			onremove: onremove,
+			view: function() {
+				if (!state || sentinel === currentResolver) return
+				// Wrap in a fragment to preserve existing key semantics
+				var vnode = [Vnode(component, attrs.key, attrs)]
+				if (currentResolver) vnode = currentResolver.render(vnode[0])
+				return vnode
+			},
+		})
+	}
+	route.set = function(path, data, options) {
+		if (lastUpdate != null) {
+			options = options || {}
+			options.replace = true
+		}
+		lastUpdate = null
+		setPath(path, data, options)
+	}
+	route.get = function() {return currentPath}
+	route.prefix = "#!"
+	route.Link = {
+		view: function(vnode) {
+			var options = vnode.attrs.options
+			// Remove these so they don't get overwritten
+			var attrs = {}, onclick, href
+			assign(attrs, vnode.attrs)
+			// The first two are internal, but the rest are magic attributes
+			// that need censored to not screw up rendering.
+			attrs.selector = attrs.options = attrs.key = attrs.oninit =
+			attrs.oncreate = attrs.onbeforeupdate = attrs.onupdate =
+			attrs.onbeforeremove = attrs.onremove = null
+
+			// Do this now so we can get the most current `href` and `disabled`.
+			// Those attributes may also be specified in the selector, and we
+			// should honor that.
+			var child = m(vnode.attrs.selector || "a", attrs, vnode.children)
+
+			// Let's provide a *right* way to disable a route link, rather than
+			// letting people screw up accessibility on accident.
+			//
+			// The attribute is coerced so users don't get surprised over
+			// `disabled: 0` resulting in a button that's somehow routable
+			// despite being visibly disabled.
+			if (child.attrs.disabled = Boolean(child.attrs.disabled)) {
+				child.attrs.href = null
+				child.attrs["aria-disabled"] = "true"
+				// If you *really* do want to do this on a disabled link, use
+				// an `oncreate` hook to add it.
+				child.attrs.onclick = null
+			} else {
+				onclick = child.attrs.onclick
+				href = child.attrs.href
+				child.attrs.href = route.prefix + href
+				child.attrs.onclick = function(e) {
+					var result
+					if (typeof onclick === "function") {
+						result = onclick.call(e.currentTarget, e)
+					} else if (onclick == null || typeof onclick !== "object") {
+						// do nothing
+					} else if (typeof onclick.handleEvent === "function") {
+						onclick.handleEvent(e)
+					}
+
+					// Adapted from React Router's implementation:
+					// https://github.com/ReactTraining/react-router/blob/520a0acd48ae1b066eb0b07d6d4d1790a1d02482/packages/react-router-dom/modules/Link.js
+					//
+					// Try to be flexible and intuitive in how we handle links.
+					// Fun fact: links aren't as obvious to get right as you
+					// would expect. There's a lot more valid ways to click a
+					// link than this, and one might want to not simply click a
+					// link, but right click or command-click it to copy the
+					// link target, etc. Nope, this isn't just for blind people.
+					if (
+						// Skip if `onclick` prevented default
+						result !== false && !e.defaultPrevented &&
+						// Ignore everything but left clicks
+						(e.button === 0 || e.which === 0 || e.which === 1) &&
+						// Let the browser handle `target=_blank`, etc.
+						(!e.currentTarget.target || e.currentTarget.target === "_self") &&
+						// No modifier keys
+						!e.ctrlKey && !e.metaKey && !e.shiftKey && !e.altKey
+					) {
+						e.preventDefault()
+						e.redraw = false
+						route.set(href, null, options)
+					}
+				}
+			}
+			return child
+		},
+	}
+	route.param = function(key) {
+		return attrs && key != null ? attrs[key] : attrs
+	}
+
+	return route
+}
+  })();
+});
+
+require.register("mithril/hyperscript.js", function(exports, require, module) {
+  require = __makeRelativeRequire(require, {}, "mithril");
+  (function() {
+    "use strict"
+
+var hyperscript = require("./render/hyperscript")
+
+hyperscript.trust = require("./render/trust")
+hyperscript.fragment = require("./render/fragment")
+
+module.exports = hyperscript
+  })();
+});
+
+require.register("mithril/index.js", function(exports, require, module) {
+  require = __makeRelativeRequire(require, {}, "mithril");
+  (function() {
+    "use strict"
+
+var hyperscript = require("./hyperscript")
+var request = require("./request")
+var mountRedraw = require("./mount-redraw")
+
+var m = function m() { return hyperscript.apply(this, arguments) }
+m.m = hyperscript
+m.trust = hyperscript.trust
+m.fragment = hyperscript.fragment
+m.mount = mountRedraw.mount
+m.route = require("./route")
+m.render = require("./render")
+m.redraw = mountRedraw.redraw
+m.request = request.request
+m.jsonp = request.jsonp
+m.parseQueryString = require("./querystring/parse")
+m.buildQueryString = require("./querystring/build")
+m.parsePathname = require("./pathname/parse")
+m.buildPathname = require("./pathname/build")
+m.vnode = require("./render/vnode")
+m.PromisePolyfill = require("./promise/polyfill")
+
+module.exports = m
+  })();
+});
+
+require.register("mithril/mount-redraw.js", function(exports, require, module) {
+  require = __makeRelativeRequire(require, {}, "mithril");
+  (function() {
+    "use strict"
+
+var render = require("./render")
+
+module.exports = require("./api/mount-redraw")(render, requestAnimationFrame, console)
+  })();
+});
+
+require.register("mithril/pathname/assign.js", function(exports, require, module) {
+  require = __makeRelativeRequire(require, {}, "mithril");
+  (function() {
+    "use strict"
+
+module.exports = Object.assign || function(target, source) {
+	if(source) Object.keys(source).forEach(function(key) { target[key] = source[key] })
+}
+  })();
+});
+
+require.register("mithril/pathname/build.js", function(exports, require, module) {
+  require = __makeRelativeRequire(require, {}, "mithril");
+  (function() {
+    "use strict"
+
+var buildQueryString = require("../querystring/build")
+var assign = require("./assign")
+
+// Returns `path` from `template` + `params`
+module.exports = function(template, params) {
+	if ((/:([^\/\.-]+)(\.{3})?:/).test(template)) {
+		throw new SyntaxError("Template parameter names *must* be separated")
+	}
+	if (params == null) return template
+	var queryIndex = template.indexOf("?")
+	var hashIndex = template.indexOf("#")
+	var queryEnd = hashIndex < 0 ? template.length : hashIndex
+	var pathEnd = queryIndex < 0 ? queryEnd : queryIndex
+	var path = template.slice(0, pathEnd)
+	var query = {}
+
+	assign(query, params)
+
+	var resolved = path.replace(/:([^\/\.-]+)(\.{3})?/g, function(m, key, variadic) {
+		delete query[key]
+		// If no such parameter exists, don't interpolate it.
+		if (params[key] == null) return m
+		// Escape normal parameters, but not variadic ones.
+		return variadic ? params[key] : encodeURIComponent(String(params[key]))
+	})
+
+	// In case the template substitution adds new query/hash parameters.
+	var newQueryIndex = resolved.indexOf("?")
+	var newHashIndex = resolved.indexOf("#")
+	var newQueryEnd = newHashIndex < 0 ? resolved.length : newHashIndex
+	var newPathEnd = newQueryIndex < 0 ? newQueryEnd : newQueryIndex
+	var result = resolved.slice(0, newPathEnd)
+
+	if (queryIndex >= 0) result += template.slice(queryIndex, queryEnd)
+	if (newQueryIndex >= 0) result += (queryIndex < 0 ? "?" : "&") + resolved.slice(newQueryIndex, newQueryEnd)
+	var querystring = buildQueryString(query)
+	if (querystring) result += (queryIndex < 0 && newQueryIndex < 0 ? "?" : "&") + querystring
+	if (hashIndex >= 0) result += template.slice(hashIndex)
+	if (newHashIndex >= 0) result += (hashIndex < 0 ? "" : "&") + resolved.slice(newHashIndex)
+	return result
+}
+  })();
+});
+
+require.register("mithril/pathname/compileTemplate.js", function(exports, require, module) {
+  require = __makeRelativeRequire(require, {}, "mithril");
+  (function() {
+    "use strict"
+
+var parsePathname = require("./parse")
+
+// Compiles a template into a function that takes a resolved path (without query
+// strings) and returns an object containing the template parameters with their
+// parsed values. This expects the input of the compiled template to be the
+// output of `parsePathname`. Note that it does *not* remove query parameters
+// specified in the template.
+module.exports = function(template) {
+	var templateData = parsePathname(template)
+	var templateKeys = Object.keys(templateData.params)
+	var keys = []
+	var regexp = new RegExp("^" + templateData.path.replace(
+		// I escape literal text so people can use things like `:file.:ext` or
+		// `:lang-:locale` in routes. This is all merged into one pass so I
+		// don't also accidentally escape `-` and make it harder to detect it to
+		// ban it from template parameters.
+		/:([^\/.-]+)(\.{3}|\.(?!\.)|-)?|[\\^$*+.()|\[\]{}]/g,
+		function(m, key, extra) {
+			if (key == null) return "\\" + m
+			keys.push({k: key, r: extra === "..."})
+			if (extra === "...") return "(.*)"
+			if (extra === ".") return "([^/]+)\\."
+			return "([^/]+)" + (extra || "")
+		}
+	) + "$")
+	return function(data) {
+		// First, check the params. Usually, there isn't any, and it's just
+		// checking a static set.
+		for (var i = 0; i < templateKeys.length; i++) {
+			if (templateData.params[templateKeys[i]] !== data.params[templateKeys[i]]) return false
+		}
+		// If no interpolations exist, let's skip all the ceremony
+		if (!keys.length) return regexp.test(data.path)
+		var values = regexp.exec(data.path)
+		if (values == null) return false
+		for (var i = 0; i < keys.length; i++) {
+			data.params[keys[i].k] = keys[i].r ? values[i + 1] : decodeURIComponent(values[i + 1])
+		}
+		return true
+	}
+}
+  })();
+});
+
+require.register("mithril/pathname/parse.js", function(exports, require, module) {
+  require = __makeRelativeRequire(require, {}, "mithril");
+  (function() {
+    "use strict"
+
+var parseQueryString = require("../querystring/parse")
+
+// Returns `{path, params}` from `url`
+module.exports = function(url) {
+	var queryIndex = url.indexOf("?")
+	var hashIndex = url.indexOf("#")
+	var queryEnd = hashIndex < 0 ? url.length : hashIndex
+	var pathEnd = queryIndex < 0 ? queryEnd : queryIndex
+	var path = url.slice(0, pathEnd).replace(/\/{2,}/g, "/")
+
+	if (!path) path = "/"
+	else {
+		if (path[0] !== "/") path = "/" + path
+		if (path.length > 1 && path[path.length - 1] === "/") path = path.slice(0, -1)
+	}
+	return {
+		path: path,
+		params: queryIndex < 0
+			? {}
+			: parseQueryString(url.slice(queryIndex + 1, queryEnd)),
+	}
+}
+  })();
+});
+
+require.register("mithril/promise/polyfill.js", function(exports, require, module) {
+  require = __makeRelativeRequire(require, {}, "mithril");
+  (function() {
+    "use strict"
+/** @constructor */
+var PromisePolyfill = function(executor) {
+	if (!(this instanceof PromisePolyfill)) throw new Error("Promise must be called with `new`")
+	if (typeof executor !== "function") throw new TypeError("executor must be a function")
+
+	var self = this, resolvers = [], rejectors = [], resolveCurrent = handler(resolvers, true), rejectCurrent = handler(rejectors, false)
+	var instance = self._instance = {resolvers: resolvers, rejectors: rejectors}
+	var callAsync = typeof setImmediate === "function" ? setImmediate : setTimeout
+	function handler(list, shouldAbsorb) {
+		return function execute(value) {
+			var then
+			try {
+				if (shouldAbsorb && value != null && (typeof value === "object" || typeof value === "function") && typeof (then = value.then) === "function") {
+					if (value === self) throw new TypeError("Promise can't be resolved w/ itself")
+					executeOnce(then.bind(value))
+				}
+				else {
+					callAsync(function() {
+						if (!shouldAbsorb && list.length === 0) console.error("Possible unhandled promise rejection:", value)
+						for (var i = 0; i < list.length; i++) list[i](value)
+						resolvers.length = 0, rejectors.length = 0
+						instance.state = shouldAbsorb
+						instance.retry = function() {execute(value)}
+					})
+				}
+			}
+			catch (e) {
+				rejectCurrent(e)
+			}
+		}
+	}
+	function executeOnce(then) {
+		var runs = 0
+		function run(fn) {
+			return function(value) {
+				if (runs++ > 0) return
+				fn(value)
+			}
+		}
+		var onerror = run(rejectCurrent)
+		try {then(run(resolveCurrent), onerror)} catch (e) {onerror(e)}
+	}
+
+	executeOnce(executor)
+}
+PromisePolyfill.prototype.then = function(onFulfilled, onRejection) {
+	var self = this, instance = self._instance
+	function handle(callback, list, next, state) {
+		list.push(function(value) {
+			if (typeof callback !== "function") next(value)
+			else try {resolveNext(callback(value))} catch (e) {if (rejectNext) rejectNext(e)}
+		})
+		if (typeof instance.retry === "function" && state === instance.state) instance.retry()
+	}
+	var resolveNext, rejectNext
+	var promise = new PromisePolyfill(function(resolve, reject) {resolveNext = resolve, rejectNext = reject})
+	handle(onFulfilled, instance.resolvers, resolveNext, true), handle(onRejection, instance.rejectors, rejectNext, false)
+	return promise
+}
+PromisePolyfill.prototype.catch = function(onRejection) {
+	return this.then(null, onRejection)
+}
+PromisePolyfill.prototype.finally = function(callback) {
+	return this.then(
+		function(value) {
+			return PromisePolyfill.resolve(callback()).then(function() {
+				return value
+			})
+		},
+		function(reason) {
+			return PromisePolyfill.resolve(callback()).then(function() {
+				return PromisePolyfill.reject(reason);
+			})
+		}
+	)
+}
+PromisePolyfill.resolve = function(value) {
+	if (value instanceof PromisePolyfill) return value
+	return new PromisePolyfill(function(resolve) {resolve(value)})
+}
+PromisePolyfill.reject = function(value) {
+	return new PromisePolyfill(function(resolve, reject) {reject(value)})
+}
+PromisePolyfill.all = function(list) {
+	return new PromisePolyfill(function(resolve, reject) {
+		var total = list.length, count = 0, values = []
+		if (list.length === 0) resolve([])
+		else for (var i = 0; i < list.length; i++) {
+			(function(i) {
+				function consume(value) {
+					count++
+					values[i] = value
+					if (count === total) resolve(values)
+				}
+				if (list[i] != null && (typeof list[i] === "object" || typeof list[i] === "function") && typeof list[i].then === "function") {
+					list[i].then(consume, reject)
+				}
+				else consume(list[i])
+			})(i)
+		}
+	})
+}
+PromisePolyfill.race = function(list) {
+	return new PromisePolyfill(function(resolve, reject) {
+		for (var i = 0; i < list.length; i++) {
+			list[i].then(resolve, reject)
+		}
+	})
+}
+
+module.exports = PromisePolyfill
+  })();
+});
+
+require.register("mithril/promise/promise.js", function(exports, require, module) {
+  require = __makeRelativeRequire(require, {}, "mithril");
+  (function() {
+    "use strict"
+
+var PromisePolyfill = require("./polyfill")
+
+if (typeof window !== "undefined") {
+	if (typeof window.Promise === "undefined") {
+		window.Promise = PromisePolyfill
+	} else if (!window.Promise.prototype.finally) {
+		window.Promise.prototype.finally = PromisePolyfill.prototype.finally
+	}
+	module.exports = window.Promise
+} else if (typeof global !== "undefined") {
+	if (typeof global.Promise === "undefined") {
+		global.Promise = PromisePolyfill
+	} else if (!global.Promise.prototype.finally) {
+		global.Promise.prototype.finally = PromisePolyfill.prototype.finally
+	}
+	module.exports = global.Promise
+} else {
+	module.exports = PromisePolyfill
+}
+  })();
+});
+
+require.register("mithril/querystring/build.js", function(exports, require, module) {
+  require = __makeRelativeRequire(require, {}, "mithril");
+  (function() {
+    "use strict"
+
+module.exports = function(object) {
+	if (Object.prototype.toString.call(object) !== "[object Object]") return ""
+
+	var args = []
+	for (var key in object) {
+		destructure(key, object[key])
+	}
+
+	return args.join("&")
+
+	function destructure(key, value) {
+		if (Array.isArray(value)) {
+			for (var i = 0; i < value.length; i++) {
+				destructure(key + "[" + i + "]", value[i])
+			}
+		}
+		else if (Object.prototype.toString.call(value) === "[object Object]") {
+			for (var i in value) {
+				destructure(key + "[" + i + "]", value[i])
+			}
+		}
+		else args.push(encodeURIComponent(key) + (value != null && value !== "" ? "=" + encodeURIComponent(value) : ""))
+	}
+}
+  })();
+});
+
+require.register("mithril/querystring/parse.js", function(exports, require, module) {
+  require = __makeRelativeRequire(require, {}, "mithril");
+  (function() {
+    "use strict"
+
+module.exports = function(string) {
+	if (string === "" || string == null) return {}
+	if (string.charAt(0) === "?") string = string.slice(1)
+
+	var entries = string.split("&"), counters = {}, data = {}
+	for (var i = 0; i < entries.length; i++) {
+		var entry = entries[i].split("=")
+		var key = decodeURIComponent(entry[0])
+		var value = entry.length === 2 ? decodeURIComponent(entry[1]) : ""
+
+		if (value === "true") value = true
+		else if (value === "false") value = false
+
+		var levels = key.split(/\]\[?|\[/)
+		var cursor = data
+		if (key.indexOf("[") > -1) levels.pop()
+		for (var j = 0; j < levels.length; j++) {
+			var level = levels[j], nextLevel = levels[j + 1]
+			var isNumber = nextLevel == "" || !isNaN(parseInt(nextLevel, 10))
+			if (level === "") {
+				var key = levels.slice(0, j).join()
+				if (counters[key] == null) {
+					counters[key] = Array.isArray(cursor) ? cursor.length : 0
+				}
+				level = counters[key]++
+			}
+			// Disallow direct prototype pollution
+			else if (level === "__proto__") break
+			if (j === levels.length - 1) cursor[level] = value
+			else {
+				// Read own properties exclusively to disallow indirect
+				// prototype pollution
+				var desc = Object.getOwnPropertyDescriptor(cursor, level)
+				if (desc != null) desc = desc.value
+				if (desc == null) cursor[level] = desc = isNumber ? [] : {}
+				cursor = desc
+			}
+		}
+	}
+	return data
+}
+  })();
+});
+
+require.register("mithril/render.js", function(exports, require, module) {
+  require = __makeRelativeRequire(require, {}, "mithril");
+  (function() {
+    "use strict"
+
+module.exports = require("./render/render")(window)
+  })();
+});
+
+require.register("mithril/render/fragment.js", function(exports, require, module) {
+  require = __makeRelativeRequire(require, {}, "mithril");
+  (function() {
+    "use strict"
+
+var Vnode = require("../render/vnode")
+var hyperscriptVnode = require("./hyperscriptVnode")
+
+module.exports = function() {
+	var vnode = hyperscriptVnode.apply(0, arguments)
+
+	vnode.tag = "["
+	vnode.children = Vnode.normalizeChildren(vnode.children)
+	return vnode
+}
+  })();
+});
+
+require.register("mithril/render/hyperscript.js", function(exports, require, module) {
+  require = __makeRelativeRequire(require, {}, "mithril");
+  (function() {
+    "use strict"
+
+var Vnode = require("../render/vnode")
+var hyperscriptVnode = require("./hyperscriptVnode")
+
+var selectorParser = /(?:(^|#|\.)([^#\.\[\]]+))|(\[(.+?)(?:\s*=\s*("|'|)((?:\\["'\]]|.)*?)\5)?\])/g
+var selectorCache = {}
+var hasOwn = {}.hasOwnProperty
+
+function isEmpty(object) {
+	for (var key in object) if (hasOwn.call(object, key)) return false
+	return true
+}
+
+function compileSelector(selector) {
+	var match, tag = "div", classes = [], attrs = {}
+	while (match = selectorParser.exec(selector)) {
+		var type = match[1], value = match[2]
+		if (type === "" && value !== "") tag = value
+		else if (type === "#") attrs.id = value
+		else if (type === ".") classes.push(value)
+		else if (match[3][0] === "[") {
+			var attrValue = match[6]
+			if (attrValue) attrValue = attrValue.replace(/\\(["'])/g, "$1").replace(/\\\\/g, "\\")
+			if (match[4] === "class") classes.push(attrValue)
+			else attrs[match[4]] = attrValue === "" ? attrValue : attrValue || true
+		}
+	}
+	if (classes.length > 0) attrs.className = classes.join(" ")
+	return selectorCache[selector] = {tag: tag, attrs: attrs}
+}
+
+function execSelector(state, vnode) {
+	var attrs = vnode.attrs
+	var children = Vnode.normalizeChildren(vnode.children)
+	var hasClass = hasOwn.call(attrs, "class")
+	var className = hasClass ? attrs.class : attrs.className
+
+	vnode.tag = state.tag
+	vnode.attrs = null
+	vnode.children = undefined
+
+	if (!isEmpty(state.attrs) && !isEmpty(attrs)) {
+		var newAttrs = {}
+
+		for (var key in attrs) {
+			if (hasOwn.call(attrs, key)) newAttrs[key] = attrs[key]
+		}
+
+		attrs = newAttrs
+	}
+
+	for (var key in state.attrs) {
+		if (hasOwn.call(state.attrs, key) && key !== "className" && !hasOwn.call(attrs, key)){
+			attrs[key] = state.attrs[key]
+		}
+	}
+	if (className != null || state.attrs.className != null) attrs.className =
+		className != null
+			? state.attrs.className != null
+				? String(state.attrs.className) + " " + String(className)
+				: className
+			: state.attrs.className != null
+				? state.attrs.className
+				: null
+
+	if (hasClass) attrs.class = null
+
+	for (var key in attrs) {
+		if (hasOwn.call(attrs, key) && key !== "key") {
+			vnode.attrs = attrs
+			break
+		}
+	}
+
+	if (Array.isArray(children) && children.length === 1 && children[0] != null && children[0].tag === "#") {
+		vnode.text = children[0].children
+	} else {
+		vnode.children = children
+	}
+
+	return vnode
+}
+
+function hyperscript(selector) {
+	if (selector == null || typeof selector !== "string" && typeof selector !== "function" && typeof selector.view !== "function") {
+		throw Error("The selector must be either a string or a component.");
+	}
+
+	var vnode = hyperscriptVnode.apply(1, arguments)
+
+	if (typeof selector === "string") {
+		vnode.children = Vnode.normalizeChildren(vnode.children)
+		if (selector !== "[") return execSelector(selectorCache[selector] || compileSelector(selector), vnode)
+	}
+
+	vnode.tag = selector
+	return vnode
+}
+
+module.exports = hyperscript
+  })();
+});
+
+require.register("mithril/render/hyperscriptVnode.js", function(exports, require, module) {
+  require = __makeRelativeRequire(require, {}, "mithril");
+  (function() {
+    "use strict"
+
+var Vnode = require("../render/vnode")
+
+// Call via `hyperscriptVnode.apply(startOffset, arguments)`
+//
+// The reason I do it this way, forwarding the arguments and passing the start
+// offset in `this`, is so I don't have to create a temporary array in a
+// performance-critical path.
+//
+// In native ES6, I'd instead add a final `...args` parameter to the
+// `hyperscript` and `fragment` factories and define this as
+// `hyperscriptVnode(...args)`, since modern engines do optimize that away. But
+// ES5 (what Mithril requires thanks to IE support) doesn't give me that luxury,
+// and engines aren't nearly intelligent enough to do either of these:
+//
+// 1. Elide the allocation for `[].slice.call(arguments, 1)` when it's passed to
+//    another function only to be indexed.
+// 2. Elide an `arguments` allocation when it's passed to any function other
+//    than `Function.prototype.apply` or `Reflect.apply`.
+//
+// In ES6, it'd probably look closer to this (I'd need to profile it, though):
+// module.exports = function(attrs, ...children) {
+//     if (attrs == null || typeof attrs === "object" && attrs.tag == null && !Array.isArray(attrs)) {
+//         if (children.length === 1 && Array.isArray(children[0])) children = children[0]
+//     } else {
+//         children = children.length === 0 && Array.isArray(attrs) ? attrs : [attrs, ...children]
+//         attrs = undefined
+//     }
+//
+//     if (attrs == null) attrs = {}
+//     return Vnode("", attrs.key, attrs, children)
+// }
+module.exports = function() {
+	var attrs = arguments[this], start = this + 1, children
+
+	if (attrs == null) {
+		attrs = {}
+	} else if (typeof attrs !== "object" || attrs.tag != null || Array.isArray(attrs)) {
+		attrs = {}
+		start = this
+	}
+
+	if (arguments.length === start + 1) {
+		children = arguments[start]
+		if (!Array.isArray(children)) children = [children]
+	} else {
+		children = []
+		while (start < arguments.length) children.push(arguments[start++])
+	}
+
+	return Vnode("", attrs.key, attrs, children)
+}
+  })();
+});
+
+require.register("mithril/render/render.js", function(exports, require, module) {
+  require = __makeRelativeRequire(require, {}, "mithril");
+  (function() {
+    "use strict"
+
+var Vnode = require("../render/vnode")
+
+module.exports = function($window) {
+	var $doc = $window && $window.document
+	var currentRedraw
+
+	var nameSpace = {
+		svg: "http://www.w3.org/2000/svg",
+		math: "http://www.w3.org/1998/Math/MathML"
+	}
+
+	function getNameSpace(vnode) {
+		return vnode.attrs && vnode.attrs.xmlns || nameSpace[vnode.tag]
+	}
+
+	//sanity check to discourage people from doing `vnode.state = ...`
+	function checkState(vnode, original) {
+		if (vnode.state !== original) throw new Error("`vnode.state` must not be modified")
+	}
+
+	//Note: the hook is passed as the `this` argument to allow proxying the
+	//arguments without requiring a full array allocation to do so. It also
+	//takes advantage of the fact the current `vnode` is the first argument in
+	//all lifecycle methods.
+	function callHook(vnode) {
+		var original = vnode.state
+		try {
+			return this.apply(original, arguments)
+		} finally {
+			checkState(vnode, original)
+		}
+	}
+
+	// IE11 (at least) throws an UnspecifiedError when accessing document.activeElement when
+	// inside an iframe. Catch and swallow this error, and heavy-handidly return null.
+	function activeElement() {
+		try {
+			return $doc.activeElement
+		} catch (e) {
+			return null
+		}
+	}
+	//create
+	function createNodes(parent, vnodes, start, end, hooks, nextSibling, ns) {
+		for (var i = start; i < end; i++) {
+			var vnode = vnodes[i]
+			if (vnode != null) {
+				createNode(parent, vnode, hooks, ns, nextSibling)
+			}
+		}
+	}
+	function createNode(parent, vnode, hooks, ns, nextSibling) {
+		var tag = vnode.tag
+		if (typeof tag === "string") {
+			vnode.state = {}
+			if (vnode.attrs != null) initLifecycle(vnode.attrs, vnode, hooks)
+			switch (tag) {
+				case "#": createText(parent, vnode, nextSibling); break
+				case "<": createHTML(parent, vnode, ns, nextSibling); break
+				case "[": createFragment(parent, vnode, hooks, ns, nextSibling); break
+				default: createElement(parent, vnode, hooks, ns, nextSibling)
+			}
+		}
+		else createComponent(parent, vnode, hooks, ns, nextSibling)
+	}
+	function createText(parent, vnode, nextSibling) {
+		vnode.dom = $doc.createTextNode(vnode.children)
+		insertNode(parent, vnode.dom, nextSibling)
+	}
+	var possibleParents = {caption: "table", thead: "table", tbody: "table", tfoot: "table", tr: "tbody", th: "tr", td: "tr", colgroup: "table", col: "colgroup"}
+	function createHTML(parent, vnode, ns, nextSibling) {
+		var match = vnode.children.match(/^\s*?<(\w+)/im) || []
+		// not using the proper parent makes the child element(s) vanish.
+		//     var div = document.createElement("div")
+		//     div.innerHTML = "<td>i</td><td>j</td>"
+		//     console.log(div.innerHTML)
+		// --> "ij", no <td> in sight.
+		var temp = $doc.createElement(possibleParents[match[1]] || "div")
+		if (ns === "http://www.w3.org/2000/svg") {
+			temp.innerHTML = "<svg xmlns=\"http://www.w3.org/2000/svg\">" + vnode.children + "</svg>"
+			temp = temp.firstChild
+		} else {
+			temp.innerHTML = vnode.children
+		}
+		vnode.dom = temp.firstChild
+		vnode.domSize = temp.childNodes.length
+		// Capture nodes to remove, so we don't confuse them.
+		vnode.instance = []
+		var fragment = $doc.createDocumentFragment()
+		var child
+		while (child = temp.firstChild) {
+			vnode.instance.push(child)
+			fragment.appendChild(child)
+		}
+		insertNode(parent, fragment, nextSibling)
+	}
+	function createFragment(parent, vnode, hooks, ns, nextSibling) {
+		var fragment = $doc.createDocumentFragment()
+		if (vnode.children != null) {
+			var children = vnode.children
+			createNodes(fragment, children, 0, children.length, hooks, null, ns)
+		}
+		vnode.dom = fragment.firstChild
+		vnode.domSize = fragment.childNodes.length
+		insertNode(parent, fragment, nextSibling)
+	}
+	function createElement(parent, vnode, hooks, ns, nextSibling) {
+		var tag = vnode.tag
+		var attrs = vnode.attrs
+		var is = attrs && attrs.is
+
+		ns = getNameSpace(vnode) || ns
+
+		var element = ns ?
+			is ? $doc.createElementNS(ns, tag, {is: is}) : $doc.createElementNS(ns, tag) :
+			is ? $doc.createElement(tag, {is: is}) : $doc.createElement(tag)
+		vnode.dom = element
+
+		if (attrs != null) {
+			setAttrs(vnode, attrs, ns)
+		}
+
+		insertNode(parent, element, nextSibling)
+
+		if (!maybeSetContentEditable(vnode)) {
+			if (vnode.text != null) {
+				if (vnode.text !== "") element.textContent = vnode.text
+				else vnode.children = [Vnode("#", undefined, undefined, vnode.text, undefined, undefined)]
+			}
+			if (vnode.children != null) {
+				var children = vnode.children
+				createNodes(element, children, 0, children.length, hooks, null, ns)
+				if (vnode.tag === "select" && attrs != null) setLateSelectAttrs(vnode, attrs)
+			}
+		}
+	}
+	function initComponent(vnode, hooks) {
+		var sentinel
+		if (typeof vnode.tag.view === "function") {
+			vnode.state = Object.create(vnode.tag)
+			sentinel = vnode.state.view
+			if (sentinel.$$reentrantLock$$ != null) return
+			sentinel.$$reentrantLock$$ = true
+		} else {
+			vnode.state = void 0
+			sentinel = vnode.tag
+			if (sentinel.$$reentrantLock$$ != null) return
+			sentinel.$$reentrantLock$$ = true
+			vnode.state = (vnode.tag.prototype != null && typeof vnode.tag.prototype.view === "function") ? new vnode.tag(vnode) : vnode.tag(vnode)
+		}
+		initLifecycle(vnode.state, vnode, hooks)
+		if (vnode.attrs != null) initLifecycle(vnode.attrs, vnode, hooks)
+		vnode.instance = Vnode.normalize(callHook.call(vnode.state.view, vnode))
+		if (vnode.instance === vnode) throw Error("A view cannot return the vnode it received as argument")
+		sentinel.$$reentrantLock$$ = null
+	}
+	function createComponent(parent, vnode, hooks, ns, nextSibling) {
+		initComponent(vnode, hooks)
+		if (vnode.instance != null) {
+			createNode(parent, vnode.instance, hooks, ns, nextSibling)
+			vnode.dom = vnode.instance.dom
+			vnode.domSize = vnode.dom != null ? vnode.instance.domSize : 0
+		}
+		else {
+			vnode.domSize = 0
+		}
+	}
+
+	//update
+	/**
+	 * @param {Element|Fragment} parent - the parent element
+	 * @param {Vnode[] | null} old - the list of vnodes of the last `render()` call for
+	 *                               this part of the tree
+	 * @param {Vnode[] | null} vnodes - as above, but for the current `render()` call.
+	 * @param {Function[]} hooks - an accumulator of post-render hooks (oncreate/onupdate)
+	 * @param {Element | null} nextSibling - the next DOM node if we're dealing with a
+	 *                                       fragment that is not the last item in its
+	 *                                       parent
+	 * @param {'svg' | 'math' | String | null} ns) - the current XML namespace, if any
+	 * @returns void
+	 */
+	// This function diffs and patches lists of vnodes, both keyed and unkeyed.
+	//
+	// We will:
+	//
+	// 1. describe its general structure
+	// 2. focus on the diff algorithm optimizations
+	// 3. discuss DOM node operations.
+
+	// ## Overview:
+	//
+	// The updateNodes() function:
+	// - deals with trivial cases
+	// - determines whether the lists are keyed or unkeyed based on the first non-null node
+	//   of each list.
+	// - diffs them and patches the DOM if needed (that's the brunt of the code)
+	// - manages the leftovers: after diffing, are there:
+	//   - old nodes left to remove?
+	// 	 - new nodes to insert?
+	// 	 deal with them!
+	//
+	// The lists are only iterated over once, with an exception for the nodes in `old` that
+	// are visited in the fourth part of the diff and in the `removeNodes` loop.
+
+	// ## Diffing
+	//
+	// Reading https://github.com/localvoid/ivi/blob/ddc09d06abaef45248e6133f7040d00d3c6be853/packages/ivi/src/vdom/implementation.ts#L617-L837
+	// may be good for context on longest increasing subsequence-based logic for moving nodes.
+	//
+	// In order to diff keyed lists, one has to
+	//
+	// 1) match nodes in both lists, per key, and update them accordingly
+	// 2) create the nodes present in the new list, but absent in the old one
+	// 3) remove the nodes present in the old list, but absent in the new one
+	// 4) figure out what nodes in 1) to move in order to minimize the DOM operations.
+	//
+	// To achieve 1) one can create a dictionary of keys => index (for the old list), then iterate
+	// over the new list and for each new vnode, find the corresponding vnode in the old list using
+	// the map.
+	// 2) is achieved in the same step: if a new node has no corresponding entry in the map, it is new
+	// and must be created.
+	// For the removals, we actually remove the nodes that have been updated from the old list.
+	// The nodes that remain in that list after 1) and 2) have been performed can be safely removed.
+	// The fourth step is a bit more complex and relies on the longest increasing subsequence (LIS)
+	// algorithm.
+	//
+	// the longest increasing subsequence is the list of nodes that can remain in place. Imagine going
+	// from `1,2,3,4,5` to `4,5,1,2,3` where the numbers are not necessarily the keys, but the indices
+	// corresponding to the keyed nodes in the old list (keyed nodes `e,d,c,b,a` => `b,a,e,d,c` would
+	//  match the above lists, for example).
+	//
+	// In there are two increasing subsequences: `4,5` and `1,2,3`, the latter being the longest. We
+	// can update those nodes without moving them, and only call `insertNode` on `4` and `5`.
+	//
+	// @localvoid adapted the algo to also support node deletions and insertions (the `lis` is actually
+	// the longest increasing subsequence *of old nodes still present in the new list*).
+	//
+	// It is a general algorithm that is fireproof in all circumstances, but it requires the allocation
+	// and the construction of a `key => oldIndex` map, and three arrays (one with `newIndex => oldIndex`,
+	// the `LIS` and a temporary one to create the LIS).
+	//
+	// So we cheat where we can: if the tails of the lists are identical, they are guaranteed to be part of
+	// the LIS and can be updated without moving them.
+	//
+	// If two nodes are swapped, they are guaranteed not to be part of the LIS, and must be moved (with
+	// the exception of the last node if the list is fully reversed).
+	//
+	// ## Finding the next sibling.
+	//
+	// `updateNode()` and `createNode()` expect a nextSibling parameter to perform DOM operations.
+	// When the list is being traversed top-down, at any index, the DOM nodes up to the previous
+	// vnode reflect the content of the new list, whereas the rest of the DOM nodes reflect the old
+	// list. The next sibling must be looked for in the old list using `getNextSibling(... oldStart + 1 ...)`.
+	//
+	// In the other scenarios (swaps, upwards traversal, map-based diff),
+	// the new vnodes list is traversed upwards. The DOM nodes at the bottom of the list reflect the
+	// bottom part of the new vnodes list, and we can use the `v.dom`  value of the previous node
+	// as the next sibling (cached in the `nextSibling` variable).
+
+
+	// ## DOM node moves
+	//
+	// In most scenarios `updateNode()` and `createNode()` perform the DOM operations. However,
+	// this is not the case if the node moved (second and fourth part of the diff algo). We move
+	// the old DOM nodes before updateNode runs because it enables us to use the cached `nextSibling`
+	// variable rather than fetching it using `getNextSibling()`.
+	//
+	// The fourth part of the diff currently inserts nodes unconditionally, leading to issues
+	// like #1791 and #1999. We need to be smarter about those situations where adjascent old
+	// nodes remain together in the new list in a way that isn't covered by parts one and
+	// three of the diff algo.
+
+	function updateNodes(parent, old, vnodes, hooks, nextSibling, ns) {
+		if (old === vnodes || old == null && vnodes == null) return
+		else if (old == null || old.length === 0) createNodes(parent, vnodes, 0, vnodes.length, hooks, nextSibling, ns)
+		else if (vnodes == null || vnodes.length === 0) removeNodes(parent, old, 0, old.length)
+		else {
+			var isOldKeyed = old[0] != null && old[0].key != null
+			var isKeyed = vnodes[0] != null && vnodes[0].key != null
+			var start = 0, oldStart = 0
+			if (!isOldKeyed) while (oldStart < old.length && old[oldStart] == null) oldStart++
+			if (!isKeyed) while (start < vnodes.length && vnodes[start] == null) start++
+			if (isKeyed === null && isOldKeyed == null) return // both lists are full of nulls
+			if (isOldKeyed !== isKeyed) {
+				removeNodes(parent, old, oldStart, old.length)
+				createNodes(parent, vnodes, start, vnodes.length, hooks, nextSibling, ns)
+			} else if (!isKeyed) {
+				// Don't index past the end of either list (causes deopts).
+				var commonLength = old.length < vnodes.length ? old.length : vnodes.length
+				// Rewind if necessary to the first non-null index on either side.
+				// We could alternatively either explicitly create or remove nodes when `start !== oldStart`
+				// but that would be optimizing for sparse lists which are more rare than dense ones.
+				start = start < oldStart ? start : oldStart
+				for (; start < commonLength; start++) {
+					o = old[start]
+					v = vnodes[start]
+					if (o === v || o == null && v == null) continue
+					else if (o == null) createNode(parent, v, hooks, ns, getNextSibling(old, start + 1, nextSibling))
+					else if (v == null) removeNode(parent, o)
+					else updateNode(parent, o, v, hooks, getNextSibling(old, start + 1, nextSibling), ns)
+				}
+				if (old.length > commonLength) removeNodes(parent, old, start, old.length)
+				if (vnodes.length > commonLength) createNodes(parent, vnodes, start, vnodes.length, hooks, nextSibling, ns)
+			} else {
+				// keyed diff
+				var oldEnd = old.length - 1, end = vnodes.length - 1, map, o, v, oe, ve, topSibling
+
+				// bottom-up
+				while (oldEnd >= oldStart && end >= start) {
+					oe = old[oldEnd]
+					ve = vnodes[end]
+					if (oe.key !== ve.key) break
+					if (oe !== ve) updateNode(parent, oe, ve, hooks, nextSibling, ns)
+					if (ve.dom != null) nextSibling = ve.dom
+					oldEnd--, end--
+				}
+				// top-down
+				while (oldEnd >= oldStart && end >= start) {
+					o = old[oldStart]
+					v = vnodes[start]
+					if (o.key !== v.key) break
+					oldStart++, start++
+					if (o !== v) updateNode(parent, o, v, hooks, getNextSibling(old, oldStart, nextSibling), ns)
+				}
+				// swaps and list reversals
+				while (oldEnd >= oldStart && end >= start) {
+					if (start === end) break
+					if (o.key !== ve.key || oe.key !== v.key) break
+					topSibling = getNextSibling(old, oldStart, nextSibling)
+					moveNodes(parent, oe, topSibling)
+					if (oe !== v) updateNode(parent, oe, v, hooks, topSibling, ns)
+					if (++start <= --end) moveNodes(parent, o, nextSibling)
+					if (o !== ve) updateNode(parent, o, ve, hooks, nextSibling, ns)
+					if (ve.dom != null) nextSibling = ve.dom
+					oldStart++; oldEnd--
+					oe = old[oldEnd]
+					ve = vnodes[end]
+					o = old[oldStart]
+					v = vnodes[start]
+				}
+				// bottom up once again
+				while (oldEnd >= oldStart && end >= start) {
+					if (oe.key !== ve.key) break
+					if (oe !== ve) updateNode(parent, oe, ve, hooks, nextSibling, ns)
+					if (ve.dom != null) nextSibling = ve.dom
+					oldEnd--, end--
+					oe = old[oldEnd]
+					ve = vnodes[end]
+				}
+				if (start > end) removeNodes(parent, old, oldStart, oldEnd + 1)
+				else if (oldStart > oldEnd) createNodes(parent, vnodes, start, end + 1, hooks, nextSibling, ns)
+				else {
+					// inspired by ivi https://github.com/ivijs/ivi/ by Boris Kaul
+					var originalNextSibling = nextSibling, vnodesLength = end - start + 1, oldIndices = new Array(vnodesLength), li=0, i=0, pos = 2147483647, matched = 0, map, lisIndices
+					for (i = 0; i < vnodesLength; i++) oldIndices[i] = -1
+					for (i = end; i >= start; i--) {
+						if (map == null) map = getKeyMap(old, oldStart, oldEnd + 1)
+						ve = vnodes[i]
+						var oldIndex = map[ve.key]
+						if (oldIndex != null) {
+							pos = (oldIndex < pos) ? oldIndex : -1 // becomes -1 if nodes were re-ordered
+							oldIndices[i-start] = oldIndex
+							oe = old[oldIndex]
+							old[oldIndex] = null
+							if (oe !== ve) updateNode(parent, oe, ve, hooks, nextSibling, ns)
+							if (ve.dom != null) nextSibling = ve.dom
+							matched++
+						}
+					}
+					nextSibling = originalNextSibling
+					if (matched !== oldEnd - oldStart + 1) removeNodes(parent, old, oldStart, oldEnd + 1)
+					if (matched === 0) createNodes(parent, vnodes, start, end + 1, hooks, nextSibling, ns)
+					else {
+						if (pos === -1) {
+							// the indices of the indices of the items that are part of the
+							// longest increasing subsequence in the oldIndices list
+							lisIndices = makeLisIndices(oldIndices)
+							li = lisIndices.length - 1
+							for (i = end; i >= start; i--) {
+								v = vnodes[i]
+								if (oldIndices[i-start] === -1) createNode(parent, v, hooks, ns, nextSibling)
+								else {
+									if (lisIndices[li] === i - start) li--
+									else moveNodes(parent, v, nextSibling)
+								}
+								if (v.dom != null) nextSibling = vnodes[i].dom
+							}
+						} else {
+							for (i = end; i >= start; i--) {
+								v = vnodes[i]
+								if (oldIndices[i-start] === -1) createNode(parent, v, hooks, ns, nextSibling)
+								if (v.dom != null) nextSibling = vnodes[i].dom
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+	function updateNode(parent, old, vnode, hooks, nextSibling, ns) {
+		var oldTag = old.tag, tag = vnode.tag
+		if (oldTag === tag) {
+			vnode.state = old.state
+			vnode.events = old.events
+			if (shouldNotUpdate(vnode, old)) return
+			if (typeof oldTag === "string") {
+				if (vnode.attrs != null) {
+					updateLifecycle(vnode.attrs, vnode, hooks)
+				}
+				switch (oldTag) {
+					case "#": updateText(old, vnode); break
+					case "<": updateHTML(parent, old, vnode, ns, nextSibling); break
+					case "[": updateFragment(parent, old, vnode, hooks, nextSibling, ns); break
+					default: updateElement(old, vnode, hooks, ns)
+				}
+			}
+			else updateComponent(parent, old, vnode, hooks, nextSibling, ns)
+		}
+		else {
+			removeNode(parent, old)
+			createNode(parent, vnode, hooks, ns, nextSibling)
+		}
+	}
+	function updateText(old, vnode) {
+		if (old.children.toString() !== vnode.children.toString()) {
+			old.dom.nodeValue = vnode.children
+		}
+		vnode.dom = old.dom
+	}
+	function updateHTML(parent, old, vnode, ns, nextSibling) {
+		if (old.children !== vnode.children) {
+			removeHTML(parent, old)
+			createHTML(parent, vnode, ns, nextSibling)
+		}
+		else {
+			vnode.dom = old.dom
+			vnode.domSize = old.domSize
+			vnode.instance = old.instance
+		}
+	}
+	function updateFragment(parent, old, vnode, hooks, nextSibling, ns) {
+		updateNodes(parent, old.children, vnode.children, hooks, nextSibling, ns)
+		var domSize = 0, children = vnode.children
+		vnode.dom = null
+		if (children != null) {
+			for (var i = 0; i < children.length; i++) {
+				var child = children[i]
+				if (child != null && child.dom != null) {
+					if (vnode.dom == null) vnode.dom = child.dom
+					domSize += child.domSize || 1
+				}
+			}
+			if (domSize !== 1) vnode.domSize = domSize
+		}
+	}
+	function updateElement(old, vnode, hooks, ns) {
+		var element = vnode.dom = old.dom
+		ns = getNameSpace(vnode) || ns
+
+		if (vnode.tag === "textarea") {
+			if (vnode.attrs == null) vnode.attrs = {}
+			if (vnode.text != null) {
+				vnode.attrs.value = vnode.text //FIXME handle multiple children
+				vnode.text = undefined
+			}
+		}
+		updateAttrs(vnode, old.attrs, vnode.attrs, ns)
+		if (!maybeSetContentEditable(vnode)) {
+			if (old.text != null && vnode.text != null && vnode.text !== "") {
+				if (old.text.toString() !== vnode.text.toString()) old.dom.firstChild.nodeValue = vnode.text
+			}
+			else {
+				if (old.text != null) old.children = [Vnode("#", undefined, undefined, old.text, undefined, old.dom.firstChild)]
+				if (vnode.text != null) vnode.children = [Vnode("#", undefined, undefined, vnode.text, undefined, undefined)]
+				updateNodes(element, old.children, vnode.children, hooks, null, ns)
+			}
+		}
+	}
+	function updateComponent(parent, old, vnode, hooks, nextSibling, ns) {
+		vnode.instance = Vnode.normalize(callHook.call(vnode.state.view, vnode))
+		if (vnode.instance === vnode) throw Error("A view cannot return the vnode it received as argument")
+		updateLifecycle(vnode.state, vnode, hooks)
+		if (vnode.attrs != null) updateLifecycle(vnode.attrs, vnode, hooks)
+		if (vnode.instance != null) {
+			if (old.instance == null) createNode(parent, vnode.instance, hooks, ns, nextSibling)
+			else updateNode(parent, old.instance, vnode.instance, hooks, nextSibling, ns)
+			vnode.dom = vnode.instance.dom
+			vnode.domSize = vnode.instance.domSize
+		}
+		else if (old.instance != null) {
+			removeNode(parent, old.instance)
+			vnode.dom = undefined
+			vnode.domSize = 0
+		}
+		else {
+			vnode.dom = old.dom
+			vnode.domSize = old.domSize
+		}
+	}
+	function getKeyMap(vnodes, start, end) {
+		var map = Object.create(null)
+		for (; start < end; start++) {
+			var vnode = vnodes[start]
+			if (vnode != null) {
+				var key = vnode.key
+				if (key != null) map[key] = start
+			}
+		}
+		return map
+	}
+	// Lifted from ivi https://github.com/ivijs/ivi/
+	// takes a list of unique numbers (-1 is special and can
+	// occur multiple times) and returns an array with the indices
+	// of the items that are part of the longest increasing
+	// subsequece
+	var lisTemp = []
+	function makeLisIndices(a) {
+		var result = [0]
+		var u = 0, v = 0, i = 0
+		var il = lisTemp.length = a.length
+		for (var i = 0; i < il; i++) lisTemp[i] = a[i]
+		for (var i = 0; i < il; ++i) {
+			if (a[i] === -1) continue
+			var j = result[result.length - 1]
+			if (a[j] < a[i]) {
+				lisTemp[i] = j
+				result.push(i)
+				continue
+			}
+			u = 0
+			v = result.length - 1
+			while (u < v) {
+				// Fast integer average without overflow.
+				// eslint-disable-next-line no-bitwise
+				var c = (u >>> 1) + (v >>> 1) + (u & v & 1)
+				if (a[result[c]] < a[i]) {
+					u = c + 1
+				}
+				else {
+					v = c
+				}
+			}
+			if (a[i] < a[result[u]]) {
+				if (u > 0) lisTemp[i] = result[u - 1]
+				result[u] = i
+			}
+		}
+		u = result.length
+		v = result[u - 1]
+		while (u-- > 0) {
+			result[u] = v
+			v = lisTemp[v]
+		}
+		lisTemp.length = 0
+		return result
+	}
+
+	function getNextSibling(vnodes, i, nextSibling) {
+		for (; i < vnodes.length; i++) {
+			if (vnodes[i] != null && vnodes[i].dom != null) return vnodes[i].dom
+		}
+		return nextSibling
+	}
+
+	// This covers a really specific edge case:
+	// - Parent node is keyed and contains child
+	// - Child is removed, returns unresolved promise in `onbeforeremove`
+	// - Parent node is moved in keyed diff
+	// - Remaining children still need moved appropriately
+	//
+	// Ideally, I'd track removed nodes as well, but that introduces a lot more
+	// complexity and I'm not exactly interested in doing that.
+	function moveNodes(parent, vnode, nextSibling) {
+		var frag = $doc.createDocumentFragment()
+		moveChildToFrag(parent, frag, vnode)
+		insertNode(parent, frag, nextSibling)
+	}
+	function moveChildToFrag(parent, frag, vnode) {
+		// Dodge the recursion overhead in a few of the most common cases.
+		while (vnode.dom != null && vnode.dom.parentNode === parent) {
+			if (typeof vnode.tag !== "string") {
+				vnode = vnode.instance
+				if (vnode != null) continue
+			} else if (vnode.tag === "<") {
+				for (var i = 0; i < vnode.instance.length; i++) {
+					frag.appendChild(vnode.instance[i])
+				}
+			} else if (vnode.tag !== "[") {
+				// Don't recurse for text nodes *or* elements, just fragments
+				frag.appendChild(vnode.dom)
+			} else if (vnode.children.length === 1) {
+				vnode = vnode.children[0]
+				if (vnode != null) continue
+			} else {
+				for (var i = 0; i < vnode.children.length; i++) {
+					var child = vnode.children[i]
+					if (child != null) moveChildToFrag(parent, frag, child)
+				}
+			}
+			break
+		}
+	}
+
+	function insertNode(parent, dom, nextSibling) {
+		if (nextSibling != null) parent.insertBefore(dom, nextSibling)
+		else parent.appendChild(dom)
+	}
+
+	function maybeSetContentEditable(vnode) {
+		if (vnode.attrs == null || (
+			vnode.attrs.contenteditable == null && // attribute
+			vnode.attrs.contentEditable == null // property
+		)) return false
+		var children = vnode.children
+		if (children != null && children.length === 1 && children[0].tag === "<") {
+			var content = children[0].children
+			if (vnode.dom.innerHTML !== content) vnode.dom.innerHTML = content
+		}
+		else if (vnode.text != null || children != null && children.length !== 0) throw new Error("Child node of a contenteditable must be trusted")
+		return true
+	}
+
+	//remove
+	function removeNodes(parent, vnodes, start, end) {
+		for (var i = start; i < end; i++) {
+			var vnode = vnodes[i]
+			if (vnode != null) removeNode(parent, vnode)
+		}
+	}
+	function removeNode(parent, vnode) {
+		var mask = 0
+		var original = vnode.state
+		var stateResult, attrsResult
+		if (typeof vnode.tag !== "string" && typeof vnode.state.onbeforeremove === "function") {
+			var result = callHook.call(vnode.state.onbeforeremove, vnode)
+			if (result != null && typeof result.then === "function") {
+				mask = 1
+				stateResult = result
+			}
+		}
+		if (vnode.attrs && typeof vnode.attrs.onbeforeremove === "function") {
+			var result = callHook.call(vnode.attrs.onbeforeremove, vnode)
+			if (result != null && typeof result.then === "function") {
+				// eslint-disable-next-line no-bitwise
+				mask |= 2
+				attrsResult = result
+			}
+		}
+		checkState(vnode, original)
+
+		// If we can, try to fast-path it and avoid all the overhead of awaiting
+		if (!mask) {
+			onremove(vnode)
+			removeChild(parent, vnode)
+		} else {
+			if (stateResult != null) {
+				var next = function () {
+					// eslint-disable-next-line no-bitwise
+					if (mask & 1) { mask &= 2; if (!mask) reallyRemove() }
+				}
+				stateResult.then(next, next)
+			}
+			if (attrsResult != null) {
+				var next = function () {
+					// eslint-disable-next-line no-bitwise
+					if (mask & 2) { mask &= 1; if (!mask) reallyRemove() }
+				}
+				attrsResult.then(next, next)
+			}
+		}
+
+		function reallyRemove() {
+			checkState(vnode, original)
+			onremove(vnode)
+			removeChild(parent, vnode)
+		}
+	}
+	function removeHTML(parent, vnode) {
+		for (var i = 0; i < vnode.instance.length; i++) {
+			parent.removeChild(vnode.instance[i])
+		}
+	}
+	function removeChild(parent, vnode) {
+		// Dodge the recursion overhead in a few of the most common cases.
+		while (vnode.dom != null && vnode.dom.parentNode === parent) {
+			if (typeof vnode.tag !== "string") {
+				vnode = vnode.instance
+				if (vnode != null) continue
+			} else if (vnode.tag === "<") {
+				removeHTML(parent, vnode)
+			} else {
+				if (vnode.tag !== "[") {
+					parent.removeChild(vnode.dom)
+					if (!Array.isArray(vnode.children)) break
+				}
+				if (vnode.children.length === 1) {
+					vnode = vnode.children[0]
+					if (vnode != null) continue
+				} else {
+					for (var i = 0; i < vnode.children.length; i++) {
+						var child = vnode.children[i]
+						if (child != null) removeChild(parent, child)
+					}
+				}
+			}
+			break
+		}
+	}
+	function onremove(vnode) {
+		if (typeof vnode.tag !== "string" && typeof vnode.state.onremove === "function") callHook.call(vnode.state.onremove, vnode)
+		if (vnode.attrs && typeof vnode.attrs.onremove === "function") callHook.call(vnode.attrs.onremove, vnode)
+		if (typeof vnode.tag !== "string") {
+			if (vnode.instance != null) onremove(vnode.instance)
+		} else {
+			var children = vnode.children
+			if (Array.isArray(children)) {
+				for (var i = 0; i < children.length; i++) {
+					var child = children[i]
+					if (child != null) onremove(child)
+				}
+			}
+		}
+	}
+
+	//attrs
+	function setAttrs(vnode, attrs, ns) {
+		for (var key in attrs) {
+			setAttr(vnode, key, null, attrs[key], ns)
+		}
+	}
+	function setAttr(vnode, key, old, value, ns) {
+		if (key === "key" || key === "is" || value == null || isLifecycleMethod(key) || (old === value && !isFormAttribute(vnode, key)) && typeof value !== "object") return
+		if (key[0] === "o" && key[1] === "n") return updateEvent(vnode, key, value)
+		if (key.slice(0, 6) === "xlink:") vnode.dom.setAttributeNS("http://www.w3.org/1999/xlink", key.slice(6), value)
+		else if (key === "style") updateStyle(vnode.dom, old, value)
+		else if (hasPropertyKey(vnode, key, ns)) {
+			if (key === "value") {
+				// Only do the coercion if we're actually going to check the value.
+				/* eslint-disable no-implicit-coercion */
+				//setting input[value] to same value by typing on focused element moves cursor to end in Chrome
+				if ((vnode.tag === "input" || vnode.tag === "textarea") && vnode.dom.value === "" + value && vnode.dom === activeElement()) return
+				//setting select[value] to same value while having select open blinks select dropdown in Chrome
+				if (vnode.tag === "select" && old !== null && vnode.dom.value === "" + value) return
+				//setting option[value] to same value while having select open blinks select dropdown in Chrome
+				if (vnode.tag === "option" && old !== null && vnode.dom.value === "" + value) return
+				/* eslint-enable no-implicit-coercion */
+			}
+			// If you assign an input type that is not supported by IE 11 with an assignment expression, an error will occur.
+			if (vnode.tag === "input" && key === "type") vnode.dom.setAttribute(key, value)
+			else vnode.dom[key] = value
+		} else {
+			if (typeof value === "boolean") {
+				if (value) vnode.dom.setAttribute(key, "")
+				else vnode.dom.removeAttribute(key)
+			}
+			else vnode.dom.setAttribute(key === "className" ? "class" : key, value)
+		}
+	}
+	function removeAttr(vnode, key, old, ns) {
+		if (key === "key" || key === "is" || old == null || isLifecycleMethod(key)) return
+		if (key[0] === "o" && key[1] === "n" && !isLifecycleMethod(key)) updateEvent(vnode, key, undefined)
+		else if (key === "style") updateStyle(vnode.dom, old, null)
+		else if (
+			hasPropertyKey(vnode, key, ns)
+			&& key !== "className"
+			&& !(key === "value" && (
+				vnode.tag === "option"
+				|| vnode.tag === "select" && vnode.dom.selectedIndex === -1 && vnode.dom === activeElement()
+			))
+			&& !(vnode.tag === "input" && key === "type")
+		) {
+			vnode.dom[key] = null
+		} else {
+			var nsLastIndex = key.indexOf(":")
+			if (nsLastIndex !== -1) key = key.slice(nsLastIndex + 1)
+			if (old !== false) vnode.dom.removeAttribute(key === "className" ? "class" : key)
+		}
+	}
+	function setLateSelectAttrs(vnode, attrs) {
+		if ("value" in attrs) {
+			if(attrs.value === null) {
+				if (vnode.dom.selectedIndex !== -1) vnode.dom.value = null
+			} else {
+				var normalized = "" + attrs.value // eslint-disable-line no-implicit-coercion
+				if (vnode.dom.value !== normalized || vnode.dom.selectedIndex === -1) {
+					vnode.dom.value = normalized
+				}
+			}
+		}
+		if ("selectedIndex" in attrs) setAttr(vnode, "selectedIndex", null, attrs.selectedIndex, undefined)
+	}
+	function updateAttrs(vnode, old, attrs, ns) {
+		if (attrs != null) {
+			for (var key in attrs) {
+				setAttr(vnode, key, old && old[key], attrs[key], ns)
+			}
+		}
+		var val
+		if (old != null) {
+			for (var key in old) {
+				if (((val = old[key]) != null) && (attrs == null || attrs[key] == null)) {
+					removeAttr(vnode, key, val, ns)
+				}
+			}
+		}
+	}
+	function isFormAttribute(vnode, attr) {
+		return attr === "value" || attr === "checked" || attr === "selectedIndex" || attr === "selected" && vnode.dom === activeElement() || vnode.tag === "option" && vnode.dom.parentNode === $doc.activeElement
+	}
+	function isLifecycleMethod(attr) {
+		return attr === "oninit" || attr === "oncreate" || attr === "onupdate" || attr === "onremove" || attr === "onbeforeremove" || attr === "onbeforeupdate"
+	}
+	function hasPropertyKey(vnode, key, ns) {
+		// Filter out namespaced keys
+		return ns === undefined && (
+			// If it's a custom element, just keep it.
+			vnode.tag.indexOf("-") > -1 || vnode.attrs != null && vnode.attrs.is ||
+			// If it's a normal element, let's try to avoid a few browser bugs.
+			key !== "href" && key !== "list" && key !== "form" && key !== "width" && key !== "height"// && key !== "type"
+			// Defer the property check until *after* we check everything.
+		) && key in vnode.dom
+	}
+
+	//style
+	var uppercaseRegex = /[A-Z]/g
+	function toLowerCase(capital) { return "-" + capital.toLowerCase() }
+	function normalizeKey(key) {
+		return key[0] === "-" && key[1] === "-" ? key :
+			key === "cssFloat" ? "float" :
+				key.replace(uppercaseRegex, toLowerCase)
+	}
+	function updateStyle(element, old, style) {
+		if (old === style) {
+			// Styles are equivalent, do nothing.
+		} else if (style == null) {
+			// New style is missing, just clear it.
+			element.style.cssText = ""
+		} else if (typeof style !== "object") {
+			// New style is a string, let engine deal with patching.
+			element.style.cssText = style
+		} else if (old == null || typeof old !== "object") {
+			// `old` is missing or a string, `style` is an object.
+			element.style.cssText = ""
+			// Add new style properties
+			for (var key in style) {
+				var value = style[key]
+				if (value != null) element.style.setProperty(normalizeKey(key), String(value))
+			}
+		} else {
+			// Both old & new are (different) objects.
+			// Update style properties that have changed
+			for (var key in style) {
+				var value = style[key]
+				if (value != null && (value = String(value)) !== String(old[key])) {
+					element.style.setProperty(normalizeKey(key), value)
+				}
+			}
+			// Remove style properties that no longer exist
+			for (var key in old) {
+				if (old[key] != null && style[key] == null) {
+					element.style.removeProperty(normalizeKey(key))
+				}
+			}
+		}
+	}
+
+	// Here's an explanation of how this works:
+	// 1. The event names are always (by design) prefixed by `on`.
+	// 2. The EventListener interface accepts either a function or an object
+	//    with a `handleEvent` method.
+	// 3. The object does not inherit from `Object.prototype`, to avoid
+	//    any potential interference with that (e.g. setters).
+	// 4. The event name is remapped to the handler before calling it.
+	// 5. In function-based event handlers, `ev.target === this`. We replicate
+	//    that below.
+	// 6. In function-based event handlers, `return false` prevents the default
+	//    action and stops event propagation. We replicate that below.
+	function EventDict() {
+		// Save this, so the current redraw is correctly tracked.
+		this._ = currentRedraw
+	}
+	EventDict.prototype = Object.create(null)
+	EventDict.prototype.handleEvent = function (ev) {
+		var handler = this["on" + ev.type]
+		var result
+		if (typeof handler === "function") result = handler.call(ev.currentTarget, ev)
+		else if (typeof handler.handleEvent === "function") handler.handleEvent(ev)
+		if (this._ && ev.redraw !== false) (0, this._)()
+		if (result === false) {
+			ev.preventDefault()
+			ev.stopPropagation()
+		}
+	}
+
+	//event
+	function updateEvent(vnode, key, value) {
+		if (vnode.events != null) {
+			if (vnode.events[key] === value) return
+			if (value != null && (typeof value === "function" || typeof value === "object")) {
+				if (vnode.events[key] == null) vnode.dom.addEventListener(key.slice(2), vnode.events, false)
+				vnode.events[key] = value
+			} else {
+				if (vnode.events[key] != null) vnode.dom.removeEventListener(key.slice(2), vnode.events, false)
+				vnode.events[key] = undefined
+			}
+		} else if (value != null && (typeof value === "function" || typeof value === "object")) {
+			vnode.events = new EventDict()
+			vnode.dom.addEventListener(key.slice(2), vnode.events, false)
+			vnode.events[key] = value
+		}
+	}
+
+	//lifecycle
+	function initLifecycle(source, vnode, hooks) {
+		if (typeof source.oninit === "function") callHook.call(source.oninit, vnode)
+		if (typeof source.oncreate === "function") hooks.push(callHook.bind(source.oncreate, vnode))
+	}
+	function updateLifecycle(source, vnode, hooks) {
+		if (typeof source.onupdate === "function") hooks.push(callHook.bind(source.onupdate, vnode))
+	}
+	function shouldNotUpdate(vnode, old) {
+		do {
+			if (vnode.attrs != null && typeof vnode.attrs.onbeforeupdate === "function") {
+				var force = callHook.call(vnode.attrs.onbeforeupdate, vnode, old)
+				if (force !== undefined && !force) break
+			}
+			if (typeof vnode.tag !== "string" && typeof vnode.state.onbeforeupdate === "function") {
+				var force = callHook.call(vnode.state.onbeforeupdate, vnode, old)
+				if (force !== undefined && !force) break
+			}
+			return false
+		} while (false); // eslint-disable-line no-constant-condition
+		vnode.dom = old.dom
+		vnode.domSize = old.domSize
+		vnode.instance = old.instance
+		// One would think having the actual latest attributes would be ideal,
+		// but it doesn't let us properly diff based on our current internal
+		// representation. We have to save not only the old DOM info, but also
+		// the attributes used to create it, as we diff *that*, not against the
+		// DOM directly (with a few exceptions in `setAttr`). And, of course, we
+		// need to save the children and text as they are conceptually not
+		// unlike special "attributes" internally.
+		vnode.attrs = old.attrs
+		vnode.children = old.children
+		vnode.text = old.text
+		return true
+	}
+
+	return function(dom, vnodes, redraw) {
+		if (!dom) throw new TypeError("Ensure the DOM element being passed to m.route/m.mount/m.render is not undefined.")
+		var hooks = []
+		var active = activeElement()
+		var namespace = dom.namespaceURI
+
+		// First time rendering into a node clears it out
+		if (dom.vnodes == null) dom.textContent = ""
+
+		vnodes = Vnode.normalizeChildren(Array.isArray(vnodes) ? vnodes : [vnodes])
+		var prevRedraw = currentRedraw
+		try {
+			currentRedraw = typeof redraw === "function" ? redraw : undefined
+			updateNodes(dom, dom.vnodes, vnodes, hooks, null, namespace === "http://www.w3.org/1999/xhtml" ? undefined : namespace)
+		} finally {
+			currentRedraw = prevRedraw
+		}
+		dom.vnodes = vnodes
+		// `document.activeElement` can return null: https://html.spec.whatwg.org/multipage/interaction.html#dom-document-activeelement
+		if (active != null && activeElement() !== active && typeof active.focus === "function") active.focus()
+		for (var i = 0; i < hooks.length; i++) hooks[i]()
+	}
+}
+  })();
+});
+
+require.register("mithril/render/trust.js", function(exports, require, module) {
+  require = __makeRelativeRequire(require, {}, "mithril");
+  (function() {
+    "use strict"
+
+var Vnode = require("../render/vnode")
+
+module.exports = function(html) {
+	if (html == null) html = ""
+	return Vnode("<", undefined, undefined, html, undefined, undefined)
+}
+  })();
+});
+
+require.register("mithril/render/vnode.js", function(exports, require, module) {
+  require = __makeRelativeRequire(require, {}, "mithril");
+  (function() {
+    "use strict"
+
+function Vnode(tag, key, attrs, children, text, dom) {
+	return {tag: tag, key: key, attrs: attrs, children: children, text: text, dom: dom, domSize: undefined, state: undefined, events: undefined, instance: undefined}
+}
+Vnode.normalize = function(node) {
+	if (Array.isArray(node)) return Vnode("[", undefined, undefined, Vnode.normalizeChildren(node), undefined, undefined)
+	if (node == null || typeof node === "boolean") return null
+	if (typeof node === "object") return node
+	return Vnode("#", undefined, undefined, String(node), undefined, undefined)
+}
+Vnode.normalizeChildren = function(input) {
+	var children = []
+	if (input.length) {
+		var isKeyed = input[0] != null && input[0].key != null
+		// Note: this is a *very* perf-sensitive check.
+		// Fun fact: merging the loop like this is somehow faster than splitting
+		// it, noticeably so.
+		for (var i = 1; i < input.length; i++) {
+			if ((input[i] != null && input[i].key != null) !== isKeyed) {
+				throw new TypeError("Vnodes must either always have keys or never have keys!")
+			}
+		}
+		for (var i = 0; i < input.length; i++) {
+			children[i] = Vnode.normalize(input[i])
+		}
+	}
+	return children
+}
+
+module.exports = Vnode
+  })();
+});
+
+require.register("mithril/request.js", function(exports, require, module) {
+  require = __makeRelativeRequire(require, {}, "mithril");
+  (function() {
+    "use strict"
+
+var PromisePolyfill = require("./promise/promise")
+var mountRedraw = require("./mount-redraw")
+
+module.exports = require("./request/request")(window, PromisePolyfill, mountRedraw.redraw)
+  })();
+});
+
+require.register("mithril/request/request.js", function(exports, require, module) {
+  require = __makeRelativeRequire(require, {}, "mithril");
+  (function() {
+    "use strict"
+
+var buildPathname = require("../pathname/build")
+
+module.exports = function($window, Promise, oncompletion) {
+	var callbackCount = 0
+
+	function PromiseProxy(executor) {
+		return new Promise(executor)
+	}
+
+	// In case the global Promise is some userland library's where they rely on
+	// `foo instanceof this.constructor`, `this.constructor.resolve(value)`, or
+	// similar. Let's *not* break them.
+	PromiseProxy.prototype = Promise.prototype
+	PromiseProxy.__proto__ = Promise // eslint-disable-line no-proto
+
+	function makeRequest(factory) {
+		return function(url, args) {
+			if (typeof url !== "string") { args = url; url = url.url }
+			else if (args == null) args = {}
+			var promise = new Promise(function(resolve, reject) {
+				factory(buildPathname(url, args.params), args, function (data) {
+					if (typeof args.type === "function") {
+						if (Array.isArray(data)) {
+							for (var i = 0; i < data.length; i++) {
+								data[i] = new args.type(data[i])
+							}
+						}
+						else data = new args.type(data)
+					}
+					resolve(data)
+				}, reject)
+			})
+			if (args.background === true) return promise
+			var count = 0
+			function complete() {
+				if (--count === 0 && typeof oncompletion === "function") oncompletion()
+			}
+
+			return wrap(promise)
+
+			function wrap(promise) {
+				var then = promise.then
+				// Set the constructor, so engines know to not await or resolve
+				// this as a native promise. At the time of writing, this is
+				// only necessary for V8, but their behavior is the correct
+				// behavior per spec. See this spec issue for more details:
+				// https://github.com/tc39/ecma262/issues/1577. Also, see the
+				// corresponding comment in `request/tests/test-request.js` for
+				// a bit more background on the issue at hand.
+				promise.constructor = PromiseProxy
+				promise.then = function() {
+					count++
+					var next = then.apply(promise, arguments)
+					next.then(complete, function(e) {
+						complete()
+						if (count === 0) throw e
+					})
+					return wrap(next)
+				}
+				return promise
+			}
+		}
+	}
+
+	function hasHeader(args, name) {
+		for (var key in args.headers) {
+			if ({}.hasOwnProperty.call(args.headers, key) && name.test(key)) return true
+		}
+		return false
+	}
+
+	return {
+		request: makeRequest(function(url, args, resolve, reject) {
+			var method = args.method != null ? args.method.toUpperCase() : "GET"
+			var body = args.body
+			var assumeJSON = (args.serialize == null || args.serialize === JSON.serialize) && !(body instanceof $window.FormData)
+			var responseType = args.responseType || (typeof args.extract === "function" ? "" : "json")
+
+			var xhr = new $window.XMLHttpRequest(), aborted = false
+			var original = xhr, replacedAbort
+			var abort = xhr.abort
+
+			xhr.abort = function() {
+				aborted = true
+				abort.call(this)
+			}
+
+			xhr.open(method, url, args.async !== false, typeof args.user === "string" ? args.user : undefined, typeof args.password === "string" ? args.password : undefined)
+
+			if (assumeJSON && body != null && !hasHeader(args, /^content-type$/i)) {
+				xhr.setRequestHeader("Content-Type", "application/json; charset=utf-8")
+			}
+			if (typeof args.deserialize !== "function" && !hasHeader(args, /^accept$/i)) {
+				xhr.setRequestHeader("Accept", "application/json, text/*")
+			}
+			if (args.withCredentials) xhr.withCredentials = args.withCredentials
+			if (args.timeout) xhr.timeout = args.timeout
+			xhr.responseType = responseType
+
+			for (var key in args.headers) {
+				if ({}.hasOwnProperty.call(args.headers, key)) {
+					xhr.setRequestHeader(key, args.headers[key])
+				}
+			}
+
+			xhr.onreadystatechange = function(ev) {
+				// Don't throw errors on xhr.abort().
+				if (aborted) return
+
+				if (ev.target.readyState === 4) {
+					try {
+						var success = (ev.target.status >= 200 && ev.target.status < 300) || ev.target.status === 304 || (/^file:\/\//i).test(url)
+						// When the response type isn't "" or "text",
+						// `xhr.responseText` is the wrong thing to use.
+						// Browsers do the right thing and throw here, and we
+						// should honor that and do the right thing by
+						// preferring `xhr.response` where possible/practical.
+						var response = ev.target.response, message
+
+						if (responseType === "json") {
+							// For IE and Edge, which don't implement
+							// `responseType: "json"`.
+							if (!ev.target.responseType && typeof args.extract !== "function") response = JSON.parse(ev.target.responseText)
+						} else if (!responseType || responseType === "text") {
+							// Only use this default if it's text. If a parsed
+							// document is needed on old IE and friends (all
+							// unsupported), the user should use a custom
+							// `config` instead. They're already using this at
+							// their own risk.
+							if (response == null) response = ev.target.responseText
+						}
+
+						if (typeof args.extract === "function") {
+							response = args.extract(ev.target, args)
+							success = true
+						} else if (typeof args.deserialize === "function") {
+							response = args.deserialize(response)
+						}
+						if (success) resolve(response)
+						else {
+							try { message = ev.target.responseText }
+							catch (e) { message = response }
+							var error = new Error(message)
+							error.code = ev.target.status
+							error.response = response
+							reject(error)
+						}
+					}
+					catch (e) {
+						reject(e)
+					}
+				}
+			}
+
+			if (typeof args.config === "function") {
+				xhr = args.config(xhr, args, url) || xhr
+
+				// Propagate the `abort` to any replacement XHR as well.
+				if (xhr !== original) {
+					replacedAbort = xhr.abort
+					xhr.abort = function() {
+						aborted = true
+						replacedAbort.call(this)
+					}
+				}
+			}
+
+			if (body == null) xhr.send()
+			else if (typeof args.serialize === "function") xhr.send(args.serialize(body))
+			else if (body instanceof $window.FormData) xhr.send(body)
+			else xhr.send(JSON.stringify(body))
+		}),
+		jsonp: makeRequest(function(url, args, resolve, reject) {
+			var callbackName = args.callbackName || "_mithril_" + Math.round(Math.random() * 1e16) + "_" + callbackCount++
+			var script = $window.document.createElement("script")
+			$window[callbackName] = function(data) {
+				delete $window[callbackName]
+				script.parentNode.removeChild(script)
+				resolve(data)
+			}
+			script.onerror = function() {
+				delete $window[callbackName]
+				script.parentNode.removeChild(script)
+				reject(new Error("JSONP request failed"))
+			}
+			script.src = url + (url.indexOf("?") < 0 ? "?" : "&") +
+				encodeURIComponent(args.callbackKey || "callback") + "=" +
+				encodeURIComponent(callbackName)
+			$window.document.documentElement.appendChild(script)
+		}),
+	}
+}
+  })();
+});
+
+require.register("mithril/route.js", function(exports, require, module) {
+  require = __makeRelativeRequire(require, {}, "mithril");
+  (function() {
+    "use strict"
+
+var mountRedraw = require("./mount-redraw")
+
+module.exports = require("./api/router")(window, mountRedraw)
+  })();
+});
+require.register("___globals___", function(exports, require, module) {
+  
+
+// Auto-loaded modules from config.npm.globals.
+window.m = require("mithril");
+
+
+});})();require('___globals___');
+
+"use strict";
+
+/* jshint ignore:start */
+(function () {
+  var WebSocket = window.WebSocket || window.MozWebSocket;
+  var br = window.brunch = window.brunch || {};
+  var ar = br['auto-reload'] = br['auto-reload'] || {};
+  if (!WebSocket || ar.disabled) return;
+  if (window._ar) return;
+  window._ar = true;
+
+  var cacheBuster = function cacheBuster(url) {
+    var date = Math.round(Date.now() / 1000).toString();
+    url = url.replace(/(\&|\\?)cacheBuster=\d*/, '');
+    return url + (url.indexOf('?') >= 0 ? '&' : '?') + 'cacheBuster=' + date;
+  };
+
+  var browser = navigator.userAgent.toLowerCase();
+  var forceRepaint = ar.forceRepaint || browser.indexOf('chrome') > -1;
+  var reloaders = {
+    page: function page() {
+      window.location.reload(true);
+    },
+    stylesheet: function stylesheet() {
+      [].slice.call(document.querySelectorAll('link[rel=stylesheet]')).filter(function (link) {
+        var val = link.getAttribute('data-autoreload');
+        return link.href && val != 'false';
+      }).forEach(function (link) {
+        link.href = cacheBuster(link.href);
+      }); // Hack to force page repaint after 25ms.
+
+      if (forceRepaint) setTimeout(function () {
+        document.body.offsetHeight;
+      }, 25);
+    },
+    javascript: function javascript() {
+      var scripts = [].slice.call(document.querySelectorAll('script'));
+      var textScripts = scripts.map(function (script) {
+        return script.text;
+      }).filter(function (text) {
+        return text.length > 0;
+      });
+      var srcScripts = scripts.filter(function (script) {
+        return script.src;
+      });
+      var loaded = 0;
+      var all = srcScripts.length;
+
+      var onLoad = function onLoad() {
+        loaded = loaded + 1;
+
+        if (loaded === all) {
+          textScripts.forEach(function (script) {
+            eval(script);
+          });
+        }
+      };
+
+      srcScripts.forEach(function (script) {
+        var src = script.src;
+        script.remove();
+        var newScript = document.createElement('script');
+        newScript.src = cacheBuster(src);
+        newScript.async = true;
+        newScript.onload = onLoad;
+        document.head.appendChild(newScript);
+      });
+    }
+  };
+  var port = ar.port || 9485;
+  var host = br.server || window.location.hostname || 'localhost';
+
+  var connect = function connect() {
+    var connection = new WebSocket('ws://' + host + ':' + port);
+
+    connection.onmessage = function (event) {
+      if (ar.disabled) return;
+      var message = event.data;
+      var reloader = reloaders[message] || reloaders.page;
+      reloader();
+    };
+
+    connection.onerror = function () {
+      if (connection.readyState) connection.close();
+    };
+
+    connection.onclose = function () {
+      window.setTimeout(connect, 1000);
+    };
+  };
+
+  connect();
+})();
+/* jshint ignore:end */
+;
+//# sourceMappingURL=vendor.js.map

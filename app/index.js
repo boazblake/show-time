@@ -8,7 +8,7 @@ if (module.hot) {
   module.hot.accept()
 }
 
-if (process.env.NODE_ENV !== "production") {
+if (process.env.NODE_ENV == "development") {
   console.log("Looks like we are in development mode!")
 } else {
   if ("serviceWorker" in navigator) {

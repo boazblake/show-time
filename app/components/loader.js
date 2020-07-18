@@ -1,6 +1,13 @@
-export const Loader = () => {
-  return {
-    view: ({ children }) =>
-      m(".container", m(".banner", m(".container", children))),
-  }
-}
+const loader = m(".holder", [
+  m(".preloader", [
+    m("div"),
+    m("div"),
+    m("div"),
+    m("div"),
+    m("div"),
+    m("div"),
+    m("div"),
+  ]),
+])
+
+export default loader

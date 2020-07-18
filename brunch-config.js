@@ -21,7 +21,7 @@ exports.plugins = {
     precision: 8,
     mode: "native",
     sourceMapEmbed: true,
-    includePaths: ["node_modules/spectre.css/src/**/*.scss"],
+    includePaths: [],
   },
   imagemin: {
     plugins: {
@@ -62,14 +62,19 @@ exports.paths = {
   public: "docs",
   watched: [
     "app",
-    "app/components",
-    "app/Http",
-    "app/Validations",
     "app/Utils",
+    "app/components",
+    "app/assets",
+    "app/styles",
+    "app/pages",
   ],
 }
 
 exports.npm = {
   enabled: true,
-  globals: { m: "mithril", Task: "data.task" },
+  globals: { m: "mithril" },
+  styles: {
+    "animate.css": ["animate.min.css"],
+    hamburgers: ["_sass/hamburgers/hamburgers.scss"],
+  },
 }

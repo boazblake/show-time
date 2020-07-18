@@ -1,30 +1,24 @@
-import { uniq } from "ramda"
+import { AnimateSideBar } from "styles/animations"
 
 export const SideBar = () => {
-  const selectTag = (data, tag) =>
-    (data.tags.selected = uniq(data.tags.selected.concat([tag])))
-
+  let routeName = (route) => route.split("/")[1].toUpperCase()
   return {
-    view: ({ attrs: { data } }) => {
-      const isSelected = (tag) =>
-        data.tags.selected.includes(tag) && "tag-selected"
-
-      return m(".sidebar", [
-        m("p", "Popular Tags"),
-        m(
-          ".tag-list",
-          data.tags.tagList.map((tag) =>
+    view: ({ attrs: { mdl } }) =>
+      m(
+        "ul.sidebar",
+        { oncreate: AnimateSideBar("slideInLeft") },
+        mdl.routes
+          .filter((r) => r !== m.route.get())
+          .map((route) =>
             m(
-              "a.tag-pill.tag-default",
+              m.route.Link,
               {
-                class: isSelected(tag),
-                onclick: (e) => selectTag(data, tag),
+                href: route,
+                selector: "li",
               },
-              tag
+              routeName(route)
             )
           )
-        ),
-      ])
-    },
+      ),
   }
 }
