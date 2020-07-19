@@ -170,6 +170,163 @@ var secureImg = function secureImg(url) {
 };
 });
 
+;require.register("components/CV.js", function(exports, require, module) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.CV = void 0;
+var CV = {
+  view: function view() {
+    return m("section.resume", m("embed.resume-pdf", {
+      type: "application/pdf",
+      width: "900px",
+      height: "900px",
+      pluginspage: "http://www.adobe.com/products/acrobat/readstep2.html",
+      src: "files/resume.pdf"
+    }));
+  }
+};
+exports.CV = CV;
+});
+
+;require.register("components/TTT/TTT.js", function(exports, require, module) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.TTT_JS = void 0;
+var TTT_JS = 'const getRandomInt = (min, max) =>\n  Math.floor(Math.random() * (1 + max - min) + min)\n\nconst players = {\n  true: { score: 0, mark: "X" },\n  false: { score: 0, mark: "O" },\n}\nconst boardSizes = R.filter((n) => n % 3 == 0, R.range(0, 60))\n\nconst getDiagAcross = (acc, set, idx) => {\n  let r = acc.concat(set[idx])\n  return r\n}\n\nconst getDiagDown = (acc, set, idx) => {\n  let r = acc.concat(set[set.length - (idx + 1)])\n  return r\n}\n\nconst winningSetBy = (mdl) => {\n  if (mdl.size) {\n    let spaces = R.range(1, mdl.size * mdl.size + 1)\n    let setsAcross = R.splitEvery(mdl.size, spaces)\n    let setsDown = R.transpose(setsAcross)\n    let setsDiagAcross = setsAcross.reduce(getDiagAcross, [])\n    let setsDiagDown = setsDown.reduce(getDiagDown, [])\n    let winnings = setsAcross\n      .concat(setsDown)\n      .concat([setsDiagAcross].concat([setsDiagDown]))\n    return winnings\n  } else {\n    restart(mdl)\n  }\n}\n\nconst mdl = {\n  winnerSets: [],\n  winner: null,\n  turn: true,\n  players,\n  board: null,\n  size: 0,\n  width: 800,\n}\n\nconst markSelectedSpace = (mdl, key, mark) => {\n  const space = R.filter(R.propEq("key", key), mdl.board)\n  let updatedSpace = R.set(R.lensProp("value"), mark, R.head(space), mdl.board)\n  let index = R.findIndex(R.propEq("key", key))(mdl.board)\n  mdl.board = R.insert(index, updatedSpace, R.without(space, mdl.board))\n  return mdl\n}\n\nconst markRandomSpace = (mdl) => {\n  let emptySpaces = mdl.board.filter(R.propEq("value", ""))\n  let AISpace = emptySpaces[getRandomInt(0, emptySpaces.length - 1)]\n  !mdl.winner && AISpace && markSpace(mdl)(AISpace)\n  return mdl\n}\n\nconst updateTurn = (mdl) => {\n  mdl.turn = !mdl.turn\n  return mdl\n}\n\nconst isWinningSpace = (mdl, key) => {\n  let value = R.prop("value", R.head(R.filter(R.propEq("key", key), mdl.board)))\n  let sets = R.groupBy((c) => c[1])(mdl.board.map(R.props(["key", "value"])))\n  let keys = R.keys(R.fromPairs(sets[value])).map(Number)\n  let isWinner = mdl.winnerSets\n    .map((set) => set.every((key) => keys.includes(key)))\n    .includes(true)\n  return isWinner\n}\n\nconst checkIfDraw = (mdl) => {\n  if (!R.pluck("value", mdl.board).includes("")) {\n    mdl.winner = "No One"\n    return mdl\n  }\n  return mdl\n}\n\nconst markSpace = (mdl) => (space) => {\n  let player = mdl.players[mdl.turn].mark\n  if (isWinningSpace(markSelectedSpace(mdl, space.key, player), space.key)) {\n    mdl.players[mdl.turn].score++\n    mdl.winner = player\n    return mdl\n  }\n  checkIfDraw(mdl)\n  return mdl\n}\n\nconst nextTurn = (mdl, space) => {\n  return R.compose(\n    updateTurn,\n    markRandomSpace,\n    updateTurn,\n    markSpace(mdl)\n  )(space)\n  return mdl\n}\n\nconst restart = (mdl) => {\n  mdl.winner = null\n  mdl.size = 0\n  mdl.board = null\n  mdl.width = 800\n}\n\nconst makeBoardWithSize = (mdl, size) => {\n  mdl.size = size\n  mdl.board = R.range(0, size * size).map((n) => ({ key: n + 1, value: "" }))\n  mdl.winnerSets = winningSetBy(mdl)\n}\n\nconst Space = {\n  view: ({ attrs: { mdl, key, space } }) =>\n    m(\n      ".space",\n      {\n        style: {\n          fontSize: `${mdl.width / mdl.size / 2}px`,\n          height: `${mdl.width / mdl.size / 2}px`,\n          flex: `1 1 ${mdl.width / mdl.size}px`,\n        },\n        onclick: (e) => !mdl.winner && !space.value && nextTurn(mdl, space),\n      },\n      space.value && m(".value", space.value)\n    ),\n}\n\nconst PlayerScore = {\n  view: ({ attrs: { player, mdl } }) =>\n    m(".score-card", [player.mark, ":", player.score]),\n}\n\nconst Toolbar = {\n  view: ({ attrs: { mdl } }) =>\n    m(".toolbar", [\n      m("button.btn", { onclick: (e) => restart(mdl) }, "New Game"),\n      Object.keys(mdl.players).map((player, idx) =>\n        m(PlayerScore, { key: idx, player: players[player], mdl })\n      ),\n    ]),\n}\n\nconst Game = {\n  view: () =>\n    mdl.board\n      ? m(\n          ".game",\n          { style: { width: `${mdl.width}px` } },\n          mdl.board.map((space) => m(Space, { key: space.key, space, mdl }))\n        )\n      : [\n          m("h1", "select a board size"),\n          m(\n            "select",\n            {\n              value: mdl.size,\n              onchange: (e) => makeBoardWithSize(mdl, Number(e.target.value)),\n            },\n            boardSizes.map((n) => m("option", n)),\n            mdl.size\n          ),\n        ],\n}\n\nconst GameOver = {\n  oncreate: () => window.scrollTo(0, 0),\n  view: ({ attrs: { mdl } }) =>\n    m(\n      ".game-over",\n      { onclick: (e) => restart(mdl) },\n      `Game Over ${mdl.winner} is the winner!`\n    ),\n}\n\nconst TicTacToe = {\n  view: () =>\n    m(".", [\n      m(Toolbar, { mdl }),\n      mdl.winner && m(GameOver, { mdl }),\n      m(Game, { mdl }),\n    ]),\n}\n\nm.mount(document.body, TicTacToe)';
+exports.TTT_JS = TTT_JS;
+});
+
+;require.register("components/TTT/TTT_CSS.js", function(exports, require, module) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.TTT_CSS = void 0;
+var TTT_CSS = "\n* {\n  box-sizing: border-box;\n  font-family: 'Mansalva';\n}\n\nselect {\n  width: 80px;\n  height: 36px;\n  font-size: 30px;\n}\n\n.toolbar {\n  border: 1px solid green;\n  display: flex;\n  flex-flow: wrap;\n  justify-content: space-between;\n}\n\n.score-card {\n  padding: 10px;\n  font-size: 30px\n}\n\n.game {\n  display: flex;\n  flex-flow: wrap;\n}\n\n\n.space {\n  display: flex;\n  align-items: center;\n  justify-content: center;\n  border: 1px solid green;\n  cursor:pointer;\n}\n\n.game-over {\n  position: absolute;\n  top: 15%;\n  left: 15%;\n  width: 500px;\n  font-size: 90px;\n  background: #bdc3c7;\n  padding: 4px;\n  cursor: pointer;\n}\n\n.value {\n  font-size: inherit;\n}";
+exports.TTT_CSS = TTT_CSS;
+});
+
+;require.register("components/TTT/TTT_HTML.js", function(exports, require, module) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.TTT_HTML = void 0;
+var TTT_HTML = '<link href="https://fonts.googleapis.com/css?family=Mansalva&display=swap" rel="stylesheet">';
+exports.TTT_HTML = TTT_HTML;
+});
+
+;require.register("components/TTT/index.js", function(exports, require, module) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _TTT = require("./TTT.js");
+
+Object.keys(_TTT).forEach(function (key) {
+  if (key === "default" || key === "__esModule") return;
+  Object.defineProperty(exports, key, {
+    enumerable: true,
+    get: function get() {
+      return _TTT[key];
+    }
+  });
+});
+
+var _TTT_CSS = require("./TTT_CSS.js");
+
+Object.keys(_TTT_CSS).forEach(function (key) {
+  if (key === "default" || key === "__esModule") return;
+  Object.defineProperty(exports, key, {
+    enumerable: true,
+    get: function get() {
+      return _TTT_CSS[key];
+    }
+  });
+});
+
+var _TTT_HTML = require("./TTT_HTML.js");
+
+Object.keys(_TTT_HTML).forEach(function (key) {
+  if (key === "default" || key === "__esModule") return;
+  Object.defineProperty(exports, key, {
+    enumerable: true,
+    get: function get() {
+      return _TTT_HTML[key];
+    }
+  });
+});
+});
+
+;require.register("components/boazimage.js", function(exports, require, module) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.BoazFace = void 0;
+var BoazFace = {
+  view: function view() {
+    return m("img", {
+      src: "/images/boazface.jpg",
+      style: {
+        width: "500px",
+        height: "500px"
+      }
+    });
+  }
+};
+exports.BoazFace = BoazFace;
+});
+
+;require.register("components/flems.js", function(exports, require, module) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.TicTacToe = void 0;
+
+var _index = require("./TTT/index");
+
+var TicTacToe = {
+  files: [{
+    name: "app.js",
+    content: _index.TTT_JS
+  }, {
+    name: "style.css",
+    content: _index.TTT_CSS
+  }, {
+    name: "index.html",
+    content: _index.TTT_HTML
+  }],
+  links: [{
+    name: "mithril",
+    type: "js",
+    url: "https://unpkg.com/mithril"
+  }, {
+    name: "ramda",
+    type: "js",
+    url: "https://unpkg.com/ramda@0.26.1/dist/ramda.min.js"
+  }, {
+    name: "mithril-stream",
+    type: "js",
+    url: "https://unpkg.com/mithril-stream@2.0.0/stream.js"
+  }]
+};
+exports.TicTacToe = TicTacToe;
+});
+
 ;require.register("components/hamburger.js", function(exports, require, module) {
 "use strict";
 
@@ -230,6 +387,42 @@ Object.keys(_layout).forEach(function (key) {
     enumerable: true,
     get: function get() {
       return _layout[key];
+    }
+  });
+});
+
+var _boazimage = require("./boazimage.js");
+
+Object.keys(_boazimage).forEach(function (key) {
+  if (key === "default" || key === "__esModule") return;
+  Object.defineProperty(exports, key, {
+    enumerable: true,
+    get: function get() {
+      return _boazimage[key];
+    }
+  });
+});
+
+var _CV = require("./CV.js");
+
+Object.keys(_CV).forEach(function (key) {
+  if (key === "default" || key === "__esModule") return;
+  Object.defineProperty(exports, key, {
+    enumerable: true,
+    get: function get() {
+      return _CV[key];
+    }
+  });
+});
+
+var _flems = require("./flems.js");
+
+Object.keys(_flems).forEach(function (key) {
+  if (key === "default" || key === "__esModule") return;
+  Object.defineProperty(exports, key, {
+    enumerable: true,
+    get: function get() {
+      return _flems[key];
     }
   });
 });
@@ -426,12 +619,12 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.Home = void 0;
 
+var _components = require("components");
+
 var Home = function Home() {
   return {
     view: function view() {
-      return m(".page", [m("section.pic", m("img.profile-pic", {
-        src: "pic"
-      })), m("br"), m(".row", m("section.intro", [m("code.intro-text", "I am a Front-End web developer with 3 + years industry experience  building a variety of different applications and using a multitude of different frameworks and languages. "), m("br"), m("code.intro-text", "After serving as a paratrooper in the IDF I spent the next decade in Academia studying the effects of changes in environment on Human Performance, from pregancy to sports-injuries to space-flight."), m("br"), m("code.intro-text", ["My background in programming started at a 3 month boot-camp at the Iron Yard in Houston (since closed) supplemented with various online courses ", m("a.intro-text", {
+      return m(".page", [m("section.pic", m(_components.BoazFace)), m("br"), m(".row", m("section.intro", [m("code.intro-text", "I am a Front-End web developer with 3 + years industry experience  building a variety of different applications and using a multitude of different frameworks and languages. "), m("br"), m("code.intro-text", "After serving as a paratrooper in the IDF I spent the next decade in Academia studying the effects of changes in environment on Human Performance, from pregancy to sports-injuries to space-flight."), m("br"), m("code.intro-text", ["My background in programming started at a 3 month boot-camp at the Iron Yard in Houston (since closed) supplemented with various online courses ", m("a.intro-text", {
         href: "https://online-learning.harvard.edu/course/cs50-introduction-computer-science",
         target: "_blank"
       }, "from the Harvard CS50 course"), " to ", m("a.intro-text", {
@@ -534,10 +727,12 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.Resume = void 0;
 
+var _components = require("components");
+
 var Resume = function Resume() {
   return {
     view: function view() {
-      return m(".page", "RESUME");
+      return m(".page", "RESUME", m(_components.CV));
     }
   };
 };
@@ -553,10 +748,25 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.Snippets = void 0;
 
+var _components = require("components");
+
+console.log(_components.TicTacToe);
+
+var AddSnip = function AddSnip(_ref) {
+  var dom = _ref.dom;
+  window.Flems(dom, _components.TicTacToe);
+};
+
 var Snippets = function Snippets() {
   return {
     view: function view() {
-      return m(".page", "SNIPPETS");
+      return m(".page", ["SNIPPETS", m(".", {
+        style: {
+          height: "500px"
+        },
+        oncreate: AddSnip,
+        id: "test"
+      })]);
     }
   };
 };
@@ -755,5 +965,5 @@ window.m = require("mithril");
 
 });})();require('___globals___');
 
-
+require('initialize');
 //# sourceMappingURL=app.js.map

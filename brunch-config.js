@@ -7,12 +7,22 @@ exports.files = {
     },
   },
   stylesheets: {
+    order: {
+      before: ["normalize.css"],
+      after: ["app.css"],
+    },
     joinTo: {
       "app.css": [
         (path) => path.includes(".scss"),
         (path) => path.includes(".css"),
       ],
     },
+  },
+}
+
+exports.modules = {
+  autoRequire: {
+    "app.js": ["initialize"],
   },
 }
 
@@ -32,20 +42,25 @@ exports.plugins = {
     },
     pattern: /\.(gif|jpg|jpeg|jpe|jif|jfif|jfi|png|svg|svgz)$/,
   },
+
   copycat: {
     // fonts: [
     //   "node_modules/@mithril-icons/clarity/cjs"
     //   "bower_components/material-design-iconic-font",
     //   "bower_components/font-awesome/fonts"
     // ],
-    images: ["app/assets/images"],
+    images: ["app/assets/images", "app/assets/files"],
     verbose: true, //shows each file that is copied to the destination directory
     onlyChanged: true, //only copy a file if it's modified time has changed (only effective when using brunch watch)
   },
   swPrecache: {
     swFileName: "service-worker.js",
     options: {
-      autorequire: ["app/assets/index.html"],
+      autorequire: [
+        "app/assets/index.html",
+        "app/assets/images",
+        "app/assets/files",
+      ],
       staticFileGlobs: [
         "docs/app.css",
         "docs/app.js",
@@ -64,9 +79,9 @@ exports.paths = {
     "app",
     "app/Utils",
     "app/components",
-    "app/assets",
     "app/styles",
     "app/pages",
+    "app/assets",
   ],
 }
 
@@ -74,6 +89,7 @@ exports.npm = {
   enabled: true,
   globals: { m: "mithril" },
   styles: {
+    "normalize.css": ["normalize.css"],
     "animate.css": ["animate.min.css"],
     hamburgers: ["_sass/hamburgers/hamburgers.scss"],
   },
