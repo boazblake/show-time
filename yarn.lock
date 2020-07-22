@@ -2759,6 +2759,11 @@ first-chunk-stream@^1.0.0:
   resolved "https://registry.yarnpkg.com/first-chunk-stream/-/first-chunk-stream-1.0.0.tgz#59bfb50cd905f60d7c394cd3d9acaab4e6ad934e"
   integrity sha1-Wb+1DNkF9g18OUzT2ayqtOatk04=
 
+flems@^1.5.3:
+  version "1.5.3"
+  resolved "https://registry.yarnpkg.com/flems/-/flems-1.5.3.tgz#269e00ac896ada070e238248dc5c479ca9c9884f"
+  integrity sha512-RwN78gXTpDp8HSE1m071IKL9qTM96AiK+M9Ly/pO/bngbl74ZC/d9lYax3WXIwZuTMKaKBDCY7DxmLWs2jDBzA==
+
 fn-args@^1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/fn-args/-/fn-args-1.0.0.tgz#974dafa1aeac4ac7c21fa09cc3b80f650106ed32"

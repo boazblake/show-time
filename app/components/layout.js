@@ -1,19 +1,17 @@
-import { Hamburger, SideBar } from "components"
+import { Header, SideBar } from "components"
 import { animateCSS } from "styles/animations"
-
-const Header = {
-  view: ({ attrs: { mdl } }) => m(".header", m(Hamburger, { mdl })),
-}
 
 export const Layout = () => {
   return {
     view: ({ attrs: { mdl }, children }) =>
-      m(".", [
+      m(".app", [
         m(Header, { mdl }),
         children,
         mdl.status.sidebar &&
+          mdl.settings.profile !== "desktop" &&
           m(SideBar, {
             oncreate: animateCSS("slideInRight"),
+            onbeforeremove: animateCSS("slideOutRight"),
             mdl,
           }),
       ]),

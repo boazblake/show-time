@@ -1,7 +1,6 @@
 import { Layout } from "components"
-import { animatePageCSS } from "styles/animations"
-import { Home, Portfolio, Snippets, Resume } from "pages"
-import { log } from "Utils"
+import { animateCSS } from "styles/animations"
+import { Home, About, Portfolio, Snippets, Resume } from "pages"
 
 const routes = (mdl) => {
   return {
@@ -15,8 +14,10 @@ const routes = (mdl) => {
           Layout,
           { mdl },
           m(Home, {
-            oncreate: animatePageCSS("slideInLeft"),
-            onbeforeremove: animatePageCSS("slideOutRight"),
+            oncreate: animateCSS("slideInLeft"),
+            onscroll: (e) => console.log(e),
+
+            onbeforeremove: animateCSS("slideOutRight"),
             mdl,
           })
         ),
@@ -32,8 +33,10 @@ const routes = (mdl) => {
           Layout,
           { mdl },
           m(Portfolio, {
-            oncreate: animatePageCSS("slideInLeft"),
-            onbeforeremove: animatePageCSS("slideOutRight"),
+            oncreate: animateCSS("slideInLeft"),
+            onscroll: (e) => console.log(e),
+
+            onbeforeremove: animateCSS("slideOutRight"),
             mdl,
           })
         ),
@@ -49,8 +52,10 @@ const routes = (mdl) => {
           Layout,
           { mdl },
           m(Resume, {
-            oncreate: animatePageCSS("slideInLeft"),
-            onbeforeremove: animatePageCSS("slideOutRight"),
+            oncreate: animateCSS("slideInLeft"),
+            onscroll: (e) => console.log(e),
+
+            onbeforeremove: animateCSS("slideOutRight"),
             mdl,
           })
         ),
@@ -66,8 +71,29 @@ const routes = (mdl) => {
           Layout,
           { mdl },
           m(Snippets, {
-            oncreate: animatePageCSS("slideInLeft"),
-            onbeforeremove: animatePageCSS("slideOutRight"),
+            oncreate: animateCSS("slideInLeft"),
+            onscroll: (e) => console.log(e),
+
+            onbeforeremove: animateCSS("slideOutRight"),
+            mdl,
+          })
+        ),
+    },
+
+    "/about": {
+      onmatch: (_, b) => {
+        mdl.slug = b
+        mdl.status.sidebar = false
+      },
+      render: () =>
+        m(
+          Layout,
+          { mdl },
+          m(About, {
+            oncreate: animateCSS("slideInLeft"),
+            onscroll: (e) => console.log(e),
+
+            onbeforeremove: animateCSS("slideOutRight"),
             mdl,
           })
         ),

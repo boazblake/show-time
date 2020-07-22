@@ -4,9 +4,16 @@ const model = {
     loadingProgress: { max: 0, value: 0 },
     isLoggedIn: () => sessionStorage.getItem("token"),
   },
-  routes: ["/home", "/portfolio", "/snippets", "/resume"],
+  routes: [
+    "/home",
+    "/portfolio",
+    "/snippets",
+    // "/about",
+    "/resume",
+  ],
   status: { sidebar: false },
-  settings: {},
+  settings: { profile: "" },
+  snippets: [],
   slug: "",
 }
 

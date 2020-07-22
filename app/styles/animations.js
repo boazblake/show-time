@@ -1,3 +1,5 @@
+import { randomPause } from "Utils"
+
 export const animatePageCSS = (animation, prefix = "animate__") => ({ dom }) =>
   new Promise((resolve) => {
     let cs = [...dom.classList].filter((c) => !c.includes("animate__"))
@@ -25,7 +27,7 @@ export const animateCSS = (animation, prefix = "animate__") => ({ dom }) =>
     }, 1000)
   })
 
-export const SlideChildrenInRight = (animation) => ({ dom }) => {
+export const animateChildren = (animation) => ({ dom }) => {
   let children = [...dom.children]
 
   return children.map((child, idx) => {
@@ -33,9 +35,12 @@ export const SlideChildrenInRight = (animation) => ({ dom }) => {
     setTimeout(() => {
       child.style.opacity = 1
       animateCSS(animation)({ dom: child })
-    }, idx * 100)
+    }, randomPause())
   })
 }
 
 export const AnimateSideBar = (animation) => ({ dom }) =>
-  SlideChildrenInRight(animation)({ dom })
+  animateChildren(animation)({ dom })
+
+export const AnimateNavBar = (animation) => ({ dom }) =>
+  animateChildren(animation)({ dom })

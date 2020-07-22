@@ -1,7 +1,6 @@
 import { AnimateSideBar } from "styles/animations"
-
+import { nameFromRoute } from "Utils"
 export const SideBar = () => {
-  let routeName = (route) => route.split("/")[1].toUpperCase()
   return {
     view: ({ attrs: { mdl } }) =>
       m(
@@ -13,10 +12,11 @@ export const SideBar = () => {
             m(
               m.route.Link,
               {
+                class: "sidebar-item",
                 href: route,
                 selector: "li",
               },
-              routeName(route)
+              nameFromRoute(route)
             )
           )
       ),
