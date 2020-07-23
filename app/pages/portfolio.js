@@ -1,5 +1,5 @@
 import { randomPause } from "Utils"
-import { animateChildrenIn } from "styles/animations"
+import { animateChildrenIn } from "Styles"
 
 const RepoLink = {
   view: ({ attrs: { url } }) =>

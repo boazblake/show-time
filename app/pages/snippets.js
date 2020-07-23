@@ -1,4 +1,4 @@
-import { TicTacToe, GameOfLife, ShapeShifter } from "components"
+import { TicTacToe, GameOfLife, ShapeShifter } from "Components"
 
 let snippets = [TicTacToe, , GameOfLife, ShapeShifter]
 const Snippet = {

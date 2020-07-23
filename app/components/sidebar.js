@@ -1,17 +1,14 @@
-import { AnimateSideBarIn, AnimateSideBarOut } from "styles/animations"
-import { nameFromRoute, Pause, randomPause, NoPause } from "Utils"
+import { AnimateChildren, slideInRight, slideOutLeft } from "Styles"
+import { nameFromRoute, randomPause } from "Utils"
+
 export const SideBar = () => {
   return {
     view: ({ attrs: { mdl } }) =>
       m(
         "ul.sidebar",
         {
-          // oncreate: AnimateSideBarIn(["slideInLeft", NoPause, randomPause]),
-          // onbeforeremove: AnimateSideBarOut([
-          //   "slideOutLeft",
-          //   Pause(2),
-          //   Pause(1),
-          // ]),
+          oncreate: AnimateChildren(slideInRight, randomPause),
+          onbeforeremove: AnimateChildren(slideOutLeft),
         },
         mdl.routes
           .filter((r) => r !== m.route.get())

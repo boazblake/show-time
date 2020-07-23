@@ -1,5 +1,6 @@
-import { Header, SideBar } from "components"
-import { animateCSS } from "styles/animations"
+import { Animate, slideInLeft, slideOutRight } from "Styles"
+import { Header, SideBar } from "Components"
+import { animate } from "Styles"
 import { NoPause, Pause } from "Utils"
 
 export const Layout = () => {
@@ -11,8 +12,8 @@ export const Layout = () => {
         mdl.status.sidebar &&
           mdl.settings.profile !== "desktop" &&
           m(SideBar, {
-            // oncreate: animateCSS(["slideInRight", NoPause]),
-            // onbeforeremove: animateCSS(["slideOutRight", NoPause]),
+            oncreate: Animate(slideInLeft),
+            onbeforeremove: Animate(slideOutRight),
             mdl,
           }),
       ]),

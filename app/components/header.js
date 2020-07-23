@@ -1,5 +1,5 @@
-import { AnimateNavBar } from "styles/animations"
-import { Hamburger } from "components"
+import { AnimateChildren, slideInDown } from "Styles"
+import { Hamburger } from "Components"
 import { nameFromRoute, Pause, randomPause, NoPause } from "Utils"
 
 export const Header = {
@@ -11,12 +11,9 @@ export const Header = {
           "p.typewriter type-writer",
           {
             id: "logo-header",
-            // oncreate: ({ dom }) =>
-            //   (dom.onanimationend = () =>
-            //     setTimeout(
-            //       () => dom.classList.remove("type-writer"),
-            //       Pause(2)
-            //     )),
+            oncreate: ({ dom }) =>
+              (dom.onanimationend = () =>
+                setTimeout(() => dom.classList.remove("type-writer"))),
           },
           "{Boaz Blake}"
         )
@@ -25,7 +22,7 @@ export const Header = {
         ? m(
             ".navbar.frow",
             {
-              // oncreate: AnimateNavBar(["slideInDown", NoPause, randomPause])
+              oncreate: AnimateChildren(slideInDown, randomPause),
             },
             mdl.routes
               .filter((r) => r !== m.route.get())

@@ -15,6 +15,7 @@ exports.files = {
       "app.css": [
         (path) => path.includes(".scss"),
         (path) => path.includes(".css"),
+        (path) => path.includes(".sass"),
       ],
     },
   },
@@ -89,9 +90,9 @@ exports.paths = {
   watched: [
     "app",
     "app/Utils",
-    "app/components",
-    "app/styles",
-    "app/pages",
+    "app/Components",
+    "app/Styles",
+    "app/Pages",
     "app/assets",
   ],
 }
@@ -101,7 +102,5 @@ exports.npm = {
   globals: { m: "mithril" },
   styles: {
     "normalize.css": ["normalize.css"],
-    "animate.css": ["animate.min.css"],
-    hamburgers: ["_sass/hamburgers/hamburgers.scss"],
   },
 }

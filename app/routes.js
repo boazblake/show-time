@@ -1,7 +1,6 @@
-import { Layout } from "components"
-import { animatePageCSS } from "styles/animations"
-import { Home, About, Portfolio, Snippets, Resume } from "pages"
-import { Pause } from "Utils"
+import { Layout } from "Components"
+import { AnimatePage, slideOutLeft, slideInRight } from "Styles"
+import { Home, About, Portfolio, Snippets, Resume } from "Pages"
 
 const routes = (mdl) => {
   return {
@@ -15,10 +14,9 @@ const routes = (mdl) => {
           Layout,
           { mdl },
           m(Home, {
-            // oncreate: animatePageCSS(["slideInLeft", Pause(1)]),
+            oncreate: AnimatePage(slideInRight),
             onscroll: (e) => console.log(e),
-
-            // onbeforeremove: animatePageCSS(["slideOutRight", Pause(1)]),
+            onbeforeremove: AnimatePage(slideOutLeft),
             mdl,
           })
         ),
@@ -34,10 +32,9 @@ const routes = (mdl) => {
           Layout,
           { mdl },
           m(Portfolio, {
-            // oncreate: animatePageCSS(["slideInLeft", Pause(1)]),
+            oncreate: AnimatePage(slideInRight),
             onscroll: (e) => console.log(e),
-
-            // onbeforeremove: animatePageCSS(["slideOutRight", Pause(1)]),
+            onbeforeremove: AnimatePage(slideOutLeft),
             mdl,
           })
         ),
@@ -53,10 +50,9 @@ const routes = (mdl) => {
           Layout,
           { mdl },
           m(Resume, {
-            // oncreate: animatePageCSS(["slideInLeft", Pause(1)]),
+            oncreate: AnimatePage(slideInRight),
             onscroll: (e) => console.log(e),
-
-            // onbeforeremove: animatePageCSS(["slideOutRight", Pause(1)]),
+            onbeforeremove: AnimatePage(slideOutLeft),
             mdl,
           })
         ),
@@ -72,10 +68,9 @@ const routes = (mdl) => {
           Layout,
           { mdl },
           m(Snippets, {
-            // oncreate: animatePageCSS(["slideInLeft", Pause(1)]),
+            oncreate: AnimatePage(slideInRight),
             onscroll: (e) => console.log(e),
-
-            // onbeforeremove: animatePageCSS(["slideOutRight", Pause(1)]),
+            onbeforeremove: AnimatePage(slideOutLeft),
             mdl,
           })
         ),
@@ -91,10 +86,9 @@ const routes = (mdl) => {
           Layout,
           { mdl },
           m(About, {
-            // oncreate: animatePageCSS(["slideInLeft", Pause(1)]),
+            oncreate: AnimatePage(slideInRight),
             onscroll: (e) => console.log(e),
-
-            // onbeforeremove: animatePageCSS(["slideOutRight", Pause(1)]),
+            onbeforeremove: AnimatePage(slideOutLeft),
             mdl,
           })
         ),

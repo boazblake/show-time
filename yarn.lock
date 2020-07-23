@@ -851,11 +851,6 @@ align-text@^0.1.1, align-text@^0.1.3:
     longest "^1.0.1"
     repeat-string "^1.5.2"
 
-animate.css@^4.1.0:
-  version "4.1.0"
-  resolved "https://registry.yarnpkg.com/animate.css/-/animate.css-4.1.0.tgz#dec2aabe4babfc6f6777f9a5cccd132838729b50"
-  integrity sha512-0aVcfWDeU9ykV6vjn1P67ZSs01jxoUQZCGaYbkk0SIIelIG8kUdLrIkua1+VabHfTtsSivDRMMn0ILPvZum2gw==
-
 ansi-align@^2.0.0:
   version "2.0.0"
   resolved "https://registry.yarnpkg.com/ansi-align/-/ansi-align-2.0.0.tgz#c36aeccba563b89ceb556f3690f0b1d9e3547f7f"
@@ -2759,11 +2754,6 @@ first-chunk-stream@^1.0.0:
   resolved "https://registry.yarnpkg.com/first-chunk-stream/-/first-chunk-stream-1.0.0.tgz#59bfb50cd905f60d7c394cd3d9acaab4e6ad934e"
   integrity sha1-Wb+1DNkF9g18OUzT2ayqtOatk04=
 
-flems@^1.5.3:
-  version "1.5.3"
-  resolved "https://registry.yarnpkg.com/flems/-/flems-1.5.3.tgz#269e00ac896ada070e238248dc5c479ca9c9884f"
-  integrity sha512-RwN78gXTpDp8HSE1m071IKL9qTM96AiK+M9Ly/pO/bngbl74ZC/d9lYax3WXIwZuTMKaKBDCY7DxmLWs2jDBzA==
-
 fn-args@^1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/fn-args/-/fn-args-1.0.0.tgz#974dafa1aeac4ac7c21fa09cc3b80f650106ed32"
@@ -3096,11 +3086,6 @@ gulplog@^1.0.0:
   integrity sha1-4oxNRdBey77YGDY86PnFkmIp/+U=
   dependencies:
     glogg "^1.0.0"
-
-hamburgers@^1.1.3:
-  version "1.1.3"
-  resolved "https://registry.yarnpkg.com/hamburgers/-/hamburgers-1.1.3.tgz#eb583ede269d3a774aa5f613442b17ea13952b84"
-  integrity sha512-qpfnJwZq6ATAGJEriwuyfVNgT++GG+o+3bBfPYF7F3WY452cYKbaYGUuqwhp+3kHLI6CL4VIBfj8bfbp90Lp1A==
 
 has-ansi@^2.0.0:
   version "2.0.0"

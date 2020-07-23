@@ -13,9 +13,6 @@
     "build": "yarn run build:pre && brunch build --production"
   },
   "dependencies": {
-    "animate.css": "^4.1.0",
-    "flems": "^1.5.3",
-    "hamburgers": "^1.1.3",
     "mithril": "^2.0.4",
     "mithril-stream": "^2.0.0",
     "normalize.css": "^8.0.1",
