@@ -6,12 +6,12 @@ export const SideBar = () => {
       m(
         "ul.sidebar",
         {
-          oncreate: AnimateSideBarIn(["slideInLeft", NoPause, randomPause]),
-          onbeforeremove: AnimateSideBarOut([
-            "slideOutLeft",
-            Pause(2),
-            Pause(1),
-          ]),
+          // oncreate: AnimateSideBarIn(["slideInLeft", NoPause, randomPause]),
+          // onbeforeremove: AnimateSideBarOut([
+          //   "slideOutLeft",
+          //   Pause(2),
+          //   Pause(1),
+          // ]),
         },
         mdl.routes
           .filter((r) => r !== m.route.get())

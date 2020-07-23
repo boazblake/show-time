@@ -1,5 +1,5 @@
 @import url("https://fonts.googleapis.com/css?family=Montserrat&display=swap");
-
+@import "./frow/frow.sass";
 :root {
   --blue: #042532;
   --indigo: #6610f2;
@@ -43,32 +43,12 @@ a {
 }
 
 
-@mixin column {
-  display: flex;
-  flex-flow: column;
-}
-
-@mixin row {
-  display: flex;
-  flex-flow: wrap;
-}
-
-.row {
-  @include row;
-}
-
-.column {
-  @include column;
-}
 
 #boazface {
   width: 80%;
 }
 
 .navbar {
-  @include row;
-  justify-content: space-between;
-  align-content: center;
 
  > li {
     list-style: none;
@@ -124,18 +104,13 @@ a {
 }
 
 #header {
-  @include row;
-  justify-content: space-between;
   font-size: 25px;
   padding: 8px;
   min-height: 100px;
 }
 
 .header-text {
-  @include row;
   width: 80%;
-  justify-content: space-between;
-  align-content: center;
 }
 
 .body {
@@ -146,8 +121,6 @@ a {
 }
 
 .page {
-  @include column;
-  justify-content: space-around;
   width: 80%;
   margin: 0 auto;
   height: 80vh;
@@ -185,8 +158,6 @@ a {
 
 
 .portfolio {
-  @include row;
-  justify-content: space-evenly;
 }
 
 .resume {
@@ -221,36 +192,10 @@ a {
   transform: scale(0);
 }
 
-.repos {
-  @include row;
-  justify-content: space-between;
-  align-content: center;
-}
 
-.repo {
-  @include column;
-  justify-content: space-evenly;
-  background-color: var(--light);
-  max-width: 300px;
-  min-height: 300px;
-  margin: 6px;
-  > img {
-    max-width: 300px;
-  }
-}
 
 @media screen and (min-width: 600px) and (max-width: 899px) {
-  // .repo {
-  //   @include column;
-  //   justify-content: space-evenly;
-  //   background-color: var(--light);
-  //   max-width: 400px;
-  //   min-height: 300px;
-  //   margin: 6px;
-  //   > img {
-  //     max-width: 400px;
-  //   }
-  // }
+
 
 
 }
@@ -260,17 +205,7 @@ a {
     font-size: 25px;
   }
 
-  .repo {
-    @include column;
-    justify-content: space-evenly;
-    background-color: var(--light);
-    max-width: 400px;
-    min-height: 300px;
-    margin: 6px;
-    > img {
-      max-width: 400px;
-    }
-  }
+
 
   #boazface {
     width: 45%;
@@ -278,17 +213,7 @@ a {
 }
 
 @media screen and (min-width: 1200px) and (max-width: 1399px) {
-  .repo {
-    @include column;
-    justify-content: space-evenly;
-    background-color: var(--light);
-    max-width: 300px;
-    min-height: 300px;
-    margin: 6px;
-    > img {
-      max-width: 300px;
-    }
-  }
+
 
   #boazface {
     width: 55%;

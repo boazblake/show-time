@@ -3,23 +3,24 @@ import { jsonCopy } from "Utils"
 function transitionEndPromise(element) {
   return new Promise((resolve) => {
     element.addEventListener("transitionend", function f() {
-      if (event.target !== element) return
+      console.log("el", element)
+      // if (event.target !== element) return
       element.removeEventListener("transitionend", f)
       resolve()
     })
   })
 }
 
-function requestAnimationFramePromise() {
-  return new Promise((resolve) => requestAnimationFrame(resolve))
-}
+// function requestAnimationFramePromise() {
+//   return new Promise((resolve) => requestAnimationFrame(resolve))
+// }
 
-export function animate(element, stylz) {
-  Object.assign(element.style, stylz)
-  return transitionEndPromise(element).then((_) =>
-    requestAnimationFramePromise()
-  )
-}
+// export function animate(element, stylz) {
+//   Object.assign(element.style, stylz)
+//   return transitionEndPromise(element).then((_) =>
+//     requestAnimationFramePromise()
+//   )
+// }
 
 export const animatePageCSS = ([animation, pause], prefix = "animate__") => ({
   dom,
@@ -33,12 +34,12 @@ export const animatePageCSS = ([animation, pause], prefix = "animate__") => ({
     dom.style.top = -19
     dom.style.width = "100%"
 
-    setTimeout(() => {
-      return transitionEndPromise(dom).then((_) => {
-        dom.style = origStyles
-        requestAnimationFramePromise()
-      })
-    }, pause())
+    // setTimeout(() => {
+    return transitionEndPromise(dom).then((_) => {
+      dom.style = origStyles
+      resolve()
+    })
+    // }, pause())
   })
 
 export const animateCSS = ([animation, pause], prefix = "animate__") => ({
@@ -50,9 +51,10 @@ export const animateCSS = ([animation, pause], prefix = "animate__") => ({
     dom.classList.add(`${prefix}animated`, `${prefix}${animation}`)
 
     setTimeout(() => {
-      return transitionEndPromise(dom).then((_) =>
-        requestAnimationFramePromise()
-      )
+      transitionEndPromise(dom).then(() => resolve())
+      // .then((_) =>
+      //   requestAnimationFramePromise()
+      // )
     }, pause())
   })
 

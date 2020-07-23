@@ -11,8 +11,8 @@ export const Layout = () => {
         mdl.status.sidebar &&
           mdl.settings.profile !== "desktop" &&
           m(SideBar, {
-            oncreate: animateCSS(["slideInRight", NoPause]),
-            onbeforeremove: animateCSS(["slideOutRight", NoPause]),
+            // oncreate: animateCSS(["slideInRight", NoPause]),
+            // onbeforeremove: animateCSS(["slideOutRight", NoPause]),
             mdl,
           }),
       ]),

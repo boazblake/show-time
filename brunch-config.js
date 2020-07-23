@@ -42,7 +42,18 @@ exports.plugins = {
     },
     pattern: /\.(gif|jpg|jpeg|jpe|jif|jfif|jfi|png|svg|svgz)$/,
   },
-
+  babel: {
+    presets: [
+      [
+        "@babel/preset-env",
+        {
+          targets: {
+            browsers: ["last 2 versions"],
+          },
+        },
+      ],
+    ],
+  },
   copycat: {
     // fonts: [
     //   "node_modules/@mithril-icons/clarity/cjs"

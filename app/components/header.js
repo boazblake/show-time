@@ -4,27 +4,29 @@ import { nameFromRoute, Pause, randomPause, NoPause } from "Utils"
 
 export const Header = {
   view: ({ attrs: { mdl } }) =>
-    m("#header", [
+    m("#header.frow.row-center.justify-between", [
       m(
         "code",
         m(
           "p.typewriter type-writer",
           {
             id: "logo-header",
-            oncreate: ({ dom }) =>
-              (dom.onanimationend = () =>
-                setTimeout(
-                  () => dom.classList.remove("type-writer"),
-                  Pause(2)
-                )),
+            // oncreate: ({ dom }) =>
+            //   (dom.onanimationend = () =>
+            //     setTimeout(
+            //       () => dom.classList.remove("type-writer"),
+            //       Pause(2)
+            //     )),
           },
           "{Boaz Blake}"
         )
       ),
       mdl.settings.profile === "desktop"
         ? m(
-            ".navbar",
-            { oncreate: AnimateNavBar(["slideInDown", NoPause, randomPause]) },
+            ".navbar.frow",
+            {
+              // oncreate: AnimateNavBar(["slideInDown", NoPause, randomPause])
+            },
             mdl.routes
               .filter((r) => r !== m.route.get())
               .map((route) =>

@@ -54,15 +54,19 @@ const Repo = () => {
         state.status == "failed" && "Error",
         state.status == "loaded" &&
           m(
-            ".repo",
-            {
-              oncreate: animateChildrenIn(["fadeIn", randomPause, randomPause]),
-            },
-            [
-              m(".repo-title", [m(RepoLink, { url: state.name })]),
-              m("img", { src: state.src }),
-              m(".info", state.info),
-            ]
+            ".frow",
+            m(
+              ".col-lg-1-3",
+
+              {
+                // oncreate: animateChildrenIn(["fadeIn", randomPause, randomPause]),
+              },
+              [
+                m(".repo-title", [m(RepoLink, { url: state.name })]),
+                m("img", { width: "200px", src: state.src }),
+                m(".info", state.info),
+              ]
+            )
           )
       )
     },
@@ -98,14 +102,11 @@ export const Portfolio = () => {
     ),
     view: ({ attrs: { mdl } }) =>
       m(
-        ".page portfolio",
-        m(
-          ".repos",
-          state.status == "failed" && "Error fetching Repos ...",
-          state.status == "loading" && "Loading Repos ...",
-          state.status == "loaded" &&
-            state.repos.map((url) => m(Repo, { url, mdl }))
-        )
+        ".frow-container",
+        state.status == "failed" && "Error fetching Repos ...",
+        state.status == "loading" && "Loading Repos ...",
+        state.status == "loaded" &&
+          state.repos.map((url) => m(Repo, { url, mdl }))
       ),
   }
 }

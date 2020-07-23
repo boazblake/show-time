@@ -5,7 +5,9 @@ export const Home = {
   view: () =>
     m(
       ".page",
-      { oncreate: animateChildrenIn(["fadeInUp", Pause(1), Pause(1)]) },
+      {
+        // oncreate: animateChildrenIn(["fadeInUp", Pause(1), Pause(1)])
+      },
       [
         m("img#boazface", {
           src: "images/boazface.jpg",

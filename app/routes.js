@@ -15,10 +15,10 @@ const routes = (mdl) => {
           Layout,
           { mdl },
           m(Home, {
-            oncreate: animatePageCSS(["slideInLeft", Pause(1)]),
+            // oncreate: animatePageCSS(["slideInLeft", Pause(1)]),
             onscroll: (e) => console.log(e),
 
-            onbeforeremove: animatePageCSS(["slideOutRight", Pause(1)]),
+            // onbeforeremove: animatePageCSS(["slideOutRight", Pause(1)]),
             mdl,
           })
         ),
@@ -34,10 +34,10 @@ const routes = (mdl) => {
           Layout,
           { mdl },
           m(Portfolio, {
-            oncreate: animatePageCSS(["slideInLeft", Pause(1)]),
+            // oncreate: animatePageCSS(["slideInLeft", Pause(1)]),
             onscroll: (e) => console.log(e),
 
-            onbeforeremove: animatePageCSS(["slideOutRight", Pause(1)]),
+            // onbeforeremove: animatePageCSS(["slideOutRight", Pause(1)]),
             mdl,
           })
         ),
@@ -53,10 +53,10 @@ const routes = (mdl) => {
           Layout,
           { mdl },
           m(Resume, {
-            oncreate: animatePageCSS(["slideInLeft", Pause(1)]),
+            // oncreate: animatePageCSS(["slideInLeft", Pause(1)]),
             onscroll: (e) => console.log(e),
 
-            onbeforeremove: animatePageCSS(["slideOutRight", Pause(1)]),
+            // onbeforeremove: animatePageCSS(["slideOutRight", Pause(1)]),
             mdl,
           })
         ),
@@ -72,10 +72,10 @@ const routes = (mdl) => {
           Layout,
           { mdl },
           m(Snippets, {
-            oncreate: animatePageCSS(["slideInLeft", Pause(1)]),
+            // oncreate: animatePageCSS(["slideInLeft", Pause(1)]),
             onscroll: (e) => console.log(e),
 
-            onbeforeremove: animatePageCSS(["slideOutRight", Pause(1)]),
+            // onbeforeremove: animatePageCSS(["slideOutRight", Pause(1)]),
             mdl,
           })
         ),
@@ -91,10 +91,10 @@ const routes = (mdl) => {
           Layout,
           { mdl },
           m(About, {
-            oncreate: animatePageCSS(["slideInLeft", Pause(1)]),
+            // oncreate: animatePageCSS(["slideInLeft", Pause(1)]),
             onscroll: (e) => console.log(e),
 
-            onbeforeremove: animatePageCSS(["slideOutRight", Pause(1)]),
+            // onbeforeremove: animatePageCSS(["slideOutRight", Pause(1)]),
             mdl,
           })
         ),
