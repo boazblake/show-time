@@ -158,7 +158,6 @@ a {
   white-space: nowrap; /* Keeps the content on a single line */
   margin: 0 auto; /* Gives that scrolling effect as the typing happens */
   letter-spacing: .1em; /* Adjust as needed */
-  width: 300px;
 }
 
 .type-writer {
@@ -180,10 +179,13 @@ a {
   50% { border-color: var(--orange); }
 }
 
+.logo-header {
+  width: 300px;
+ }
 
 
 .portfolio {
-  @include column;
+  @include row;
   justify-content: space-evenly;
 }
 
@@ -192,7 +194,7 @@ a {
 }
 
 .nav-icon {
-  width: 60px;
+  width: 40px;
 }
 
 .nav-icon:after,
@@ -202,7 +204,7 @@ a {
   border-radius: 3px;
   content: '';
   display: block;
-  height: 5px;
+  height: 2px;
   margin: 7px 0;
   transition: all .2s ease-in-out;
 }
@@ -219,7 +221,37 @@ a {
   transform: scale(0);
 }
 
+.repos {
+  @include row;
+  justify-content: space-between;
+  align-content: center;
+}
+
+.repo {
+  @include column;
+  justify-content: space-evenly;
+  background-color: var(--light);
+  max-width: 300px;
+  min-height: 300px;
+  margin: 6px;
+  > img {
+    max-width: 300px;
+  }
+}
+
 @media screen and (min-width: 600px) and (max-width: 899px) {
+  // .repo {
+  //   @include column;
+  //   justify-content: space-evenly;
+  //   background-color: var(--light);
+  //   max-width: 400px;
+  //   min-height: 300px;
+  //   margin: 6px;
+  //   > img {
+  //     max-width: 400px;
+  //   }
+  // }
+
 
 }
 
@@ -228,18 +260,44 @@ a {
     font-size: 25px;
   }
 
+  .repo {
+    @include column;
+    justify-content: space-evenly;
+    background-color: var(--light);
+    max-width: 400px;
+    min-height: 300px;
+    margin: 6px;
+    > img {
+      max-width: 400px;
+    }
+  }
+
   #boazface {
     width: 45%;
   }
 }
 
 @media screen and (min-width: 1200px) and (max-width: 1399px) {
+  .repo {
+    @include column;
+    justify-content: space-evenly;
+    background-color: var(--light);
+    max-width: 300px;
+    min-height: 300px;
+    margin: 6px;
+    > img {
+      max-width: 300px;
+    }
+  }
+
   #boazface {
     width: 55%;
   }
 }
 
 @media screen and (min-width: 1400px) {
+
+
   #boazface {
     width: 40%;
   }

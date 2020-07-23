@@ -1,6 +1,6 @@
-import { AnimateNavBar, animateCSS } from "styles/animations"
+import { AnimateNavBar } from "styles/animations"
 import { Hamburger } from "components"
-import { nameFromRoute } from "Utils"
+import { nameFromRoute, Pause, randomPause, NoPause } from "Utils"
 
 export const Header = {
   view: ({ attrs: { mdl } }) =>
@@ -10,9 +10,13 @@ export const Header = {
         m(
           "p.typewriter type-writer",
           {
+            id: "logo-header",
             oncreate: ({ dom }) =>
               (dom.onanimationend = () =>
-                setTimeout(() => dom.classList.remove("type-writer"), 2000)),
+                setTimeout(
+                  () => dom.classList.remove("type-writer"),
+                  Pause(2)
+                )),
           },
           "{Boaz Blake}"
         )
@@ -20,7 +24,7 @@ export const Header = {
       mdl.settings.profile === "desktop"
         ? m(
             ".navbar",
-            { oncreate: AnimateNavBar("slideInDown") },
+            { oncreate: AnimateNavBar(["slideInDown", NoPause, randomPause]) },
             mdl.routes
               .filter((r) => r !== m.route.get())
               .map((route) =>

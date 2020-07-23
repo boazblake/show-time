@@ -1,11 +1,18 @@
-import { AnimateSideBar } from "styles/animations"
-import { nameFromRoute } from "Utils"
+import { AnimateSideBarIn, AnimateSideBarOut } from "styles/animations"
+import { nameFromRoute, Pause, randomPause, NoPause } from "Utils"
 export const SideBar = () => {
   return {
     view: ({ attrs: { mdl } }) =>
       m(
         "ul.sidebar",
-        { oncreate: AnimateSideBar("slideInLeft") },
+        {
+          oncreate: AnimateSideBarIn(["slideInLeft", NoPause, randomPause]),
+          onbeforeremove: AnimateSideBarOut([
+            "slideOutLeft",
+            Pause(2),
+            Pause(1),
+          ]),
+        },
         mdl.routes
           .filter((r) => r !== m.route.get())
           .map((route) =>
