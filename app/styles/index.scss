@@ -68,7 +68,7 @@ a {
 
   width: 100%;
   height: 100%;
-  background: var(--white);
+  // background: var(--white);
 
   > li {
     color: var(--blue);
@@ -107,6 +107,7 @@ a {
   font-size: 25px;
   padding: 8px;
   min-height: 100px;
+  transition-duration: .6s;
 }
 
 .header-text {
@@ -124,6 +125,11 @@ a {
   width: 80%;
   margin: 0 auto;
   height: 80vh;
+}
+
+.repo {
+  flex-basis: 30%;
+  margin: 18px;
 }
 
 .typewriter {
@@ -190,6 +196,20 @@ a {
   transform: scale(0);
 }
 
+
+.snippet {
+  margin: 0 auto;
+  width: 90%;
+
+  .snippet-title {
+    color: var(--blue);
+    // visibility: visible;
+    font-size: 20px;
+  }
+  .snippet-code{
+    // width: 80%;
+  }
+}
 
 
 @media screen and (min-width: 600px) and (max-width: 899px) {

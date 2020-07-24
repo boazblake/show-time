@@ -8,32 +8,27 @@ const duration = {
 }
 
 function transitionEndPromise(element) {
-  return new Promise((resolve) => {
-    element.addEventListener("transitionend", function f() {
-      if (event.target !== element) return
-      element.removeEventListener("transitionend", f)
-      return resolve()
-    })
-  })
+  const transitionEnded = (e) => {
+    // console.log("transitionEnded", element, e)
+    if (e.target !== element) return
+    element.removeEventListener("transitionend", transitionEnded)
+  }
+  return new Promise(() =>
+    element.addEventListener("transitionend", transitionEnded)
+  )
 }
 
 export const AnimatePage = (animation) => ({ dom }) => {
-  let origStyles = jsonCopy(dom.style)
-  dom.style.position = "absolute"
-  dom.style.top = -19
-  dom.style.width = "100%"
-  Animate(animation)({ dom }).then((res) => {
-    return transitionEndPromise(dom).then((resolve) => {
-      dom.style = origStyles
-      return resolve
-    })
-  })
+  // let origStyles = jsonCopy(dom.style)
+  // dom.style.position = "absolute"
+  // dom.style.top = -19
+  // dom.style.width = "100%"
+  Animate(animation)({ dom })
+  // Animate(animation)({ dom })
 }
 
-export const Animate = (animation) => ({ dom }) => {
-  dom.animate(animation, duration)
-  return transitionEndPromise(dom)
-}
+export const Animate = (animation) => ({ dom }) =>
+  dom.animate(animation, duration).finished.then(transitionEndPromise(dom))
 
 export const AnimateChildren = (animation, pause) => ({ dom }) => {
   let children = [...dom.children]

@@ -1,5 +1,5 @@
-import { randomPause } from "Utils"
-import { animateChildrenIn } from "Styles"
+import { Pause } from "Utils"
+import { Animate, fadeIn } from "Styles"
 
 const RepoLink = {
   view: ({ attrs: { url } }) =>
@@ -54,12 +54,11 @@ const Repo = () => {
         state.status == "failed" && "Error",
         state.status == "loaded" &&
           m(
-            ".frow",
+            ".repo",
             m(
-              ".col-lg-1-3",
-
+              ".col-md-3-3",
               {
-                // oncreate: animateChildrenIn(["fadeIn", randomPause, randomPause]),
+                oncreate: Animate(fadeIn, Pause(1)),
               },
               [
                 m(".repo-title", [m(RepoLink, { url: state.name })]),
@@ -102,7 +101,7 @@ export const Portfolio = () => {
     ),
     view: ({ attrs: { mdl } }) =>
       m(
-        ".frow-container",
+        ".frow-container.frow",
         state.status == "failed" && "Error fetching Repos ...",
         state.status == "loading" && "Loading Repos ...",
         state.status == "loaded" &&

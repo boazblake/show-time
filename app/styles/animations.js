@@ -1,5 +1,14 @@
 import { jsonCopy } from "Utils"
 
+export const fadeIn = [
+  {
+    opacity: 0,
+  },
+  {
+    opacity: 1,
+  },
+]
+
 export const fadeInUp = [
   {
     opacity: 0,

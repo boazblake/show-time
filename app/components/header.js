@@ -8,6 +8,7 @@ export const Header = {
       "#header.frow.row-center.justify-between",
       {
         style: {
+          transitionDuration: 2000,
           backgroundColor: isSideBarActive(mdl) ? "black" : "white",
           color: isSideBarActive(mdl) ? "white" : "black",
         },
