@@ -1,4 +1,4 @@
-import { AnimateChildren, slideInRight, slideOutLeft } from "Styles"
+import { AnimateChildren, sideBarChildren, slideOutLeft } from "Styles"
 import { nameFromRoute, randomPause } from "Utils"
 
 export const SideBar = () => {
@@ -7,7 +7,7 @@ export const SideBar = () => {
       m(
         "ul.sidebar",
         {
-          oncreate: AnimateChildren(slideInRight, randomPause),
+          oncreate: AnimateChildren(sideBarChildren(), randomPause),
           onbeforeremove: AnimateChildren(slideOutLeft),
         },
         mdl.routes

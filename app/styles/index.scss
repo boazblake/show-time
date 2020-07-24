@@ -177,10 +177,12 @@ a {
 }
 
 .nav-icon.is-active:before {
+  background-color: var(--white);
   transform: translateY(12px) rotate(135deg);
 }
 
 .nav-icon.is-active:after {
+  background-color: var(--white);
   transform: translateY(-12px) rotate(-135deg);
 }
 

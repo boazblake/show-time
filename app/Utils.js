@@ -14,3 +14,6 @@ export const NoPause = () => {}
 export const nameFromRoute = (route) => route.split("/")[1].toUpperCase()
 
 export const jsonCopy = (data) => JSON.parse(JSON.stringify(data))
+
+export const isSideBarActive = (mdl) =>
+  mdl.settings.profile !== "desktop" && mdl.status.sidebar

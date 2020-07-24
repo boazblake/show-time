@@ -1,10 +1,14 @@
+import { isSideBarActive } from "Utils"
+
 export const Hamburger = {
   view: ({ attrs: { mdl } }) =>
     m(
       "div.nav-icon",
       {
-        class: mdl.status.sidebar ? "is-active" : "",
-        onclick: (e) => (mdl.status.sidebar = !mdl.status.sidebar),
+        class: isSideBarActive(mdl) ? "is-active" : "",
+        onclick: (e) => {
+          mdl.status.sidebar = !mdl.status.sidebar
+        },
       },
       m("div")
     ),

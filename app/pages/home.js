@@ -1,4 +1,4 @@
-import { animateChildrenIn } from "Styles"
+import { AnimateChildren, fadeInUp } from "Styles"
 import { Pause } from "Utils"
 
 export const Home = {
@@ -6,15 +6,15 @@ export const Home = {
     m(
       ".page",
       {
-        // oncreate: animateChildrenIn(["fadeInUp", Pause(1), Pause(1)])
+        oncreate: AnimateChildren(fadeInUp, Pause(1)),
       },
       [
         m("img#boazface", {
           src: "images/boazface.jpg",
         }),
         m(
-          "code.",
-          { style: { fontSize: "2rem" } },
+          "code",
+          { style: { color: "black", margin: "4px", fontSize: "2rem" } },
           "Front-End developer with 4 +  years industry experience building a variety of different applications using a multitude of different frameworks and languages."
         ),
       ]

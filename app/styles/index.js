@@ -8,12 +8,11 @@ const duration = {
 }
 
 function transitionEndPromise(element) {
-  // console.log("el", element)
   return new Promise((resolve) => {
     element.addEventListener("transitionend", function f() {
-      // if (event.target !== element) return
+      if (event.target !== element) return
       element.removeEventListener("transitionend", f)
-      resolve()
+      return resolve()
     })
   })
 }
@@ -23,10 +22,10 @@ export const AnimatePage = (animation) => ({ dom }) => {
   dom.style.position = "absolute"
   dom.style.top = -19
   dom.style.width = "100%"
-  Animate(animation)({ dom }).then((_) => {
-    return transitionEndPromise(dom).then((_) => {
+  Animate(animation)({ dom }).then((res) => {
+    return transitionEndPromise(dom).then((resolve) => {
       dom.style = origStyles
-      resolve()
+      return resolve
     })
   })
 }
