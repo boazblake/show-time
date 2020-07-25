@@ -33,11 +33,11 @@ export const Animate = (animation) => ({ dom }) =>
 export const AnimateChildren = (animation, pause) => ({ dom }) => {
   let children = [...dom.children]
 
-  return children.map((child, idx) => {
+  children.map((child, idx) => {
     child.style.opacity = 0
     setTimeout(() => {
       child.style.opacity = 1
-      return Animate(animation)({ dom: child })
+      Animate(animation)({ dom: child })
     }, pause())
   })
 }

@@ -1,4 +1,13 @@
-import { jsonCopy } from "Utils"
+export const popIn = [
+  {
+    transform: "scale(0)",
+    opacity: 1,
+  },
+  {
+    transform: "scale(1)",
+    opacity: 1,
+  },
+]
 
 export const fadeIn = [
   {

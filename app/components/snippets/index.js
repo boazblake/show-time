@@ -1,6 +1,6 @@
-import { TTT, TTT_CSS, TTT_HTML } from "./TTT/index"
-import { GOL, GOL_CSS, GOL_HTML } from "./GOL/index"
-import { SHAPE, SHAPE_CSS, SHAPE_HTML } from "./SHAPE/index"
+import { TTT, TTT_CSS, TTT_HTML, TTT_URL } from "./TTT/index"
+import { GOL, GOL_CSS, GOL_HTML, GOL_URL } from "./GOL/index"
+import { SHAPE, SHAPE_CSS, SHAPE_HTML, SHAPE_URL } from "./SHAPE/index"
 
 const MITHRIL = {
   name: "mithril",
@@ -11,6 +11,7 @@ const MITHRIL = {
 export const TicTacToe = {
   id: "TicTacToe",
   title: "Tic Tac Toe",
+  url: TTT_URL,
   code: {
     files: [
       { name: "app.js", content: TTT },
@@ -36,6 +37,7 @@ export const TicTacToe = {
 export const GameOfLife = {
   id: "GameOfLife",
   title: "Game Of Life",
+  url: GOL_URL,
   code: {
     files: [
       { name: "app.js", content: GOL },
@@ -61,6 +63,7 @@ export const GameOfLife = {
 export const ShapeShifter = {
   id: "DynamicSVGManipulation",
   title: "Dynamic SVG Manipulation",
+  url: SHAPE_URL,
   code: {
     files: [
       { name: "app.js", content: SHAPE },

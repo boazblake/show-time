@@ -6,7 +6,7 @@ let snippets = [TicTacToe, , GameOfLife, ShapeShifter]
 const Snippet = {
   view: ({ attrs: { snip, Flems } }) => {
     return m(".snippet", [
-      m("h3.snippet-title", snip.title),
+      m("a.snippet-title", { href: snip.url, target: "__blank" }, snip.title),
       m(".snippet-code", {
         id: snip.id,
         style: { height: "500px" },
