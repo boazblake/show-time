@@ -78,9 +78,9 @@ a {
   }
 }
 
-#resume-pdf {
-  margin-top: 10px;
-  max-width: 100vw;
+.resume-img {
+  object-fit: contain;
+  max-width: 90vw;
 }
 
 #about-me {

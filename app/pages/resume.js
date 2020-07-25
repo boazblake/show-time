@@ -19,14 +19,12 @@ export const Resume = () => {
             },
             "Download PDF"
           ),
-          m("img", {
-            width: "900px",
-            height: "1000px",
+          m("img.resume-img", {
+            id: "resume-1",
             src: "images/resume.jpeg",
           }),
-          m("img", {
-            width: "900px",
-            height: "1000px",
+          m("img.resume-img", {
+            id: "resume-2",
             src: "images/resume 2.jpeg",
           }),
         ]
