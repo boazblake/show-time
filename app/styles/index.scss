@@ -208,8 +208,10 @@ a {
 
 
 #boazface {
-  width: 80%;
-  max-width: 500px
+  object-fit: cover;
+  width: 100%;
+  max-width: 500px;
+  height: 250px;
 }
 
 @media screen and (min-width: 600px) and (max-width: 899px) {
