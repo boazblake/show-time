@@ -5,7 +5,7 @@ export const Resume = () => {
   return {
     view: () =>
       m(
-        ".page.frow-container",
+        ".frow-container",
         {
           oncreate: AnimateChildren(fadeInUp, Pause(0.15)),
         },

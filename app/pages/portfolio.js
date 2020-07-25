@@ -101,11 +101,14 @@ export const Portfolio = () => {
     ),
     view: ({ attrs: { mdl } }) =>
       m(
-        ".frow-container.frow",
-        state.status == "failed" && "Error fetching Repos ...",
-        state.status == "loading" && "Loading Repos ...",
-        state.status == "loaded" &&
-          state.repos.map((url) => m(Repo, { url, mdl }))
+        ".portfolio",
+        m(
+          ".frow-container.frow",
+          state.status == "failed" && "Error fetching Repos ...",
+          state.status == "loading" && "Loading Repos ...",
+          state.status == "loaded" &&
+            state.repos.map((url) => m(Repo, { url, mdl }))
+        )
       ),
   }
 }

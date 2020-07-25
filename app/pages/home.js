@@ -4,7 +4,7 @@ import { log, randomPause, Pause } from "Utils"
 export const Home = {
   view: () =>
     m(
-      ".page",
+      ".home",
       {
         oncreate: AnimateChildren(fadeInUp, Pause(0.05)),
       },

@@ -36,6 +36,7 @@
 
 html, body {
   margin: 0;
+  overflow: hidden
 }
 
 a {
@@ -80,7 +81,7 @@ a {
 
 .resume-img {
   object-fit: contain;
-  max-width: 90vw;
+  max-width: 75vw;
 }
 
 #about-me {
@@ -120,6 +121,7 @@ a {
   width: 80%;
   margin: 0 auto;
   height: 80vh;
+  overflow: scroll;
 }
 
 .repo {

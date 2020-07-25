@@ -7,6 +7,14 @@ export const popIn = [
     transform: "scale(1)",
     opacity: 1,
   },
+  {
+    transform: "scale(0.8)",
+    opacity: 1,
+  },
+  {
+    transform: "scale(1)",
+    opacity: 1,
+  },
 ]
 
 export const fadeIn = [
@@ -21,7 +29,7 @@ export const fadeIn = [
 export const fadeInUp = [
   {
     opacity: 0,
-    transform: "translate3d(0, 100%, 0)",
+    transform: "translate3d(0, 40%, 0)",
   },
   {
     opacity: 1,
@@ -31,7 +39,7 @@ export const fadeInUp = [
 
 export const slideInRight = [
   {
-    transform: "translate3d(-100%, 0, 0)",
+    transform: "translate3d(-50%, 0, 0)",
   },
   {
     transform: "translate3d(0, 0, 0)",
@@ -41,7 +49,7 @@ export const slideInRight = [
 
 export const slideInLeft = [
   {
-    transform: "translate3d(100%, 0, 0)",
+    transform: "translate3d(80%, 0, 0)",
     visibility: "visible",
   },
   {
@@ -61,7 +69,7 @@ export const slideOutRight = [
 
 export const slideInDown = [
   {
-    transform: "translate3d(0, -100%, 0)",
+    transform: "translate3d(0, -50%, 0)",
   },
   {
     transform: "translate3d(0, 0, 0)",

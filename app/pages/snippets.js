@@ -20,7 +20,7 @@ export const Snippets = ({ attrs: { mdl } }) => {
   return {
     view: () =>
       m(
-        ".page",
+        ".snippets",
         snippets.map((snip) => m(Snippet, { snip, Flems: window.Flems }))
       ),
   }
