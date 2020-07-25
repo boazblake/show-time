@@ -1,4 +1,4 @@
-import { Pause } from "Utils"
+import { Pause, randomPause } from "Utils"
 import { Animate, fadeIn } from "Styles"
 
 const RepoLink = {
@@ -58,7 +58,7 @@ const Repo = () => {
             m(
               ".col-md-3-3",
               {
-                oncreate: Animate(fadeIn, Pause(1)),
+                oncreate: Animate(fadeIn, randomPause),
               },
               [
                 m(".repo-title", [m(RepoLink, { url: state.name })]),

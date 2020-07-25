@@ -43,11 +43,6 @@ a {
 }
 
 
-
-#boazface {
-  width: 80%;
-}
-
 .navbar {
 
  > li {
@@ -206,11 +201,16 @@ a {
     // visibility: visible;
     font-size: 20px;
   }
-  .snippet-code{
+  // .snippet-code{
     // width: 80%;
-  }
+  // }
 }
 
+
+#boazface {
+  width: 80%;
+  max-width: 500px
+}
 
 @media screen and (min-width: 600px) and (max-width: 899px) {
 
@@ -224,24 +224,12 @@ a {
   }
 
 
-
-  #boazface {
-    width: 45%;
-  }
 }
 
 @media screen and (min-width: 1200px) and (max-width: 1399px) {
 
-
-  #boazface {
-    width: 55%;
-  }
 }
 
 @media screen and (min-width: 1400px) {
 
-
-  #boazface {
-    width: 40%;
-  }
 }

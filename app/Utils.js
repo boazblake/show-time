@@ -8,9 +8,9 @@ export const log = (m) => (v) => {
 const secureImg = (url) =>
   url.match(/(https)./) ? url : url.replace("http", "https")
 
-export const randomPause = () => Math.random() * 100
+export const randomPause = () => Math.random() * 1000
 export const Pause = (n) => Stream(n * 1000)
-export const NoPause = () => {}
+export const NoOp = () => {}
 export const nameFromRoute = (route) => route.split("/")[1].toUpperCase()
 
 export const jsonCopy = (data) => JSON.parse(JSON.stringify(data))

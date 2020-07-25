@@ -1,5 +1,5 @@
 import { AnimateChildren, fadeInUp, Animate, popIn } from "Styles"
-import { randomPause, Pause } from "Utils"
+import { log, randomPause, Pause } from "Utils"
 
 export const Home = {
   view: () =>
@@ -18,11 +18,11 @@ export const Home = {
             m(
               "a",
               {
+                oncreate: Animate(popIn, randomPause),
                 target: "_blank",
                 href: "https://github.com/boazblake",
               },
               m("img", {
-                oncreate: Animate(popIn, randomPause),
                 style: { margin: "2px", height: "100px", width: "100px" },
                 src: "images/github.svg",
               })
@@ -30,11 +30,11 @@ export const Home = {
             m(
               "a",
               {
+                oncreate: Animate(popIn, randomPause),
                 target: "_blank",
                 href: "https://www.linkedin.com/in/boazblake/",
               },
               m("img", {
-                oncreate: Animate(popIn, randomPause),
                 style: { margin: "2px", height: "100px", width: "100px" },
                 src: "images/linkedin.svg",
               })
