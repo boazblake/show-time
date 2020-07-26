@@ -118,10 +118,10 @@ a {
 }
 
 .page {
-  width: 80%;
+  width: 100vw;
   margin: 0 auto;
   height: 80vh;
-  overflow: scroll;
+  overflow: auto;
 }
 
 .repo {

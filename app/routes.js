@@ -8,6 +8,7 @@ const routes = (mdl) => {
       onmatch: (_, b) => {
         mdl.slug = b
         mdl.status.sidebar = false
+        window.scrollTo(0, 0)
       },
       render: () =>
         m(
@@ -26,6 +27,7 @@ const routes = (mdl) => {
       onmatch: (_, b) => {
         mdl.slug = b
         mdl.status.sidebar = false
+        window.scrollTo(0, 0)
       },
       render: () =>
         m(
@@ -44,6 +46,7 @@ const routes = (mdl) => {
       onmatch: (_, b) => {
         mdl.slug = b
         mdl.status.sidebar = false
+        window.scrollTo(0, 0)
       },
       render: () =>
         m(
@@ -62,6 +65,7 @@ const routes = (mdl) => {
       onmatch: (_, b) => {
         mdl.slug = b
         mdl.status.sidebar = false
+        window.scrollTo(0, 0)
       },
       render: () =>
         m(
@@ -80,6 +84,7 @@ const routes = (mdl) => {
       onmatch: (_, b) => {
         mdl.slug = b
         mdl.status.sidebar = false
+        window.scrollTo(0, 0)
       },
       render: () =>
         m(

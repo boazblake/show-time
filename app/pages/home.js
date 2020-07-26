@@ -46,7 +46,7 @@ export const Home = {
           m(
             "code",
             { style: { color: "black", margin: "4px", fontSize: "2rem" } },
-            "Front-End developer with 4 +  years industry experience building a variety of different applications using a multitude of different frameworks and languages."
+            "Front-End developer with half a decade of industry experience building a variety of different applications using a multitude of different frameworks and languages."
           )
         ),
         m(
