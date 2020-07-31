@@ -1,6 +1,6 @@
 {
-  "short_name": "identity",
-  "name": "identity",
+  "short_name": "shindigit",
+  "name": "shindigit",
   "icons": [
     {
       "src": "./icons/android-icon-36x36.png",
@@ -39,7 +39,7 @@
       "density": "4.0"
     }
   ],
-  "start_url": "/identity/#!/home",
+  "start_url": "/shindigit/#!/home",
   "background_color": "#3367D6",
   "display": "standalone",
   "scope": "/",

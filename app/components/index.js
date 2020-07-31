@@ -1,5 +1,2 @@
-export * from "./hamburger.js"
-export * from "./header.js"
-export * from "./sidebar.js"
-export * from "./layout.js"
-export * from "./snippets/index.js"
+export * from "./calendar/index.js"
+export * from "./clock/index.js"

@@ -1,5 +1,5 @@
 {
-  "name": "portfolio",
+  "name": "shindigit",
   "version": "1.0.0",
   "main": "index.js",
   "license": "MIT",
@@ -13,8 +13,8 @@
     "build": "yarn run build:pre && brunch build --production"
   },
   "dependencies": {
+    "date-fns": "^2.15.0",
     "mithril": "^2.0.4",
-    "mithril-stream": "^2.0.0",
     "normalize.css": "^8.0.1",
     "ramda": "^0.27.0"
   },
@@ -30,5 +30,7 @@
     "size-limit": "^4.5.0",
     "sw-precache-brunch": "^2.0.1",
     "uglify-js-brunch": "^2.10.0"
-  }
+  },
+  "author": "boaz blake<boazblake@gmail.com>",
+  "private": true
 }

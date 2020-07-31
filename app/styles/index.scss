@@ -1,5 +1,6 @@
 @import url("https://fonts.googleapis.com/css?family=Montserrat&display=swap");
 @import "./frow/frow.sass";
+
 :root {
   --blue: #042532;
   --indigo: #6610f2;
@@ -29,191 +30,82 @@
   --breakpoint-xl: 1200px;
 }
 
-* {
-  box-sizing: border-box;
-  font-family: Montserrat;
-}
 
 html, body {
   margin: 0;
   overflow: hidden
 }
 
+html > * {
+  box-sizing: border-box;
+  font-family: 'Montserrat';
+}
+
+
 a {
   text-decoration: none;
 }
 
 
-.navbar {
-
- > li {
-    list-style: none;
-    cursor: pointer;
-    padding: 3px;
-    margin: 3px;
-    &:hover {
-     text-decoration: underline;
-    }
-  }
+.centerMonthGroup {
+  position: relative;
+  top: 20px;
 }
 
-.sidebar {
-  position: absolute;
-  top:80px;
-  right:0;
-
-  width: 100%;
-  height: 100%;
-  // background: var(--white);
-
-  > li {
-    color: var(--blue);
-    font-size: 3rem;
-    line-height: 6rem;
-    list-style: none;
-    cursor: pointer;
-
-    &:hover {
-      text-decoration: underline;
-    }
-  }
+.currentMonth {
+  color: var(--orange);
+  font-size: 2.5rem;
 }
 
-.resume-img {
-  object-fit: contain;
-  max-width: 75vw;
+.day {
+  line-height: 2rem;
 }
 
-#about-me {
-  position: absolute;
-  top: 10%;
-  right: 0;
-  max-width: 80%;
-  max-height: 95%;
-  overflow: scroll;
-  background-color: var(--white);
-  border: dashed;
+.notThisMonth {
+  background-color:var(--yellow);
 }
 
-.app {
-  height: 100vh;
+.selectedDay {
+  border: 1px solid var(--red);
 }
 
-#header {
-  font-size: 25px;
-  padding: 8px;
-  min-height: 100px;
-  transition-duration: .6s;
+.isToday {
+  background-color: var(--primary);
+  color: var(--white);
 }
 
-.header-text {
-  width: 80%;
+.selectedWeek {
+  background-color: var(--yellow);
 }
 
-.body {
-  padding: 4px;
-  width: 100%;
-  height: 100%;
-  margin: 0 auto;
-}
-
-.page {
+.clock {
+  height: 500px;
   width: 100vw;
-  margin: 0 auto;
-  height: 80vh;
+}
+
+.clock-face {
+  height: 360px;
   overflow: auto;
 }
 
-.repo {
-  flex-basis: 30%;
-  margin: 18px;
-}
+.half-hour {
+  display: flex;
+  flex: 1;
+  flex-direction: row;
+  justify-content: center;
 
-.typewriter {
-  overflow: hidden; /* Ensures the content is not revealed until the animation */
-  white-space: nowrap; /* Keeps the content on a single line */
-  margin: 0 auto; /* Gives that scrolling effect as the typing happens */
-  letter-spacing: .1em; /* Adjust as needed */
-}
-
-.type-writer {
-  border-right: .15em solid var(--orange); /* The typwriter cursor */
-  animation:
-    typing 3.5s steps(40, end),
-    blink-caret .75s step-end infinite;
-}
-
-/* The typing effect */
-@keyframes typing {
-  from { width: 0 }
-  to { width: 100% }
-}
-
-/* The typewriter cursor effect */
-@keyframes blink-caret {
-  from, to { border-color: transparent }
-  50% { border-color: var(--orange); }
-}
-
-.logo-header {
-  width: 300px;
- }
-
-.resume {
-  height: 100%;
-}
-
-.nav-icon {
-  width: 40px;
-}
-
-.nav-icon:after,
-.nav-icon:before,
-.nav-icon div {
-  background-color: var(--blue);
-  border-radius: 3px;
-  content: '';
-  display: block;
-  height: 2px;
-  margin: 7px 0;
-  transition: all .2s ease-in-out;
-}
-
-.nav-icon.is-active:before {
-  background-color: var(--white);
-  transform: translateY(12px) rotate(135deg);
-}
-
-.nav-icon.is-active:after {
-  background-color: var(--white);
-  transform: translateY(-12px) rotate(-135deg);
-}
-
-.nav-icon.is-active div {
-  transform: scale(0);
-}
-
-
-.snippet {
-  margin: 0 auto;
-  width: 90%;
-
-  .snippet-title {
-    color: var(--blue);
-    // visibility: visible;
-    font-size: 20px;
+  .top {
+    // min-width: 90vw;
   }
-  // .snippet-code{
-    // width: 80%;
-  // }
 }
 
-
-#boazface {
-  object-fit: cover;
-  width: 100%;
-  max-width: 500px;
-  height: 250px;
+.hour {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  justify-content: center;
+  min-height: 120px;
+  border-top: 1px dashed var(--blue);
 }
 
 @media screen and (min-width: 600px) and (max-width: 899px) {
@@ -223,9 +115,6 @@ a {
 }
 
 @media screen and (min-width: 900px) and (max-width: 1199px) {
-  #header {
-    font-size: 25px;
-  }
 
 
 }

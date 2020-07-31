@@ -1,2 +1,0 @@
-export const SHAPE_CSS =
-  "body {\n  font-family: Helvetica Neue, Arial, sans-serif;\n}\n\npolygon {\n  fill: #42b983;\n  opacity: 0.75;\n}\n\ncircle {\n  fill: transparent;\n  stroke: #999;\n}\n\ntext {\n  font-family: Helvetica Neue, Arial, sans-serif;\n  font-size: 10px;\n  fill: #666;\n}\n\nlabel {\n  display: inline-block;\n  margin-left: 10px;\n  width: 20px;\n}\n\n#raw {\n  position: absolute;\n  top: 0;\n  left: 300px;\n}\n"

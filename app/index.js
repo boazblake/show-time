@@ -1,11 +1,5 @@
 import routes from "./routes.js"
 import model from "./model.js"
-import {
-  sendMessage,
-  initMithrilInspector,
-  saveJsonMdl,
-  getLocalMdl,
-} from "./init-mithril-inspector"
 
 const root = document.body
 let winW = window.innerWidth
@@ -16,20 +10,6 @@ if (module.hot) {
 
 if (process.env.NODE_ENV == "development") {
   console.log("Looks like we are in development mode!")
-  //mithril - inspector
-  initMithrilInspector(model)
-
-  const updateMithrilInspector = () => {
-    const mdl = getLocalMdl()
-    if (mdl !== JSON.stringify(model)) {
-      let dto = JSON.stringify(model)
-      saveJsonMdl(dto)
-      sendMessage("mithril-inspector", JSON.parse(dto))
-    }
-    return requestAnimationFrame(updateMithrilInspector)
-  }
-
-  updateMithrilInspector(model)
 } else {
   if ("serviceWorker" in navigator) {
     window.addEventListener("load", () => {
@@ -67,8 +47,4 @@ model.settings.profile = getProfile(winW)
 
 checkWidth(winW)
 
-if (sessionStorage.getItem("user")) {
-  model.user = JSON.parse(sessionStorage.getItem("user"))
-}
-
-m.route(root, "/home", routes(model))
+m.route(root, "/", routes(model))

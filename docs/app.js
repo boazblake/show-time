@@ -1,2 +1,1022 @@
-!function(){"use strict";var e="undefined"==typeof global?self:global;if("function"!=typeof e.require){var n={},t={},r={},o={}.hasOwnProperty,i=/^\.\.?(\/|$)/,a=function(e,n){for(var t,r=[],o=(i.test(n)?e+"/"+n:n).split("/"),a=0,s=o.length;a<s;a++)t=o[a],".."===t?r.pop():"."!==t&&""!==t&&r.push(t);return r.join("/")},s=function(e){return e.split("/").slice(0,-1).join("/")},l=function(n){return function(t){var r=a(s(n),t);return e.require(r,n)}},c=function(e,n){var r=g&&g.createHot(e),o={id:e,exports:{},hot:r};return t[e]=o,n(o.exports,l(e),o),o.exports},d=function(e){var n=r[e];return n&&e!==n?d(n):e},u=function(e,n){return d(a(s(e),n))},m=function(e,r){null==r&&(r="/");var i=d(e);if(o.call(t,i))return t[i].exports;if(o.call(n,i))return c(i,n[i]);throw new Error("Cannot find module '"+e+"' from '"+r+"'")};m.alias=function(e,n){r[n]=e};var p=/\.[^.\/]+$/,f=/\/index(\.[^\/]+)?$/,A=function(e){if(p.test(e)){var n=e.replace(p,"");o.call(r,n)&&r[n].replace(p,"")!==n+"/index"||(r[n]=e)}if(f.test(e)){var t=e.replace(f,"");o.call(r,t)||(r[t]=e)}};m.register=m.define=function(e,r){if(e&&"object"==typeof e)for(var i in e)o.call(e,i)&&m.register(i,e[i]);else n[e]=r,delete t[e],A(e)},m.list=function(){var e=[];for(var t in n)o.call(n,t)&&e.push(t);return e};var g=e._hmr&&new e._hmr(u,m,n,t);m._cache=t,m.hmr=g&&g.wrap,m.brunch=!0,e.require=m}}(),function(){"undefined"==typeof window?this:window;require.register("Components/hamburger.js",function(e,n,t){"use strict";Object.defineProperty(e,"__esModule",{value:!0}),e.Hamburger=void 0;var r=n("Utils"),o={view:function(e){var n=e.attrs.mdl;return m("div.nav-icon",{"class":(0,r.isSideBarActive)(n)?"is-active":"",onclick:function(e){n.status.sidebar=!n.status.sidebar}},m("div"))}};e.Hamburger=o}),require.register("Components/header.js",function(e,n,t){"use strict";Object.defineProperty(e,"__esModule",{value:!0}),e.Header=void 0;var r=n("Styles"),o=n("Components"),i=n("Utils"),a={view:function(e){var n=e.attrs.mdl;return m("#header.frow.row-center.justify-between",{style:{transitionDuration:2e3,backgroundColor:(0,i.isSideBarActive)(n)?"black":"white",color:(0,i.isSideBarActive)(n)?"white":"black"}},[m("code",m("p.typewriter type-writer",{id:"logo-header",oncreate:function(e){var n=e.dom;return n.onanimationend=function(){return setTimeout(function(){return n.classList.remove("type-writer")})}}},"{Boaz Blake}")),"desktop"===n.settings.profile?m(".navbar.frow",{oncreate:(0,r.AnimateChildren)(r.slideInDown,i.randomPause)},n.routes.filter(function(e){return e!==m.route.get()}).map(function(e){return m(m.route.Link,{"class":"navbar-item",href:e,selector:"li"},(0,i.nameFromRoute)(e))})):m(o.Hamburger,{mdl:n})])}};e.Header=a}),require.register("Components/index.js",function(e,n,t){"use strict";Object.defineProperty(e,"__esModule",{value:!0});var r=n("./hamburger.js");Object.keys(r).forEach(function(n){"default"!==n&&"__esModule"!==n&&Object.defineProperty(e,n,{enumerable:!0,get:function(){return r[n]}})});var o=n("./header.js");Object.keys(o).forEach(function(n){"default"!==n&&"__esModule"!==n&&Object.defineProperty(e,n,{enumerable:!0,get:function(){return o[n]}})});var i=n("./sidebar.js");Object.keys(i).forEach(function(n){"default"!==n&&"__esModule"!==n&&Object.defineProperty(e,n,{enumerable:!0,get:function(){return i[n]}})});var a=n("./layout.js");Object.keys(a).forEach(function(n){"default"!==n&&"__esModule"!==n&&Object.defineProperty(e,n,{enumerable:!0,get:function(){return a[n]}})});var s=n("./snippets/index.js");Object.keys(s).forEach(function(n){"default"!==n&&"__esModule"!==n&&Object.defineProperty(e,n,{enumerable:!0,get:function(){return s[n]}})})}),require.register("Components/layout.js",function(e,n,t){"use strict";Object.defineProperty(e,"__esModule",{value:!0}),e.Layout=void 0;var r=n("Styles"),o=n("Components"),i=function(){return{view:function(e){var n=e.attrs.mdl,t=e.children;return m(".app",[m(o.Header,{mdl:n}),m(".page",t),n.status.sidebar&&"desktop"!==n.settings.profile&&m(o.SideBar,{oncreate:(0,r.Animate)((0,r.sideBarIn)()),onbeforeremove:(0,r.Animate)(r.slideOutRight),mdl:n})])}}};e.Layout=i}),require.register("Components/loader.js",function(e,n,t){"use strict";Object.defineProperty(e,"__esModule",{value:!0}),e["default"]=void 0;var r=m(".holder",[m(".preloader",[m("div"),m("div"),m("div"),m("div"),m("div"),m("div"),m("div")])]),o=r;e["default"]=o}),require.register("Components/sidebar.js",function(e,n,t){"use strict";Object.defineProperty(e,"__esModule",{value:!0}),e.SideBar=void 0;var r=n("Styles"),o=n("Utils"),i=function(){return{view:function(e){var n=e.attrs.mdl;return m("ul.sidebar",{oncreate:(0,r.AnimateChildren)((0,r.sideBarChildren)(),o.randomPause),onbeforeremove:(0,r.AnimateChildren)(r.slideOutLeft)},n.routes.filter(function(e){return e!==m.route.get()}).map(function(e){return m(m.route.Link,{"class":"sidebar-item",href:e,selector:"li"},(0,o.nameFromRoute)(e))}))}}};e.SideBar=i}),require.register("Components/snippets/GOL/GOL.js",function(e,n,t){"use strict";Object.defineProperty(e,"__esModule",{value:!0}),e.GOL=void 0;var r='const Stream  = m.stream\nconst compose = R.compose\nconst range = R.range\nconst without = R.without\nconst values = R.values\nconst root = document.getElementById(\'GameOfLife\')\nconst siblingCoords = [[-1, 0],[-1, 1],[0, 1],[1, 1],[1, 0],[1, -1],[0, -1],[-1, -1]]\n\nconst model = {\n  isRunning: Stream(false),\n  board: {},\n  delay: Stream(1000),\n  randomized: Stream(15),\n  size: Stream(30),\n  width: Stream(800),\n  lifecycle: Stream(0)\n}\n\nconst restart = (mdl) => {\n  mdl.isRunning(false)\n  mdl.delay(1000)\n  mdl.randomized(15)\n  mdl.size(30)\n  mdl.width(800)\n  mdl.lifecycle(0)\n  return mdl\n}\n\n\nconst withinBounds = (limit) => (coords) =>\n  !(coords.includes(limit) || coords.includes(-1))\n\nconst toSiblingModel = (acc, sibling) => {\n  acc[sibling] = false\n  return acc\n}\n\nconst calcSiblings = (limit) => (sibCoords) => (coords) =>\n  sibCoords\n    .map((sib) => [sib[0] + coords[0], sib[1] + coords[1]])\n    .filter(withinBounds(limit))\n    .reduce(toSiblingModel, {})\n\nconst makeCell = (mdl) => (size) => (idx) => {\n  let coords = [idx % size, Math.floor(idx / size)]\n  let siblings = calcSiblings(size)(siblingCoords)(coords)\n  let cell = {\n    key: idx,\n    value: "",\n    isAlive: false,\n    coords,\n    siblings\n  }\n  mdl.board[coords] = cell\n\n  return mdl\n}\n\nconst makeBoardFromSize = (mdl, size) => {\n  mdl.size(size)\n  return range(0, size * size).map(makeCell(mdl)(size))\n}\n\nconst calculateCell = (mdl) => {\n  Object.keys(mdl.board).map((cell) => {\n    let cellsAlive = without([false], values(mdl.board[cell].siblings)).length\n\n    if (mdl.board[cell].isAlive) {\n      if (cellsAlive <= 2) {\n        mdl.board[cell].isAlive = false\n      }\n\n      if ([2, 3].includes(cellsAlive)) {\n        mdl.board[cell].isAlive = true\n      }\n\n      if (cellsAlive > 3) {\n        mdl.board[cell].isAlive = false\n      }\n    } else {\n      if (cellsAlive == 3) {\n        mdl.board[cell].isAlive = true\n      }\n    }\n  })\n  return mdl\n}\n\nconst updateSiblings = (mdl) => {\n  Object.keys(mdl.board).map((cell) =>\n    Object.keys(mdl.board[cell].siblings).map(\n      (sibling) =>\n        (mdl.board[cell].siblings[sibling] = mdl.board[sibling].isAlive)\n    )\n  )\n\n  return mdl\n}\n\nconst runGOL = (mdl) => {\n  if (mdl.isRunning()) {\n    mdl.lifecycle(mdl.lifecycle() + 1)\n    setTimeout(() => {\n      m.redraw()\n      return runGOL(updateCells(mdl))\n    }, mdl.delay())\n  } else {\n    return mdl\n  }\n}\n\nconst randomizeCells = (mdl) => {\n  let randomCells = Object.keys(mdl.board)\n    .sort(() => 0.5 - Math.random())\n    .slice(0, Math.floor((mdl.randomized() / 100) * (mdl.size() * mdl.size())))\n\n  randomCells.map((cell) => (mdl.board[cell].isAlive = true))\n\n  return mdl\n}\n\n\nconst initBoard = mdl =>   {  \n  makeBoardFromSize(mdl, Number(mdl.size()))\n  createSeed(mdl)\n}\n\nconst makeNewGame = mdl => e => {\n  restart(mdl)\n  initBoard(mdl)\n}\n\nconst advanceLifeCycle = mdl => (e) => {\n  mdl.isRunning(false)\n  mdl.lifecycle(mdl.lifecycle() + 1)\n  updateCells(mdl)\n}\n\nconst goForth = mdl => (e) => {\n  mdl.isRunning(true)\n  runGOL(mdl)\n}\n\nconst randomize = mdl => (e) =>{\n  mdl.randomized(e.target.value)\n  initBoard(mdl)\n}\n\nconst setDelay = mdl => (e) => mdl.delay(e.target.value)\n\nconst setBoardSize = mdl => (e) => {\n  mdl.size(e.target.value)\n  initBoard(mdl)\n}\n\nconst updateCells = compose(calculateCell, updateSiblings)\nconst createSeed = compose(updateSiblings, randomizeCells)\n\nconst Cell = {\n  view: ({ attrs: { mdl, cell } }) => {\n    return m(".cell", {\n      class: cell.isAlive ? "alive" : "dead",\n      style: {\n        fontSize: `${mdl.width() / mdl.size() / 2}px`,\n        height: `${mdl.width() / mdl.size() / 2}px`,\n        flex: `1 1 ${mdl.width() / mdl.size()}px`\n      },\n      onclick: () => {\n        mdl.board[cell.coords].isAlive = !cell.isAlive\n        updateSiblings(mdl)\n      }\n    })\n  }\n}\n\nconst Board = ({ attrs: { mdl } }) => {\n  initBoard(mdl)\n  return {\n    view: ({ attrs: { mdl } }) => {\n      return m(\n        ".board",\n        { style: { width: `${mdl.width()}px` } },\n        Object.keys(mdl.board).map((coord) => {\n          let cell = mdl.board[coord]\n          return m(Cell, { key: cell.key, cell, mdl })\n        })\n      )\n    }\n  }\n}\n\nconst Input = () => {\n  return {\n    view: ({ attrs: { mdl, label, min, max, step, value, fn } }) => [\n      m("label", [label,\n      m("input[type=\'number\']", {\n        inputmode: \'numeric\',\n        pattern:"[0-9]*",\n        min,\n        max,\n        step,\n        value,\n        onchange: e => fn(e)\n      })\n      ])\n    ]\n  }\n}\n\nconst Button = () => {\n  return {\n    view:({attrs:{mdl, label, fn}}) => m(\n        "button", {onclick: (e) => fn(e)},\n        label\n      )\n  }\n}\n\nconst TopRow = {\n  view:({attrs:{mdl}})=>\n   m(\'.topRow\', [m(Button, {mdl, fn: makeNewGame(mdl), label: \'New Game\'}),\n      m(Button, {mdl, fn: advanceLifeCycle(mdl), label:"Advance 1 Lifecycle"}),\n      m(Button, {mdl, fn:goForth(mdl), label:"Go Forth"})])\n}\n\nconst BottomRow = {\n  view:({attrs:{mdl}})=>\n    m(\'.bottomRow\',[\n      m(Input, { mdl, label: \'Randomize(%):\', min:0, max:100, step:1, value:mdl.randomized(), fn:randomize(mdl) }),\n      m(Input, { mdl, label: \'Delay(ms):\', min:0, max:1000, step:100, value:mdl.delay(), fn:setDelay(mdl) }),\n      m(Input, { mdl, label: \'size:\', min:30, max:100, step:10, value:mdl.size(), fn: setBoardSize(mdl) })])\n}\n\n      \nconst Toolbar = {\n  view: ({ attrs: { mdl } }) =>\n    m(".toolbar", [\n      m(TopRow, {mdl}),\n      m(BottomRow, {mdl})\n    ])\n}\n\nconst GameOfLife = {\n  view: ({ attrs: { mdl } }) => {\n    return m(".container", [\n      m(Toolbar, { mdl }),\n      m(Board, {\n        mdl\n      }),\n      m("h2", `lifecycle: ${mdl.lifecycle()}`)\n    ])\n  }\n}\n\nm.mount(root, {view:() => m(GameOfLife, {mdl:model})})';e.GOL=r}),require.register("Components/snippets/GOL/GOL_CSS.js",function(e,n,t){"use strict";Object.defineProperty(e,"__esModule",{value:!0}),e.GOL_CSS=void 0;var r="* {\n  font-family: Montserrat, Sans-Serif;\n  -webkit-box-sizing: border-box;\n  -moz-box-sizing: border-box;\n  box-sizing: border-box;\n  outline: none;\n}\n\n.toolbar {\n  line-height: 70px;\n  padding: 10px;\n  border: 1px solid #ecf0f1;\n  justify-content: space-between;\n}\n\n.topRow {\n  display: flex;\n  flex-flow: wrap;\n  justify-content: space-around;\n}\n\n.bottomRow {\n  display: flex;\n  flex-flow: wrap;\n  justify-content: space-around;\n}\n\nbutton {\n\tbox-shadow: 0px 10px 14px -7px #276873;\n\tbackground:linear-gradient(to bottom, #599bb3 5%, #408c99 100%);\n\tbackground-color:#599bb3;\n\tborder-radius:8px;\n\tdisplay:inline-block;\n\tcursor:pointer;\n\tcolor:#ffffff;\n\tfont-family:Arial;\n\tfont-size:20px;\n\tfont-weight:bold;\n\tpadding:13px 32px;\n\ttext-decoration:none;\n\ttext-shadow:0px 1px 0px #3d768a;\n}\nbutton:hover {\n\tbackground:linear-gradient(to bottom, #408c99 5%, #599bb3 100%);\n\tbackground-color:#408c99;\n}\nbutton:active {\n\tposition:relative;\n\ttop:1px;\n}\n\nlabel > * {\n  padding: 10px;\n  margin: 10px;\n\tbackground: #1abc9c;\n\tcolor: #fff;\n\tfont-size: 1em;\n\tline-height: 30px;\n\ttext-align: center;\n\ttext-shadow: 0 1px 0 rgba(255,255,255,0.2);\n\tborder-radius: 15px;\n}\n\n.board {\n  display: flex;\n  flex-flow: wrap;\n  width: 800px;\n  background: #ecf0f1;\n}\n\n.cell {\n  display: flex;\n  align-items: center;\n  justify-content: center;\n  border: 1px solid #8e44ad;\n  cursor: pointer;\n}\n\n.alive {\n  background: #8e44ad;\n}\n\n.dead {\n  background: #ecf0f1;\n}";e.GOL_CSS=r}),require.register("Components/snippets/GOL/GOL_HTML.js",function(e,n,t){"use strict";Object.defineProperty(e,"__esModule",{value:!0}),e.GOL_HTML=void 0;var r='<div id="GameOfLife"></div>';e.GOL_HTML=r}),require.register("Components/snippets/GOL/index.js",function(e,n,t){"use strict";Object.defineProperty(e,"__esModule",{value:!0});var r={GOL_URL:!0};e.GOL_URL=void 0;var o=n("./GOL.js");Object.keys(o).forEach(function(n){"default"!==n&&"__esModule"!==n&&(Object.prototype.hasOwnProperty.call(r,n)||Object.defineProperty(e,n,{enumerable:!0,get:function(){return o[n]}}))});var i=n("./GOL_CSS.js");Object.keys(i).forEach(function(n){"default"!==n&&"__esModule"!==n&&(Object.prototype.hasOwnProperty.call(r,n)||Object.defineProperty(e,n,{enumerable:!0,get:function(){return i[n]}}))});var a=n("./GOL_HTML.js");Object.keys(a).forEach(function(n){"default"!==n&&"__esModule"!==n&&(Object.prototype.hasOwnProperty.call(r,n)||Object.defineProperty(e,n,{enumerable:!0,get:function(){return a[n]}}))});var s="https://flems.io/#0=N4IgtglgJlA2CmIBcAWFA6ATCgNCAzgMYBOA9rLMgNoCsOADALp4BmEC+1oAdgIZiIkIdAAsALmEp5CpbmPhzkIEAF8cPfoOEArTtNnzFQmd3xiABAGUxxeP3PmAvObDozt-gB1uJs+ZlgAA6k+PBO5gBK6AHBod6+FsS83ADmYc5RSanw8bJ+AO4QYiKkAK4WGeiFxWViuaYWAG68sKXw+OFRza3t3vV++BAARrAQqQDCpKTEUB3OVFQAtACMOOZMOEur5svMVPRru5vbR1TbG2drK3sH5tebK1e7jH0+eRZgpFDwsOHA3g4IPgIqVuNwxikkFYbHYwAAKFgtUIAShwAPMQ1IvBmUOAanR31gvAAnlDrB54ct6NTUeislBSJAAF7wKBkmH8OHLGi07gOQYs9kUuEAZnovIchSgxSFsLhAA4aWi+eZRix4IRiYQELLOeLvCpXglzLYzNiKuY4WA4MinAA+cz-FXW2DoIEgsEQhFI+DI9Eu9CEklc6n651wdD0xkQFlQLk8-0RgXwUVhhwBqXFBU0xOutUarUIOFpk3wMSlYh8l0G179CzVERjABCZW4s3CcNGkDEtscDrhMmms17dvRAEIB1MZvg3T5Wt98J2IN3bQAfVf+KezWfa0oLuErZF+7h18xiUiWYajVIAWS+Pw7vEIhDWgxGEJHjvRT8IVDf15SRhwkRWA4hVWxy0rcwfxrE83gafwWkIS931SOZLS7IpPzhN9JiHfBsMHacR3RXCt3wdEHHQMBeECOEcOGT8-2GfYgIAak3fDWNfFjdnMDiiNmM5GEYY8HCothYHkYg4QbZtW1mJcVzE8TI1ZUpCBTc8UIAu9CTWPFj1PGiAGt4HGH5fmcK0bXtS1k2w6AAA9PydBwEAsQT0KoZzzAAUnMZM1hvXhinQFhYCnOFfIAekCmNfReFUPPi1CUnQwgkJ0iFFwchi0rw4jJ3wlSUs0ig-ko8wzNJcxnOVcTzG6NooU8EA2oa8SgQAQVGRp4ChEDQk6hwvJG1KAIolVDXDV1MWxKAqC8oDnHK2BXgcCCKyrOBYOM3gzJbBaADEyDAS8WQ7F0eJZVzczcBKGNuuky22k1kjSYsbrCAAqeLbuo2irQO8zLJs2BkSe31jxm09MtgQhSiJeQLIq6yXTulUAHkhm0DUxHQGrFwDeaZmRQG6IHSzMcasrLPwXqIH68IG1qOEqCG+BmCalo2mJiNScWtbGAetKCPJhBUmKDaupYS0SaxGYlsskWer630vxVRqIDlqmKAZ9XzAAHmcTBbTcxrxIVhblYoVWDaZ9JzE5qqHFhrXZctKhMDWEVVbnPd2j10DGf6o9Nctq2BcVoWVbdB3mecGw2ld8x3cjnXLTWhOwgdEVzdT9No5t4X49Dp2XY9t2qpUcwflCCPLcz4Oc6cZx88byPraV0u1cd8Jk5yKu05r9EVBUraoOrbh3eNUpAigUL4GytCrtsvtG5xvHCAJonwfQQXyZoym1pIj2t-xwn4GJfm5pj23YBF-8cqPoHU-ygCz8jhx98Fh+n6vDlZiaUVouGLkrZ+qR7blxUg4FSRlwKvSnrtGeRp3gmlBAAcSxgAGTXhDOyFtm4BndKCcEqQ4ThwtkXPMOsCzahTAGfMmoGGUP4jsWBgUywABVlzwDZmwje1CrZqSgEkfIlDU6Tz5MQLBuC4Tz0Xijem4Mjw1zWAGIMxJKEqVrvXMIwjpFgPWtNPa8E-BRmZKDfW+CaaqjLO9NsjJUagXCBfHeV8b6-xjpwtw0wxD0U-PQdANA7jmBCmFSxOiqpuFGJpL64TQoiHCpFaY9EAyWISnGW0cUqTinMH9feyY2F-QDMUo8ai4KbWSAyMALiZzH3oqfOy3iS5xz7onM8sjoYyyMdPd2p4xhFCOjMcILo7IOGAA4f0IMRlQFOoyC6jC4BrAAHKlDAEMeAMkymPQqeiEgdh5CWHgKyVRZjjSmXgKs+A+RMGaDGXAOy6QHQW1NGIc05yVRDLEHMr5s90G8CgM0Hw8AcF0PGIWJ24yN5wg1kI+6pDPQUM5ipJhdCWFFnReqTFKZbQcWWCpRRS96n-LQQhFIpBjr+JEI8qy-Z4WvMRcCMhXpB4TzkTgslcFjSZMus4GFDKRwWwyTU6MsY4XoA+cQNIBNmq+nRD8v5GMLnoNCGIAAIj8EkdKWmMuMYGbV2j4BSuxLK9A8qEHGnVXMpZurYX6pFUmR6JrpXmstYq8EvyY7ctPMS5RNjVqMliCmeGiNkbWNgGsf1y9AFoWPMaQ5S8TmsnCDEEIKYY0r3SmsPlkaCLkr8C4yqKpGgQFuVCOEUzQo2HwLiYxaw1ppzTnYzaSCqxwjatESyHVO7iW1LwfAdb-CWTLobAA-OYNqLRHZtXMK1EA3wgUdVTmYYkOo+2NRYAYJZUIAAGAASYAGZoBZhyQa8p5g4qYBUIEJye7xqNREPACAKRxD7qPSe6UIg2FxV2SyX95gb13ofYXZ2CAnL7uWDscwn6IyZh-ee-9eLb33tTviYeshtQQEICZStrbLbd1jhQaI5FoGG2cGONaY7Z3DwcFmuN6UvmRxmo1ceY9VUITmR2atYha31vGbXcehDPXDJ9SqxBkE+TCLLRWy0vH+OOmMc24TCLh59M7XRqdwhBYrq01MtdG6pkIY-ce+Dp7EOob3Spx94l3G72vrfA+PiKZNK3ARyOdM0YGr-oJJK39xIaZcQZaq18oTUZqo2yyGinnsa03FyOnDWMj1QTy9BABJbggRygdjsUYmT5b8iVoU8QYdUzrqql4FsqNLgxgaN4E5V88hAhrHlWsFgfIhNMVTvCNqRJqu9qoP1n4tnesgDGNlsQVAxDEkCPARwABybgGytnEAWy8EABkwMTfKJ8b4UIlsbO2ThhbtmHCBBrds7gSA2r7EWAATkYD9PTAXIDcDOy4BrH2zDwBa2BtrYGsMiA+gNOudkOtws4W7KH5hRJVX8ylgFXHyjnj5NZPL7a+2yaK1WmtpWkBmZq8NmrHWVCqYdL1rTbUhgo9kL24AWG4l4ctPqiHvoMMBeJ6nXRnG-DcNIIECIpB8glocNjpAuO+P48J2T5EfZKLwgW1KgXQv8infMFQeETZafvcdBVjrUIrk3LuZoVRaxicHeN+Ye5AgFvj1G3CbXfHZAGX19d6CwLkiaXBeqSFrCMbm6qz8G7IBuqe9BTBn39CEBtXtz1x3OvXcrOdtdyl1LiBZgD5V6rIfMGkHMOn6WqhkRw9S6eFszuwCq9F01QrEvgB47rTL8e8uPaK+c5X1Xp2qDx8y5NkLFWLfmAWxEMVVi4R+WREgdXb2kC3BopBvJTXftIG2PKpAoqnFWOye167ebVEtod338oA-k9D4W1qok2iwAEWnxosYc-6uL9DMvwIq-qStd5gNTRRrKG76QOqpfsGBjIfr3llifkpoPkHrAAdsmHfrVtdmKE-u-rcD9m-lSJ-j0Bvs6gBqiCnlCDajHEsgfuPKXunJbKePzuQEMNiDXuLvJtBFLmVspl1vaFVGNsrtQdiINvHvzoLsLknrAHHsPFrqQJ3gIXrnAAluJGQYWhYDbvAFjCwFHnQXXgwY3gJrFi2iJh7Bpl2iYB8mMNsjwSIXCFQbADQcQKfr8MIV3I7jHFtlptPCxhKIRp2iACIJgL2nuswlClCHBrQjilCpQioHupwqXtXGXtwK4J8KCAEgyIjAIHIM5lAMSOYAZOLoIhTnCAoUoVHoIRvveEIciOPJtiADEOwNskoDQdVmUaEAgDvBAHkEoDQPKEgJgAAGyLCtFIAigADsqg6gIAfAAgSg0QQ6ZRBhCgYgSgf0Fs26cgiwiIkAsAtUd4cgoQxASQYgawlgyQ+AiwJyxAOsAA3OiIsPkPAEMCZEUIsJiE5IsAKBCFCJiDMNsncaQE5GcSqIsJ8EyB8Q8U8akC8UOO8fcd8Q4PcY8TGM8RiKCcQACRCeYLUNeKDtwLIPAN8e7JwRYbQRbKiYsM+q+u+uYH0fQHekiRdjALCVSBSeiK8d8MQFCMsHeoFOQNAOYAAMQagsD0AsDLBInaClBmA6zEiLBTFyAEEXaaR3FliXEKBYmvDK78Ei4WxQBAiBBX6DQQZIkRTwAPERTC5Qj5BJCBCCnCliCinikGDTFSlPjwCLDYgKSKlwQd7nhV7C6Nzqn4Cakkjan6m6kQZLGRRFbmAmm0TmkiksBikSliB2kylOmghQAuneA07O7SZ9BiBQn4DA4MihnklOQ7AFk7AoCsmLB9GsmcmYB9EdHyh9EijfGeBZlPgmQpBkBJlIConYiLBtlArlpyBwjnhwmV5rCck0D3b3ZDBDAijmA0B+SjkoD0DyiEATlFn0CT6NnNm4ZtkKTWmRRMljkTlTkNmZkMnvFJDqnClIDyh0knhiDem+mkhjAEkjCkC4abmIylbTBIDBBjDSQfnkDfmcksAgWgWbkLFiBLH8DsCkjdTHEtDgUGDQmCiYAFmIWLGXHElxmYiwDJmZlUnqnAnLAiiskiiYC3lNnyBOSQXfAyDbFNHXboncCYmZlUWQU5lApGnFksmFnFmckihQA1nyi8Aulpmo5IAlD9TECaxNk0HbntltidlGHdm9nqnTGDn56YgjlcmLnLmrlzmjnjmTnTlrkbmnktk7lJl7lAW6Urn3aiU65IBPiWnMxOhNmxBFAMVIC2DIyOybnnjoG3nuzE7mAOhzHogEU0loUzIyoP5FkUVbmtkKVshcnLBVYrmEAAX7lQjAUgXoXsUJTMnwBgCbkElElvpxnmBigJVsWOmjApDu6aRyDbL+X6nsW5lGnrA7Csn0AmgpA0FwiYA0B0BDUjXDUMBYDIiblnkIkXkQBXk7A0BBVKmCxekalangYBnoh6kGkhnGmmlIkmbmCKjRUqhyVJUKQ5U8l8kClmLdoVRqnrV+mbVfHfj1XcCLBFDFXDpNX-nohClRkxk2mSkjrNXEBIkzXMmsn4DslQBcnyjwBoBApImfkw1MnmC-lg0pncDoAzquX0kWXJU5UI1I14VRGGpAqNznWWWKVcnXX8lYl1E-D4wMWcBCA0Cr4dGqDMAgDXgmRs1UAaCjFCDdgiDHFSAgAViUBCDiBiCBB1oxQxSgiBCtmkZgAxSi3i0AACmA6AwSKAGtRQYt7A1EYw6AugZRM2c2SgRAxxgQMxagQtWgSQ1ovAZRUtSgst8tSAitytqtAQMULti8WtwSnR6AywMU3pYggd-Ai8ptONFteAVtWgttEA9tgxTtSgmt7AjxHIYA7txA0tHhfG3tvtWW-tjIhtxQ4tudFIOtetetMU7gsI5tegIAydNtJAadDtjAKgQAA";e.GOL_URL=s}),require.register("Components/snippets/SHAPE/SHAPE.js",function(e,n,t){"use strict";Object.defineProperty(e,"__esModule",{value:!0}),e.SHAPE=void 0;var r="const valueToPoint = (value, index, total) => {\n  var x = 0;\n  var y = -value * 0.8;\n  var angle = ((Math.PI * 2) / total) * index;\n  var cos = Math.cos(angle);\n  var sin = Math.sin(angle);\n  var tx = x * cos - y * sin + 100;\n  var ty = x * sin + y * cos + 100;\n  return {\n    x: tx,\n    y: ty\n  };\n}\n    \nconst statsToPoints = (stats) => {\n  var total = stats.length;\n  return stats.map((stat, i) => {\n      var point = valueToPoint(stat.value, i, total);\n      return point.x + \",\" + point.y;\n    })\n    .join(\" \");\n}\nconst update = stat => e => stat.value  = e.target.value\nconst remove = stat => stats => stats = stats.length > 3\n      ? stats.splice(stats.indexOf(stat), 1)\n      : 'Cant Delete Anymore'\nconst add = stat => e => {\n    e.preventDefault()\n    if(stat == '') return\n   stats.push({label:stat.toUpperCase(), value:100})\n   newlabel = ''\n } \n \nconst stats = [\n    { label: \"A\", value: 100 },\n    { label: \"B\", value: 100 },\n    { label: \"C\", value: 100 },\n    { label: \"D\", value: 100 },\n    { label: \"E\", value: 100 },\n    { label: \"F\", value: 100 }\n  ]\n  \nlet newlabel = ''\n\nconst AxisLabel = { view: ({attrs:{point, stat}}) =>\n  m('text', {x:point.x, y:point.y}, stat.label)}\n\nconst Polygraph = {\n  view: ({attrs:{stats, points}}) => m('g',[\n    m('polygon', {points}),\n    m('circle',{cx:100, cy:100, r:80}),\n    stats.map((stat, idx) => \n      m(AxisLabel, {\n        point:valueToPoint(+stat.value+10, idx, stats.length),\n        stat\n        })\n    )\n  ])\n}\n\nconst Controls = {\n  view:({attrs:{stats}}) => m('', [\n    stats.map(stat => m('.',[\n      m('label', stat.label),\n      m('input',{type:'range', oninput:update(stat), value:stat.value, min:0, max:100}),\n      m('span', stat.value),\n      m('button.remove',{onclick:e=>remove(stat)(stats)}, 'X')\n      ])),\n      m('form#add',[\n        m('input', {\n          oninput:e => newlabel = e.target.value,\n          name:'newlabel',\n          value:newlabel}),\n        m('button',{onclick: add(newlabel)},'Add')])\n      ]        \n  )\n}\n\nm.mount(document.getElementById('ShapeShifter'), {\n  view:() =>\n    m('.#demo', [\n      m('svg',{width:200, height:200}, m(Polygraph,{stats, points:statsToPoints(stats)})),\n      m(Controls, {stats}),\n      m('pre.#raw', JSON.stringify(stats, null, 4))\n    ])})";e.SHAPE=r}),require.register("Components/snippets/SHAPE/SHAPE_CSS.js",function(e,n,t){"use strict";Object.defineProperty(e,"__esModule",{value:!0}),e.SHAPE_CSS=void 0;var r="body {\n  font-family: Helvetica Neue, Arial, sans-serif;\n}\n\npolygon {\n  fill: #42b983;\n  opacity: 0.75;\n}\n\ncircle {\n  fill: transparent;\n  stroke: #999;\n}\n\ntext {\n  font-family: Helvetica Neue, Arial, sans-serif;\n  font-size: 10px;\n  fill: #666;\n}\n\nlabel {\n  display: inline-block;\n  margin-left: 10px;\n  width: 20px;\n}\n\n#raw {\n  position: absolute;\n  top: 0;\n  left: 300px;\n}\n";e.SHAPE_CSS=r}),require.register("Components/snippets/SHAPE/SHAPE_HTML.js",function(e,n,t){"use strict";Object.defineProperty(e,"__esModule",{value:!0}),e.SHAPE_HTML=void 0;var r='<div id="ShapeShifter"></div>';e.SHAPE_HTML=r}),require.register("Components/snippets/SHAPE/index.js",function(e,n,t){"use strict";Object.defineProperty(e,"__esModule",{value:!0});var r={SHAPE_URL:!0};e.SHAPE_URL=void 0;var o=n("./SHAPE.js");Object.keys(o).forEach(function(n){"default"!==n&&"__esModule"!==n&&(Object.prototype.hasOwnProperty.call(r,n)||Object.defineProperty(e,n,{enumerable:!0,get:function(){return o[n]}}))});var i=n("./SHAPE_CSS.js");Object.keys(i).forEach(function(n){"default"!==n&&"__esModule"!==n&&(Object.prototype.hasOwnProperty.call(r,n)||Object.defineProperty(e,n,{enumerable:!0,get:function(){return i[n]}}))});var a=n("./SHAPE_HTML.js");Object.keys(a).forEach(function(n){"default"!==n&&"__esModule"!==n&&(Object.prototype.hasOwnProperty.call(r,n)||Object.defineProperty(e,n,{enumerable:!0,get:function(){return a[n]}}))});var s="https://flems.io/#0=N4IgtglgJlA2CmIBcA2A7AOhQFgDQgGcBjAJwHtZZkBtABl1oF18AzCBAm0AOwEMxESEBgAWAFzBV8RMtzHw5yECAC+uHv0HCAVp2mz5ioTO4ExAAgBuvWAFd4AFTIAFMhDnmAvOYAU1u-C45u5Q8AAeQWJkYjYAlF4AfObAADrc5la8JOZhXua0ANxpGdbZAJ55ALT+9uYAVPkYABxF6ZnZvNwA5gh5Pj4AsrxiIhjOAJL15gBM8QD05lExsPENIeGtJVnmMgR5QyMYuz6dPfCxm+3mBO77w6M33CfdCBfFV2K53rkNu+aV5gqDUe5gA1OYAIy0QrvUqLCrfKYg8FAnZkPbgqEwtokeBiWwkdKpNoZMJIRYRd4ZMrksRld4qVoqKnmNImMzXGJiAhOVzubl9MzDAjxTxJYlbbJLGx5IXcjAIbojS64-GEznCjBgXgAB36cqCEFF4pZkvMOrcHm8NUcLktYh8cowNsNkWicUuGQyqoJ6Qt-IwuXBKRAuBDYPN9owZU95hUsRZGG0lp84ZDb24zO47Isth1UGG8FlXMS5iLYo1YmdNlqeXgGBiJC6eOrATZsg5uLAZEs5crpblewrg+LmsVXRG5iSAGZTeYAPyVggYAg62AQIjwR1c5frMIAeRY2+GsSCEITJK95IA5ABhToWAAi8AQ8nMAEFuGVu7jr+3TBYvAwKOFgVuWJqXvWOq4r2cjPiwvC2LADoXl6wRHnKXjeNe17xD6hJUoOGA6rYBAiD4wCwLwABGL5IE6UQAKo6jq8AkPeBBbqemQBEgWLxlS3DwAA7lRtGwHkOHFCorLpP+HIjt41AssA5hiXRrIgO+IZBDa5JYnGYaXqp6mwOSIYAEI6Tx9j6dChkqWpNEaSGt7WXpkL2WojmmeZICPu5NbwHZtAOcZTniX5ACigW8Z5oXeeFvmaQAYrFtnxXG7yMO8aSvuYQmic5EnYX+3DyRY75hBABAADLFXkqmWBAInkhRwxiCQBBIMA-pyEEcoqPGiTvGAPjXvIYRiNeQTAGSfVVhEgJIAt0ZqJWCrFbEWYVeYriwGUXQkLqIiNbCLXCW1wAdV1PWDkEC0EENxrmGN15dDNymXm9FoHV0sgzckj3xkZaFvUQEAkEQCAzcARBkliQREDSiPmCQSBNLQIMskR2p6seYiGlAYQvXOY1VTV9XibNc4ZAtSA2ry9o+KCTo2qCUJE0tRHjiMp605WAsCZeqHmIwF47dmHYWLeBjkLAQ7JOdrXtWInXdcAg7PaWb2A19aG47qBM6+NGCfWT42mYDTqmfzl4ZG97gkdN6h0qxSDXsd3TwIDshO7YYhIHmBbyAT3F6WzQVBJA3BIPQr28Aj0LY-br3jaunTW1yrb2HbaEO+N1EB1E3AYF2PY++osjQxuADWSDwGK5e9mHBMiut14ABq4XO4t5-nb0sGQJBgAAxEBUDm6nBfXv7LtK9PXp+9wzsN6WhWmXWDZZM2VYugLGR8AIHsb8VM0HzZwWn+JKf516b1F2rANV9m65EPX5gTz418vttuDXu+GAuFxa9zvhkd4Es0hpDAFqMgtg5A+CgGQIgtgBByAwNRMgUAyg0zaM1FWxoWRvQwKPUI3Y9YW2vAQSwH11DCWgCMJA0xoRBBEPACAXRxBMOTtHHw+1DrHR1CIdQ91Iz8m6oOJm4i27bViP3MGPhZZyHlgQWaWt5H33GtBeso9jrCUBgAKQAMr7gAHIrk6u4LoEAWBlDbkEbgSFYBBGwHIlk4t4yhhADIMAOp2BsSUNRYqXjOIICIGICAHYlAQgAKx8VUOoEAR8tBHAIHobxBgFBiECVgioEpzBDzkJUBCkADrkgABIvl7BEogvBzCmPgPYII74SAQBsANToBBKicVaSwJkUCV4UEOrIBeGQ2CUHJKPbA0xqIAE4mjTkuGQHUvAIZ0nJLQDAaAYn9PKtmSG0Miz5PGWZRYXsM64jkJcMw5Ba7BXMKPWZTzdlpEmhYY5Bhin8HYDScwlTYDVI3HUhpTSPytPadcTp3S2I2MuIUsQ3SIAAC97lQh1GEOF7BTmjxQLil53BN75KgDVNcvBfnuHXEJSo1FYDINrpcbUTZ3CVAQCwQOnl0WXHoVARhMxaCcrSJLXRvBhKjMjDcCJshyQ0QIBQAO8BLhRB1Bsy4rL2XTmhAKzMaQQkvngOEyJpglC0DjpUacEI46qGYCASltdOBIGoBoAQShIAjFaVIEABIqBCHEGIHU3U5hzHgTqWuXQjhkDAHMV1Ih3UAAFpgYE2dgKNEA3XsC1O4JM6S3ZaGIK0nU2SVCMBUEAA";e.SHAPE_URL=s}),require.register("Components/snippets/TTT/TTT.js",function(e,n,t){"use strict";Object.defineProperty(e,"__esModule",{value:!0}),e.TTT=void 0;var r='const getRandomInt = (min, max) =>\n  Math.floor(Math.random() * (1 + max - min) + min)\n\nconst players = {\n  true: { score: 0, mark: "X" },\n  false: { score: 0, mark: "O" },\n}\nconst boardSizes = R.filter((n) => n % 3 == 0, R.range(0, 60))\n\nconst getDiagAcross = (acc, set, idx) => {\n  let r = acc.concat(set[idx])\n  return r\n}\n\nconst getDiagDown = (acc, set, idx) => {\n  let r = acc.concat(set[set.length - (idx + 1)])\n  return r\n}\n\nconst winningSetBy = (mdl) => {\n  if (mdl.size) {\n    let spaces = R.range(1, mdl.size * mdl.size + 1)\n    let setsAcross = R.splitEvery(mdl.size, spaces)\n    let setsDown = R.transpose(setsAcross)\n    let setsDiagAcross = setsAcross.reduce(getDiagAcross, [])\n    let setsDiagDown = setsDown.reduce(getDiagDown, [])\n    let winnings = setsAcross\n      .concat(setsDown)\n      .concat([setsDiagAcross].concat([setsDiagDown]))\n    return winnings\n  } else {\n    restart(mdl)\n  }\n}\n\nconst mdl = {\n  winnerSets: [],\n  winner: null,\n  turn: true,\n  players,\n  board: null,\n  size: 0,\n  width: 800,\n}\n\nconst markSelectedSpace = (mdl, key, mark) => {\n  const space = R.filter(R.propEq("key", key), mdl.board)\n  let updatedSpace = R.set(R.lensProp("value"), mark, R.head(space), mdl.board)\n  let index = R.findIndex(R.propEq("key", key))(mdl.board)\n  mdl.board = R.insert(index, updatedSpace, R.without(space, mdl.board))\n  return mdl\n}\n\nconst markRandomSpace = (mdl) => {\n  let emptySpaces = mdl.board.filter(R.propEq("value", ""))\n  let AISpace = emptySpaces[getRandomInt(0, emptySpaces.length - 1)]\n  !mdl.winner && AISpace && markSpace(mdl)(AISpace)\n  return mdl\n}\n\nconst updateTurn = (mdl) => {\n  mdl.turn = !mdl.turn\n  return mdl\n}\n\nconst isWinningSpace = (mdl, key) => {\n  let value = R.prop("value", R.head(R.filter(R.propEq("key", key), mdl.board)))\n  let sets = R.groupBy((c) => c[1])(mdl.board.map(R.props(["key", "value"])))\n  let keys = R.keys(R.fromPairs(sets[value])).map(Number)\n  let isWinner = mdl.winnerSets\n    .map((set) => set.every((key) => keys.includes(key)))\n    .includes(true)\n  return isWinner\n}\n\nconst checkIfDraw = (mdl) => {\n  if (!R.pluck("value", mdl.board).includes("")) {\n    mdl.winner = "No One"\n    return mdl\n  }\n  return mdl\n}\n\nconst markSpace = (mdl) => (space) => {\n  let player = mdl.players[mdl.turn].mark\n  if (isWinningSpace(markSelectedSpace(mdl, space.key, player), space.key)) {\n    mdl.players[mdl.turn].score++\n    mdl.winner = player\n    return mdl\n  }\n  checkIfDraw(mdl)\n  return mdl\n}\n\nconst nextTurn = (mdl, space) => {\n  return R.compose(\n    updateTurn,\n    markRandomSpace,\n    updateTurn,\n    markSpace(mdl)\n  )(space)\n  return mdl\n}\n\nconst restart = (mdl) => {\n  mdl.winner = null\n  mdl.size = 0\n  mdl.board = null\n  mdl.width = 800\n}\n\nconst makeBoardWithSize = (mdl, size) => {\n  mdl.size = size\n  mdl.board = R.range(0, size * size).map((n) => ({ key: n + 1, value: "" }))\n  mdl.winnerSets = winningSetBy(mdl)\n}\n\nconst Space = {\n  view: ({ attrs: { mdl, key, space } }) =>\n    m(\n      ".space",\n      {\n        style: {\n          fontSize: `${mdl.width / mdl.size / 2}px`,\n          height: `${mdl.width / mdl.size / 2}px`,\n          flex: `1 1 ${mdl.width / mdl.size}px`,\n        },\n        onclick: (e) => !mdl.winner && !space.value && nextTurn(mdl, space),\n      },\n      space.value && m(".value", space.value)\n    ),\n}\n\nconst PlayerScore = {\n  view: ({ attrs: { player, mdl } }) =>\n    m(".score-card", [player.mark, ":", player.score]),\n}\n\nconst Toolbar = {\n  view: ({ attrs: { mdl } }) =>\n    m(".toolbar", [\n      m("button.btn", { onclick: (e) => restart(mdl) }, "New Game"),\n      Object.keys(mdl.players).map((player, idx) =>\n        m(PlayerScore, { key: idx, player: players[player], mdl })\n      ),\n    ]),\n}\n\nconst Game = {\n  view: () =>\n    mdl.board\n      ? m(\n          ".game",\n          { style: { width: `${mdl.width}px` } },\n          mdl.board.map((space) => m(Space, { key: space.key, space, mdl }))\n        )\n      : [\n          m("h1", "select a board size"),\n          m(\n            "select",\n            {\n              value: mdl.size,\n              onchange: (e) => makeBoardWithSize(mdl, Number(e.target.value)),\n            },\n            boardSizes.map((n) => m("option", n)),\n            mdl.size\n          ),\n        ],\n}\n\nconst GameOver = {\n  oncreate: () => window.scrollTo(0, 0),\n  view: ({ attrs: { mdl } }) =>\n    m(\n      ".game-over",\n      { onclick: (e) => restart(mdl) },\n      `Game Over ${mdl.winner} is the winner!`\n    ),\n}\n\nconst TicTacToe = {\n  view: () =>\n    m(".", [\n      m(Toolbar, { mdl }),\n      mdl.winner && m(GameOver, { mdl }),\n      m(Game, { mdl }),\n    ]),\n}\n\nm.mount(document.getElementById("TicTacToe"), TicTacToe)';e.TTT=r}),require.register("Components/snippets/TTT/TTT_CSS.js",function(e,n,t){"use strict";Object.defineProperty(e,"__esModule",{value:!0}),e.TTT_CSS=void 0;var r="\n* {\n  box-sizing: border-box;\n  font-family: 'Mansalva';\n}\n\nselect {\n  width: 80px;\n  height: 36px;\n  font-size: 30px;\n}\n\n.toolbar {\n  border: 1px solid green;\n  display: flex;\n  flex-flow: wrap;\n  justify-content: space-between;\n}\n\n.score-card {\n  padding: 10px;\n  font-size: 30px\n}\n\n.game {\n  display: flex;\n  flex-flow: wrap;\n}\n\n\n.space {\n  display: flex;\n  align-items: center;\n  justify-content: center;\n  border: 1px solid green;\n  cursor:pointer;\n}\n\n.game-over {\n  position: absolute;\n  top: 15%;\n  left: 15%;\n  width: 500px;\n  font-size: 90px;\n  background: #bdc3c7;\n  padding: 4px;\n  cursor: pointer;\n}\n\n.value {\n  font-size: inherit;\n}";e.TTT_CSS=r}),require.register("Components/snippets/TTT/TTT_HTML.js",function(e,n,t){"use strict";Object.defineProperty(e,"__esModule",{value:!0}),e.TTT_HTML=void 0;var r='<link href="https://fonts.googleapis.com/css?family=Mansalva&display=swap" rel="stylesheet">\n<div id="TicTacToe"></div>';e.TTT_HTML=r}),require.register("Components/snippets/TTT/index.js",function(e,n,t){"use strict";Object.defineProperty(e,"__esModule",{value:!0});var r={TTT_URL:!0};e.TTT_URL=void 0;
-var o=n("./TTT.js");Object.keys(o).forEach(function(n){"default"!==n&&"__esModule"!==n&&(Object.prototype.hasOwnProperty.call(r,n)||Object.defineProperty(e,n,{enumerable:!0,get:function(){return o[n]}}))});var i=n("./TTT_CSS.js");Object.keys(i).forEach(function(n){"default"!==n&&"__esModule"!==n&&(Object.prototype.hasOwnProperty.call(r,n)||Object.defineProperty(e,n,{enumerable:!0,get:function(){return i[n]}}))});var a=n("./TTT_HTML.js");Object.keys(a).forEach(function(n){"default"!==n&&"__esModule"!==n&&(Object.prototype.hasOwnProperty.call(r,n)||Object.defineProperty(e,n,{enumerable:!0,get:function(){return a[n]}}))});var s="https://flems.io/#0=N4IgtglgJlA2CmIBcAGANCAzgYwE4HtZZkBtdFAXQwDMIFNTQA7AQzESRADoALAFzDEM2fEz7wxyEAB5YEJgGsABD1zxqAXgA6IfnwAOmJAHpj1UX0xcA5vnzWELfRCsiwx7JkwB+amzoAnhoAsixMmCywAG4sAGRQLvqwLEGYAO5OOkpqsNpYfAH0PPDwfDoAfCAYmPAI2HwQogycKEgArABMALStAGwoIAC+aMxsHNwAVgzCFhJ8UiLhfErWpQBKYVD4YACSYkoaSgAUkExoSmAsAB4AlAflSqF8PFzUsHa4R08vuJvbR3cAFTHACMSgA1Bdrkouhd5HdIacblomCjFphlkkUvBcJgDkpgCilEo+LgAK7wJAEnD4NSoc6XXAKKkAcgAGiylMMiUo-LAalTgDS6Up0FCmayAPIs7lMQZoprLABG+BYuCgAGUIAAveB4w5rV50cSfI5MO4aB5MJQAUiUAGYDocUEo0IbfkxVkd0P0bsjUQH0ctVnwACIQFjWACCeHwXgORxY2Gw5xqfHO0Fu9wJPIQy1w+KT2C4i2wLD4RzTJEzFH9xLUfDJuGtuBR8sDipWpXDkdD+DS1o0ieTqdKGagWctOetSjz2ULyZLojLFaraa4CE9zxhx0zEKUIJutZ5DabLbbKIVSyUaXkTHk1g1pQAQgF8WA4NnCTOINQTnAuEwHV4DuYBiWJHliTnTB9CTPV8XdMIvRBc5-1gQDgKUYEP3QoDdX3Q863A6DSkwGMCHjA1AKSCA+AAUSiHEAjQjDdVTWDsD1IioNKJQ00wPsBwQrhSTCGC43gStSPIuNMG42deP4nto1jSi+Ok1SrDUKAyU4o4Q2UmSvHOEhjxnHjliUiNrEEwd1MsWyuG03TJIM6zbJMszwIU5ZbyYe9PX1eyyM0pcmBXKSHP7c0woikgrMjIzMAoWLyyOeLSOU2za3k09mxvO8H0wHlBiUWoamnby1AxNUKxwoj23bK8MQuT9Dm-Yk-KYHEn0sJBTLQHkupxJAmDJIhBpnRtmypUkKUm4ksQCHFMHOHkVTVKBRvG2AFr44CqXQIboGeKkAA4UBQC8O2vRkFCfOpxE1Dj4HxNDzgUeAAgZNUFAtB4OqUIM+Je4TaFgE0jkNfQCH0OiAEcjhZT6AhZD6vpuNAcK4Db1SIucyX0KBy3gZ64OEtMoY3CRMAABVhpGYlgCkWUxu7zkNYoWCgSsXsx1r0NxqB8d4+QoHgK4wbFvZxauKmYfwOHEeRr60ZRv0WKFojsaF-ElENeQalwCsxYltBCeJp6NRet0uFvZ58DJVcbZ11U8aIvLrRw67muWO6NiYLYwGt8nDhwr9c14+AwH0AoQ84oLXc2o0IZxeXYYRxnIhZtAWVZkXlijHZ49ew5o9jgIS8wEgQwDoO9grMVy7jl6rE3axt1hQ8KB5ABCbHhoLWJYiUIuS6UYfxXul60JuI4x75k9SjPAWffCzsLZJgAVFew7agGeWx6a7P7gDj6X4+BYguVL3X68XAAdUKz1x8Od6lHViOZznJmKWEhX9BZ2ZvANGnN4DcypuDSG0MM7KxRmjD+GMsYAS1n6SOllSLCWsAQQmr4jjYGzNgEgIJayazdlALglxAEwMVpgdKKtUa51-iAnKBdEEBCCoaFGdDDTUAIGAWmLAIC4kitXZhOVKFOCOAAOTJGAJUOI2GPzvDid8AFB69SsFQyK2Z1zwEYrgZiKNszcK4PIbAzNxZ0PVn6Mx4VLF6iOHNECF8V7KP8jiNewNsDFGwAoHY1BQy-DSGo2AX9iS-iOL3aGzM-FAJzknPGdiLFkisUjfOlVwIDxUQWQ4LJpH4CUJKbqnIlCQWyMvfK3tzLtnAp7VeN8botTuq-K+U4YKhwBtfCySglqqL3uhPpuISBHzPClO6PJInuICo+GeLTajwHqKTEu78OmcS4Cjc4vTkjLVwPzNZ8ANkY1AuU7GQzq6jObClYUr1wTglOeonJ+IhnlPqdU4ktSga+P8YE4Js9XFVLgF4zs3Urh8B3vlQ4xwcLsTgv9TJ9TDRuH0BJI4m9xAQrOGU8yU867bBLntYk6L4CYsJVPFZ9U9pzwOR7SpXsgWNN9hUmqxtQnhIFnbJ5hwxpEEPgBPCpdRR8sFuQ-EPLYDCs5VAbchwLpXUZXfZpLBPrPnIU-Z4Wp8JvxhftXU8LAbYwFfiAVkrdZUQ9F6dARrgQCpuJIwBg4HhHGACjKk1pIQoSUMw1kMo0EzmyR43Amj8RdQfL1PB9VgXXlaYDKIEB4BpCpM68spIjDAB1ZskGcFBiDH+pBMASNqJwQQYDbyGJCiUlLd5XkFhNWUgAAYABJgAsVvNKngxhDXARuMYDogx9BXHrWS7yxQIDWH4FSJtLbsnts7fy7tvb+2DuHbyBAVwkD1rBGCZtM7nhztwsBJd9bZTVqUMuOQfiqSlweKfdCg8J4j17gcrgzCH1KFBeCs8qy+Ynurc+19k8C0shfdnEBsL1nML9U1AMTLaY7J6iINQ+Iq1xoTUoJNwAU24iQMAIZDI4A5vhUBwCiH4BdDLOqBBJAhmSKZLnJACCaM3LMtB4GW87CwCVGqZDPJUOJuOJhvgqacM4UI-cU5ha+Aca47gKj5TiRAaVE7KTTAcZ8CYGjYA56ICXrKtmaqfBaqz2GEofJaGADiYxWZkslEqCYiy+BHI4Sxc5drtFHDw0oTMeacUKaOHB7EQbSPnBdV9JAmZzhDKpOc6j8HcBUAFrm+SLHb7A0s+wHjM4+NJvhQ8kVm0lDeAuIW6wVmQvloQDhttp0p27p4EenN+H8vqntUcXmcLszyeKwSgkrrn2ZoOU13NSg-WnqpCQYrLIeAgjRiyGoj0lAsCULrAV1muveSA-NhzJbvVdrYme8KPAkKUj01OS4Kq1W0R4HW9+sj5Fp0OYZ3AIYQPAL9L+09xIhZ1q0VIx1k3FYNFEAg80mN1tZPnXqnuCq0tjElAYzLxJlxqBJjl7MfkthpBIwQIg7HvRoBQGDrL8b+PJqE9h9NBHhuWgk8B0r7Auj4AMSW7Tl7r3Mqe3VOANwTP1vS69eHqid2PMDaVFwJJigFUDb3et-pWOdi3jpreSZ2OCtjSTpAAJszEbk-6o47HCAyZC6JonCmRfdSHiPAt-PBe4GNwR03xX+f29gLmlEKWYNMDAJQx2YgjhbGwHIuYON8BQG+koRX2BldR-wCBKoIBkV0BxFILjCihBYAWfURo4QpAghBL0JAHQQRDBGCAVg7ApAli8PHxY4hJCcBRMCQGKorhdDwg+KkKp1Q4i6C3gA3DycwYguh+EgLAAIrJQjhEiDEFkA+FVbfqJk6rPBzooAHfP4ko7x18CpPaXoG-B8WDbwdB06+rjz+gyJaT3Hm+0nFrgKkIIB18UINAFYagJCb6UAkGCOyqRvASzf6AGt5vD9hUhpC-D6Df4TBkgYi-gBDkazBiBUgHK96lBpAlBMCX63wka0hkYUZQCZKwQwAd4Hjn7AHH4Cp77n5rw2BjCZK-5LQAFrrAFroj7vD8aQFOA4Ge5FqcSMGJD-6rpAE8iRBjpMBdC0TRxGBAxzA4gwFwENDUCIG15zBUicRiAKHrT34jQHgv6YBv5EHYJYHf6B64i0hIAoryAmi8Eoj0EM5M6qKAwopARA5MBUgsBKiGHMziDf5Sb6BP5tA2jf4IDUC74HjBHf4r5UhtCXSH4zhD58An66hUgACcFB60SYCg2CvuW0SgAAxEqFANgPaNgAAOzf4kEJCehUgAAsCRxI5hhhj+vS+ANh2hCqr2f8gMSRKRJ28gxQuAtEl+8ei+7hzQIAdRBeIIZ0QwVAIAcgigzQJAowFenAkAzwwx6eTYxAnAeghgJgxgZITA+gORS47gmxqgdAAAAh0FwCgFwHUZ2ldtsZQvIFwFMPHgUPoOMDgMMbHCXmseML8B+CwPHrsVIAcUYKYCcWcdYBccYKCcTDcY8R0L0FwCCMYL-nwEiWwMTO8apl8RgD8X8XgBAICcMMCVIFcdsW3qSOAmABCbgHsboEJocbCacecW4C8VsXQPSSjmAHcQ8Q8cYBiIKZ8dMCAKSVIP8RSfMIMBQIMEAA";e.TTT_URL=s}),require.register("Components/snippets/index.js",function(e,n,t){"use strict";Object.defineProperty(e,"__esModule",{value:!0}),e.ShapeShifter=e.GameOfLife=e.TicTacToe=void 0;var r=n("./TTT/index"),o=n("./GOL/index"),i=n("./SHAPE/index"),a={name:"mithril",type:"js",url:"https://unpkg.com/mithril"},s={id:"TicTacToe",title:"Tic Tac Toe",url:r.TTT_URL,code:{files:[{name:"app.js",content:r.TTT},{name:"style.css",content:r.TTT_CSS},{name:"index.html",content:r.TTT_HTML}],links:[a,{name:"ramda",type:"js",url:"https://unpkg.com/ramda@0.26.1/dist/ramda.min.js"},{name:"mithril-stream",type:"js",url:"https://unpkg.com/mithril-stream@2.0.0/stream.js"}]}};e.TicTacToe=s;var l={id:"GameOfLife",title:"Game Of Life",url:o.GOL_URL,code:{files:[{name:"app.js",content:o.GOL},{name:"style.css",content:o.GOL_CSS},{name:"index.html",content:o.GOL_HTML}],links:[a,{name:"ramda",type:"js",url:"https://unpkg.com/ramda@0.26.1/dist/ramda.min.js"},{name:"mithril-stream",type:"js",url:"https://unpkg.com/mithril-stream@2.0.0/stream.js"}]}};e.GameOfLife=l;var c={id:"DynamicSVGManipulation",title:"Dynamic SVG Manipulation",url:i.SHAPE_URL,code:{files:[{name:"app.js",content:i.SHAPE},{name:"style.css",content:i.SHAPE_CSS},{name:"index.html",content:i.SHAPE_HTML}],links:[a]}};e.ShapeShifter=c}),require.register("Pages/about.js",function(e,n,t){"use strict";Object.defineProperty(e,"__esModule",{value:!0}),e.About=void 0;var r={view:function(){return m("section",[m("code.intro-text","After serving as a paratrooper in the IDF I spent the next decade in Academia studying the effects of changes in environment on Human Performance, from pregancy to sports-injuries to space-flight."),m("br"),m("code.intro-text",["My background in programming started at a 3 month boot-camp at the Iron Yard in Houston (since closed) supplemented with various online courses ",m("a.intro-text",{href:"https://online-learning.harvard.edu/course/cs50-introduction-computer-science",target:"_blank"},"from the Harvard CS50 course")," to ",m("a.intro-text",{href:"https://www.youtube.com/watch?v=I8LbkfSSR58",target:"_blank"},"Bartosz Milewski's Category Theory,")," as well as working through An Introduction to Functional Programming Through Lambda Calculus,",m("a.intro-text",{href:"https://egghead.io/courses/professor-frisby-introduces-composable-functional-javascript",target:"_blank"}," and Brian Lonsdorf's Professor Frisbies Egghead Course on FP in JS,"),m("a.intro-text",{href:"https://github.com/boazblake?tab=repositories",target:"_blank"}," and lots of time spent on personal projects,"),"and on-the-job training (Agile, SCRUM). "]),m("br"),m("code.intro-text","My current personal interests lie in the nexus of true object oriented programming - as per Alan Kay, and functional programming in JavaScript. I am also a fan of Douglas Crockford and Kyle Simpson’s philosophy of JavaScripts behavior delegation / Objects linked to other Objects and I favour composition over hierarchy.")])}};e.About=r}),require.register("Pages/home.js",function(e,n,t){"use strict";Object.defineProperty(e,"__esModule",{value:!0}),e.Home=void 0;var r=n("Styles"),o=n("Utils"),i={view:function(){return m(".home",{oncreate:(0,r.AnimateChildren)(r.fadeInUp,(0,o.Pause)(.05))},[m(".frow",m("img#boazface",{src:"images/boazface.jpg"}),m(".frow.row-around",{padding:"2px"},[m("a",{oncreate:(0,r.Animate)(r.popIn,o.randomPause),target:"_blank",href:"https://github.com/boazblake"},m("img",{style:{margin:"2px",height:"100px",width:"100px"},src:"images/github.svg"})),m("a",{oncreate:(0,r.Animate)(r.popIn,o.randomPause),target:"_blank",href:"https://www.linkedin.com/in/boazblake/"},m("img",{style:{margin:"2px",height:"100px",width:"100px"},src:"images/linkedin.svg"}))])),m("p",m("code",{style:{color:"black",margin:"4px",fontSize:"2rem"}},"Front-End developer with half a decade of industry experience building a variety of different applications using a multitude of different frameworks and languages.")),m("p",m("code",{style:{color:"black",margin:"4px",fontSize:"1rem"}},"Contact:","boazBlake at protonMail dot com"))])}};e.Home=i}),require.register("Pages/index.js",function(e,n,t){"use strict";Object.defineProperty(e,"__esModule",{value:!0});var r=n("./home");Object.keys(r).forEach(function(n){"default"!==n&&"__esModule"!==n&&Object.defineProperty(e,n,{enumerable:!0,get:function(){return r[n]}})});var o=n("./portfolio");Object.keys(o).forEach(function(n){"default"!==n&&"__esModule"!==n&&Object.defineProperty(e,n,{enumerable:!0,get:function(){return o[n]}})});var i=n("./snippets");Object.keys(i).forEach(function(n){"default"!==n&&"__esModule"!==n&&Object.defineProperty(e,n,{enumerable:!0,get:function(){return i[n]}})});var a=n("./resume");Object.keys(a).forEach(function(n){"default"!==n&&"__esModule"!==n&&Object.defineProperty(e,n,{enumerable:!0,get:function(){return a[n]}})});var s=n("./about");Object.keys(s).forEach(function(n){"default"!==n&&"__esModule"!==n&&Object.defineProperty(e,n,{enumerable:!0,get:function(){return s[n]}})})}),require.register("Pages/portfolio.js",function(e,n,t){"use strict";Object.defineProperty(e,"__esModule",{value:!0}),e.Portfolio=void 0;var r=n("Utils"),o=n("Styles"),i={view:function(e){var n=e.attrs.url;return m("a.github-app-link",{href:"https://boazblake.github.io/".concat(n),target:"_blank",title:n},n)}},a=function(){return m.request({url:"https://api.github.com/users/boazblake/repos?sort=asc&per_page=100",headers:{Accept:"application/vnd.github.v3+json"}})},s=function(e){return m.request({url:"https://api.github.com/repos/boazblake/".concat(e.name)})},l=function(){var e={name:"",status:"loading"};return{oninit:function(n){var t=n.attrs.url;e.name=t.split("/")[3],s(e).then(function(n){var t=n.description;e.errors=null,e.info=t&&t.split("~")[0],e.src=t&&t.split("~")[1],e.status="loaded"},function(n){e.status="failed",e.errors=n})},view:function(){return"loading"==e.status&&"Repo Loading...","failed"==e.status&&"Error","loaded"==e.status&&m(".repo",m(".col-md-3-3",{oncreate:(0,o.Animate)(o.fadeIn,r.randomPause)},[m(".repo-title",[m(i,{url:e.name})]),m("img",{width:"200px",src:e.src}),m(".info",e.info)]))}}},c=function(){var e={status:"loading",repos:[],errors:{}};return{oninit:a().then(function(n){e.status="loaded",e.repos=n.filter(function(e){return e.homepage&&e.homepage.includes("boazblake")&&e.description&&e.description.split("~")[1]}).map(function(e){return e.homepage})},function(n){e.status="failed",e.errors=n}),view:function(n){var t=n.attrs.mdl;return m(".portfolio",m(".frow-container.frow","failed"==e.status&&"Error fetching Repos ...","loading"==e.status&&"Loading Repos ...","loaded"==e.status&&e.repos.map(function(e){return m(l,{url:e,mdl:t})})))}}};e.Portfolio=c}),require.register("Pages/resume.js",function(e,n,t){"use strict";Object.defineProperty(e,"__esModule",{value:!0}),e.Resume=void 0;var r=n("Styles"),o=n("Utils"),i=function(){return{view:function(){return m(".frow-container",{oncreate:(0,r.AnimateChildren)(r.fadeInUp,(0,o.Pause)(.15))},[m("a",{href:"files/resume.pdf",title:"Boaz Blake Web Dev Resume",download:"files/resume.pdf"},"Download PDF"),m("img.resume-img",{id:"resume-1",src:"images/resume.jpeg"}),m("img.resume-img",{id:"resume-2",src:"images/resume 2.jpeg"})])}}};e.Resume=i}),require.register("Pages/snippets.js",function(e,n,t){"use strict";Object.defineProperty(e,"__esModule",{value:!0}),e.Snippets=void 0;var r=n("Components"),o=n("Utils"),i=[r.TicTacToe,,r.GameOfLife,r.ShapeShifter],a={view:function(e){var n=e.attrs,t=n.snip,r=n.Flems;return m(".snippet",[m("a.snippet-title",{href:t.url,target:"__blank"},t.title),m(".snippet-code",{id:t.id,style:{height:"500px"},oncreate:function(e){var n=e.dom;return r(n,(0,o.jsonCopy)(t.code))}})])}},s=function(e){e.attrs.mdl;return{view:function(){return m(".snippets",i.map(function(e){return m(a,{snip:e,Flems:window.Flems})}))}}};e.Snippets=s}),require.register("Styles/animations.js",function(e,n,t){"use strict";Object.defineProperty(e,"__esModule",{value:!0}),e.sideBarChildren=e.sideBarIn=e.slideInDown=e.slideOutRight=e.slideInLeft=e.slideInRight=e.fadeInUp=e.fadeIn=e.popIn=void 0;var r=[{transform:"scale(0)",opacity:1},{transform:"scale(1)",opacity:1},{transform:"scale(0.8)",opacity:1},{transform:"scale(1)",opacity:1}];e.popIn=r;var o=[{opacity:0},{opacity:1}];e.fadeIn=o;var i=[{opacity:0,transform:"translate3d(0, 40%, 0)"},{opacity:1,transform:"translate3d(0, 0, 0)"}];e.fadeInUp=i;var a=[{transform:"translate3d(-50%, 0, 0)"},{transform:"translate3d(0, 0, 0)",visibility:"visible"}];e.slideInRight=a;var s=[{transform:"translate3d(80%, 0, 0)",visibility:"visible"},{transform:"translate3d(0, 0, 0)"}];e.slideInLeft=s;var l=[{transform:"translate3d(0, 0, 0)"},{visibility:"hidden",transform:"translate3d(100%, 0, 0)"}];e.slideOutRight=l;var c=[{transform:"translate3d(0, -50%, 0)"},{transform:"translate3d(0, 0, 0)",visibility:"visible"}];e.slideInDown=c;var d=function(){var e=Object.assign(s);return e[1].background="black",e};e.sideBarIn=d;var u=function(){var e=Object.assign(a);return e[1].color="white",e};e.sideBarChildren=u}),require.register("Styles/index.js",function(e,n,t){"use strict";function r(e){return s(e)||a(e)||i(e)||o()}function o(){throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method.")}function i(e,n){if(e){if("string"==typeof e)return l(e,n);var t=Object.prototype.toString.call(e).slice(8,-1);return"Object"===t&&e.constructor&&(t=e.constructor.name),"Map"===t||"Set"===t?Array.from(e):"Arguments"===t||/^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(t)?l(e,n):void 0}}function a(e){if("undefined"!=typeof Symbol&&Symbol.iterator in Object(e))return Array.from(e)}function s(e){if(Array.isArray(e))return l(e)}function l(e,n){(null==n||n>e.length)&&(n=e.length);for(var t=0,r=new Array(n);t<n;t++)r[t]=e[t];return r}function c(e){var n=function t(n){n.target===e&&e.removeEventListener("transitionend",t)};return new Promise(function(){return e.addEventListener("transitionend",n)})}Object.defineProperty(e,"__esModule",{value:!0});var d={AnimatePage:!0,Animate:!0,AnimateChildren:!0};e.AnimateChildren=e.Animate=e.AnimatePage=void 0;var u=n("Utils"),m=n("./animations.js");Object.keys(m).forEach(function(n){"default"!==n&&"__esModule"!==n&&(Object.prototype.hasOwnProperty.call(d,n)||Object.defineProperty(e,n,{enumerable:!0,get:function(){return m[n]}}))});var p={duration:700,easing:"ease-in-out",fill:"forwards"},f=function(e){return function(n){var t=n.dom;A(e)({dom:t})}};e.AnimatePage=f;var A=function(e){var n=arguments.length>1&&void 0!==arguments[1]?arguments[1]:u.NoOp;return function(t){var r=t.dom;return setTimeout(function(){return r.animate(e,p).finished.then(c(r))},n())}};e.Animate=A;var g=function(e,n){return function(t){var o=t.dom,i=r(o.children);i.map(function(t,r){t.style.opacity=0,setTimeout(function(){t.style.opacity=1,A(e)({dom:t})},n())})}};e.AnimateChildren=g}),require.register("Utils.js",function(e,n,t){"use strict";function r(e){return e&&e.__esModule?e:{"default":e}}function o(e){return l(e)||s(e)||a(e)||i()}function i(){throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method.")}function a(e,n){if(e){if("string"==typeof e)return c(e,n);var t=Object.prototype.toString.call(e).slice(8,-1);return"Object"===t&&e.constructor&&(t=e.constructor.name),"Map"===t||"Set"===t?Array.from(e):"Arguments"===t||/^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(t)?c(e,n):void 0}}function s(e){if("undefined"!=typeof Symbol&&Symbol.iterator in Object(e))return Array.from(e)}function l(e){if(Array.isArray(e))return c(e)}function c(e,n){(null==n||n>e.length)&&(n=e.length);for(var t=0,r=new Array(n);t<n;t++)r[t]=e[t];return r}Object.defineProperty(e,"__esModule",{value:!0}),e.range=e.isSideBarActive=e.jsonCopy=e.nameFromRoute=e.NoOp=e.Pause=e.randomPause=e.log=void 0;var d=r(n("mithril-stream")),u=function(e){return function(n){return console.log(e,n),n}};e.log=u;var m=function(){return 1e3*Math.random()};e.randomPause=m;var p=function(e){return(0,d["default"])(1e3*e)};e.Pause=p;var f=function(){};e.NoOp=f;var A=function(e){return e.split("/")[1].toUpperCase()};e.nameFromRoute=A;var g=function(e){return JSON.parse(JSON.stringify(e))};e.jsonCopy=g;var b=function(e){return"desktop"!==e.settings.profile&&e.status.sidebar};e.isSideBarActive=b;var v=function(e){return o(Array(e).keys())};e.range=v}),require.register("http.js",function(e,n,t){"use strict"}),require.register("index.js",function(e,n,t){"use strict";function r(e){return e&&e.__esModule?e:{"default":e}}var o=r(n("./routes.js")),i=r(n("./model.js")),a=(n("./init-mithril-inspector"),document.body),s=window.innerWidth;t.hot&&t.hot.accept();"serviceWorker"in navigator&&window.addEventListener("load",function(){navigator.serviceWorker.register("./service-worker.js").then(function(e){console.log("⚙️ SW registered: ",e)})["catch"](function(e){console.log("🧟 SW registration failed: ",e)})});var l=function(e){return e<668?"phone":e<920?"tablet":"desktop"},c=function d(e){var n=window.innerWidth;if(e!==n){e=n;var t=i["default"].settings.profile;i["default"].settings.profile=l(n),t!=i["default"].settings.profile&&m.redraw()}return requestAnimationFrame(d)};i["default"].settings.profile=l(s),c(s),sessionStorage.getItem("user")&&(i["default"].user=JSON.parse(sessionStorage.getItem("user"))),m.route(a,"/home",(0,o["default"])(i["default"]))}),require.register("init-mithril-inspector.js",function(e,n,t){"use strict";function r(e){"@babel/helpers - typeof";return(r="function"==typeof Symbol&&"symbol"==typeof Symbol.iterator?function(e){return typeof e}:function(e){return e&&"function"==typeof Symbol&&e.constructor===Symbol&&e!==Symbol.prototype?"symbol":typeof e})(e)}Object.defineProperty(e,"__esModule",{value:!0}),e.initMithrilInspector=e.getLocalMdl=e.saveJsonMdl=e.toDto=e.sendMessage=void 0;var o=function(e,n){return window.postMessage({source:"mithril-inspect-agent",name:e,msg:n||{}},"*")};e.sendMessage=o;var i=function(){window.addEventListener("mithril-inspect-agent",function(e){if(e.source===window){var n=e.data;"object"===r(n)&&null!==n&&"mithril-inspect-devtools"===n.source&&console.log("need to handle this somehow",n)}})},a=function(e){return JSON.stringify(e)};e.toDto=a;var s=function(e){return localStorage.setItem("mithril-inspector",e)};e.saveJsonMdl=s;var l=function(){return localStorage.getItem("mithril-inspector")};e.getLocalMdl=l;var c=function(e){console.log("init mithril inspector"),i();var n=a(e);s(n)};e.initMithrilInspector=c}),require.register("initialize.js",function(e,n,t){"use strict";document.addEventListener("DOMContentLoaded",function(){n("./index.js")})}),require.register("model.js",function(e,n,t){"use strict";Object.defineProperty(e,"__esModule",{value:!0}),e["default"]=void 0;var r={state:{isLoading:!1,loadingProgress:{max:0,value:0},isLoggedIn:function(){return sessionStorage.getItem("token")}},routes:["/home","/portfolio","/snippets","/resume"],status:{sidebar:!1},settings:{profile:"",inspector:""},snippets:[],slug:""},o=r;e["default"]=o}),require.register("routes.js",function(e,n,t){"use strict";Object.defineProperty(e,"__esModule",{value:!0}),e["default"]=void 0;var r=n("Components"),o=n("Styles"),i=n("Pages"),a=function(e){return{"/home":{onmatch:function(n,t){e.slug=t,e.status.sidebar=!1,window.scrollTo(0,0)},render:function(){return m(r.Layout,{mdl:e},m(i.Home,{oncreate:(0,o.AnimatePage)(o.slideInRight),onscroll:function(e){return console.log(e)},onbeforeremove:(0,o.AnimatePage)(o.slideOutLeft),mdl:e}))}},"/portfolio":{onmatch:function(n,t){e.slug=t,e.status.sidebar=!1,window.scrollTo(0,0)},render:function(){return m(r.Layout,{mdl:e},m(i.Portfolio,{oncreate:(0,o.AnimatePage)(o.slideInRight),onscroll:function(e){return console.log(e)},onbeforeremove:(0,o.AnimatePage)(o.slideOutLeft),mdl:e}))}},"/resume":{onmatch:function(n,t){e.slug=t,e.status.sidebar=!1,window.scrollTo(0,0)},render:function(){return m(r.Layout,{mdl:e},m(i.Resume,{oncreate:(0,o.AnimatePage)(o.slideInRight),onscroll:function(e){return console.log(e)},onbeforeremove:(0,o.AnimatePage)(o.slideOutLeft),mdl:e}))}},"/snippets":{onmatch:function(n,t){e.slug=t,e.status.sidebar=!1,window.scrollTo(0,0)},render:function(){return m(r.Layout,{mdl:e},m(i.Snippets,{oncreate:(0,o.AnimatePage)(o.slideInRight),onscroll:function(e){return console.log(e)},onbeforeremove:(0,o.AnimatePage)(o.slideOutLeft),mdl:e}))}},"/about":{onmatch:function(n,t){e.slug=t,e.status.sidebar=!1,window.scrollTo(0,0)},render:function(){return m(r.Layout,{mdl:e},m(i.About,{oncreate:(0,o.AnimatePage)(o.slideInRight),onscroll:function(e){return console.log(e)},onbeforeremove:(0,o.AnimatePage)(o.slideOutLeft),mdl:e}))}}}},s=a;e["default"]=s}),require.register("___globals___",function(e,n,t){window.m=n("mithril")})}(),require("___globals___"),require("initialize");
+(function() {
+  'use strict';
+
+  var globals = typeof global === 'undefined' ? self : global;
+  if (typeof globals.require === 'function') return;
+
+  var modules = {};
+  var cache = {};
+  var aliases = {};
+  var has = {}.hasOwnProperty;
+
+  var expRe = /^\.\.?(\/|$)/;
+  var expand = function(root, name) {
+    var results = [], part;
+    var parts = (expRe.test(name) ? root + '/' + name : name).split('/');
+    for (var i = 0, length = parts.length; i < length; i++) {
+      part = parts[i];
+      if (part === '..') {
+        results.pop();
+      } else if (part !== '.' && part !== '') {
+        results.push(part);
+      }
+    }
+    return results.join('/');
+  };
+
+  var dirname = function(path) {
+    return path.split('/').slice(0, -1).join('/');
+  };
+
+  var localRequire = function(path) {
+    return function expanded(name) {
+      var absolute = expand(dirname(path), name);
+      return globals.require(absolute, path);
+    };
+  };
+
+  var initModule = function(name, definition) {
+    var hot = hmr && hmr.createHot(name);
+    var module = {id: name, exports: {}, hot: hot};
+    cache[name] = module;
+    definition(module.exports, localRequire(name), module);
+    return module.exports;
+  };
+
+  var expandAlias = function(name) {
+    var val = aliases[name];
+    return (val && name !== val) ? expandAlias(val) : name;
+  };
+
+  var _resolve = function(name, dep) {
+    return expandAlias(expand(dirname(name), dep));
+  };
+
+  var require = function(name, loaderPath) {
+    if (loaderPath == null) loaderPath = '/';
+    var path = expandAlias(name);
+
+    if (has.call(cache, path)) return cache[path].exports;
+    if (has.call(modules, path)) return initModule(path, modules[path]);
+
+    throw new Error("Cannot find module '" + name + "' from '" + loaderPath + "'");
+  };
+
+  require.alias = function(from, to) {
+    aliases[to] = from;
+  };
+
+  var extRe = /\.[^.\/]+$/;
+  var indexRe = /\/index(\.[^\/]+)?$/;
+  var addExtensions = function(bundle) {
+    if (extRe.test(bundle)) {
+      var alias = bundle.replace(extRe, '');
+      if (!has.call(aliases, alias) || aliases[alias].replace(extRe, '') === alias + '/index') {
+        aliases[alias] = bundle;
+      }
+    }
+
+    if (indexRe.test(bundle)) {
+      var iAlias = bundle.replace(indexRe, '');
+      if (!has.call(aliases, iAlias)) {
+        aliases[iAlias] = bundle;
+      }
+    }
+  };
+
+  require.register = require.define = function(bundle, fn) {
+    if (bundle && typeof bundle === 'object') {
+      for (var key in bundle) {
+        if (has.call(bundle, key)) {
+          require.register(key, bundle[key]);
+        }
+      }
+    } else {
+      modules[bundle] = fn;
+      delete cache[bundle];
+      addExtensions(bundle);
+    }
+  };
+
+  require.list = function() {
+    var list = [];
+    for (var item in modules) {
+      if (has.call(modules, item)) {
+        list.push(item);
+      }
+    }
+    return list;
+  };
+
+  var hmr = globals._hmr && new globals._hmr(_resolve, require, modules, cache);
+  require._cache = cache;
+  require.hmr = hmr && hmr.wrap;
+  require.brunch = true;
+  globals.require = require;
+})();
+
+(function() {
+var global = typeof window === 'undefined' ? this : window;
+var __makeRelativeRequire = function(require, mappings, pref) {
+  var none = {};
+  var tryReq = function(name, pref) {
+    var val;
+    try {
+      val = require(pref + '/node_modules/' + name);
+      return val;
+    } catch (e) {
+      if (e.toString().indexOf('Cannot find module') === -1) {
+        throw e;
+      }
+
+      if (pref.indexOf('node_modules') !== -1) {
+        var s = pref.split('/');
+        var i = s.lastIndexOf('node_modules');
+        var newPref = s.slice(0, i).join('/');
+        return tryReq(name, newPref);
+      }
+    }
+    return none;
+  };
+  return function(name) {
+    if (name in mappings) name = mappings[name];
+    if (!name) return;
+    if (name[0] !== '.' && pref) {
+      var val = tryReq(name, pref);
+      if (val !== none) return val;
+    }
+    return require(name);
+  }
+};
+require.register("Components/calendar/index.js", function(exports, require, module) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.Calendar = void 0;
+
+var _model = require("./model");
+
+var _Utils = require("Utils");
+
+var Toolbar = function Toolbar(_ref) {
+  var mdl = _ref.attrs.mdl;
+  return {
+    view: function view(_ref2) {
+      var mdl = _ref2.attrs.mdl;
+      return m(".toolbar", [m("input", {
+        onchange: function onchange(e) {
+          return mdl.data = (0, _model.calendarModel)(e.target.value);
+        },
+        type: "date",
+        value: mdl.data.startDate
+      }), m("button.width-100", {
+        onclick: function onclick(_) {
+          return mdl.data = (0, _model.calendarModel)();
+        }
+      }, "Today")]);
+    }
+  };
+};
+
+var MonthsToolbar = function MonthsToolbar() {
+  return {
+    view: function view(_ref3) {
+      var mdl = _ref3.attrs.mdl;
+      // console.log(mdl)
+      return m(".frow width-100  mt-10", [m(".frow width-100 row-between mt-10", [m("button.prevMonth", m("h3", {
+        onclick: function onclick(_) {
+          mdl.data = (0, _model.calendarModel)((0, _model.formatDateString)(parseInt(mdl.data.selected.year) - 1, mdl.data.selected.month, mdl.data.selected.day));
+        }
+      }, parseInt(mdl.data.selected.year) - 1)), m(".centerMonthGroup", [m("h2.currentMonth", (0, _model.getMonthByIdx)(parseInt(mdl.data.selected.month) - 1)), m("h3.text-center", parseInt(mdl.data.selected.year))]), m("button.nextMonth", m("h3", {
+        onclick: function onclick(_) {
+          mdl.data = (0, _model.calendarModel)((0, _model.formatDateString)(parseInt(mdl.data.selected.year) + 1, mdl.data.selected.month, mdl.data.selected.day));
+        }
+      }, parseInt(mdl.data.selected.year) + 1))]), m(".frow width-100 row-between mt-10", [m("button", {
+        onclick: function onclick(_) {
+          mdl.data = (0, _model.updateMonthDto)(mdl.data.selected.year, mdl.data.selected.month, null, -1);
+        }
+      }, m("h4", (0, _model.getMonthByIdx)(parseInt(mdl.data.selected.month - 2)))), m("button", {
+        onclick: function onclick(_) {
+          mdl.data = (0, _model.updateMonthDto)(mdl.data.selected.year, mdl.data.selected.month, null, 1);
+        }
+      }, m("h4", (0, _model.getMonthByIdx)(parseInt(mdl.data.selected.month))))])]);
+    }
+  };
+};
+
+var CalendarBody = function CalendarBody() {
+  return {
+    view: function view(_ref4) {
+      var mdl = _ref4.attrs.mdl;
+      var dto = (0, _model.getMountMatrix)(mdl.data);
+      return m(".frow frow-container", [m(MonthsToolbar, {
+        mdl: mdl
+      }), m(".frow width-100 row-between mt-10", _Utils.daysOfTheWeek.map(function (day) {
+        return m(".col-xs-1-7 text-center", m("span.width-auto", day[0].toUpperCase()));
+      })), m(".frow centered-column width-100 row-between mt-10 ", dto.map(function (week) {
+        return m(".frow width-100", {
+          class: ""
+        }, week.map(function (_ref5) {
+          var day = _ref5.day,
+              dir = _ref5.dir;
+          return m(".col-xs-1-7 text-center", {
+            onclick: function onclick(_) {
+              return mdl.data = (0, _model.updateMonthDto)(mdl.data.selected.year, mdl.data.selected.month, day, dir);
+            },
+            class: (0, _model.calendarDay)(mdl.data)(day, dir)
+          }, m("span.day", day));
+        }));
+      }))]);
+    }
+  };
+};
+
+var Calendar = function Calendar() {
+  return {
+    view: function view(_ref6) {
+      var mdl = _ref6.attrs.mdl;
+      return m(".calendar", [m(Toolbar, {
+        mdl: mdl.CalendarDto
+      }), m(CalendarBody, {
+        mdl: mdl.CalendarDto
+      })]);
+    }
+  };
+};
+
+exports.Calendar = Calendar;
+});
+
+;require.register("Components/calendar/model.js", function(exports, require, module) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.calendarDay = exports.calendarModel = exports.getMountMatrix = exports.createCalendarDayViewModel = exports.isNotCalenderDay = exports.isCalenderDay = exports.getMonthByIdx = exports.updateMonthDto = void 0;
+
+var _eachDayOfInterval = _interopRequireDefault(require("date-fns/eachDayOfInterval"));
+
+var _endOfISOWeek = _interopRequireDefault(require("date-fns/endOfISOWeek"));
+
+var _endOfMonth = _interopRequireDefault(require("date-fns/endOfMonth"));
+
+var _isSameMonth = _interopRequireDefault(require("date-fns/isSameMonth"));
+
+var _startOfISOWeek = _interopRequireDefault(require("date-fns/startOfISOWeek"));
+
+var _startOfMonth = _interopRequireDefault(require("date-fns/startOfMonth"));
+
+var _eachWeekOfInterval = _interopRequireDefault(require("date-fns/eachWeekOfInterval"));
+
+var _format = _interopRequireDefault(require("date-fns/format"));
+
+var _differenceInMonths = _interopRequireDefault(require("date-fns/differenceInMonths"));
+
+var _parseISO = _interopRequireDefault(require("date-fns/parseISO"));
+
+var _Utils = require("Utils");
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var updateYear = function updateYear(year, dir) {
+  return (parseInt(year) + dir).toString();
+};
+
+var daysInMonth = function daysInMonth(month, year) {
+  return new Date(parseInt(year), parseInt(month) + 1, 0).getDate();
+};
+
+var updateMonth = function updateMonth(month, dir) {
+  return (parseInt(month) + dir).toString().length == 1 ? (0, _Utils.pad0Left)((parseInt(month) + dir).toString()) : (parseInt(month) + dir).toString();
+};
+
+var updateMonthDto = function updateMonthDto(year, month, day, dir) {
+  var _year = year;
+
+  var _month = updateMonth(month, dir);
+
+  var _day = day || "01";
+
+  if (_month >= 13) {
+    _year = updateYear(_year, dir);
+    _month = "01";
+  }
+
+  if (_month <= 0) {
+    _year = updateYear(_year, dir);
+    _month = "12";
+  }
+
+  return calendarModel((0, _Utils.formatDateString)(_year, _month, _day));
+};
+
+exports.updateMonthDto = updateMonthDto;
+
+var getMonthByIdx = function getMonthByIdx(idx) {
+  return idx >= 12 ? _Utils.monthsOfTheYear[0] : idx < 0 ? _Utils.monthsOfTheYear[11] : _Utils.monthsOfTheYear[idx];
+};
+
+exports.getMonthByIdx = getMonthByIdx;
+
+var isCalenderDay = function isCalenderDay(date) {
+  return {
+    day: (0, _format.default)(date, "dd"),
+    dir: 0
+  };
+};
+
+exports.isCalenderDay = isCalenderDay;
+
+var isNotCalenderDay = function isNotCalenderDay(day, date) {
+  return {
+    day: (0, _format.default)(day, "dd"),
+    dir: (0, _differenceInMonths.default)((0, _parseISO.default)((0, _Utils.shortDate)(date)), day) == 0 ? -1 : +1
+  };
+};
+
+exports.isNotCalenderDay = isNotCalenderDay;
+
+var createCalendarDayViewModel = function createCalendarDayViewModel(day, date, _ref) {
+  var isSameMonth = _ref.isSameMonth;
+  return isSameMonth ? isCalenderDay(day) : isNotCalenderDay(day, date);
+};
+
+exports.createCalendarDayViewModel = createCalendarDayViewModel;
+
+var getMountMatrix = function getMountMatrix(_ref2) {
+  var year = _ref2.year,
+      month = _ref2.month;
+  var date = new Date(parseInt(year), parseInt(month - 1));
+  var matrix = (0, _eachWeekOfInterval.default)({
+    start: (0, _startOfMonth.default)(date),
+    end: (0, _endOfMonth.default)(date)
+  }, {
+    weekStartsOn: 1
+  });
+  return matrix.map(function (weekDay) {
+    return (0, _eachDayOfInterval.default)({
+      start: (0, _startOfISOWeek.default)(weekDay),
+      end: (0, _endOfISOWeek.default)(weekDay)
+    }).map(function (day) {
+      return createCalendarDayViewModel(day, date, {
+        isSameMonth: (0, _isSameMonth.default)(date, day)
+      });
+    });
+  });
+};
+
+exports.getMountMatrix = getMountMatrix;
+
+var calendarModel = function calendarModel() {
+  var date = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : (0, _Utils.shortDate)();
+
+  var _date = (0, _Utils.shortDate)(date).split("-");
+
+  var today = (0, _Utils.shortDate)().split("-");
+  var year = _date[0];
+  var month = _date[1];
+  var day = _date[2];
+  var dto = {
+    isLeapYear: (0, _Utils.isLeapYear)(year),
+    startDate: date,
+    selected: {
+      year: year,
+      month: month,
+      day: day
+    },
+    today: {
+      year: today[0],
+      month: today[1],
+      day: today[2]
+    },
+    year: year,
+    month: month,
+    day: day,
+    daysInMonth: daysInMonth(month, year)
+  };
+  return dto;
+};
+
+exports.calendarModel = calendarModel;
+
+var calendarDay = function calendarDay(_ref3) {
+  var today = _ref3.today,
+      selected = _ref3.selected;
+  return function (currentDate, dir) {
+    if (dir !== 0) {
+      return "notThisMonth";
+    }
+
+    if ((0, _Utils.isEqual)(currentDate, today.day) && (0, _Utils.isEqual)(currentDate, selected.day) && (0, _Utils.isEqual)(selected.year, today.year)) {
+      return "selectedDay isToday";
+    } else if ((0, _Utils.isEqual)(currentDate, selected.day)) {
+      return "selectedDay";
+    } else if ((0, _Utils.isEqual)(currentDate, today) && (0, _Utils.isEqual)(today.month, selected.month) && (0, _Utils.isEqual)(today.year, selected.year)) {
+      return "isToday";
+    }
+  };
+};
+
+exports.calendarDay = calendarDay;
+});
+
+;require.register("Components/clock/index.js", function(exports, require, module) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.Clock = void 0;
+
+var _eachHourOfInterval = _interopRequireDefault(require("date-fns/fp/eachHourOfInterval"));
+
+var _add = _interopRequireDefault(require("date-fns/fp/add"));
+
+var _parseISO = _interopRequireDefault(require("date-fns/parseISO"));
+
+var _format = _interopRequireDefault(require("date-fns/format"));
+
+var _Utils = require("Utils");
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var getHours = function getHours(dateFormat, _ref) {
+  var year = _ref.year,
+      month = _ref.month,
+      day = _ref.day;
+  var date = (0, _parseISO.default)((0, _Utils.formatDateString)(year, month, day));
+  var interval = {
+    start: date,
+    end: (0, _add.default)({
+      days: 1
+    })(date)
+  };
+  return (0, _eachHourOfInterval.default)(interval).map(function (hour) {
+    return (0, _format.default)(hour, dateFormat);
+  });
+};
+
+var toHourViewModel = function toHourViewModel(mdl) {
+  return function (today, hour) {
+    //assign events to hour
+    console.log(mdl);
+    today[hour] = {};
+    return today;
+  };
+};
+
+var DailyPlanner = function DailyPlanner(mdl, _ref2) {
+  var year = _ref2.year,
+      month = _ref2.month,
+      day = _ref2.day;
+  var hours = getHours(mdl.format, {
+    year: year,
+    month: month,
+    day: day
+  });
+  var today = mdl.data[(0, _Utils.formatDateString)(year, month, day)] = {};
+  var plannerViewModel = hours.reduce(toHourViewModel(mdl), today);
+  return {
+    hours: hours,
+    plannerViewModel: plannerViewModel
+  };
+};
+
+var Hour = function Hour() {
+  return {
+    view: function view(_ref3) {
+      var hour = _ref3.attrs.hour;
+      return m(".frow ", m(".hour ", [m(".half-hour", [m(".top", hour)]), m(".half-hour", m(".bottom"))]));
+    }
+  };
+};
+
+var Clock = function Clock() {
+  return {
+    view: function view(_ref4) {
+      var mdl = _ref4.attrs.mdl;
+      var date = mdl.CalendarDto.data.selected;
+      var now = "";
+      return m(".clock", m(".frow-container", [m("button.width-100", "Add Event"), m(".clock-face", DailyPlanner(mdl.ClockDto, date).hours.map(function (hour) {
+        return m(Hour, {
+          hour: hour
+        });
+      }))]));
+    }
+  };
+};
+
+exports.Clock = Clock;
+});
+
+;require.register("Components/index.js", function(exports, require, module) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _index = require("./calendar/index.js");
+
+Object.keys(_index).forEach(function (key) {
+  if (key === "default" || key === "__esModule") return;
+  Object.defineProperty(exports, key, {
+    enumerable: true,
+    get: function get() {
+      return _index[key];
+    }
+  });
+});
+
+var _index2 = require("./clock/index.js");
+
+Object.keys(_index2).forEach(function (key) {
+  if (key === "default" || key === "__esModule") return;
+  Object.defineProperty(exports, key, {
+    enumerable: true,
+    get: function get() {
+      return _index2[key];
+    }
+  });
+});
+});
+
+;require.register("Pages/home/index.js", function(exports, require, module) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.Home = void 0;
+
+var _Components = require("Components");
+
+var Home = function Home() {
+  return {
+    view: function view(_ref) {
+      var mdl = _ref.attrs.mdl;
+      return m(".frow", [m(_Components.Calendar, {
+        mdl: mdl
+      }), m(_Components.Clock, {
+        mdl: mdl
+      })]);
+    }
+  };
+};
+
+exports.Home = Home;
+});
+
+;require.register("Pages/index.js", function(exports, require, module) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _index = require("./home/index.js");
+
+Object.keys(_index).forEach(function (key) {
+  if (key === "default" || key === "__esModule") return;
+  Object.defineProperty(exports, key, {
+    enumerable: true,
+    get: function get() {
+      return _index[key];
+    }
+  });
+});
+});
+
+;require.register("Styles/animations.js", function(exports, require, module) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.slideInDown = exports.slideOutRight = exports.slideInLeft = exports.slideInRight = exports.fadeInUp = exports.fadeIn = exports.popIn = void 0;
+var popIn = [{
+  transform: "scale(0)",
+  opacity: 1
+}, {
+  transform: "scale(1)",
+  opacity: 1
+}, {
+  transform: "scale(0.8)",
+  opacity: 1
+}, {
+  transform: "scale(1)",
+  opacity: 1
+}];
+exports.popIn = popIn;
+var fadeIn = [{
+  opacity: 0
+}, {
+  opacity: 1
+}];
+exports.fadeIn = fadeIn;
+var fadeInUp = [{
+  opacity: 0,
+  transform: "translate3d(0, 40%, 0)"
+}, {
+  opacity: 1,
+  transform: "translate3d(0, 0, 0)"
+}];
+exports.fadeInUp = fadeInUp;
+var slideInRight = [{
+  transform: "translate3d(-50%, 0, 0)"
+}, {
+  transform: "translate3d(0, 0, 0)",
+  visibility: "visible"
+}];
+exports.slideInRight = slideInRight;
+var slideInLeft = [{
+  transform: "translate3d(80%, 0, 0)",
+  visibility: "visible"
+}, {
+  transform: "translate3d(0, 0, 0)"
+}];
+exports.slideInLeft = slideInLeft;
+var slideOutRight = [{
+  transform: "translate3d(0, 0, 0)"
+}, {
+  visibility: "hidden",
+  transform: "translate3d(100%, 0, 0)"
+}];
+exports.slideOutRight = slideOutRight;
+var slideInDown = [{
+  transform: "translate3d(0, -50%, 0)"
+}, {
+  transform: "translate3d(0, 0, 0)",
+  visibility: "visible"
+}];
+exports.slideInDown = slideInDown;
+});
+
+;require.register("Styles/index.js", function(exports, require, module) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+var _exportNames = {
+  AnimatePage: true,
+  Animate: true,
+  AnimateChildren: true
+};
+exports.AnimateChildren = exports.Animate = exports.AnimatePage = void 0;
+
+var _Utils = require("Utils");
+
+var _animations = require("./animations.js");
+
+Object.keys(_animations).forEach(function (key) {
+  if (key === "default" || key === "__esModule") return;
+  if (Object.prototype.hasOwnProperty.call(_exportNames, key)) return;
+  Object.defineProperty(exports, key, {
+    enumerable: true,
+    get: function get() {
+      return _animations[key];
+    }
+  });
+});
+
+function _toConsumableArray(arr) { return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _unsupportedIterableToArray(arr) || _nonIterableSpread(); }
+
+function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
+
+function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
+
+function _iterableToArray(iter) { if (typeof Symbol !== "undefined" && Symbol.iterator in Object(iter)) return Array.from(iter); }
+
+function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) return _arrayLikeToArray(arr); }
+
+function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
+
+var duration = {
+  duration: 700,
+  easing: "ease-in-out",
+  fill: "forwards"
+};
+
+function transitionEndPromise(element) {
+  var transitionEnded = function transitionEnded(e) {
+    // console.log("transitionEnded", element, e)
+    if (e.target !== element) return;
+    element.removeEventListener("transitionend", transitionEnded);
+  };
+
+  return new Promise(function () {
+    return element.addEventListener("transitionend", transitionEnded);
+  });
+}
+
+var AnimatePage = function AnimatePage(animation) {
+  return function (_ref) {
+    var dom = _ref.dom;
+    // let origStyles = jsonCopy(dom.style)
+    // dom.style.position = "absolute"
+    // dom.style.top = -19
+    // dom.style.width = "100%"
+    Animate(animation)({
+      dom: dom
+    }); // Animate(animation)({ dom })
+  };
+};
+
+exports.AnimatePage = AnimatePage;
+
+var Animate = function Animate(animation) {
+  var pause = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : _Utils.NoOp;
+  return function (_ref2) {
+    var dom = _ref2.dom;
+    return setTimeout(function () {
+      return dom.animate(animation, duration).finished.then(transitionEndPromise(dom));
+    }, pause());
+  };
+};
+
+exports.Animate = Animate;
+
+var AnimateChildren = function AnimateChildren(animation, pause) {
+  return function (_ref3) {
+    var dom = _ref3.dom;
+
+    var children = _toConsumableArray(dom.children);
+
+    children.map(function (child, idx) {
+      child.style.opacity = 0;
+      setTimeout(function () {
+        child.style.opacity = 1;
+        Animate(animation)({
+          dom: child
+        });
+      }, pause());
+    });
+  };
+};
+
+exports.AnimateChildren = AnimateChildren;
+});
+
+;require.register("Utils/index.js", function(exports, require, module) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.isEqual = exports.formatDateString = exports.pad0Left = exports.monthsOfTheYear = exports.daysOfTheWeek = exports.isLeapYear = exports.shortDate = exports.range = exports.isSideBarActive = exports.jsonCopy = exports.nameFromRoute = exports.NoOp = exports.Pause = exports.randomPause = exports.log = void 0;
+
+function _toConsumableArray(arr) { return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _unsupportedIterableToArray(arr) || _nonIterableSpread(); }
+
+function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
+
+function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
+
+function _iterableToArray(iter) { if (typeof Symbol !== "undefined" && Symbol.iterator in Object(iter)) return Array.from(iter); }
+
+function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) return _arrayLikeToArray(arr); }
+
+function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
+
+var log = function log(m) {
+  return function (v) {
+    console.log(m, v);
+    return v;
+  };
+};
+
+exports.log = log;
+
+var secureImg = function secureImg(url) {
+  return url.match(/(https)./) ? url : url.replace("http", "https");
+};
+
+var randomPause = function randomPause() {
+  return Math.random() * 1000;
+};
+
+exports.randomPause = randomPause;
+
+var Pause = function Pause(n) {
+  return n * 1000;
+};
+
+exports.Pause = Pause;
+
+var NoOp = function NoOp() {};
+
+exports.NoOp = NoOp;
+
+var nameFromRoute = function nameFromRoute(route) {
+  return route.split("/")[1].toUpperCase();
+};
+
+exports.nameFromRoute = nameFromRoute;
+
+var jsonCopy = function jsonCopy(data) {
+  return JSON.parse(JSON.stringify(data));
+};
+
+exports.jsonCopy = jsonCopy;
+
+var isSideBarActive = function isSideBarActive(mdl) {
+  return mdl.settings.profile !== "desktop" && mdl.status.sidebar;
+};
+
+exports.isSideBarActive = isSideBarActive;
+
+var range = function range(size) {
+  return _toConsumableArray(Array(size).keys());
+};
+
+exports.range = range;
+
+var shortDate = function shortDate() {
+  var date = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : new Date();
+  return new Date(date).toISOString().split("T")[0];
+};
+
+exports.shortDate = shortDate;
+
+var isLeapYear = function isLeapYear(year) {
+  return year % 4 == 0 ? false : year % 100 == 0 ? year % 400 == 0 ? true : false : false;
+};
+
+exports.isLeapYear = isLeapYear;
+var daysOfTheWeek = ["Sunday", "Monday", "Teusday", "Wednesday", "Thursday", "Friday", "Saturday"];
+exports.daysOfTheWeek = daysOfTheWeek;
+var monthsOfTheYear = ["January", "Febuary", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+exports.monthsOfTheYear = monthsOfTheYear;
+
+var pad0Left = function pad0Left(num) {
+  return "0".concat(num);
+};
+
+exports.pad0Left = pad0Left;
+
+var formatDateString = function formatDateString(year, month, day) {
+  return "".concat(year, "-").concat(month, "-").concat(day);
+};
+
+exports.formatDateString = formatDateString;
+
+var isEqual = function isEqual(a, b) {
+  return JSON.stringify(a) == JSON.stringify(b);
+};
+
+exports.isEqual = isEqual;
+});
+
+;require.register("http.js", function(exports, require, module) {
+"use strict";
+});
+
+;require.register("index.js", function(exports, require, module) {
+"use strict";
+
+var _routes = _interopRequireDefault(require("./routes.js"));
+
+var _model = _interopRequireDefault(require("./model.js"));
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var root = document.body;
+var winW = window.innerWidth;
+
+if (module.hot) {
+  module.hot.accept();
+}
+
+if ('development' == "development") {
+  console.log("Looks like we are in development mode!");
+} else {
+  if ("serviceWorker" in navigator) {
+    window.addEventListener("load", function () {
+      navigator.serviceWorker.register("./service-worker.js").then(function (registration) {
+        console.log("⚙️ SW registered: ", registration);
+      }).catch(function (registrationError) {
+        console.log("🧟 SW registration failed: ", registrationError);
+      });
+    });
+  }
+} // set display profiles
+
+
+var getProfile = function getProfile(w) {
+  if (w < 668) return "phone";
+  if (w < 920) return "tablet";
+  return "desktop";
+};
+
+var checkWidth = function checkWidth(winW) {
+  var w = window.innerWidth;
+
+  if (winW !== w) {
+    winW = w;
+    var lastProfile = _model.default.settings.profile;
+    _model.default.settings.profile = getProfile(w);
+    if (lastProfile != _model.default.settings.profile) m.redraw();
+  }
+
+  return requestAnimationFrame(checkWidth);
+};
+
+_model.default.settings.profile = getProfile(winW);
+checkWidth(winW);
+m.route(root, "/", (0, _routes.default)(_model.default));
+});
+
+;require.register("initialize.js", function(exports, require, module) {
+"use strict";
+
+document.addEventListener("DOMContentLoaded", function () {
+  require("./index.js");
+});
+});
+
+;require.register("model.js", function(exports, require, module) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+
+var _model = require("Components/calendar/model");
+
+var model = {
+  CalendarDto: {
+    data: (0, _model.calendarModel)()
+  },
+  ClockDto: {
+    format: "KK:mm",
+    data: {}
+  },
+  state: {
+    isLoading: false,
+    loadingProgress: {
+      max: 0,
+      value: 0
+    },
+    isLoggedIn: function isLoggedIn() {
+      return sessionStorage.getItem("token");
+    }
+  },
+  routes: ["/"],
+  status: {
+    sidebar: false
+  },
+  settings: {
+    profile: "",
+    inspector: ""
+  },
+  snippets: [],
+  slug: ""
+};
+var _default = model;
+exports.default = _default;
+});
+
+;require.register("routes.js", function(exports, require, module) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+
+var _home = require("Pages/home");
+
+var routes = function routes(mdl) {
+  return {
+    "/": {
+      onmatch: function onmatch(_, b) {
+        return mdl.slug = b;
+      },
+      render: function render() {
+        return m(_home.Home, {
+          mdl: mdl
+        });
+      }
+    }
+  };
+};
+
+var _default = routes;
+exports.default = _default;
+});
+
+;require.register("___globals___", function(exports, require, module) {
+  
+
+// Auto-loaded modules from config.npm.globals.
+window.m = require("mithril");
+
+
+});})();require('___globals___');
+
+require('initialize');
+//# sourceMappingURL=app.js.map

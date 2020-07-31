@@ -61,18 +61,14 @@ exports.plugins = {
     //   "bower_components/material-design-iconic-font",
     //   "bower_components/font-awesome/fonts"
     // ],
-    images: ["app/assets/images", "app/assets/files"],
+    images: ["app/assets/images"],
     verbose: true, //shows each file that is copied to the destination directory
     onlyChanged: true, //only copy a file if it's modified time has changed (only effective when using brunch watch)
   },
   swPrecache: {
     swFileName: "service-worker.js",
     options: {
-      autorequire: [
-        "app/assets/index.html",
-        "app/assets/images",
-        "app/assets/files",
-      ],
+      autorequire: ["app/assets/index.html", "app/assets/images"],
       staticFileGlobs: [
         "docs/app.css",
         "docs/app.js",
@@ -87,14 +83,7 @@ exports.plugins = {
 
 exports.paths = {
   public: "docs",
-  watched: [
-    "app",
-    "app/Utils",
-    "app/Components",
-    "app/Styles",
-    "app/Pages",
-    "app/assets",
-  ],
+  watched: ["app", "app/Utils", "app/Styles", "app/Pages", "app/assets"],
 }
 
 exports.npm = {

@@ -76,15 +76,3 @@ export const slideInDown = [
     visibility: "visible",
   },
 ]
-
-export const sideBarIn = () => {
-  let animation = Object.assign(slideInLeft)
-  animation[1].background = "black"
-  return animation
-}
-
-export const sideBarChildren = () => {
-  let animation = Object.assign(slideInRight)
-  animation[1].color = "white"
-  return animation
-}
