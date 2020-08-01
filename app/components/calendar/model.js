@@ -132,24 +132,24 @@ export const calendarModel = (date = shortDate()) => {
   return dto
 }
 
-export const calendarDay = ({ today, selected }) => (currentDate, dir) => {
+export const calendarDay = ({ today, selected }) => (currentDay, dir) => {
+  let cs = ""
   if (dir !== 0) {
     return "notThisMonth"
   }
-
   if (
-    isEqual(currentDate, today.day) &&
-    isEqual(currentDate, selected.day) &&
-    isEqual(selected.year, today.year)
-  ) {
-    return "selectedDay isToday"
-  } else if (isEqual(currentDate, selected.day)) {
-    return "selectedDay"
-  } else if (
-    isEqual(currentDate, today) &&
+    isEqual(today.day, currentDay) &&
     isEqual(today.month, selected.month) &&
     isEqual(today.year, selected.year)
   ) {
     return "isToday"
+  }
+
+  if (
+    isEqual(currentDay, selected.day) &&
+    isEqual(selected.month, selected.month) &&
+    isEqual(selected.year, today.year)
+  ) {
+    return "selectedDay"
   }
 }

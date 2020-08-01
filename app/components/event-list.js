@@ -9,8 +9,6 @@ const Event = ({ attrs: { mdl, event } }) => {
     return differenceInMinutes(startDate, endDate)
   }
 
-  console.log(``)
-
   return {
     view: ({ attrs: { mdl, event, col } }) =>
       m(

@@ -128,7 +128,6 @@ const CalendarBody = () => {
           dto.map((week) =>
             m(
               ".frow width-100",
-              { class: "" },
               week.map(({ day, dir }) =>
                 m(
                   ".col-xs-1-7 text-center",

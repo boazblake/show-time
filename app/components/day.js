@@ -22,7 +22,6 @@ export const Day = ({ attrs: { mdl } }) => {
   const load = (state) => ({ attrs: { mdl } }) => {
     loadTask(HTTP)(mdl).fork(onError(state), onSuccess(mdl, state))
   }
-  console.log("clocl", mdl.Day.data)
   return {
     oninit: load,
     view: ({ attrs: { mdl } }) => {
