@@ -8,7 +8,7 @@ exports.files = {
   },
   stylesheets: {
     order: {
-      before: ["normalize.css"],
+      before: [],
       after: ["app.css"],
     },
     joinTo: {
@@ -89,7 +89,5 @@ exports.paths = {
 exports.npm = {
   enabled: true,
   globals: { m: "mithril" },
-  styles: {
-    "normalize.css": ["normalize.css"],
-  },
+  styles: {},
 }

@@ -1,6 +1,5 @@
 @import url("https://fonts.googleapis.com/css?family=Montserrat&display=swap");
 @import "./frow/frow.sass";
-
 :root {
   --blue: #042532;
   --indigo: #6610f2;
@@ -33,7 +32,7 @@
 
 html, body {
   margin: 0;
-  overflow: hidden
+  overflow: auto
 }
 
 html > * {
@@ -47,6 +46,10 @@ a {
 }
 
 
+input[type="time"] {
+  max-width: 100px;;
+}
+
 .centerMonthGroup {
   position: relative;
   top: 20px;
@@ -54,7 +57,7 @@ a {
 
 .currentMonth {
   color: var(--orange);
-  font-size: 2.5rem;
+  font-size: 2.4rem;
 }
 
 .day {
@@ -79,7 +82,6 @@ a {
 }
 
 .clock {
-  height: 500px;
   width: 100vw;
 }
 
@@ -107,6 +109,38 @@ a {
   min-height: 120px;
   border-top: 1px dashed var(--blue);
 }
+
+.modal-container {
+  position: absolute;
+  left:0;
+  x-index: 100;
+  width: 100vw;
+  height: 100vw;
+  background-image: linear-gradient(
+    rgba(255, 255, 255, 1) 60%,
+    rgba(255, 255, 255, 0) 100%
+    );
+  .modal {
+    // width: 80%;
+    // max-width: 400px;
+    // margin: 0 auto;
+    .modal-header{}
+    .modal-body {}
+    .modal-footer {}
+  }
+}
+
+
+.event-form{min-width:345px;}
+
+.bg-warn > * {
+  background-color: var(--warning) !important;
+}
+
+.bg-info > * {
+  background-color: var(--info) !important;
+}
+
 
 @media screen and (min-width: 600px) and (max-width: 899px) {
 

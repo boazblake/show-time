@@ -1,5 +1,8 @@
 import routes from "./routes.js"
 import model from "./model.js"
+import { shortDate } from "Utils"
+import { FunConfig } from "@boazblake/fun-config"
+FunConfig.configure()
 
 const root = document.body
 let winW = window.innerWidth
@@ -47,4 +50,4 @@ model.settings.profile = getProfile(winW)
 
 checkWidth(winW)
 
-m.route(root, "/", routes(model))
+m.route(root, `/${shortDate(new Date())}`, routes(model))

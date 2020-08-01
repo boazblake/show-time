@@ -1,22 +1,25 @@
 import { calendarModel } from "Components/calendar/model"
+import Stream from "mithril-stream"
 
 const model = {
-  CalendarDto: {
+  timeFormats: ["12hrs", "24hrs"],
+  format: Stream(1),
+  currentShortDate: Stream(""),
+  currentLongDate: Stream(""),
+  Calendar: {
     data: calendarModel(),
   },
-  ClockDto: {
-    format: "KK:mm",
+  Clock: {
+    timeFormat: Stream("kk:mm"),
     data: {},
   },
   state: {
-    isLoading: false,
+    modal: Stream(false),
+    isLoading: Stream(false),
     loadingProgress: { max: 0, value: 0 },
     isLoggedIn: () => sessionStorage.getItem("token"),
   },
-  routes: ["/"],
-  status: { sidebar: false },
   settings: { profile: "", inspector: "" },
-  snippets: [],
   slug: "",
 }
 

@@ -2,59 +2,78 @@ import eachHourOfInterval from "date-fns/fp/eachHourOfInterval"
 import add from "date-fns/fp/add"
 import parseISO from "date-fns/parseISO"
 import format from "date-fns/format"
-import { formatDateString } from "Utils"
+import { formatDateString, shortDate } from "Utils"
+import { Editor } from "Components"
 
-const getHours = (dateFormat, { year, month, day }) => {
-  let date = parseISO(formatDateString(year, month, day))
-  let interval = {
-    start: date,
-    end: add({ days: 1 })(date),
+// const getHours = (dateFormat, selectedDate) => {
+//   console.log(parseISO(formatDateString(selectedDate)))
+//   let interval = {
+//     start: selectedDate,
+//     end: add({ days: 1 })(selectedDate),
+//   }
+//   return eachHourOfInterval(interval).map((hour) => format(hour, dateFormat))
+// }
+
+const toHourViewModel = (date) => (mdl, hour) => {
+  if (!mdl[date][hour]) {
+    mdl[date][hour] = {}
   }
-  return eachHourOfInterval(interval).map((hour) => format(hour, dateFormat))
+  return mdl
 }
 
-const toHourViewModel = (mdl) => (today, hour) => {
-  //assign events to hour
-  console.log(mdl)
-  today[hour] = {}
-  return today
-}
-
-const DailyPlanner = (mdl, { year, month, day }) => {
-  let hours = getHours(mdl.format, { year, month, day })
-  let today = (mdl.data[formatDateString(year, month, day)] = {})
-  let plannerViewModel = hours.reduce(toHourViewModel(mdl), today)
-  return { hours, plannerViewModel }
+export const DailyPlanner = (mdl, selectedDate) => {
+  let hours = getHours(mdl.format, selectedDate)
+  let today = mdl.data[shortDate(selectedDate)] || {
+    [shortDate(selectedDate)]: {},
+  }
+  return hours.reduce(toHourViewModel(shortDate(selectedDate)), today)
 }
 
 const Hour = () => {
   return {
-    view: ({ attrs: { hour } }) =>
-      m(
+    view: ({ attrs: { mdl, events, hour, time } }) => {
+      let titles = Object.values(events).map((e) => e.title)
+      // console.log("HOUR", time, hour, hour[time], titles)
+      return m(
         ".frow ",
         m(".hour ", [
-          m(".half-hour", [m(".top", hour)]),
+          time,
+          m(".half-hour", [m(".top", titles)]),
           m(".half-hour", m(".bottom")),
         ])
-      ),
+      )
+    },
   }
 }
 
 export const Clock = () => {
   return {
-    view: ({ attrs: { mdl } }) => {
-      let date = mdl.CalendarDto.data.selected
-      let now = ""
+    view: ({ attrs: { mdl, events } }) => {
       return m(
         ".clock",
         m(".frow-container", [
-          m("button.width-100", "Add Event"),
           m(
-            ".clock-face",
-            DailyPlanner(mdl.ClockDto, date).hours.map((hour) =>
-              m(Hour, { hour })
+            `.${mdl.state.modal() ? "bg-warn" : "bg-info"}`,
+            m(
+              "button.frow.width-100",
+              {
+                onclick: (e) => mdl.state.modal(!mdl.state.modal()),
+              },
+              mdl.state.modal() ? "Cancel" : "Add Event"
             )
           ),
+          m(".clock-face", [
+            mdl.state.modal() && m(Editor, { mdl }),
+            Object.values(mdl.Clock.data).map((hour, idx) => {
+              console.log()
+              return m(Hour, {
+                mdl,
+                hour,
+                time: Object.keys(hour)[0],
+                events,
+              })
+            }),
+          ]),
         ])
       )
     },

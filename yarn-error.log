@@ -1,8 +1,8 @@
 Arguments: 
-  /usr/local/opt/nvm/versions/node/v14.2.0/bin/node /Users/bblake/.yarn/bin/yarn.js init
+  /usr/local/opt/nvm/versions/node/v14.2.0/bin/node /Users/bblake/.yarn/bin/yarn.js install
 
 PATH: 
-  /usr/local/opt/nvm/versions/node/v14.2.0/bin:/Users/boazblake/.cargo/bin:/private/var/folders/7s/ks_v5nmn4mv4lw0f1ffqpg8w0000gn/T/AppTranslocation/FEE8BA79-830F-4867-AB72-4FAFD9D74824/d/Zed.app/bin:/Users/boazblake/.yarn/bin:/usr/local/opt/nvm/versions/node/v8.9.4/bin:/Users/boazblake/.yarn/bin:/Users/boazblake/.config/yarn/global/node_modules/.bin:/usr/local/opt/openssl/bin:/usr/local/mysql/bin:/usr/local/cmake/bin:/usr/local/mongodb/bin:/usr/local/au/bin:/usr/local/git/bin:/usr/local/autoconf/bin:/usr/local/git/bin:/sw/bin:/usr/local/bin:/usr/local:/usr/local/sbin:/usr/local/mysql/bin:/usr/local/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/Users/boazblake/.vimpkg/bin:/Users/bblake/.local/bin:/usr/local/opt/nvm/versions/node/v14.2.0/bin:/usr/local/share/npm/bin:/Users/bblake/Library/Android/sdk/platform-tools:/Users/bblake/Library/Android/sdk/tools/bin:/Users/bblake/Library/Android/sdk/tools:/Users/bblake/.config/yarn/global/node_modules/.bin:/Users/bblake/.yarn/bin:/Users/bblake/usr/local/bin:/Users/bblake/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/Library/Apple/usr/bin:/Library/Frameworks/Mono.framework/Versions/Current/Commands:/Users/boazblake/.cargo/bin:/private/var/folders/7s/ks_v5nmn4mv4lw0f1ffqpg8w0000gn/T/AppTranslocation/FEE8BA79-830F-4867-AB72-4FAFD9D74824/d/Zed.app/bin:/Users/boazblake/.yarn/bin:/usr/local/opt/nvm/versions/node/v8.9.4/bin:/Users/boazblake/.config/yarn/global/node_modules/.bin:/usr/local/opt/openssl/bin:/usr/local/mysql/bin:/usr/local/cmake/bin:/usr/local/mongodb/bin:/usr/local/au/bin:/usr/local/git/bin:/usr/local/autoconf/bin:/sw/bin:/usr/local:/usr/local/sbin:/Users/boazblake/.vimpkg/bin:/Users/bblake/.local/bin:/usr/local/opt/nvm/versions/node/v14.2.0/bin:/usr/local/share/npm/bin:/Users/bblake/Library/Android/sdk/platform-tools:/Users/bblake/Library/Android/sdk/tools/bin:/Users/bblake/Library/Android/sdk/tools:/Users/bblake/.config/yarn/global/node_modules/.bin:/Users/bblake/.yarn/bin:/Users/bblake/usr/local/bin:/Users/bblake/bin:/Users/bblake/Library/Android/sdk/build-tools/29.0.2:/Users/bblake/.rvm/bin:/Users/bblake/Library/Android/sdk/tools:/Users/bblake/Library/Android/sdk/platform-tools:/Users/bblake/Library/Android/sdk/build-tools/29.0.2:/Users/bblake/.rvm/bin
+  /var/folders/7s/ks_v5nmn4mv4lw0f1ffqpg8w0000gn/T/yarn--1596227651420-0.922436745601461:/Users/bblake/workspace/explorations/mithril/shindigit/node_modules/.bin:/Users/bblake/.config/yarn/link/node_modules/.bin:/usr/local/opt/nvm/versions/node/v14.2.0/libexec/lib/node_modules/npm/bin/node-gyp-bin:/usr/local/opt/nvm/versions/node/v14.2.0/lib/node_modules/npm/bin/node-gyp-bin:/usr/local/opt/nvm/versions/node/v14.2.0/bin/node_modules/npm/bin/node-gyp-bin:/usr/local/opt/nvm/versions/node/v14.2.0/bin:/Users/boazblake/.cargo/bin:/private/var/folders/7s/ks_v5nmn4mv4lw0f1ffqpg8w0000gn/T/AppTranslocation/FEE8BA79-830F-4867-AB72-4FAFD9D74824/d/Zed.app/bin:/Users/boazblake/.yarn/bin:/usr/local/opt/nvm/versions/node/v8.9.4/bin:/Users/boazblake/.yarn/bin:/Users/boazblake/.config/yarn/global/node_modules/.bin:/usr/local/opt/openssl/bin:/usr/local/mysql/bin:/usr/local/cmake/bin:/usr/local/mongodb/bin:/usr/local/au/bin:/usr/local/git/bin:/usr/local/autoconf/bin:/usr/local/git/bin:/sw/bin:/usr/local/bin:/usr/local:/usr/local/sbin:/usr/local/mysql/bin:/usr/local/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/Users/boazblake/.vimpkg/bin:/Users/bblake/.local/bin:/usr/local/opt/nvm/versions/node/v14.2.0/bin:/usr/local/share/npm/bin:/Users/bblake/Library/Android/sdk/platform-tools:/Users/bblake/Library/Android/sdk/tools/bin:/Users/bblake/Library/Android/sdk/tools:/Users/bblake/.config/yarn/global/node_modules/.bin:/Users/bblake/.yarn/bin:/Users/bblake/usr/local/bin:/Users/bblake/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/Library/Apple/usr/bin:/Library/Frameworks/Mono.framework/Versions/Current/Commands:/Users/boazblake/.cargo/bin:/private/var/folders/7s/ks_v5nmn4mv4lw0f1ffqpg8w0000gn/T/AppTranslocation/FEE8BA79-830F-4867-AB72-4FAFD9D74824/d/Zed.app/bin:/Users/boazblake/.yarn/bin:/usr/local/opt/nvm/versions/node/v8.9.4/bin:/Users/boazblake/.config/yarn/global/node_modules/.bin:/usr/local/opt/openssl/bin:/usr/local/mysql/bin:/usr/local/cmake/bin:/usr/local/mongodb/bin:/usr/local/au/bin:/usr/local/git/bin:/usr/local/autoconf/bin:/sw/bin:/usr/local:/usr/local/sbin:/Users/boazblake/.vimpkg/bin:/Users/bblake/.local/bin:/usr/local/opt/nvm/versions/node/v14.2.0/bin:/usr/local/share/npm/bin:/Users/bblake/Library/Android/sdk/platform-tools:/Users/bblake/Library/Android/sdk/tools/bin:/Users/bblake/Library/Android/sdk/tools:/Users/bblake/.config/yarn/global/node_modules/.bin:/Users/bblake/.yarn/bin:/Users/bblake/usr/local/bin:/Users/bblake/bin:/Users/bblake/Library/Android/sdk/build-tools/29.0.2:/Users/bblake/.rvm/bin:/Users/bblake/Library/Android/sdk/tools:/Users/bblake/Library/Android/sdk/platform-tools:/Users/bblake/Library/Android/sdk/build-tools/29.0.2:/Users/bblake/.rvm/bin
 
 Yarn version: 
   1.22.4
@@ -14,21 +14,21 @@ Platform:
   darwin x64
 
 Trace: 
-  Error: canceled
-      at Interface.<anonymous> (/Users/bblake/.yarn/lib/cli.js:137008:13)
-      at Interface.emit (events.js:315:20)
-      at Interface._ttyWrite (readline.js:873:16)
-      at ReadStream.onkeypress (readline.js:213:10)
-      at ReadStream.emit (events.js:315:20)
-      at emitKeys (internal/readline/utils.js:335:14)
-      at emitKeys.next (<anonymous>)
-      at ReadStream.onData (readline.js:1140:36)
-      at ReadStream.emit (events.js:315:20)
-      at addChunk (_stream_readable.js:302:12)
+  Error: https://npm.pkg.github.com/@boazblake%2ffun-config: Your request could not be authenticated by the GitHub Packages service. Please ensure your access token is valid and has the appropriate scopes configured.
+      at Request.params.callback [as _callback] (/Users/bblake/.yarn/lib/cli.js:66987:18)
+      at Request.self.callback (/Users/bblake/.yarn/lib/cli.js:140748:22)
+      at Request.emit (events.js:315:20)
+      at Request.<anonymous> (/Users/bblake/.yarn/lib/cli.js:141720:10)
+      at Request.emit (events.js:315:20)
+      at IncomingMessage.<anonymous> (/Users/bblake/.yarn/lib/cli.js:141642:12)
+      at Object.onceWrapper (events.js:421:28)
+      at IncomingMessage.emit (events.js:327:22)
+      at endReadableNT (_stream_readable.js:1225:12)
+      at processTicksAndRejections (internal/process/task_queues.js:84:21)
 
 npm manifest: 
   {
-    "name": "portfolio",
+    "name": "shindigit",
     "version": "1.0.0",
     "main": "index.js",
     "license": "MIT",
@@ -42,10 +42,10 @@ npm manifest:
       "build": "yarn run build:pre && brunch build --production"
     },
     "dependencies": {
+      "date-fns": "^2.15.0",
       "mithril": "^2.0.4",
-      "normalize.css": "^8.0.1",
       "ramda": "^0.27.0",
-      "date-fns": "^2.15.0"
+      "@boazblake/fun-config": "1.0.0"
     },
     "devDependencies": {
       "@babel/plugin-transform-spread": "^7.7.4",
@@ -59,7 +59,9 @@ npm manifest:
       "size-limit": "^4.5.0",
       "sw-precache-brunch": "^2.0.1",
       "uglify-js-brunch": "^2.10.0"
-    }
+    },
+    "author": "boaz blake<boazblake@gmail.com>",
+    "private": true
   }
 
 yarn manifest: 
@@ -4618,11 +4620,6 @@ Lockfile:
     version "3.0.0"
     resolved "https://registry.yarnpkg.com/normalize-path/-/normalize-path-3.0.0.tgz#0dcd69ff23a1c9b11fd0978316644a0388216a65"
     integrity sha512-6eZs5Ls3WtCisHWp9S2GUy8dqkpGi4BVSz3GaqiE6ezub0512ESztXUwUB6C6IKbQkY2Pnb/mD4WYojCRwcwLA==
-  
-  normalize.css@^8.0.1:
-    version "8.0.1"
-    resolved "https://registry.yarnpkg.com/normalize.css/-/normalize.css-8.0.1.tgz#9b98a208738b9cc2634caacbc42d131c97487bf3"
-    integrity sha512-qizSNPO93t1YUuUhP22btGOo3chcvDFqFaj2TRybP0DMxkHOCTYwp3n34fel4a31ORXy4m1Xq0Gyqpb5m33qIg==
   
   npm-run-path@^2.0.0:
     version "2.0.2"

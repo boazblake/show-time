@@ -830,6 +830,18 @@
     lodash "^4.17.19"
     to-fast-properties "^2.0.0"
 
+"@boazblake/fun-config@1.0.0":
+  version "1.0.0"
+  resolved "https://npm.pkg.github.com/download/@boazblake/fun-config/1.0.0/87c735fc02a09808ba1ea027e993307e103320581a78ff087690ab5625b6d800#8fe988102375f7be7ec5317ad94bebb6354af741"
+  integrity sha512-ty/wDxfDT+m3SpwggVqR838cKcqhvBOMnD8bWWOzigxMmJeOMWLW4QldobM5BsDY1dL1wbMFVdLnsCyFlVokeg==
+  dependencies:
+    daggy "^1.4.0"
+    data.either "^1.5.2"
+    data.maybe "^1.2.3"
+    data.task "^3.1.2"
+    data.validation "^1.3.1"
+    ramda "^0.27.0"
+
 "@nodelib/fs.scandir@2.1.3":
   version "2.1.3"
   resolved "https://registry.yarnpkg.com/@nodelib/fs.scandir/-/fs.scandir-2.1.3.tgz#3a582bdb53804c6ba6d146579c46e52130cf4a3b"
@@ -2053,6 +2065,34 @@ currently-unhandled@^0.4.1:
   integrity sha1-mI3zP+qxke95mmE2nddsF635V+o=
   dependencies:
     array-find-index "^1.0.1"
+
+daggy@^1.4.0:
+  version "1.4.0"
+  resolved "https://registry.yarnpkg.com/daggy/-/daggy-1.4.0.tgz#178b4722866e1c8fac7b91d4bbf171d3767c1573"
+  integrity sha512-6g8sOIPMzriYtyoCfpM2bUobu2yj0UPdaPy+Yzdqow8RqJy/Dv2PrqiNOzCvbxUuT6B1eSbr2EmFPlLNfKFDzQ==
+  dependencies:
+    sanctuary-type-classes "3.0.0"
+    sanctuary-type-identifiers "1.0.0"
+
+data.either@^1.5.2:
+  version "1.5.2"
+  resolved "https://registry.yarnpkg.com/data.either/-/data.either-1.5.2.tgz#5b25cafa7ff1361806e20937a1201c4472763dcf"
+  integrity sha512-ADXzxd3HiUzK+X0Txy8ZxzGKlQcVVMITkQ6yOWZ61EFxQ4a4YEHIMI4mPYc7U4q/3btGNMpJ9+Mt+Q/IWAQCZw==
+
+data.maybe@^1.2.3:
+  version "1.2.3"
+  resolved "https://registry.yarnpkg.com/data.maybe/-/data.maybe-1.2.3.tgz#940475f8ccddc10eb218b73125bdfb449d6d9ebc"
+  integrity sha512-iiw1TvVqHTOpnIwueo9jE3a2UFqblSHobzYTzvbvabNRnZq+D/tFi8J4olZ0viqbWkm7zKcPtu1/EzGhEyTH8A==
+
+data.task@^3.1.2:
+  version "3.1.2"
+  resolved "https://registry.yarnpkg.com/data.task/-/data.task-3.1.2.tgz#f61511339ad5c5ac6f417cc2666b95153dc7448d"
+  integrity sha512-gGDjno8m/FS1kdMU3EmKcLaO1enFyfCV/EscvDZ4+KZDSg9xHePa2VFfWd+QO5PUp18NdCIziOpaSUE4Efw8/w==
+
+data.validation@^1.3.1:
+  version "1.3.1"
+  resolved "https://registry.yarnpkg.com/data.validation/-/data.validation-1.3.1.tgz#0cc3185b61a1702ad71b840117b11717eec546fa"
+  integrity sha1-DMMYW2GhcCrXG4QBF7EXF+7FRvo=
 
 date-fns@^2.15.0:
   version "2.15.0"
@@ -4390,6 +4430,11 @@ minimist@^1.1.0, minimist@^1.1.1, minimist@^1.1.3, minimist@^1.2.0, minimist@^1.
   resolved "https://registry.yarnpkg.com/minimist/-/minimist-1.2.5.tgz#67d66014b66a6a8aaa0c083c5fd58df4e4e97602"
   integrity sha512-FM9nNUYrRBAELZQT3xeZQ7fmMOBg6nWNmJKTcgsJeaLstP/UODVpGsr5OhXhhXg6f+qtJ8uiZ+PUxkDWcgIXLw==
 
+mithril-stream@^2.0.0:
+  version "2.0.0"
+  resolved "https://registry.yarnpkg.com/mithril-stream/-/mithril-stream-2.0.0.tgz#b33a9b8d1f1a93b50f79e13a3454d3a39d7e39fb"
+  integrity sha512-7anPud4n2FMGIXBQATVpFzclkddXHmJ1TzlqOP9STybk8JZYOPAD2otMYiMDc6sPrTNDY5S6GPDlYNIUY8Qs3Q==
+
 mithril@^2.0.4:
   version "2.0.4"
   resolved "https://registry.yarnpkg.com/mithril/-/mithril-2.0.4.tgz#d125969d992b924c7185d24ff92d997e5c00116b"
@@ -4550,11 +4595,6 @@ normalize-path@^3.0.0, normalize-path@~3.0.0:
   version "3.0.0"
   resolved "https://registry.yarnpkg.com/normalize-path/-/normalize-path-3.0.0.tgz#0dcd69ff23a1c9b11fd0978316644a0388216a65"
   integrity sha512-6eZs5Ls3WtCisHWp9S2GUy8dqkpGi4BVSz3GaqiE6ezub0512ESztXUwUB6C6IKbQkY2Pnb/mD4WYojCRwcwLA==
-
-normalize.css@^8.0.1:
-  version "8.0.1"
-  resolved "https://registry.yarnpkg.com/normalize.css/-/normalize.css-8.0.1.tgz#9b98a208738b9cc2634caacbc42d131c97487bf3"
-  integrity sha512-qizSNPO93t1YUuUhP22btGOo3chcvDFqFaj2TRybP0DMxkHOCTYwp3n34fel4a31ORXy4m1Xq0Gyqpb5m33qIg==
 
 npm-run-path@^2.0.0:
   version "2.0.2"
@@ -5475,6 +5515,18 @@ safe-regex@^1.1.0:
   integrity sha1-QKNmnzsHfR6UPURinhV91IAjvy4=
   dependencies:
     ret "~0.1.10"
+
+sanctuary-type-classes@3.0.0:
+  version "3.0.0"
+  resolved "https://registry.yarnpkg.com/sanctuary-type-classes/-/sanctuary-type-classes-3.0.0.tgz#e4cf422abceb8c78b6f625d84d61fdb5c6d44116"
+  integrity sha1-5M9CKrzrjHi29iXYTWH9tcbUQRY=
+  dependencies:
+    sanctuary-type-identifiers "1.0.x"
+
+sanctuary-type-identifiers@1.0.0, sanctuary-type-identifiers@1.0.x:
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/sanctuary-type-identifiers/-/sanctuary-type-identifiers-1.0.0.tgz#e8f359f006cb5e624cfb8464603fc114608bde9f"
+  integrity sha1-6PNZ8AbLXmJM+4RkYD/BFGCL3p8=
 
 sass-brunch@3.0.0:
   version "3.0.0"

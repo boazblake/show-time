@@ -27,6 +27,27 @@ const updateMonth = (month, dir) =>
     ? pad0Left((parseInt(month) + dir).toString())
     : (parseInt(month) + dir).toString()
 
+export const goToDate = ({ year, month, day, dir }) => {
+  let _year = year
+  let _month = updateMonth(month, dir)
+  let _day = day || "01"
+
+  if (_month >= 13) {
+    _year = updateYear(_year, dir)
+    _month = "01"
+  }
+
+  if (_month <= 0) {
+    _year = updateYear(_year, dir)
+    _month = "12"
+  }
+  // console.log(
+  //   { year: _year, month: _month, day: _day },
+  //   `/${formatDateString({ year: _year, month: _month, day: _day })}`
+  // )
+  m.route.set(`/${formatDateString({ year: _year, month: _month, day: _day })}`)
+}
+
 export const updateMonthDto = (year, month, day, dir) => {
   let _year = year
   let _month = updateMonth(month, dir)
@@ -42,7 +63,9 @@ export const updateMonthDto = (year, month, day, dir) => {
     _month = "12"
   }
 
-  return calendarModel(formatDateString(_year, _month, _day))
+  return calendarModel(
+    formatDateString({ year: _year, month: _month, day: _day })
+  )
 }
 
 export const getMonthByIdx = (idx) =>
@@ -65,7 +88,7 @@ export const isNotCalenderDay = (day, date) => ({
 export const createCalendarDayViewModel = (day, date, { isSameMonth }) =>
   isSameMonth ? isCalenderDay(day) : isNotCalenderDay(day, date)
 
-export const getMountMatrix = ({ year, month }) => {
+export const getMonthMatrix = ({ year, month }) => {
   const date = new Date(parseInt(year), parseInt(month - 1))
 
   const matrix = eachWeekOfInterval(

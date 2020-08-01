@@ -13,9 +13,10 @@
     "build": "yarn run build:pre && brunch build --production"
   },
   "dependencies": {
+    "@boazblake/fun-config": "1.0.0",
     "date-fns": "^2.15.0",
     "mithril": "^2.0.4",
-    "normalize.css": "^8.0.1",
+    "mithril-stream": "^2.0.0",
     "ramda": "^0.27.0"
   },
   "devDependencies": {

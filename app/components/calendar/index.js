@@ -1,25 +1,25 @@
 import {
   updateMonthDto,
-  getMountMatrix,
+  getMonthMatrix,
   calendarModel,
+  goToDate,
   calendarDay,
   getMonthByIdx,
-  formatDateString,
 } from "./model"
-import { daysOfTheWeek } from "Utils"
+import { daysOfTheWeek, shortDate, formatDateString } from "Utils"
 
 const Toolbar = ({ attrs: { mdl } }) => {
   return {
     view: ({ attrs: { mdl } }) =>
       m(".toolbar", [
         m("input", {
-          onchange: (e) => (mdl.data = calendarModel(e.target.value)),
+          onchange: (e) => m.route.set(e.target.value), //(mdl.data = calendarModel(e.target.value)),
           type: "date",
           value: mdl.data.startDate,
         }),
         m(
           "button.width-100",
-          { onclick: (_) => (mdl.data = calendarModel()) },
+          { onclick: (_) => m.route.set(shortDate(new Date())) }, //(mdl.data = calendarModel()) },
           "Today"
         ),
       ]),
@@ -38,12 +38,12 @@ const MonthsToolbar = () => {
               "h3",
               {
                 onclick: (_) => {
-                  mdl.data = calendarModel(
-                    formatDateString(
-                      parseInt(mdl.data.selected.year) - 1,
-                      mdl.data.selected.month,
-                      mdl.data.selected.day
-                    )
+                  m.route.set(
+                    `/${formatDateString({
+                      year: parseInt(mdl.data.selected.year) - 1,
+                      month: mdl.data.selected.month,
+                      day: mdl.data.selected.day,
+                    })}`
                   )
                 },
               },
@@ -63,12 +63,12 @@ const MonthsToolbar = () => {
               "h3",
               {
                 onclick: (_) => {
-                  mdl.data = calendarModel(
-                    formatDateString(
-                      parseInt(mdl.data.selected.year) + 1,
-                      mdl.data.selected.month,
-                      mdl.data.selected.day
-                    )
+                  m.route.set(
+                    `/${formatDateString({
+                      year: parseInt(mdl.data.selected.year) + 1,
+                      month: mdl.data.selected.month,
+                      day: mdl.data.selected.day,
+                    })}`
                   )
                 },
               },
@@ -81,12 +81,12 @@ const MonthsToolbar = () => {
             "button",
             {
               onclick: (_) => {
-                mdl.data = updateMonthDto(
-                  mdl.data.selected.year,
-                  mdl.data.selected.month,
-                  null,
-                  -1
-                )
+                goToDate({
+                  year: mdl.data.selected.year,
+                  month: mdl.data.selected.month,
+                  day: mdl.data.selected.day,
+                  dir: -1,
+                })
               },
             },
             m("h4", getMonthByIdx(parseInt(mdl.data.selected.month - 2)))
@@ -96,12 +96,12 @@ const MonthsToolbar = () => {
             "button",
             {
               onclick: (_) => {
-                mdl.data = updateMonthDto(
-                  mdl.data.selected.year,
-                  mdl.data.selected.month,
-                  null,
-                  1
-                )
+                goToDate({
+                  year: mdl.data.selected.year,
+                  month: mdl.data.selected.month,
+                  day: mdl.data.selected.day,
+                  dir: 1,
+                })
               },
             },
             m("h4", getMonthByIdx(parseInt(mdl.data.selected.month)))
@@ -115,7 +115,7 @@ const MonthsToolbar = () => {
 const CalendarBody = () => {
   return {
     view: ({ attrs: { mdl } }) => {
-      let dto = getMountMatrix(mdl.data)
+      let dto = getMonthMatrix(mdl.data)
       return m(".frow frow-container", [
         m(MonthsToolbar, { mdl }),
         m(
@@ -163,10 +163,12 @@ const CalendarBody = () => {
 
 export const Calendar = () => {
   return {
-    view: ({ attrs: { mdl } }) =>
-      m(".calendar", [
-        m(Toolbar, { mdl: mdl.CalendarDto }),
-        m(CalendarBody, { mdl: mdl.CalendarDto }),
-      ]),
+    view: ({ attrs: { mdl } }) => {
+      console.log(mdl)
+      return m(".calendar", [
+        m(Toolbar, { mdl: mdl.Calendar }),
+        m(CalendarBody, { mdl: mdl.Calendar }),
+      ])
+    },
   }
 }
