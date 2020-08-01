@@ -7,7 +7,10 @@ export const locals = {
     newTaskFromPromise(
       new Promise(
         (_, res) =>
-          localStorage.getItem(key) ? res(localStorage.getItem(key)) : res([]) // hack just for now
+          localStorage.getItem(key)
+            ? res(JSON.parse(localStorage.getItem(key)))
+            : res(null)
+        // hack just for now
       )
     ),
   setTask: (key) => (value) =>

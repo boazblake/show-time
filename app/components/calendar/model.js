@@ -41,10 +41,6 @@ export const goToDate = ({ year, month, day, dir }) => {
     _year = updateYear(_year, dir)
     _month = "12"
   }
-  // console.log(
-  //   { year: _year, month: _month, day: _day },
-  //   `/${formatDateString({ year: _year, month: _month, day: _day })}`
-  // )
   m.route.set(`/${formatDateString({ year: _year, month: _month, day: _day })}`)
 }
 
@@ -90,7 +86,6 @@ export const createCalendarDayViewModel = (day, date, { isSameMonth }) =>
 
 export const getMonthMatrix = ({ year, month }) => {
   const date = new Date(parseInt(year), parseInt(month - 1))
-
   const matrix = eachWeekOfInterval(
     {
       start: startOfMonth(date),

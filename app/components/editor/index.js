@@ -10,10 +10,11 @@ const addNewEvent = (state, mdl) => {
   let StartTimeMin = startSplit[1]
   let EndTimeHour = endSplit[0]
   let EndTimeMin = endSplit[1]
-
-  console.log("what am i", mdl.Clock.data[state.date], [state.date])
-  mdl.Clock.data[state.date][`${StartTimeHour}:00`][StartTimeMin] = state
-  mdl.state.modal = false
+  mdl.Clock.data[`${StartTimeHour}:00`][StartTimeMin] = state
+  // console.log("event", mdl.Clock.data)
+  localStorage.setItem(state.date, JSON.stringify(mdl.Clock.data))
+  mdl.state.modal(false)
+  m.redraw()
 }
 
 const EventForm = ({ attrs: { state } }) => {

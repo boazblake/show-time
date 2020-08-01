@@ -31,14 +31,21 @@ export const DailyPlanner = (mdl, selectedDate) => {
 
 const Hour = () => {
   return {
-    view: ({ attrs: { mdl, events, hour, time } }) => {
-      let titles = Object.values(events).map((e) => e.title)
-      // console.log("HOUR", time, hour, hour[time], titles)
+    view: ({ attrs: { mdl, hour, time, events } }) => {
+      // console.log(events)
       return m(
         ".frow ",
         m(".hour ", [
           time,
-          m(".half-hour", [m(".top", titles)]),
+          m(".half-hour", [
+            m(
+              ".top",
+              m(
+                "ul",
+                events.map((e) => m("li", e.title))
+              )
+            ),
+          ]),
           m(".half-hour", m(".bottom")),
         ])
       )
@@ -46,9 +53,34 @@ const Hour = () => {
   }
 }
 
-export const Clock = () => {
+export const Clock = ({ attrs: { mdl } }) => {
+  const loadTask = (http) => (mdl) => locals.getTask(mdl.currentShortDate())
+
+  const onError = (state) => (err) => {
+    state.error = err
+    state.status = "failed"
+    // console.log("e", state)
+    m.redraw()
+  }
+
+  const onSuccess = (mdl, state) => (data) => {
+    state.data = data
+    if (data) {
+      mdl.Clock.data = data
+    }
+    state.error = null
+    state.status = "success"
+    // console.log("s", state)
+    m.redraw()
+  }
+
+  const load = (state) => ({ attrs: { mdl } }) => {
+    loadTask(HTTP)(mdl).fork(onError(state), onSuccess(mdl, state))
+  }
+  console.log("clocl", mdl.Clock.data)
   return {
-    view: ({ attrs: { mdl, events } }) => {
+    oninit: load,
+    view: ({ attrs: { mdl } }) => {
       return m(
         ".clock",
         m(".frow-container", [
@@ -64,13 +96,13 @@ export const Clock = () => {
           ),
           m(".clock-face", [
             mdl.state.modal() && m(Editor, { mdl }),
-            Object.values(mdl.Clock.data).map((hour, idx) => {
-              console.log()
+            Object.keys(mdl.Clock.data).map((hour, idx) => {
+              // console.log(mdl.Clock.data[hour])
               return m(Hour, {
                 mdl,
-                hour,
-                time: Object.keys(hour)[0],
-                events,
+                hour: mdl.Clock.data[hour],
+                time: hour,
+                events: Object.values(mdl.Clock.data[hour]),
               })
             }),
           ]),

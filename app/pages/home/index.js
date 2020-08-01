@@ -1,25 +1,26 @@
 import { Calendar, Clock } from "Components"
 import { HTTP, locals } from "Utils"
 
-const loadTask = (http) => (mdl) => locals.getTask(mdl.currentDate)
+const loadTask = (http) => (mdl) => locals.getTask(mdl.currentShortDate())
 
 const onError = (state) => (err) => {
   state.error = err
   state.status = "failed"
-  // console.log("e", state)
   m.redraw()
 }
 
-const onSuccess = (state) => (data) => {
+const onSuccess = (mdl, state) => (data) => {
   state.data = data
+  if (data) {
+    mdl.Clock.data = data
+  }
   state.error = null
   state.status = "success"
-  // console.log("s", state)
   m.redraw()
 }
 
 const load = (state) => ({ attrs: { mdl } }) =>
-  loadTask(HTTP)(mdl).fork(onError(state), onSuccess(state))
+  loadTask(HTTP)(mdl).fork(onError(state), onSuccess(mdl, state))
 
 export const Home = ({ attrs: { mdl } }) => {
   const state = {

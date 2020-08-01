@@ -1,7 +1,6 @@
 import { Home } from "Pages/home"
 import { calendarModel } from "Components/calendar/model"
-// import { clockModel } from "Components/clock/model"
-import { getHoursInDay, clockModel } from "Utils"
+import { clockModel } from "Utils"
 
 const routes = (mdl) => {
   return {
@@ -11,8 +10,9 @@ const routes = (mdl) => {
         mdl.currentLongDate(new Date(date))
         mdl.Calendar.data = calendarModel(date)
         mdl.Clock.data = clockModel(mdl, date)
+        // console.log(mdl.Clock.data)
       },
-      render: () => m(Home, { mdl, key: new Date() }),
+      render: () => [m(Home, { mdl, key: mdl.currentLongDate() })],
     },
   }
 }

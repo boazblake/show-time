@@ -244,7 +244,12 @@ var CalendarBody = function CalendarBody() {
               dir = _ref5.dir;
           return m(".col-xs-1-7 text-center", {
             onclick: function onclick(_) {
-              return mdl.data = (0, _model.updateMonthDto)(mdl.data.selected.year, mdl.data.selected.month, day, dir);
+              return m.route.set("/".concat((0, _Utils.formatDateString)({
+                year: mdl.data.selected.year,
+                month: mdl.data.selected.month,
+                day: day,
+                dir: dir
+              })));
             },
             class: (0, _model.calendarDay)(mdl.data)(day, dir)
           }, m("span.day", day));
@@ -258,7 +263,7 @@ var Calendar = function Calendar() {
   return {
     view: function view(_ref6) {
       var mdl = _ref6.attrs.mdl;
-      console.log(mdl);
+      // console.log(mdl)
       return m(".calendar", [m(Toolbar, {
         mdl: mdl.Calendar
       }), m(CalendarBody, {
@@ -334,11 +339,7 @@ var goToDate = function goToDate(_ref) {
   if (_month <= 0) {
     _year = updateYear(_year, dir);
     _month = "12";
-  } // console.log(
-  //   { year: _year, month: _month, day: _day },
-  //   `/${formatDateString({ year: _year, month: _month, day: _day })}`
-  // )
-
+  }
 
   m.route.set("/".concat((0, _Utils.formatDateString)({
     year: _year,
@@ -540,37 +541,75 @@ var Hour = function Hour() {
     view: function view(_ref2) {
       var _ref2$attrs = _ref2.attrs,
           mdl = _ref2$attrs.mdl,
-          events = _ref2$attrs.events,
           hour = _ref2$attrs.hour,
-          time = _ref2$attrs.time;
-      var titles = Object.values(events).map(function (e) {
-        return e.title;
-      }); // console.log("HOUR", time, hour, hour[time], titles)
-
-      return m(".frow ", m(".hour ", [time, m(".half-hour", [m(".top", titles)]), m(".half-hour", m(".bottom"))]));
+          time = _ref2$attrs.time,
+          events = _ref2$attrs.events;
+      // console.log(events)
+      return m(".frow ", m(".hour ", [time, m(".half-hour", [m(".top", m("ul", events.map(function (e) {
+        return m("li", e.title);
+      })))]), m(".half-hour", m(".bottom"))]));
     }
   };
 };
 
-var Clock = function Clock() {
+var Clock = function Clock(_ref3) {
+  var mdl = _ref3.attrs.mdl;
+
+  var loadTask = function loadTask(http) {
+    return function (mdl) {
+      return locals.getTask(mdl.currentShortDate());
+    };
+  };
+
+  var onError = function onError(state) {
+    return function (err) {
+      state.error = err;
+      state.status = "failed"; // console.log("e", state)
+
+      m.redraw();
+    };
+  };
+
+  var onSuccess = function onSuccess(mdl, state) {
+    return function (data) {
+      state.data = data;
+
+      if (data) {
+        mdl.Clock.data = data;
+      }
+
+      state.error = null;
+      state.status = "success"; // console.log("s", state)
+
+      m.redraw();
+    };
+  };
+
+  var load = function load(state) {
+    return function (_ref4) {
+      var mdl = _ref4.attrs.mdl;
+      loadTask(HTTP)(mdl).fork(onError(state), onSuccess(mdl, state));
+    };
+  };
+
+  console.log("clocl", mdl.Clock.data);
   return {
-    view: function view(_ref3) {
-      var _ref3$attrs = _ref3.attrs,
-          mdl = _ref3$attrs.mdl,
-          events = _ref3$attrs.events;
+    oninit: load,
+    view: function view(_ref5) {
+      var mdl = _ref5.attrs.mdl;
       return m(".clock", m(".frow-container", [m(".".concat(mdl.state.modal() ? "bg-warn" : "bg-info"), m("button.frow.width-100", {
         onclick: function onclick(e) {
           return mdl.state.modal(!mdl.state.modal());
         }
       }, mdl.state.modal() ? "Cancel" : "Add Event")), m(".clock-face", [mdl.state.modal() && m(_Components.Editor, {
         mdl: mdl
-      }), Object.values(mdl.Clock.data).map(function (hour, idx) {
-        console.log();
+      }), Object.keys(mdl.Clock.data).map(function (hour, idx) {
+        // console.log(mdl.Clock.data[hour])
         return m(Hour, {
           mdl: mdl,
-          hour: hour,
-          time: Object.keys(hour)[0],
-          events: events
+          hour: mdl.Clock.data[hour],
+          time: hour,
+          events: Object.values(mdl.Clock.data[hour])
         });
       })])]));
     }
@@ -578,6 +617,35 @@ var Clock = function Clock() {
 };
 
 exports.Clock = Clock;
+});
+
+;require.register("Components/clock/model.js", function(exports, require, module) {
+// import eachHourOfInterval from "date-fns/fp/eachHourOfInterval"
+// import add from "date-fns/fp/add"
+// import format from "date-fns/format"
+// import parseISO from "date-fns/parseISO"
+// import { formatDateString, shortDate } from "Utils"
+// export const DailyPlanner = (mdl, selectedDate) => {
+//   let longFormDate = parseISO(formatString(mdl.Calendar.data.selected))
+//   let hours = getHoursInDay(mdl.format, longFormDate)
+//   let today = mdl.data[shortDate(selectedDate)] || {
+//     [shortDate(selectedDate)]: {},
+//   }
+//   return hours.reduce(toHourViewModel(shortDate(selectedDate)), today)
+// }
+// export const getHoursInDay = (dateFormat, selectedDate) => {
+//   let interval = {
+//     start: selectedDate,
+//     end: add({ days: 1 })(selectedDate),
+//   }
+//   return eachHourOfInterval(interval).map((hour) => format(hour, dateFormat))
+// }
+// export const clockModel = (date) => {
+//   const hours = getHoursInDay(mdl.clock.timeFormat, date)
+//   console.log(hours)
+//   return { [shortDate(date)]: hours }
+// }
+"use strict";
 });
 
 ;require.register("Components/component.js", function(exports, require, module) {
@@ -621,9 +689,11 @@ var addNewEvent = function addNewEvent(state, mdl) {
   var StartTimeMin = startSplit[1];
   var EndTimeHour = endSplit[0];
   var EndTimeMin = endSplit[1];
-  console.log("what am i", mdl.Clock.data[state.date], [state.date]);
-  mdl.Clock.data[state.date]["".concat(StartTimeHour, ":00")][StartTimeMin] = state;
-  mdl.state.modal = false;
+  mdl.Clock.data["".concat(StartTimeHour, ":00")][StartTimeMin] = state; // console.log("event", mdl.Clock.data)
+
+  localStorage.setItem(state.date, JSON.stringify(mdl.Clock.data));
+  mdl.state.modal(false);
+  m.redraw();
 };
 
 var EventForm = function EventForm(_ref) {
@@ -793,25 +863,28 @@ var _Utils = require("Utils");
 
 var loadTask = function loadTask(http) {
   return function (mdl) {
-    return _Utils.locals.getTask(mdl.currentDate);
+    return _Utils.locals.getTask(mdl.currentShortDate());
   };
 };
 
 var onError = function onError(state) {
   return function (err) {
     state.error = err;
-    state.status = "failed"; // console.log("e", state)
-
+    state.status = "failed";
     m.redraw();
   };
 };
 
-var onSuccess = function onSuccess(state) {
+var onSuccess = function onSuccess(mdl, state) {
   return function (data) {
     state.data = data;
-    state.error = null;
-    state.status = "success"; // console.log("s", state)
 
+    if (data) {
+      mdl.Clock.data = data;
+    }
+
+    state.error = null;
+    state.status = "success";
     m.redraw();
   };
 };
@@ -819,7 +892,7 @@ var onSuccess = function onSuccess(state) {
 var load = function load(state) {
   return function (_ref) {
     var mdl = _ref.attrs.mdl;
-    return loadTask(_Utils.HTTP)(mdl).fork(onError(state), onSuccess(state));
+    return loadTask(_Utils.HTTP)(mdl).fork(onError(state), onSuccess(mdl, state));
   };
 };
 
@@ -1209,7 +1282,6 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 var _exportNames = {
-  clockModel: true,
   log: true,
   randomPause: true,
   Pause: true,
@@ -1222,13 +1294,14 @@ var _exportNames = {
   isLeapYear: true,
   daysOfTheWeek: true,
   monthsOfTheYear: true,
+  clockModel: true,
   pad0Left: true,
   formatDateString: true,
   isEqual: true,
   pad00Min: true,
   getHoursInDay: true
 };
-exports.getHoursInDay = exports.pad00Min = exports.isEqual = exports.formatDateString = exports.pad0Left = exports.monthsOfTheYear = exports.daysOfTheWeek = exports.isLeapYear = exports.shortDate = exports.range = exports.isSideBarActive = exports.jsonCopy = exports.nameFromRoute = exports.NoOp = exports.Pause = exports.randomPause = exports.log = exports.clockModel = void 0;
+exports.getHoursInDay = exports.pad00Min = exports.isEqual = exports.formatDateString = exports.pad0Left = exports.clockModel = exports.monthsOfTheYear = exports.daysOfTheWeek = exports.isLeapYear = exports.shortDate = exports.range = exports.isSideBarActive = exports.jsonCopy = exports.nameFromRoute = exports.NoOp = exports.Pause = exports.randomPause = exports.log = void 0;
 
 var _http = require("./http.js");
 
@@ -1267,16 +1340,6 @@ function _iterableToArray(iter) { if (typeof Symbol !== "undefined" && Symbol.it
 function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) return _arrayLikeToArray(arr); }
 
 function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
-
-function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
-
-var clockModel = function clockModel(mdl, date) {
-  return getHoursInDay(mdl.timeFormats[mdl.format()]).map(function (n) {
-    return _defineProperty({}, n, {});
-  });
-};
-
-exports.clockModel = clockModel;
 
 var log = function log(m) {
   return function (v) {
@@ -1343,10 +1406,19 @@ var isLeapYear = function isLeapYear(year) {
 };
 
 exports.isLeapYear = isLeapYear;
-var daysOfTheWeek = ["Sunday", "Monday", "Teusday", "Wednesday", "Thursday", "Friday", "Saturday"];
+var daysOfTheWeek = ["Monday", "Teusday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"];
 exports.daysOfTheWeek = daysOfTheWeek;
 var monthsOfTheYear = ["January", "Febuary", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
 exports.monthsOfTheYear = monthsOfTheYear;
+
+var clockModel = function clockModel(mdl, date) {
+  return getHoursInDay(mdl.timeFormats[mdl.format()]).reduce(function (day, hour) {
+    day[hour] = {};
+    return day;
+  }, {});
+};
+
+exports.clockModel = clockModel;
 
 var pad0Left = function pad0Left(num) {
   return "0".concat(num);
@@ -1354,10 +1426,10 @@ var pad0Left = function pad0Left(num) {
 
 exports.pad0Left = pad0Left;
 
-var formatDateString = function formatDateString(_ref2) {
-  var year = _ref2.year,
-      month = _ref2.month,
-      day = _ref2.day;
+var formatDateString = function formatDateString(_ref) {
+  var year = _ref.year,
+      month = _ref.month,
+      day = _ref.day;
 
   var padded = function padded(d) {
     return d.toString().length == 1 ? pad0Left(d) : d;
@@ -1410,7 +1482,7 @@ var newTaskFromPromise = function newTaskFromPromise(p) {
 var locals = {
   getTask: function getTask(key) {
     return newTaskFromPromise(new Promise(function (_, res) {
-      return localStorage.getItem(key) ? res(localStorage.getItem(key)) : res([]);
+      return localStorage.getItem(key) ? res(JSON.parse(localStorage.getItem(key))) : res(null);
     } // hack just for now
     ));
   },
@@ -1555,7 +1627,6 @@ var _model = require("Components/calendar/model");
 
 var _Utils = require("Utils");
 
-// import { clockModel } from "Components/clock/model"
 var routes = function routes(mdl) {
   return {
     "/:date": {
@@ -1564,13 +1635,13 @@ var routes = function routes(mdl) {
         mdl.currentShortDate(date);
         mdl.currentLongDate(new Date(date));
         mdl.Calendar.data = (0, _model.calendarModel)(date);
-        mdl.Clock.data = (0, _Utils.clockModel)(mdl, date);
+        mdl.Clock.data = (0, _Utils.clockModel)(mdl, date); // console.log(mdl.Clock.data)
       },
       render: function render() {
-        return m(_home.Home, {
+        return [m(_home.Home, {
           mdl: mdl,
-          key: new Date()
-        });
+          key: mdl.currentLongDate()
+        })];
       }
     }
   };

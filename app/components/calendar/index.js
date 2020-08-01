@@ -142,12 +142,15 @@ const CalendarBody = () => {
                   ".col-xs-1-7 text-center",
                   {
                     onclick: (_) =>
-                      (mdl.data = updateMonthDto(
-                        mdl.data.selected.year,
-                        mdl.data.selected.month,
-                        day,
-                        dir
-                      )),
+                      m.route.set(
+                        `/${formatDateString({
+                          year: mdl.data.selected.year,
+                          month: mdl.data.selected.month,
+                          day: day,
+                          dir,
+                        })}`
+                      ),
+
                     class: calendarDay(mdl.data)(day, dir),
                   },
                   m("span.day", day)
@@ -164,7 +167,7 @@ const CalendarBody = () => {
 export const Calendar = () => {
   return {
     view: ({ attrs: { mdl } }) => {
-      console.log(mdl)
+      // console.log(mdl)
       return m(".calendar", [
         m(Toolbar, { mdl: mdl.Calendar }),
         m(CalendarBody, { mdl: mdl.Calendar }),

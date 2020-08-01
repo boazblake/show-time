@@ -1,13 +1,6 @@
 export * from "./http.js"
 export * from "./local-storage.js"
 
-export const clockModel = (mdl, date) =>
-  getHoursInDay(mdl.timeFormats[mdl.format()]).map((n) => {
-    return {
-      [n]: {},
-    }
-  })
-
 export const log = (m) => (v) => {
   console.log(m, v)
   return v
@@ -41,13 +34,13 @@ export const isLeapYear = (year) =>
     : false
 
 export const daysOfTheWeek = [
-  "Sunday",
   "Monday",
   "Teusday",
   "Wednesday",
   "Thursday",
   "Friday",
   "Saturday",
+  "Sunday",
 ]
 
 export const monthsOfTheYear = [
@@ -64,6 +57,12 @@ export const monthsOfTheYear = [
   "November",
   "December",
 ]
+
+export const clockModel = (mdl, date) =>
+  getHoursInDay(mdl.timeFormats[mdl.format()]).reduce((day, hour) => {
+    day[hour] = {}
+    return day
+  }, {})
 
 export const pad0Left = (num) => `0${num}`
 

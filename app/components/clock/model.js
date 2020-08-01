@@ -1,10 +1,3 @@
-export const clockModel = (mdl, date) =>
-  getHoursInDay(mdl.timeFormats[mdl.format()]).map((n) => {
-    return {
-      [n]: {},
-    }
-  })
-
 // import eachHourOfInterval from "date-fns/fp/eachHourOfInterval"
 // import add from "date-fns/fp/add"
 // import format from "date-fns/format"
