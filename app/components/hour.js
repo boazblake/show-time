@@ -3,7 +3,6 @@ import { EventsList } from "Components"
 export const Hour = () => {
   return {
     view: ({ attrs: { mdl, hour, time, events } }) => {
-      // console.log(events)
       return m(
         ".frow ",
         m(".hour ", [

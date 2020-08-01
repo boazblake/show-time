@@ -133,7 +133,6 @@ export const calendarModel = (date = shortDate()) => {
 }
 
 export const calendarDay = ({ today, selected }) => (currentDay, dir) => {
-  let cs = ""
   if (dir !== 0) {
     return "notThisMonth"
   }
@@ -147,8 +146,7 @@ export const calendarDay = ({ today, selected }) => (currentDay, dir) => {
 
   if (
     isEqual(currentDay, selected.day) &&
-    isEqual(selected.month, selected.month) &&
-    isEqual(selected.year, today.year)
+    isEqual(selected.month, selected.month)
   ) {
     return "selectedDay"
   }

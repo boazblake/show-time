@@ -14,6 +14,15 @@ const EventForm = ({ attrs: { state } }) => {
   return {
     view: () =>
       m("form.event-form", [
+        m(
+          "label",
+          m("input", {
+            onchange: (e) => m.route.set(e.target.value),
+            type: "date",
+            value: state.date,
+            disabled: state.allday,
+          })
+        ),
         m(".frow row", [
           [
             m(
@@ -71,6 +80,7 @@ const EventForm = ({ attrs: { state } }) => {
 }
 
 export const Editor = ({ attrs: { mdl } }) => {
+  console.log("editor:: find event?", mdl)
   const state = {
     date: jsonCopy(formatDateString(mdl.Calendar.data.selected)),
     allday: false,
@@ -86,7 +96,7 @@ export const Editor = ({ attrs: { mdl } }) => {
         Modal,
         { mdl },
         {
-          header: m("h3", `Add Event On ${state.date}`),
+          header: m("h3", `Add Event`),
           body: m(EventForm, { mdl, state }),
           footer: m(
             "button",

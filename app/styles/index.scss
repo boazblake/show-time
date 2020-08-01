@@ -117,20 +117,19 @@ input[type="time"] {
   left: 0;
 }
 
+
+// background-image:
+// rgba(255, 255, 255, 1) 60%,
+// rgba(255, 255, 255, 0) 100%
+// );
 .modal-container {
   position: absolute;
   left:0;
-  x-index: 100;
+  z-index: 1000;
   width: 100vw;
   height: 100vw;
-  background-image: linear-gradient(
-    rgba(255, 255, 255, 1) 60%,
-    rgba(255, 255, 255, 0) 100%
-    );
+  background-color: var(--white);
   .modal {
-    // width: 80%;
-    // max-width: 400px;
-    // margin: 0 auto;
     .modal-header{}
     .modal-body {}
     .modal-footer {}
@@ -159,7 +158,9 @@ input[type="time"] {
 
 .event-list-item {
   position: absolute;
+  padding-left: 12px;
   background-color: var(--purple);
+  color: var(--white);
   min-width: 200px;
 }
 
