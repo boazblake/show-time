@@ -1,18 +1,11 @@
 import { Modal } from "Components"
 import { jsonCopy, formatDateString } from "Utils"
-import { Calendar } from "../calendar"
 
 const addNewEvent = (state, mdl) => {
-  const splitTime = (time) => time.split(":")
-  let startSplit = splitTime(state.startTime)
-  let endSplit = splitTime(state.endTime)
-  let StartTimeHour = startSplit[0]
-  let StartTimeMin = startSplit[1]
-  let EndTimeHour = endSplit[0]
-  let EndTimeMin = endSplit[1]
-  mdl.Clock.data[`${StartTimeHour}:00`][StartTimeMin] = state
-  // console.log("event", mdl.Clock.data)
-  localStorage.setItem(state.date, JSON.stringify(mdl.Clock.data))
+  let startSplit = state.startTime.split(":")
+
+  mdl.Day.data[`${startSplit[0]}:00`][startSplit[1]] = state
+  localStorage.setItem(state.date, JSON.stringify(mdl.Day.data))
   mdl.state.modal(false)
   m.redraw()
 }

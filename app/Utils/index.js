@@ -58,7 +58,17 @@ export const monthsOfTheYear = [
   "December",
 ]
 
-export const clockModel = (mdl, date) =>
+export const getFullDate = ({ year, month, day }, startHour, startMin) =>
+  new Date(year, month, day, startHour, startMin)
+
+export const toHourViewModel = (date) => (mdl, hour) => {
+  if (!mdl[date][hour]) {
+    mdl[date][hour] = {}
+  }
+  return mdl
+}
+
+export const dayModel = (mdl, date) =>
   getHoursInDay(mdl.timeFormats[mdl.format()]).reduce((day, hour) => {
     day[hour] = {}
     return day

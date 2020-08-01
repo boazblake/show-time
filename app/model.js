@@ -6,10 +6,11 @@ const model = {
   format: Stream(1),
   currentShortDate: Stream(""),
   currentLongDate: Stream(""),
+  selectedDate: { year: "", month: "", day: "" },
   Calendar: {
     data: calendarModel(),
   },
-  Clock: {
+  Day: {
     timeFormat: Stream("kk:mm"),
     data: {},
   },

@@ -1,11 +1,4 @@
-import {
-  updateMonthDto,
-  getMonthMatrix,
-  calendarModel,
-  goToDate,
-  calendarDay,
-  getMonthByIdx,
-} from "./model"
+import { getMonthMatrix, goToDate, calendarDay, getMonthByIdx } from "./model"
 import { daysOfTheWeek, shortDate, formatDateString } from "Utils"
 
 const Toolbar = ({ attrs: { mdl } }) => {
@@ -13,13 +6,13 @@ const Toolbar = ({ attrs: { mdl } }) => {
     view: ({ attrs: { mdl } }) =>
       m(".toolbar", [
         m("input", {
-          onchange: (e) => m.route.set(e.target.value), //(mdl.data = calendarModel(e.target.value)),
+          onchange: (e) => m.route.set(e.target.value),
           type: "date",
           value: mdl.data.startDate,
         }),
         m(
           "button.width-100",
-          { onclick: (_) => m.route.set(shortDate(new Date())) }, //(mdl.data = calendarModel()) },
+          { onclick: (_) => m.route.set(shortDate(new Date())) },
           "Today"
         ),
       ]),
@@ -29,7 +22,6 @@ const Toolbar = ({ attrs: { mdl } }) => {
 const MonthsToolbar = () => {
   return {
     view: ({ attrs: { mdl } }) => {
-      // console.log(mdl)
       return m(".frow width-100  mt-10", [
         m(".frow width-100 row-between mt-10", [
           m(
@@ -167,7 +159,6 @@ const CalendarBody = () => {
 export const Calendar = () => {
   return {
     view: ({ attrs: { mdl } }) => {
-      // console.log(mdl)
       return m(".calendar", [
         m(Toolbar, { mdl: mdl.Calendar }),
         m(CalendarBody, { mdl: mdl.Calendar }),

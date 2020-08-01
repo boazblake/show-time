@@ -1,4 +1,4 @@
-import { Calendar, Clock } from "Components"
+import { Calendar, Day } from "Components"
 import { HTTP, locals } from "Utils"
 
 const loadTask = (http) => (mdl) => locals.getTask(mdl.currentShortDate())
@@ -12,7 +12,7 @@ const onError = (state) => (err) => {
 const onSuccess = (mdl, state) => (data) => {
   state.data = data
   if (data) {
-    mdl.Clock.data = data
+    mdl.Day.data = data
   }
   state.error = null
   state.status = "success"
@@ -35,7 +35,7 @@ export const Home = ({ attrs: { mdl } }) => {
         m(Calendar, { mdl }),
         state.status == "loading" && m("p", "FETCHING TODAYS EVENTS..."),
         state.status == "failed" && m("p", "FAILED TO FETCH EVENTS"),
-        state.status == "success" && m(Clock, { mdl, events: state.data }),
+        state.status == "success" && m(Day, { mdl, events: state.data }),
       ])
     },
   }
