@@ -50,4 +50,5 @@ model.settings.profile = getProfile(winW)
 
 checkWidth(winW)
 
-m.route(root, `/${shortDate(new Date())}`, routes(model))
+m.route(root, `/login`, routes(model))
+// m.route(root, `/${shortDate(new Date())}`, routes(model))

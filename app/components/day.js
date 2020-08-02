@@ -1,7 +1,15 @@
 import { Hour, Editor } from "Components"
+import { getHoursInDay } from "Utils"
+
+export const dayModel = (mdl, date = new Date()) =>
+  getHoursInDay(mdl.timeFormats[mdl.format()]).reduce((day, hour) => {
+    day[hour] = {}
+    return day
+  }, {})
 
 export const Day = ({ attrs: { mdl } }) => {
-  const loadTask = (http) => (mdl) => locals.getTask(mdl.currentShortDate())
+  let _dom
+  const loadTask = (http) => (mdl) => locals.getTask(mdl.currentShortDate()) //timetsamp to day model ...
 
   const onError = (state) => (err) => {
     state.error = err
@@ -22,9 +30,27 @@ export const Day = ({ attrs: { mdl } }) => {
   const load = (state) => ({ attrs: { mdl } }) => {
     loadTask(HTTP)(mdl).fork(onError(state), onSuccess(mdl, state))
   }
+
+  const planDay = (mdl) => ({ dom }) => {
+    if (mdl.toAnchor()) {
+      console.log(
+        "anchor",
+        mdl.toAnchor(),
+        dom,
+        dom.querySelector(`${mdl.toAnchor().toString()}`)
+      )
+
+      let el = document.getElementById(mdl.toAnchor())
+
+      console.log("el", el)
+    }
+  }
+
   return {
     oninit: load,
+    oncreate: planDay(mdl),
     view: ({ attrs: { mdl } }) => {
+      console.log(_dom)
       return m(
         ".day",
         m(".frow-container", [

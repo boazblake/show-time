@@ -6,7 +6,7 @@ export const Hour = () => {
       return m(
         ".frow ",
         m(".hour ", [
-          m("p.hour-time", time),
+          m("p.hour-time", { id: time }, time),
           [
             m(EventsList, { mdl, events }),
             m(".half-hour", m(".top")),

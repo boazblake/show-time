@@ -18,9 +18,9 @@ const Event = ({ attrs: { mdl } }) => {
           {
             onclick: (e) =>
               m.route.set(
-                `/${mdl.currentShortDate()}/${splitTime(event.startTime)[0]}/${
-                  splitTime(event.startTime)[1]
-                }`
+                `/${mdl.user.name}/${mdl.currentShortDate()}/${
+                  splitTime(event.startTime)[0]
+                }/${splitTime(event.startTime)[1]}`
               ),
             style: {
               top: `${splitTime(event.startTime)[1]}px`,

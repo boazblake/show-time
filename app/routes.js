@@ -1,10 +1,16 @@
-import { Home, Event } from "Pages"
+import { Home, Event, Login, Register } from "Pages"
 import { calendarModel } from "Components/calendar/model"
-import { dayModel } from "Utils"
+import { dayModel } from "Components"
 
 const routes = (mdl) => {
   return {
-    "/:date": {
+    "/login": {
+      render: () => m(Login, { mdl }),
+    },
+    "/register": {
+      render: () => m(Register, { mdl }),
+    },
+    "/:username/:date": {
       onmatch: ({ date }) => {
         let _d = date.split("-")
         mdl.currentShortDate(date)
@@ -16,7 +22,7 @@ const routes = (mdl) => {
       render: () => [m(Home, { mdl, key: mdl.currentLongDate() })],
     },
 
-    "/:date/:hour/:min": {
+    "/:username/:date/:hour/:min": {
       onmatch: ({ hour, min }) => {
         mdl.Event = mdl.Day.data[`${hour}:00`][min]
       },

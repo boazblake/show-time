@@ -1,5 +1,6 @@
 export * from "./http.js"
 export * from "./local-storage.js"
+export * from "./validations"
 
 export const log = (m) => (v) => {
   console.log(m, v)
@@ -67,12 +68,6 @@ export const toHourViewModel = (date) => (mdl, hour) => {
   }
   return mdl
 }
-
-export const dayModel = (mdl, date) =>
-  getHoursInDay(mdl.timeFormats[mdl.format()]).reduce((day, hour) => {
-    day[hour] = {}
-    return day
-  }, {})
 
 export const pad0Left = (num) => `0${num}`
 

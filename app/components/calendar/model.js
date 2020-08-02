@@ -46,25 +46,25 @@ export const goToDate = ({ year, month, day, dir }) => {
   m.route.set(`/${formatDateString({ year: _year, month: _month, day: _day })}`)
 }
 
-export const updateMonthDto = (year, month, day, dir) => {
-  let _year = year
-  let _month = updateMonth(month, dir)
-  let _day = day || "01"
+// const updateMonthDto = (year, month, day, dir) => {
+//   let _year = year
+//   let _month = updateMonth(month, dir)
+//   let _day = day || "01"
 
-  if (_month >= 13) {
-    _year = updateYear(_year, dir)
-    _month = "01"
-  }
+//   if (_month >= 13) {
+//     _year = updateYear(_year, dir)
+//     _month = "01"
+//   }
 
-  if (_month <= 0) {
-    _year = updateYear(_year, dir)
-    _month = "12"
-  }
+//   if (_month <= 0) {
+//     _year = updateYear(_year, dir)
+//     _month = "12"
+//   }
 
-  return calendarModel(
-    formatDateString({ year: _year, month: _month, day: _day })
-  )
-}
+//   return calendarModel(
+//     formatDateString({ year: _year, month: _month, day: _day })
+//   )
+// }
 
 export const getMonthByIdx = (idx) =>
   idx >= 12

@@ -88,6 +88,6 @@ exports.paths = {
 
 exports.npm = {
   enabled: true,
-  globals: { m: "mithril" },
+  globals: { m: "mithril", Stream: "mithril-stream" },
   styles: {},
 }

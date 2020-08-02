@@ -133,15 +133,12 @@ const CalendarBody = () => {
                   ".col-xs-1-7 text-center",
                   {
                     onclick: (_) =>
-                      m.route.set(
-                        `/${formatDateString({
-                          year: mdl.data.selected.year,
-                          month: mdl.data.selected.month,
-                          day: day,
-                          dir,
-                        })}`
-                      ),
-
+                      goToDate({
+                        year: mdl.data.selected.year,
+                        month: mdl.data.selected.month,
+                        day,
+                        dir,
+                      }),
                     class: calendarDay(mdl.data)(day, dir),
                   },
                   m("span.day", day)
