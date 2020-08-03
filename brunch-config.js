@@ -83,7 +83,14 @@ exports.plugins = {
 
 exports.paths = {
   public: "docs",
-  watched: ["app", "app/Utils", "app/Styles", "app/Pages", "app/assets"],
+  watched: [
+    "app",
+    "app/Utils",
+    "app/Styles",
+    "app/Pages",
+    "app/assets",
+    "app/models",
+  ],
 }
 
 exports.npm = {

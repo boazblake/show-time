@@ -1,6 +1,5 @@
 import { differenceInMinutes } from "date-fns"
 import { getFullDate } from "Utils"
-const splitTime = (time) => time.split(":")
 
 const Event = ({ attrs: { mdl } }) => {
   const getHeight = ([startHour, startMin], [endHour, endMin]) => {
@@ -10,8 +9,14 @@ const Event = ({ attrs: { mdl } }) => {
   }
 
   return {
-    view: ({ attrs: { mdl, event, col } }) =>
-      m(
+    view: ({ attrs: { mdl, event, col } }) => {
+      console.log(
+        differenceInMinutes(
+          new Date(event.endTime),
+          new Date(event.startTime)
+        ) * 2
+      )
+      return m(
         `.col-xs-1-${col + 2}`,
         m(
           ".event-list-item ",
@@ -19,20 +24,23 @@ const Event = ({ attrs: { mdl } }) => {
             onclick: (e) =>
               m.route.set(
                 `/${mdl.user.name}/${mdl.currentShortDate()}/${
-                  splitTime(event.startTime)[0]
-                }/${splitTime(event.startTime)[1]}`
+                  event.start.hour
+                }/${event.start.min}`
               ),
             style: {
-              top: `${splitTime(event.startTime)[1]}px`,
-              height: `${getHeight(
-                splitTime(event.endTime),
-                splitTime(event.startTime)
-              )}px`,
+              top: `${event.start.min}px`,
+              height: `${
+                differenceInMinutes(
+                  new Date(event.endTime),
+                  new Date(event.startTime)
+                ) * 2
+              }px`,
             },
           },
           event.title
         )
-      ),
+      )
+    },
   }
 }
 

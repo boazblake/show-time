@@ -1,37 +1,37 @@
-import { Hour, Editor } from "Components"
-import { getHoursInDay } from "Utils"
+import { Editor } from "Components"
+import { log, getHoursInDay } from "Utils"
+import { EventsList } from "Components"
 
-export const dayModel = (mdl, date = new Date()) =>
-  getHoursInDay(mdl.timeFormats[mdl.format()]).reduce((day, hour) => {
-    day[hour] = {}
-    return day
-  }, {})
+export const Hour = () => {
+  return {
+    view: ({ attrs: { mdl, hour, time, events } }) => {
+      return m(
+        ".frow ",
+        m(".hour ", [
+          m("p.hour-time", { id: time }, time),
+          [
+            m(EventsList, { mdl, events }),
+            m(".half-hour", m(".top")),
+            m(".half-hour", m(".bottom")),
+          ],
+        ])
+      )
+    },
+  }
+}
 
 export const Day = ({ attrs: { mdl } }) => {
+  const state = {
+    error: null,
+    data: null,
+    status: "loading",
+  }
+
   let _dom
-  const loadTask = (http) => (mdl) => locals.getTask(mdl.currentShortDate()) //timetsamp to day model ...
-
-  const onError = (state) => (err) => {
-    state.error = err
-    state.status = "failed"
-    m.redraw()
-  }
-
-  const onSuccess = (mdl, state) => (data) => {
-    state.data = data
-    if (data) {
-      mdl.Day.data = data
-    }
-    state.error = null
-    state.status = "success"
-    m.redraw()
-  }
-
-  const load = (state) => ({ attrs: { mdl } }) => {
-    loadTask(HTTP)(mdl).fork(onError(state), onSuccess(mdl, state))
-  }
 
   const planDay = (mdl) => ({ dom }) => {
+    // _dom = dom
+    console.log("create day")
     if (mdl.toAnchor()) {
       console.log(
         "anchor",
@@ -44,13 +44,15 @@ export const Day = ({ attrs: { mdl } }) => {
 
       console.log("el", el)
     }
+    mdl.updateDay(false)
   }
 
   return {
-    oninit: load,
-    oncreate: planDay(mdl),
-    view: ({ attrs: { mdl } }) => {
-      console.log(_dom)
+    // oninit: load,
+    // oncreate: ({ attrs: { mdl } }) => planDay(mdl),
+    // onupdate: ({ attrs: { mdl } }) =>
+    //   mdl.updateDay() && planDay(mdl)({ dom: _dom }),
+    view: ({ attrs: { mdl, invites } }) => {
       return m(
         ".day",
         m(".frow-container", [
@@ -66,12 +68,13 @@ export const Day = ({ attrs: { mdl } }) => {
           ),
           m(".day-container", [
             mdl.state.modal() && m(Editor, { mdl }),
-            Object.keys(mdl.Day.data).map((hour, idx) => {
+            getHoursInDay(mdl.timeFormats[mdl.format()]).map((hour, idx) => {
+              // console.log("day", invites[hour])
               return m(Hour, {
                 mdl,
-                hour: mdl.Day.data[hour],
+                hour: invites[hour],
                 time: hour,
-                events: Object.values(mdl.Day.data[hour]),
+                events: invites[hour],
               })
             }),
           ]),

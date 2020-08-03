@@ -1,6 +1,5 @@
-import routes from "./routes.js"
-import model from "./model.js"
-import { shortDate } from "Utils"
+import App from "./App.js"
+import model from "Models"
 import { FunConfig } from "@boazblake/fun-config"
 FunConfig.configure()
 
@@ -50,5 +49,10 @@ model.settings.profile = getProfile(winW)
 
 checkWidth(winW)
 
-m.route(root, `/login`, routes(model))
-// m.route(root, `/${shortDate(new Date())}`, routes(model))
+if (sessionStorage.getItem("shindigit-user")) {
+  model.user = JSON.parse(sessionStorage.getItem("shindigit-user"))
+  model.state.isAuth(true)
+}
+console.log(model)
+
+m.route(root, "/login", App(model))

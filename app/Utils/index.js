@@ -22,8 +22,10 @@ export const isSideBarActive = (mdl) =>
 
 export const range = (size) => [...Array(size).keys()]
 
-export const shortDate = (date = new Date()) =>
-  new Date(date).toISOString().split("T")[0]
+export const shortDate = (date = new Date()) => {
+  console.log(date)
+  return new Date(date).toISOString().split("T")[0]
+}
 
 export const isLeapYear = (year) =>
   year % 4 == 0
@@ -33,6 +35,16 @@ export const isLeapYear = (year) =>
       ? true
       : false
     : false
+
+export const isToday = (someDate) => {
+  const today = new Date()
+  const date = new Date(someDate)
+  return (
+    date.getDate() == today.getDate() &&
+    date.getMonth() == today.getMonth() &&
+    date.getFullYear() == today.getFullYear()
+  )
+}
 
 export const daysOfTheWeek = [
   "Monday",
@@ -59,8 +71,24 @@ export const monthsOfTheYear = [
   "December",
 ]
 
-export const getFullDate = ({ year, month, day }, startHour, startMin) =>
-  new Date(year, month, day, startHour, startMin)
+export const fromFullDate = (date) => {
+  let d = new Date(date)
+  return {
+    day: d.getDate(),
+    month: d.getMonth(),
+    year: d.getFullYear(),
+    hour: d.getHours(),
+    min: d.getMinutes(),
+  }
+}
+
+export const getFullDate = ({ year, month, day }, startHour, startMin) => {
+  console.log(
+    "getFullDate",
+    new Date(year, month - 1, day, startHour, startMin)
+  )
+  return new Date(year, month - 1, day, startHour, startMin)
+}
 
 export const toHourViewModel = (date) => (mdl, hour) => {
   if (!mdl[date][hour]) {

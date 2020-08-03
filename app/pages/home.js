@@ -1,41 +1,82 @@
 import { Calendar, Day } from "Components"
-import { HTTP, locals } from "Utils"
+import { isToday, HTTP, fromFullDate } from "Utils"
+import { dayModel } from "Models"
+import { map } from "ramda"
+import { calendarModel } from "Components/calendar/model"
 
-const loadTask = (http) => (mdl) => locals.getTask(mdl.currentShortDate())
-
-const onError = (state) => (err) => {
-  state.error = err
-  state.status = "failed"
-  m.redraw()
+const toDayViewModel = (dayViewModel, invite) => {
+  dayViewModel[`${invite.start.hour}:00`].push(invite)
+  console.log("ddd", dayViewModel)
+  return dayViewModel
 }
 
-const onSuccess = (mdl, state) => (data) => {
-  state.data = data
-  if (data) {
-    mdl.Day.data = data
-  }
-  state.error = null
-  state.status = "success"
-  m.redraw()
-}
-
-const load = (state) => ({ attrs: { mdl } }) =>
-  loadTask(HTTP)(mdl).fork(onError(state), onSuccess(mdl, state))
+const toInviteViewModel = ({
+  startTime,
+  endTime,
+  title,
+  objectId,
+  eventId,
+  status,
+}) => ({
+  startTime,
+  endTime,
+  start: fromFullDate(startTime),
+  end: fromFullDate(endTime),
+  inviteId: objectId,
+  eventId,
+  title,
+  status,
+})
 
 export const Home = ({ attrs: { mdl } }) => {
   const state = {
     error: null,
     status: "loading",
+    invites: null,
+    events: null,
+  }
+
+  const loadTask = (http) => (mdl) =>
+    http.backEnd
+      .getTask(mdl)(`data/Invites?where=userId%3D'${mdl.user.objectId}'`)
+      .map(map(toInviteViewModel))
+
+  const onError = (err) => {
+    state.error = err
+    state.status = "failed"
+  }
+
+  const onSuccess = (invites) => {
+    state.invites = invites
+    state.todaysInvites = invites
+      .filter((i) => isToday(i.startTime))
+      .reduce(toDayViewModel, dayModel(mdl, mdl.currentShortDate()))
+    console.log("home succes", state.invites, mdl)
+    state.error = null
+    state.status = "success"
+  }
+
+  const load = ({ attrs: { mdl } }) => {
+    // console.log("loading")
+    loadTask(HTTP)(mdl).fork(onError, onSuccess)
   }
 
   return {
-    oninit: load(state),
+    oninit: load,
     view: ({ attrs: { mdl } }) => {
       return m(".frow", [
-        m(Calendar, { mdl }),
-        state.status == "loading" && m("p", "FETCHING TODAYS EVENTS..."),
+        m(Calendar, {
+          mdl,
+          calendar: calendarModel(state.invites),
+          invites: state.invites,
+        }),
+        state.status == "loading" && m("p", "FETCHING EVENTS..."),
         state.status == "failed" && m("p", "FAILED TO FETCH EVENTS"),
-        state.status == "success" && m(Day, { mdl, events: state.data }),
+        state.status == "success" &&
+          m(Day, {
+            mdl,
+            invites: state.todaysInvites,
+          }),
       ])
     },
   }

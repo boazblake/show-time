@@ -1,9 +1,9 @@
 import { Modal } from "Components"
 import { HTTP } from "Utils"
+import Task from "data.task"
 
 const submitEventTask = (http) => (mdl) => ({
   shortDate,
-  timestamp,
   allday,
   startTime,
   endTime,
@@ -16,10 +16,10 @@ const submitEventTask = (http) => (mdl) => ({
 
   let url = "data/Events"
   let dto = {
-    endTime: new Date(year, month, day, getHour(endTime), getMin(endTime)),
+    endTime: new Date(year, month - 1, day, getHour(endTime), getMin(endTime)),
     startTime: new Date(
       year,
-      month,
+      month - 1,
       day,
       getHour(startTime),
       getMin(startTime)
@@ -28,29 +28,54 @@ const submitEventTask = (http) => (mdl) => ({
     notes,
     title,
     allday,
+    createdBy: mdl.user.objectId,
   }
 
-  console.log(dto)
-
-  return http.backEnd.postTask(mdl)(url)(dto)
+  return http.backEnd
+    .postTask(mdl)(url)(dto)
+    .chain(({ objectId, ownerId, endTime, startTime, allDay, title }) => {
+      let eventId = objectId
+      return http.backEnd
+        .postTask(mdl)("data/Invites")({
+          eventId,
+          userId: ownerId,
+          status: "accept",
+          endTime,
+          startTime,
+          allDay,
+          title,
+        })
+        .chain(({ objectId }) => {
+          let inviteId = objectId
+          return Task.of((user) => (event) => ({
+            user,
+            event,
+          }))
+            .ap(
+              http.backEnd.postTask(mdl)(
+                `data/Users/${mdl.user.objectId}/invites%3AInvites%3An`
+              )([inviteId])
+            )
+            .ap(
+              http.backEnd.postTask(mdl)(
+                `data/Events/${eventId}/invites%3AInvites%3An`
+              )([inviteId])
+            )
+        })
+    })
 }
 
-const EventForm = ({ attrs: { state } }) => {
-  //will need to be done on fetch??
-  // let startSplit = state.startTime.split(":")
+;`data/<table-name>/<parentObjectId>/<relationName>`
 
-  // mdl.Day.data[`${startSplit[0]}:00`][startSplit[1]] = state
-  // localStorage.setItem(state.date, JSON.stringify(mdl.Day.data))
-  // mdl.state.modal(false)
-  // m.redraw()
-
+const EventForm = ({ attrs: { state, mdl } }) => {
   return {
     view: () =>
       m("form.event-form", [
         m(
           "label",
           m("input", {
-            onchange: (e) => m.route.set(e.target.value),
+            onchange: (e) =>
+              m.route.set(`/${mdl.user.name}/${shortDate(new Date())}`),
             type: "date",
             value: state.shortDate,
             disabled: state.allday,
@@ -116,7 +141,6 @@ export const Editor = ({ attrs: { mdl } }) => {
   // console.log("editor:: find event?", mdl)
   const state = {
     shortDate: mdl.currentShortDate(),
-    timestamp: mdl.currentLongDate().valueOf,
     allday: false,
     startTime: "",
     endTime: "",
@@ -128,17 +152,13 @@ export const Editor = ({ attrs: { mdl } }) => {
     const onError = (state) => (err) => {
       state.error = err
       state.status = "failed"
-      m.redraw()
     }
 
     const onSuccess = (mdl, state) => (data) => {
-      state.data = data
-      if (data) {
-        mdl.Day.data = data
-      }
       state.error = null
       state.status = "success"
-      m.redraw()
+      mdl.updateDay(true)
+      mdl.state.modal(false)
     }
 
     submitEventTask(HTTP)(mdl)(state).fork(

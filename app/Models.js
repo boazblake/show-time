@@ -1,7 +1,22 @@
 import { calendarModel } from "Components/calendar/model"
-import { dayModel } from "Components"
+import { getHoursInDay } from "Utils"
+
+export const dayModel = (mdl, date = new Date()) =>
+  getHoursInDay(mdl.timeFormats[mdl.format()]).reduce((day, hour) => {
+    day[hour] = []
+    return day
+  }, {})
+
+export const inviteModel = () => ({
+  eventId: "",
+  status: "",
+  userId: "",
+})
+
+export const eventModel = () => ({})
 
 const model = {
+  updateDay: Stream(false),
   toAnchor: Stream(false),
   timeFormats: ["12hrs", "24hrs"],
   format: Stream(1),

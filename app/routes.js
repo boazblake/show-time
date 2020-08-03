@@ -16,8 +16,8 @@ const routes = (mdl) => {
         mdl.currentShortDate(date)
         mdl.currentLongDate(new Date(date))
         mdl.selectedDate = { year: _d[0], month: _d[1], day: _d[2] }
-        mdl.Calendar.data = calendarModel(date)
-        mdl.Day.data = dayModel(mdl, date)
+        // mdl.Calendar.data = calendarModel(date)
+        // mdl.Day.data = dayModel(mdl, date)
       },
       render: () => [m(Home, { mdl, key: mdl.currentLongDate() })],
     },

@@ -29,7 +29,7 @@ const updateMonth = (month, dir) =>
     ? pad0Left((parseInt(month) + dir).toString())
     : (parseInt(month) + dir).toString()
 
-export const goToDate = ({ year, month, day, dir }) => {
+export const goToDate = (mdl, { year, month, day, dir }) => {
   let _year = year
   let _month = updateMonth(month, dir)
   let _day = day || "01"
@@ -43,28 +43,14 @@ export const goToDate = ({ year, month, day, dir }) => {
     _year = updateYear(_year, dir)
     _month = "12"
   }
-  m.route.set(`/${formatDateString({ year: _year, month: _month, day: _day })}`)
+  m.route.set(
+    `/${mdl.user.name}/${formatDateString({
+      year: _year,
+      month: _month,
+      day: _day,
+    })}`
+  )
 }
-
-// const updateMonthDto = (year, month, day, dir) => {
-//   let _year = year
-//   let _month = updateMonth(month, dir)
-//   let _day = day || "01"
-
-//   if (_month >= 13) {
-//     _year = updateYear(_year, dir)
-//     _month = "01"
-//   }
-
-//   if (_month <= 0) {
-//     _year = updateYear(_year, dir)
-//     _month = "12"
-//   }
-
-//   return calendarModel(
-//     formatDateString({ year: _year, month: _month, day: _day })
-//   )
-// }
 
 export const getMonthByIdx = (idx) =>
   idx >= 12
@@ -108,7 +94,8 @@ export const getMonthMatrix = ({ year, month }) => {
   )
 }
 
-export const calendarModel = (date = shortDate()) => {
+export const calendarModel = (invites = [], date = shortDate()) => {
+  console.log(date, new Date())
   let _date = shortDate(date).split("-")
   let today = shortDate().split("-")
   let year = _date[0]
@@ -116,6 +103,7 @@ export const calendarModel = (date = shortDate()) => {
   let day = _date[2]
 
   let dto = {
+    invites,
     isLeapYear: isLeapYear(year),
     startDate: date,
     selected: { year, month, day },
@@ -129,6 +117,7 @@ export const calendarModel = (date = shortDate()) => {
     day,
     daysInMonth: daysInMonth(month, year),
   }
+  console.log(dto)
   return dto
 }
 

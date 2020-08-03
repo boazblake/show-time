@@ -149,7 +149,48 @@ var __makeRelativeRequire = function(require, mappings, pref) {
     return require(name);
   }
 };
-require.register("Components/calendar/calendar.js", function(exports, require, module) {
+require.register("App.js", function(exports, require, module) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+
+var _index = _interopRequireDefault(require("./Routes/index"));
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var toRoutes = function toRoutes(mdl) {
+  return function (acc, route) {
+    acc[route.route] = {
+      onmatch: function onmatch(args, path, fullroute) {
+        if (route.group.includes("authenticated") && !mdl.state.isAuth()) {
+          mdl.route.set(m.route.get());
+        }
+
+        mdl.state.route = route;
+        mdl.state.anchor = path.split("#")[1];
+        var isAnchor = Boolean(mdl.state.anchor);
+        route.onmatch(mdl, args, path, fullroute, isAnchor);
+      },
+      render: function render() {
+        return route.component(mdl);
+      }
+    };
+    return acc;
+  };
+};
+
+var App = function App(mdl) {
+  return _index.default.reduce(toRoutes(mdl), {});
+};
+
+var _default = App;
+exports.default = _default;
+});
+
+;require.register("Components/calendar/calendar.js", function(exports, require, module) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -162,19 +203,23 @@ var _model = require("./model");
 var _Utils = require("Utils");
 
 var Toolbar = function Toolbar(_ref) {
-  var mdl = _ref.attrs.mdl;
+  var _ref$attrs = _ref.attrs,
+      mdl = _ref$attrs.mdl,
+      calendar = _ref$attrs.calendar;
   return {
     view: function view(_ref2) {
-      var mdl = _ref2.attrs.mdl;
+      var _ref2$attrs = _ref2.attrs,
+          mdl = _ref2$attrs.mdl,
+          calendar = _ref2$attrs.calendar;
       return m(".toolbar", [m("input", {
         onchange: function onchange(e) {
-          return m.route.set(e.target.value);
+          return m.route.set("/".concat(mdl.user.name, "/").concat((0, _Utils.shortDate)(new Date())));
         },
         type: "date",
-        value: mdl.data.startDate
+        value: calendar.startDate
       }), m("button.width-100", {
         onclick: function onclick(_) {
-          return m.route.set((0, _Utils.shortDate)(new Date()));
+          return m.route.set("/".concat(mdl.user.name, "/").concat((0, _Utils.shortDate)(new Date())));
         }
       }, "Today")]);
     }
@@ -184,42 +229,44 @@ var Toolbar = function Toolbar(_ref) {
 var MonthsToolbar = function MonthsToolbar() {
   return {
     view: function view(_ref3) {
-      var mdl = _ref3.attrs.mdl;
+      var _ref3$attrs = _ref3.attrs,
+          mdl = _ref3$attrs.mdl,
+          calendar = _ref3$attrs.calendar;
       return m(".frow width-100  mt-10", [m(".frow width-100 row-between mt-10", [m("button.prevMonth", m("h3", {
         onclick: function onclick(_) {
-          m.route.set("/".concat((0, _Utils.formatDateString)({
-            year: parseInt(mdl.data.selected.year) - 1,
-            month: mdl.data.selected.month,
-            day: mdl.data.selected.day
+          m.route.set("/".concat(mdl.user.name, "/").concat((0, _Utils.formatDateString)({
+            year: parseInt(calendar.selected.year) - 1,
+            month: calendar.selected.month,
+            day: calendar.selected.day
           })));
         }
-      }, parseInt(mdl.data.selected.year) - 1)), m(".centerMonthGroup", [m("h2.currentMonth", (0, _model.getMonthByIdx)(parseInt(mdl.data.selected.month) - 1)), m("h3.text-center", parseInt(mdl.data.selected.year))]), m("button.nextMonth", m("h3", {
+      }, parseInt(calendar.selected.year) - 1)), m(".centerMonthGroup", [m("h2.currentMonth", (0, _model.getMonthByIdx)(parseInt(calendar.selected.month) - 1)), m("h3.text-center", parseInt(calendar.selected.year))]), m("button.nextMonth", m("h3", {
         onclick: function onclick(_) {
-          m.route.set("/".concat((0, _Utils.formatDateString)({
-            year: parseInt(mdl.data.selected.year) + 1,
-            month: mdl.data.selected.month,
-            day: mdl.data.selected.day
+          m.route.set("/".concat(mdl.user.name, "/").concat((0, _Utils.formatDateString)({
+            year: parseInt(calendar.selected.year) + 1,
+            month: calendar.selected.month,
+            day: calendar.selected.day
           })));
         }
-      }, parseInt(mdl.data.selected.year) + 1))]), m(".frow width-100 row-between mt-10", [m("button", {
+      }, parseInt(calendar.selected.year) + 1))]), m(".frow width-100 row-between mt-10", [m("button", {
         onclick: function onclick(_) {
-          (0, _model.goToDate)({
-            year: mdl.data.selected.year,
-            month: mdl.data.selected.month,
-            day: mdl.data.selected.day,
+          return (0, _model.goToDate)(mdl, {
+            year: calendar.selected.year,
+            month: calendar.selected.month,
+            day: calendar.selected.day,
             dir: -1
           });
         }
-      }, m("h4", (0, _model.getMonthByIdx)(parseInt(mdl.data.selected.month - 2)))), m("button", {
+      }, m("h4", (0, _model.getMonthByIdx)(parseInt(calendar.selected.month - 2)))), m("button", {
         onclick: function onclick(_) {
-          (0, _model.goToDate)({
-            year: mdl.data.selected.year,
-            month: mdl.data.selected.month,
-            day: mdl.data.selected.day,
+          return (0, _model.goToDate)(mdl, {
+            year: calendar.selected.year,
+            month: calendar.selected.month,
+            day: calendar.selected.day,
             dir: 1
           });
         }
-      }, m("h4", (0, _model.getMonthByIdx)(parseInt(mdl.data.selected.month))))])]);
+      }, m("h4", (0, _model.getMonthByIdx)(parseInt(calendar.selected.month))))])]);
     }
   };
 };
@@ -227,10 +274,13 @@ var MonthsToolbar = function MonthsToolbar() {
 var CalendarBody = function CalendarBody() {
   return {
     view: function view(_ref4) {
-      var mdl = _ref4.attrs.mdl;
-      var dto = (0, _model.getMonthMatrix)(mdl.data);
+      var _ref4$attrs = _ref4.attrs,
+          mdl = _ref4$attrs.mdl,
+          calendar = _ref4$attrs.calendar;
+      var dto = (0, _model.getMonthMatrix)(calendar);
       return m(".frow frow-container", [m(MonthsToolbar, {
-        mdl: mdl
+        mdl: mdl,
+        calendar: calendar
       }), m(".frow width-100 row-between mt-10", _Utils.daysOfTheWeek.map(function (day) {
         return m(".col-xs-1-7 text-center", m("span.width-auto", day[0].toUpperCase()));
       })), m(".frow centered-column width-100 row-between mt-10 ", dto.map(function (week) {
@@ -239,14 +289,14 @@ var CalendarBody = function CalendarBody() {
               dir = _ref5.dir;
           return m(".col-xs-1-7 text-center", {
             onclick: function onclick(_) {
-              return (0, _model.goToDate)({
-                year: mdl.data.selected.year,
-                month: mdl.data.selected.month,
+              return (0, _model.goToDate)(mdl, {
+                year: calendar.selected.year,
+                month: calendar.selected.month,
                 day: day,
                 dir: dir
               });
             },
-            class: (0, _model.calendarDay)(mdl.data)(day, dir)
+            class: (0, _model.calendarDay)(calendar)(day, dir)
           }, m("span.day", day));
         }));
       }))]);
@@ -259,9 +309,11 @@ var Calendar = function Calendar() {
     view: function view(_ref6) {
       var mdl = _ref6.attrs.mdl;
       return m(".calendar", [m(Toolbar, {
-        mdl: mdl.Calendar
+        mdl: mdl,
+        calendar: mdl.Calendar.data
       }), m(CalendarBody, {
-        mdl: mdl.Calendar
+        mdl: mdl,
+        calendar: mdl.Calendar.data
       })]);
     }
   };
@@ -294,7 +346,7 @@ var updateMonth = function updateMonth(month, dir) {
   return (parseInt(month) + dir).toString().length == 1 ? (0, _Utils.pad0Left)((parseInt(month) + dir).toString()) : (parseInt(month) + dir).toString();
 };
 
-var goToDate = function goToDate(_ref) {
+var goToDate = function goToDate(mdl, _ref) {
   var year = _ref.year,
       month = _ref.month,
       day = _ref.day,
@@ -315,28 +367,12 @@ var goToDate = function goToDate(_ref) {
     _month = "12";
   }
 
-  m.route.set("/".concat((0, _Utils.formatDateString)({
+  m.route.set("/".concat(mdl.user.name, "/").concat((0, _Utils.formatDateString)({
     year: _year,
     month: _month,
     day: _day
   })));
-}; // const updateMonthDto = (year, month, day, dir) => {
-//   let _year = year
-//   let _month = updateMonth(month, dir)
-//   let _day = day || "01"
-//   if (_month >= 13) {
-//     _year = updateYear(_year, dir)
-//     _month = "01"
-//   }
-//   if (_month <= 0) {
-//     _year = updateYear(_year, dir)
-//     _month = "12"
-//   }
-//   return calendarModel(
-//     formatDateString({ year: _year, month: _month, day: _day })
-//   )
-// }
-
+};
 
 exports.goToDate = goToDate;
 
@@ -396,7 +432,9 @@ var getMonthMatrix = function getMonthMatrix(_ref3) {
 exports.getMonthMatrix = getMonthMatrix;
 
 var calendarModel = function calendarModel() {
-  var date = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : (0, _Utils.shortDate)();
+  var invites = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : [];
+  var date = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : (0, _Utils.shortDate)();
+  console.log(date, new Date());
 
   var _date = (0, _Utils.shortDate)(date).split("-");
 
@@ -405,6 +443,7 @@ var calendarModel = function calendarModel() {
   var month = _date[1];
   var day = _date[2];
   var dto = {
+    invites: invites,
     isLeapYear: (0, _Utils.isLeapYear)(year),
     startDate: date,
     selected: {
@@ -422,6 +461,7 @@ var calendarModel = function calendarModel() {
     day: day,
     daysInMonth: daysInMonth(month, year)
   };
+  console.log(dto);
   return dto;
 };
 
@@ -466,93 +506,80 @@ var Component = function Component() {
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.Day = exports.dayModel = void 0;
+exports.Day = exports.Hour = void 0;
 
 var _Components = require("Components");
 
 var _Utils = require("Utils");
 
-var dayModel = function dayModel(mdl) {
-  var date = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : new Date();
-  return (0, _Utils.getHoursInDay)(mdl.timeFormats[mdl.format()]).reduce(function (day, hour) {
-    day[hour] = {};
-    return day;
-  }, {});
+var Hour = function Hour() {
+  return {
+    view: function view(_ref) {
+      var _ref$attrs = _ref.attrs,
+          mdl = _ref$attrs.mdl,
+          hour = _ref$attrs.hour,
+          time = _ref$attrs.time,
+          events = _ref$attrs.events;
+      return m(".frow ", m(".hour ", [m("p.hour-time", {
+        id: time
+      }, time), [m(_Components.EventsList, {
+        mdl: mdl,
+        events: events
+      }), m(".half-hour", m(".top")), m(".half-hour", m(".bottom"))]]));
+    }
+  };
 };
 
-exports.dayModel = dayModel;
+exports.Hour = Hour;
 
-var Day = function Day(_ref) {
-  var mdl = _ref.attrs.mdl;
+var Day = function Day(_ref2) {
+  var mdl = _ref2.attrs.mdl;
+  var state = {
+    error: null,
+    data: null,
+    status: "loading"
+  };
 
   var _dom;
-
-  var loadTask = function loadTask(http) {
-    return function (mdl) {
-      return locals.getTask(mdl.currentShortDate());
-    };
-  }; //timetsamp to day model ...
-
-
-  var onError = function onError(state) {
-    return function (err) {
-      state.error = err;
-      state.status = "failed";
-      m.redraw();
-    };
-  };
-
-  var onSuccess = function onSuccess(mdl, state) {
-    return function (data) {
-      state.data = data;
-
-      if (data) {
-        mdl.Day.data = data;
-      }
-
-      state.error = null;
-      state.status = "success";
-      m.redraw();
-    };
-  };
-
-  var load = function load(state) {
-    return function (_ref2) {
-      var mdl = _ref2.attrs.mdl;
-      loadTask(HTTP)(mdl).fork(onError(state), onSuccess(mdl, state));
-    };
-  };
 
   var planDay = function planDay(mdl) {
     return function (_ref3) {
       var dom = _ref3.dom;
+      // _dom = dom
+      console.log("create day");
 
       if (mdl.toAnchor()) {
         console.log("anchor", mdl.toAnchor(), dom, dom.querySelector("".concat(mdl.toAnchor().toString())));
         var el = document.getElementById(mdl.toAnchor());
         console.log("el", el);
       }
+
+      mdl.updateDay(false);
     };
   };
 
   return {
-    oninit: load,
-    oncreate: planDay(mdl),
+    // oninit: load,
+    // oncreate: ({ attrs: { mdl } }) => planDay(mdl),
+    // onupdate: ({ attrs: { mdl } }) =>
+    //   mdl.updateDay() && planDay(mdl)({ dom: _dom }),
     view: function view(_ref4) {
-      var mdl = _ref4.attrs.mdl;
-      console.log(_dom);
+      var _ref4$attrs = _ref4.attrs,
+          mdl = _ref4$attrs.mdl,
+          invites = _ref4$attrs.invites;
       return m(".day", m(".frow-container", [m(".".concat(mdl.state.modal() ? "bg-warn" : "bg-info"), m("button.frow.width-100", {
         onclick: function onclick(e) {
           return mdl.state.modal(!mdl.state.modal());
         }
       }, mdl.state.modal() ? "Cancel" : "Add Event")), m(".day-container", [mdl.state.modal() && m(_Components.Editor, {
         mdl: mdl
-      }), Object.keys(mdl.Day.data).map(function (hour, idx) {
-        return m(_Components.Hour, {
+      }), (0, _Utils.getHoursInDay)(mdl.timeFormats[mdl.format()]).map(function (hour, idx) {
+        // console.log("day", invites[hour])
+        return m(Hour, {
           mdl: mdl,
-          hour: mdl.Day.data[hour],
+          hour: invites[hour],
           time: hour,
-          events: Object.values(mdl.Day.data[hour])
+          events: invites[hour]
         });
       })])]));
     }
@@ -574,11 +601,14 @@ var _Components = require("Components");
 
 var _Utils = require("Utils");
 
+var _data = _interopRequireDefault(require("data.task"));
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
 var submitEventTask = function submitEventTask(http) {
   return function (mdl) {
     return function (_ref) {
       var shortDate = _ref.shortDate,
-          timestamp = _ref.timestamp,
           allday = _ref.allday,
           startTime = _ref.startTime,
           endTime = _ref.endTime,
@@ -599,32 +629,58 @@ var submitEventTask = function submitEventTask(http) {
           day = _mdl$selectedDate.day;
       var url = "data/Events";
       var dto = {
-        endTime: new Date(year, month, day, getHour(endTime), getMin(endTime)),
-        startTime: new Date(year, month, day, getHour(startTime), getMin(startTime)),
+        endTime: new Date(year, month - 1, day, getHour(endTime), getMin(endTime)),
+        startTime: new Date(year, month - 1, day, getHour(startTime), getMin(startTime)),
         shortDate: shortDate,
         notes: notes,
         title: title,
-        allday: allday
+        allday: allday,
+        createdBy: mdl.user.objectId
       };
-      console.log(dto);
-      return http.backEnd.postTask(mdl)(url)(dto);
+      return http.backEnd.postTask(mdl)(url)(dto).chain(function (_ref2) {
+        var objectId = _ref2.objectId,
+            ownerId = _ref2.ownerId,
+            endTime = _ref2.endTime,
+            startTime = _ref2.startTime,
+            allDay = _ref2.allDay,
+            title = _ref2.title;
+        var eventId = objectId;
+        return http.backEnd.postTask(mdl)("data/Invites")({
+          eventId: eventId,
+          userId: ownerId,
+          status: "accept",
+          endTime: endTime,
+          startTime: startTime,
+          allDay: allDay,
+          title: title
+        }).chain(function (_ref3) {
+          var objectId = _ref3.objectId;
+          var inviteId = objectId;
+          return _data.default.of(function (user) {
+            return function (event) {
+              return {
+                user: user,
+                event: event
+              };
+            };
+          }).ap(http.backEnd.postTask(mdl)("data/Users/".concat(mdl.user.objectId, "/invites%3AInvites%3An"))([inviteId])).ap(http.backEnd.postTask(mdl)("data/Events/".concat(eventId, "/invites%3AInvites%3An"))([inviteId]));
+        });
+      });
     };
   };
 };
 
-var EventForm = function EventForm(_ref2) {
-  var state = _ref2.attrs.state;
-  //will need to be done on fetch??
-  // let startSplit = state.startTime.split(":")
-  // mdl.Day.data[`${startSplit[0]}:00`][startSplit[1]] = state
-  // localStorage.setItem(state.date, JSON.stringify(mdl.Day.data))
-  // mdl.state.modal(false)
-  // m.redraw()
+"data/<table-name>/<parentObjectId>/<relationName>";
+
+var EventForm = function EventForm(_ref4) {
+  var _ref4$attrs = _ref4.attrs,
+      state = _ref4$attrs.state,
+      mdl = _ref4$attrs.mdl;
   return {
     view: function view() {
       return m("form.event-form", [m("label", m("input", {
         onchange: function onchange(e) {
-          return m.route.set(e.target.value);
+          return m.route.set("/".concat(mdl.user.name, "/").concat(shortDate(new Date())));
         },
         type: "date",
         value: state.shortDate,
@@ -666,12 +722,11 @@ var EventForm = function EventForm(_ref2) {
   };
 };
 
-var Editor = function Editor(_ref3) {
-  var mdl = _ref3.attrs.mdl;
+var Editor = function Editor(_ref5) {
+  var mdl = _ref5.attrs.mdl;
   // console.log("editor:: find event?", mdl)
   var state = {
     shortDate: mdl.currentShortDate(),
-    timestamp: mdl.currentLongDate().valueOf,
     allday: false,
     startTime: "",
     endTime: "",
@@ -684,21 +739,15 @@ var Editor = function Editor(_ref3) {
       return function (err) {
         state.error = err;
         state.status = "failed";
-        m.redraw();
       };
     };
 
     var onSuccess = function onSuccess(mdl, state) {
       return function (data) {
-        state.data = data;
-
-        if (data) {
-          mdl.Day.data = data;
-        }
-
         state.error = null;
         state.status = "success";
-        m.redraw();
+        mdl.updateDay(true);
+        mdl.state.modal(false);
       };
     };
 
@@ -706,8 +755,8 @@ var Editor = function Editor(_ref3) {
   };
 
   return {
-    view: function view(_ref4) {
-      var mdl = _ref4.attrs.mdl;
+    view: function view(_ref6) {
+      var mdl = _ref6.attrs.mdl;
       return m(_Components.Modal, {
         mdl: mdl
       }, {
@@ -753,10 +802,6 @@ function _iterableToArrayLimit(arr, i) { if (typeof Symbol === "undefined" || !(
 
 function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
 
-var splitTime = function splitTime(time) {
-  return time.split(":");
-};
-
 var Event = function Event(_ref) {
   var mdl = _ref.attrs.mdl;
 
@@ -780,13 +825,14 @@ var Event = function Event(_ref) {
           mdl = _ref6$attrs.mdl,
           event = _ref6$attrs.event,
           col = _ref6$attrs.col;
+      console.log((0, _dateFns.differenceInMinutes)(new Date(event.endTime), new Date(event.startTime)) * 2);
       return m(".col-xs-1-".concat(col + 2), m(".event-list-item ", {
         onclick: function onclick(e) {
-          return m.route.set("/".concat(mdl.user.name, "/").concat(mdl.currentShortDate(), "/").concat(splitTime(event.startTime)[0], "/").concat(splitTime(event.startTime)[1]));
+          return m.route.set("/".concat(mdl.user.name, "/").concat(mdl.currentShortDate(), "/").concat(event.start.hour, "/").concat(event.start.min));
         },
         style: {
-          top: "".concat(splitTime(event.startTime)[1], "px"),
-          height: "".concat(getHeight(splitTime(event.endTime), splitTime(event.startTime)), "px")
+          top: "".concat(event.start.min, "px"),
+          height: "".concat((0, _dateFns.differenceInMinutes)(new Date(event.endTime), new Date(event.startTime)) * 2, "px")
         }
       }, event.title));
     }
@@ -899,18 +945,6 @@ Object.keys(_editor).forEach(function (key) {
   });
 });
 
-var _hour = require("./hour.js");
-
-Object.keys(_hour).forEach(function (key) {
-  if (key === "default" || key === "__esModule") return;
-  Object.defineProperty(exports, key, {
-    enumerable: true,
-    get: function get() {
-      return _hour[key];
-    }
-  });
-});
-
 var _eventList = require("./event-list.js");
 
 Object.keys(_eventList).forEach(function (key) {
@@ -1003,6 +1037,87 @@ var NavLink = function NavLink() {
 };
 
 exports.NavLink = NavLink;
+});
+
+;require.register("Models.js", function(exports, require, module) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = exports.eventModel = exports.inviteModel = exports.dayModel = void 0;
+
+var _model = require("Components/calendar/model");
+
+var _Utils = require("Utils");
+
+var dayModel = function dayModel(mdl) {
+  var date = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : new Date();
+  return (0, _Utils.getHoursInDay)(mdl.timeFormats[mdl.format()]).reduce(function (day, hour) {
+    day[hour] = [];
+    return day;
+  }, {});
+};
+
+exports.dayModel = dayModel;
+
+var inviteModel = function inviteModel() {
+  return {
+    eventId: "",
+    status: "",
+    userId: ""
+  };
+};
+
+exports.inviteModel = inviteModel;
+
+var eventModel = function eventModel() {
+  return {};
+};
+
+exports.eventModel = eventModel;
+var model = {
+  updateDay: Stream(false),
+  toAnchor: Stream(false),
+  timeFormats: ["12hrs", "24hrs"],
+  format: Stream(1),
+  currentShortDate: Stream(""),
+  currentLongDate: Stream(new Date()),
+  selectedDate: {
+    year: "",
+    month: "",
+    day: ""
+  },
+  Calendar: {
+    data: (0, _model.calendarModel)()
+  },
+  Day: {
+    timeFormat: Stream("kk:mm"),
+    data: dayModel({
+      timeFormats: ["24hrs"],
+      format: Stream(0)
+    }, new Date())
+  },
+  state: {
+    isAuth: Stream(false),
+    modal: Stream(false),
+    isLoading: Stream(false),
+    loadingProgress: {
+      max: 0,
+      value: 0
+    },
+    isLoggedIn: function isLoggedIn() {
+      return sessionStorage.getItem("token");
+    }
+  },
+  settings: {
+    profile: "",
+    inspector: ""
+  },
+  slug: ""
+};
+var _default = model;
+exports.default = _default;
 });
 
 ;require.register("Pages/Auth/Validations.js", function(exports, require, module) {
@@ -1535,38 +1650,34 @@ var _Components = require("Components");
 
 var _Utils = require("Utils");
 
-var loadTask = function loadTask(http) {
-  return function (mdl) {
-    return _Utils.locals.getTask(mdl.currentShortDate());
-  };
+var _Models = require("Models");
+
+var _ramda = require("ramda");
+
+var _model = require("Components/calendar/model");
+
+var toDayViewModel = function toDayViewModel(dayViewModel, invite) {
+  dayViewModel["".concat(invite.start.hour, ":00")].push(invite);
+  console.log("ddd", dayViewModel);
+  return dayViewModel;
 };
 
-var onError = function onError(state) {
-  return function (err) {
-    state.error = err;
-    state.status = "failed";
-    m.redraw();
-  };
-};
-
-var onSuccess = function onSuccess(mdl, state) {
-  return function (data) {
-    state.data = data;
-
-    if (data) {
-      mdl.Day.data = data;
-    }
-
-    state.error = null;
-    state.status = "success";
-    m.redraw();
-  };
-};
-
-var load = function load(state) {
-  return function (_ref) {
-    var mdl = _ref.attrs.mdl;
-    return loadTask(_Utils.HTTP)(mdl).fork(onError(state), onSuccess(mdl, state));
+var toInviteViewModel = function toInviteViewModel(_ref) {
+  var startTime = _ref.startTime,
+      endTime = _ref.endTime,
+      title = _ref.title,
+      objectId = _ref.objectId,
+      eventId = _ref.eventId,
+      status = _ref.status;
+  return {
+    startTime: startTime,
+    endTime: endTime,
+    start: (0, _Utils.fromFullDate)(startTime),
+    end: (0, _Utils.fromFullDate)(endTime),
+    inviteId: objectId,
+    eventId: eventId,
+    title: title,
+    status: status
   };
 };
 
@@ -1574,17 +1685,49 @@ var Home = function Home(_ref2) {
   var mdl = _ref2.attrs.mdl;
   var state = {
     error: null,
-    status: "loading"
+    status: "loading",
+    invites: null,
+    events: null
   };
+
+  var loadTask = function loadTask(http) {
+    return function (mdl) {
+      return http.backEnd.getTask(mdl)("data/Invites?where=userId%3D'".concat(mdl.user.objectId, "'")).map((0, _ramda.map)(toInviteViewModel));
+    };
+  };
+
+  var onError = function onError(err) {
+    state.error = err;
+    state.status = "failed";
+  };
+
+  var onSuccess = function onSuccess(invites) {
+    state.invites = invites;
+    state.todaysInvites = invites.filter(function (i) {
+      return (0, _Utils.isToday)(i.startTime);
+    }).reduce(toDayViewModel, (0, _Models.dayModel)(mdl, mdl.currentShortDate()));
+    console.log("home succes", state.invites, mdl);
+    state.error = null;
+    state.status = "success";
+  };
+
+  var load = function load(_ref3) {
+    var mdl = _ref3.attrs.mdl;
+    // console.log("loading")
+    loadTask(_Utils.HTTP)(mdl).fork(onError, onSuccess);
+  };
+
   return {
-    oninit: load(state),
-    view: function view(_ref3) {
-      var mdl = _ref3.attrs.mdl;
+    oninit: load,
+    view: function view(_ref4) {
+      var mdl = _ref4.attrs.mdl;
       return m(".frow", [m(_Components.Calendar, {
-        mdl: mdl
-      }), state.status == "loading" && m("p", "FETCHING TODAYS EVENTS..."), state.status == "failed" && m("p", "FAILED TO FETCH EVENTS"), state.status == "success" && m(_Components.Day, {
         mdl: mdl,
-        events: state.data
+        calendar: (0, _model.calendarModel)(state.invites),
+        invites: state.invites
+      }), state.status == "loading" && m("p", "FETCHING EVENTS..."), state.status == "failed" && m("p", "FAILED TO FETCH EVENTS"), state.status == "success" && m(_Components.Day, {
+        mdl: mdl,
+        invites: state.todaysInvites
       })]);
     }
   };
@@ -1647,6 +1790,300 @@ Object.keys(_registerUser).forEach(function (key) {
     }
   });
 });
+});
+
+;require.register("Routes.js", function(exports, require, module) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+
+var _Pages = require("Pages");
+
+var _model = require("Components/calendar/model");
+
+var _Components = require("Components");
+
+var routes = function routes(mdl) {
+  return {
+    "/login": {
+      render: function render() {
+        return m(_Pages.Login, {
+          mdl: mdl
+        });
+      }
+    },
+    "/register": {
+      render: function render() {
+        return m(_Pages.Register, {
+          mdl: mdl
+        });
+      }
+    },
+    "/:username/:date": {
+      onmatch: function onmatch(_ref) {
+        var date = _ref.date;
+
+        var _d = date.split("-");
+
+        mdl.currentShortDate(date);
+        mdl.currentLongDate(new Date(date));
+        mdl.selectedDate = {
+          year: _d[0],
+          month: _d[1],
+          day: _d[2]
+        }; // mdl.Calendar.data = calendarModel(date)
+        // mdl.Day.data = dayModel(mdl, date)
+      },
+      render: function render() {
+        return [m(_Pages.Home, {
+          mdl: mdl,
+          key: mdl.currentLongDate()
+        })];
+      }
+    },
+    "/:username/:date/:hour/:min": {
+      onmatch: function onmatch(_ref2) {
+        var hour = _ref2.hour,
+            min = _ref2.min;
+        mdl.Event = mdl.Day.data["".concat(hour, ":00")][min];
+      },
+      render: function render() {
+        return [m(_Pages.Event, {
+          mdl: mdl,
+          key: mdl.currentLongDate()
+        })];
+      }
+    }
+  };
+};
+
+var _default = routes;
+exports.default = _default;
+});
+
+;require.register("Routes/authenticated-routes.js", function(exports, require, module) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+
+var _Pages = require("Pages");
+
+var _Utils = require("Utils");
+
+var AuthenticatedRoutes = [{
+  id: "profile",
+  name: "Profile",
+  // icon: Icons.logo,
+  route: "/profile/:name",
+  position: ["toolbar"],
+  group: ["authenticated"],
+  children: [],
+  options: [],
+  onmatch: function onmatch(mdl, args, path, fullroute, isAnchor) {
+    isAnchor ? (0, _Utils.scrollToAnchor)(mdl.state.anchor) : window.scroll({
+      top: 0,
+      left: 0,
+      behavior: "smooth"
+    });
+  },
+  component: function component(mdl) {
+    return m(_Pages.Home, {
+      mdl: mdl
+    });
+  }
+}, {
+  id: "day-planner",
+  name: "Day Planner",
+  // icon: Icons.logo,
+  route: "/:username/:date",
+  position: ["toolbar"],
+  group: ["authenticated"],
+  children: [],
+  options: [],
+  onmatch: function onmatch(mdl, args, path, fullroute, isAnchor) {
+    isAnchor ? (0, _Utils.scrollToAnchor)(mdl.state.anchor) : window.scroll({
+      top: 0,
+      left: 0,
+      behavior: "smooth"
+    });
+    var date = args.date;
+
+    var _d = date.split("-");
+
+    mdl.currentShortDate(date);
+    mdl.currentLongDate(new Date(date));
+    mdl.selectedDate = {
+      year: _d[0],
+      month: _d[1],
+      day: _d[2]
+    };
+    console.log("DAY PLANNER");
+  },
+  component: function component(mdl) {
+    return m(_Pages.Home, {
+      mdl: mdl,
+      key: new Date()
+    });
+  }
+}, {
+  id: "event",
+  name: "Event",
+  // icon: Icons.logo,
+  route: "/:username/:date/:hour/:min",
+  position: ["toolbar"],
+  group: ["authenticated"],
+  children: [],
+  options: [],
+  onmatch: function onmatch(mdl, args, path, fullroute, isAnchor) {
+    isAnchor ? (0, _Utils.scrollToAnchor)(mdl.state.anchor) : window.scroll({
+      top: 0,
+      left: 0,
+      behavior: "smooth"
+    });
+  },
+  component: function component(mdl) {
+    return m(_Pages.Event, {
+      mdl: mdl,
+      key: mdl.currentLongDate()
+    });
+  }
+}, {
+  id: "logout",
+  name: "",
+  // icon: Icons.users,
+  route: "/logout",
+  position: [],
+  group: ["authenticated", "admin"],
+  children: [],
+  options: [],
+  onmatch: function onmatch(mdl, args, path, fullroute, isAnchor) {
+    window.scroll({
+      top: 0,
+      left: 0,
+      behavior: "smooth"
+    });
+    localStorage.clear();
+    sessionStorage.clear();
+    mdl.state.isAuth(false);
+    mdl.user = {};
+    m.route.set(m.route.get());
+    console.log("loggout", mdl);
+  },
+  component: function component(mdl) {
+    return m(_Pages.Home, {
+      mdl: mdl
+    });
+  }
+}];
+var _default = AuthenticatedRoutes;
+exports.default = _default;
+});
+
+;require.register("Routes/index.js", function(exports, require, module) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+
+var _authenticatedRoutes = _interopRequireDefault(require("./authenticated-routes.js"));
+
+var _mainRoutes = _interopRequireDefault(require("./main-routes.js"));
+
+var _ramda = require("ramda");
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var Routes = (0, _ramda.flatten)([_mainRoutes.default, _authenticatedRoutes.default]);
+var _default = Routes;
+exports.default = _default;
+});
+
+;require.register("Routes/main-routes.js", function(exports, require, module) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+
+var _Pages = require("Pages");
+
+var _index = require("Utils/index.js");
+
+var Routes = [{
+  id: "shindig-it",
+  name: m(".Logo"),
+  // icon: Icons.home,
+  route: "/splash",
+  isNav: true,
+  group: ["toolbar"],
+  children: [],
+  options: [],
+  onmatch: function onmatch(mdl, args, path, fullroute, isAnchor) {
+    isAnchor ? (0, _index.scrollToAnchor)(mdl.state.anchor) : window.scroll({
+      top: 0,
+      left: 0,
+      behavior: "smooth"
+    });
+  },
+  component: function component(mdl) {
+    return m(_Pages.Home, {
+      mdl: mdl
+    });
+  }
+}, {
+  id: "login",
+  name: "Account Login",
+  // icon: Icons.search,
+  route: "/login",
+  isNav: false,
+  group: [],
+  children: [],
+  options: [],
+  onmatch: function onmatch(mdl, args, path, fullroute, isAnchor) {
+    isAnchor ? (0, _index.scrollToAnchor)(mdl.state.anchor) : window.scroll({
+      top: 0,
+      left: 0,
+      behavior: "smooth"
+    });
+  },
+  component: function component(mdl) {
+    return m(_Pages.Login, {
+      mdl: mdl
+    });
+  }
+}, {
+  id: "register",
+  name: "Register Account",
+  // icon: Icons.search,
+  route: "/register",
+  isNav: false,
+  group: [],
+  children: [],
+  options: [],
+  onmatch: function onmatch(mdl, args, path, fullroute, isAnchor) {
+    isAnchor ? (0, _index.scrollToAnchor)(mdl.state.anchor) : window.scroll({
+      top: 0,
+      left: 0,
+      behavior: "smooth"
+    });
+  },
+  component: function component(mdl) {
+    return m(_Pages.Register, {
+      mdl: mdl
+    });
+  }
+}];
+var _default = Routes;
+exports.default = _default;
 });
 
 ;require.register("Styles/animations.js", function(exports, require, module) {
@@ -2002,8 +2439,10 @@ var _exportNames = {
   range: true,
   shortDate: true,
   isLeapYear: true,
+  isToday: true,
   daysOfTheWeek: true,
   monthsOfTheYear: true,
+  fromFullDate: true,
   getFullDate: true,
   toHourViewModel: true,
   pad0Left: true,
@@ -2012,7 +2451,7 @@ var _exportNames = {
   pad00Min: true,
   getHoursInDay: true
 };
-exports.getHoursInDay = exports.pad00Min = exports.isEqual = exports.formatDateString = exports.pad0Left = exports.toHourViewModel = exports.getFullDate = exports.monthsOfTheYear = exports.daysOfTheWeek = exports.isLeapYear = exports.shortDate = exports.range = exports.isSideBarActive = exports.jsonCopy = exports.nameFromRoute = exports.NoOp = exports.Pause = exports.randomPause = exports.log = void 0;
+exports.getHoursInDay = exports.pad00Min = exports.isEqual = exports.formatDateString = exports.pad0Left = exports.toHourViewModel = exports.getFullDate = exports.fromFullDate = exports.monthsOfTheYear = exports.daysOfTheWeek = exports.isToday = exports.isLeapYear = exports.shortDate = exports.range = exports.isSideBarActive = exports.jsonCopy = exports.nameFromRoute = exports.NoOp = exports.Pause = exports.randomPause = exports.log = void 0;
 
 var _http = require("./http.js");
 
@@ -2120,6 +2559,7 @@ exports.range = range;
 
 var shortDate = function shortDate() {
   var date = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : new Date();
+  console.log(date);
   return new Date(date).toISOString().split("T")[0];
 };
 
@@ -2130,16 +2570,38 @@ var isLeapYear = function isLeapYear(year) {
 };
 
 exports.isLeapYear = isLeapYear;
+
+var isToday = function isToday(someDate) {
+  var today = new Date();
+  var date = new Date(someDate);
+  return date.getDate() == today.getDate() && date.getMonth() == today.getMonth() && date.getFullYear() == today.getFullYear();
+};
+
+exports.isToday = isToday;
 var daysOfTheWeek = ["Monday", "Teusday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"];
 exports.daysOfTheWeek = daysOfTheWeek;
 var monthsOfTheYear = ["January", "Febuary", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
 exports.monthsOfTheYear = monthsOfTheYear;
 
+var fromFullDate = function fromFullDate(date) {
+  var d = new Date(date);
+  return {
+    day: d.getDate(),
+    month: d.getMonth(),
+    year: d.getFullYear(),
+    hour: d.getHours(),
+    min: d.getMinutes()
+  };
+};
+
+exports.fromFullDate = fromFullDate;
+
 var getFullDate = function getFullDate(_ref, startHour, startMin) {
   var year = _ref.year,
       month = _ref.month,
       day = _ref.day;
-  return new Date(year, month, day, startHour, startMin);
+  console.log("getFullDate", new Date(year, month - 1, day, startHour, startMin));
+  return new Date(year, month - 1, day, startHour, startMin);
 };
 
 exports.getFullDate = getFullDate;
@@ -2345,11 +2807,9 @@ exports.isNilOrEmptyOrAtom = isNilOrEmptyOrAtom;
 ;require.register("index.js", function(exports, require, module) {
 "use strict";
 
-var _routes = _interopRequireDefault(require("./routes.js"));
+var _App = _interopRequireDefault(require("./App.js"));
 
-var _model = _interopRequireDefault(require("./model.js"));
-
-var _Utils = require("Utils");
+var _Models = _interopRequireDefault(require("Models"));
 
 var _funConfig = require("@boazblake/fun-config");
 
@@ -2390,17 +2850,25 @@ var checkWidth = function checkWidth(winW) {
 
   if (winW !== w) {
     winW = w;
-    var lastProfile = _model.default.settings.profile;
-    _model.default.settings.profile = getProfile(w);
-    if (lastProfile != _model.default.settings.profile) m.redraw();
+    var lastProfile = _Models.default.settings.profile;
+    _Models.default.settings.profile = getProfile(w);
+    if (lastProfile != _Models.default.settings.profile) m.redraw();
   }
 
   return requestAnimationFrame(checkWidth);
 };
 
-_model.default.settings.profile = getProfile(winW);
+_Models.default.settings.profile = getProfile(winW);
 checkWidth(winW);
-m.route(root, "/login", (0, _routes.default)(_model.default)); // m.route(root, `/${shortDate(new Date())}`, routes(model))
+
+if (sessionStorage.getItem("shindigit-user")) {
+  _Models.default.user = JSON.parse(sessionStorage.getItem("shindigit-user"));
+
+  _Models.default.state.isAuth(true);
+}
+
+console.log(_Models.default);
+m.route(root, "/login", (0, _App.default)(_Models.default));
 });
 
 ;require.register("initialize.js", function(exports, require, module) {
@@ -2409,134 +2877,6 @@ m.route(root, "/login", (0, _routes.default)(_model.default)); // m.route(root, 
 document.addEventListener("DOMContentLoaded", function () {
   require("./index.js");
 });
-});
-
-;require.register("model.js", function(exports, require, module) {
-"use strict";
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.default = void 0;
-
-var _model = require("Components/calendar/model");
-
-var _Components = require("Components");
-
-var model = {
-  toAnchor: Stream(false),
-  timeFormats: ["12hrs", "24hrs"],
-  format: Stream(1),
-  currentShortDate: Stream(""),
-  currentLongDate: Stream(new Date()),
-  selectedDate: {
-    year: "",
-    month: "",
-    day: ""
-  },
-  Calendar: {
-    data: (0, _model.calendarModel)()
-  },
-  Day: {
-    timeFormat: Stream("kk:mm"),
-    data: (0, _Components.dayModel)({
-      timeFormats: ["24hrs"],
-      format: Stream(0)
-    }, new Date())
-  },
-  state: {
-    isAuth: Stream(false),
-    modal: Stream(false),
-    isLoading: Stream(false),
-    loadingProgress: {
-      max: 0,
-      value: 0
-    },
-    isLoggedIn: function isLoggedIn() {
-      return sessionStorage.getItem("token");
-    }
-  },
-  settings: {
-    profile: "",
-    inspector: ""
-  },
-  slug: ""
-};
-var _default = model;
-exports.default = _default;
-});
-
-;require.register("routes.js", function(exports, require, module) {
-"use strict";
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.default = void 0;
-
-var _Pages = require("Pages");
-
-var _model = require("Components/calendar/model");
-
-var _Components = require("Components");
-
-var routes = function routes(mdl) {
-  return {
-    "/login": {
-      render: function render() {
-        return m(_Pages.Login, {
-          mdl: mdl
-        });
-      }
-    },
-    "/register": {
-      render: function render() {
-        return m(_Pages.Register, {
-          mdl: mdl
-        });
-      }
-    },
-    "/:username/:date": {
-      onmatch: function onmatch(_ref) {
-        var date = _ref.date;
-
-        var _d = date.split("-");
-
-        mdl.currentShortDate(date);
-        mdl.currentLongDate(new Date(date));
-        mdl.selectedDate = {
-          year: _d[0],
-          month: _d[1],
-          day: _d[2]
-        };
-        mdl.Calendar.data = (0, _model.calendarModel)(date);
-        mdl.Day.data = (0, _Components.dayModel)(mdl, date);
-      },
-      render: function render() {
-        return [m(_Pages.Home, {
-          mdl: mdl,
-          key: mdl.currentLongDate()
-        })];
-      }
-    },
-    "/:username/:date/:hour/:min": {
-      onmatch: function onmatch(_ref2) {
-        var hour = _ref2.hour,
-            min = _ref2.min;
-        mdl.Event = mdl.Day.data["".concat(hour, ":00")][min];
-      },
-      render: function render() {
-        return [m(_Pages.Event, {
-          mdl: mdl,
-          key: mdl.currentLongDate()
-        })];
-      }
-    }
-  };
-};
-
-var _default = routes;
-exports.default = _default;
 });
 
 ;require.alias("process/browser.js", "process");process = require('process');require.register("___globals___", function(exports, require, module) {
