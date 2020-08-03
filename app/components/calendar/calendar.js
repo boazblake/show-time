@@ -1,4 +1,4 @@
-import { getMonthMatrix, goToDate, calendarDay, getMonthByIdx } from "./model"
+import { createCalendar, goToDate, calendarDay, getMonthByIdx } from "./model"
 import { daysOfTheWeek, shortDate, shortDateString } from "Utils"
 
 const Toolbar = () => {
@@ -101,8 +101,8 @@ const MonthsToolbar = () => {
 
 const CalendarBody = () => {
   return {
-    view: ({ attrs: { mdl, calendar } }) => {
-      let dto = getMonthMatrix(calendar)
+    view: ({ attrs: { mdl, calendar, invites } }) => {
+      let dto = createCalendar(invites, calendar)
       return m(".frow frow-container", [
         m(MonthsToolbar, { mdl, calendar }),
         m(
@@ -123,22 +123,33 @@ const CalendarBody = () => {
           dto.map((week) =>
             m(
               ".frow width-100",
-              week.map(({ day, dir }) =>
-                m(
+              week.map(({ invites, day, dir }) => {
+                console.log(invites)
+                return m(
                   ".col-xs-1-7 text-center",
-                  {
-                    onclick: (_) =>
-                      goToDate(mdl, {
-                        year: calendar.selected.year,
-                        month: calendar.selected.month,
-                        day,
-                        dir,
-                      }),
-                    class: calendarDay(calendar)(day, dir),
-                  },
-                  m("span.day", day)
+                  m(
+                    ".cal-day-container",
+                    {
+                      onclick: (_) =>
+                        goToDate(mdl, {
+                          year: calendar.selected.year,
+                          month: calendar.selected.month,
+                          day,
+                          dir,
+                        }),
+                      class: calendarDay(calendar)(day, dir),
+                    },
+                    m("span.cal-day", day),
+                    m(
+                      ".cal-invites-container",
+                      m(
+                        ".frow",
+                        invites.map((i) => m(".cal-invites-item"))
+                      )
+                    )
+                  )
                 )
-              )
+              })
             )
           )
         ),
@@ -149,10 +160,10 @@ const CalendarBody = () => {
 
 export const Calendar = () => {
   return {
-    view: ({ attrs: { mdl } }) => {
+    view: ({ attrs: { mdl, invites } }) => {
       return m(".calendar", [
         m(Toolbar, { mdl, calendar: mdl.Calendar.data }),
-        m(CalendarBody, { mdl, calendar: mdl.Calendar.data }),
+        m(CalendarBody, { mdl, calendar: mdl.Calendar.data, invites }),
       ])
     },
   }

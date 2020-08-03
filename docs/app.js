@@ -273,8 +273,9 @@ var CalendarBody = function CalendarBody() {
     view: function view(_ref3) {
       var _ref3$attrs = _ref3.attrs,
           mdl = _ref3$attrs.mdl,
-          calendar = _ref3$attrs.calendar;
-      var dto = (0, _model.getMonthMatrix)(calendar);
+          calendar = _ref3$attrs.calendar,
+          invites = _ref3$attrs.invites;
+      var dto = (0, _model.createCalendar)(invites, calendar);
       return m(".frow frow-container", [m(MonthsToolbar, {
         mdl: mdl,
         calendar: calendar
@@ -282,9 +283,11 @@ var CalendarBody = function CalendarBody() {
         return m(".col-xs-1-7 text-center", m("span.width-auto", day[0].toUpperCase()));
       })), m(".frow centered-column width-100 row-between mt-10 ", dto.map(function (week) {
         return m(".frow width-100", week.map(function (_ref4) {
-          var day = _ref4.day,
+          var invites = _ref4.invites,
+              day = _ref4.day,
               dir = _ref4.dir;
-          return m(".col-xs-1-7 text-center", {
+          console.log(invites);
+          return m(".col-xs-1-7 text-center", m(".cal-day-container", {
             onclick: function onclick(_) {
               return (0, _model.goToDate)(mdl, {
                 year: calendar.selected.year,
@@ -294,7 +297,9 @@ var CalendarBody = function CalendarBody() {
               });
             },
             class: (0, _model.calendarDay)(calendar)(day, dir)
-          }, m("span.day", day));
+          }, m("span.cal-day", day), m(".cal-invites-container", m(".frow", invites.map(function (i) {
+            return m(".cal-invites-item");
+          })))));
         }));
       }))]);
     }
@@ -304,13 +309,16 @@ var CalendarBody = function CalendarBody() {
 var Calendar = function Calendar() {
   return {
     view: function view(_ref5) {
-      var mdl = _ref5.attrs.mdl;
+      var _ref5$attrs = _ref5.attrs,
+          mdl = _ref5$attrs.mdl,
+          invites = _ref5$attrs.invites;
       return m(".calendar", [m(Toolbar, {
         mdl: mdl,
         calendar: mdl.Calendar.data
       }), m(CalendarBody, {
         mdl: mdl,
-        calendar: mdl.Calendar.data
+        calendar: mdl.Calendar.data,
+        invites: invites
       })]);
     }
   };
@@ -325,7 +333,7 @@ exports.Calendar = Calendar;
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.calendarDay = exports.calendarModel = exports.getMonthMatrix = exports.createCalendarDayViewModel = exports.isNotCalenderDay = exports.isCalenderDay = exports.getMonthByIdx = exports.goToDate = void 0;
+exports.calendarDay = exports.calendarModel = exports.createCalendar = exports.createCalendarDayViewModel = exports.isNotCalenderDay = exports.isCalenderDay = exports.getMonthByIdx = exports.goToDate = void 0;
 
 var _dateFns = require("date-fns");
 
@@ -379,32 +387,44 @@ var getMonthByIdx = function getMonthByIdx(idx) {
 
 exports.getMonthByIdx = getMonthByIdx;
 
-var isCalenderDay = function isCalenderDay(date) {
+var isCalenderDay = function isCalenderDay(invites, date) {
   return {
     day: (0, _dateFns.format)(date, "dd"),
-    dir: 0
+    dir: 0,
+    invites: invites // filter for correct day
+
   };
 };
 
 exports.isCalenderDay = isCalenderDay;
 
-var isNotCalenderDay = function isNotCalenderDay(day, date) {
+var isNotCalenderDay = function isNotCalenderDay(invites, day, date) {
   return {
     day: (0, _dateFns.format)(day, "dd"),
-    dir: (0, _dateFns.differenceInMonths)((0, _dateFns.parseISO)((0, _Utils.shortDate)(date)), day) == 0 ? -1 : +1
+    dir: (0, _dateFns.differenceInMonths)((0, _dateFns.parseISO)((0, _Utils.shortDate)(date)), day) == 0 ? -1 : +1,
+    invites: invites // filter for correct day
+
   };
 };
 
 exports.isNotCalenderDay = isNotCalenderDay;
 
-var createCalendarDayViewModel = function createCalendarDayViewModel(day, date, _ref2) {
+var filterBy = function filterBy(day) {
+  return function (invites) {
+    return invites.filter(function (i) {
+      return (0, _Utils.datesAreSame)(i.startTime)(day);
+    });
+  };
+};
+
+var createCalendarDayViewModel = function createCalendarDayViewModel(invites, day, date, _ref2) {
   var isSameMonth = _ref2.isSameMonth;
-  return isSameMonth ? isCalenderDay(day) : isNotCalenderDay(day, date);
+  return isSameMonth ? isCalenderDay(filterBy(day)(invites), day) : isNotCalenderDay(filterBy(day)(invites), day, date);
 };
 
 exports.createCalendarDayViewModel = createCalendarDayViewModel;
 
-var getMonthMatrix = function getMonthMatrix(_ref3) {
+var createCalendar = function createCalendar(invites, _ref3) {
   var year = _ref3.year,
       month = _ref3.month;
   var date = new Date(parseInt(year), parseInt(month - 1));
@@ -419,14 +439,14 @@ var getMonthMatrix = function getMonthMatrix(_ref3) {
       start: (0, _dateFns.startOfISOWeek)(weekDay),
       end: (0, _dateFns.endOfISOWeek)(weekDay)
     }).map(function (day) {
-      return createCalendarDayViewModel(day, date, {
+      return createCalendarDayViewModel(invites, day, date, {
         isSameMonth: (0, _dateFns.isSameMonth)(date, day)
       });
     });
   });
 };
 
-exports.getMonthMatrix = getMonthMatrix;
+exports.createCalendar = createCalendar;
 
 var calendarModel = function calendarModel(_ref4) {
   var _ref4$invites = _ref4.invites,

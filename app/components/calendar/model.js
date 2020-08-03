@@ -17,6 +17,7 @@ import {
   monthsOfTheYear,
   shortDate,
   isEqual,
+  datesAreSame,
 } from "Utils"
 
 const updateYear = (year, dir) => (parseInt(year) + dir).toString()
@@ -59,20 +60,32 @@ export const getMonthByIdx = (idx) =>
     ? monthsOfTheYear[11]
     : monthsOfTheYear[idx]
 
-export const isCalenderDay = (date) => ({
+export const isCalenderDay = (invites, date) => ({
   day: format(date, "dd"),
   dir: 0,
+  invites, // filter for correct day
 })
 
-export const isNotCalenderDay = (day, date) => ({
+export const isNotCalenderDay = (invites, day, date) => ({
   day: format(day, "dd"),
   dir: differenceInMonths(parseISO(shortDate(date)), day) == 0 ? -1 : +1,
+  invites, // filter for correct day
 })
 
-export const createCalendarDayViewModel = (day, date, { isSameMonth }) =>
-  isSameMonth ? isCalenderDay(day) : isNotCalenderDay(day, date)
+const filterBy = (day) => (invites) =>
+  invites.filter((i) => datesAreSame(i.startTime)(day))
 
-export const getMonthMatrix = ({ year, month }) => {
+export const createCalendarDayViewModel = (
+  invites,
+  day,
+  date,
+  { isSameMonth }
+) =>
+  isSameMonth
+    ? isCalenderDay(filterBy(day)(invites), day)
+    : isNotCalenderDay(filterBy(day)(invites), day, date)
+
+export const createCalendar = (invites, { year, month }) => {
   const date = new Date(parseInt(year), parseInt(month - 1))
   const matrix = eachWeekOfInterval(
     {
@@ -87,7 +100,7 @@ export const getMonthMatrix = ({ year, month }) => {
       start: startOfISOWeek(weekDay),
       end: endOfISOWeek(weekDay),
     }).map((day) =>
-      createCalendarDayViewModel(day, date, {
+      createCalendarDayViewModel(invites, day, date, {
         isSameMonth: isSameMonth(date, day),
       })
     )
