@@ -1,18 +1,21 @@
-import { jsonCopy, log, HTTP } from "Utils"
-import { fromFullDate } from "../Utils"
+import { log, jsonCopy, shortDateString, HTTP } from "Utils"
+import moment from "moment"
 
-const deleteEvent = (mdl) => {
-  let { date, hour, min } = m.route.param()
-  delete mdl.Day.data[`${hour}:00`][min]
-  localStorage.setItem(date, JSON.stringify(mdl.Day.data))
-}
+const toEventviewModel = ({ startTime, endTime, title, notes }) => ({
+  date: moment.utc(startTime).format("DD-MM-YYYY"),
+  title: title.toUpperCase(),
+  begin: moment.utc(startTime).format("HH:MM"),
+  end: moment.utc(endTime).format("HH:MM"),
+  notes,
+})
 
-const toEventviewModel = (event) => {
-  console.log("event", event)
-  console.log("start date", event.startTime, fromFullDate(event.startTime))
+const loadTask = (http) => (mdl) => (state) =>
+  http.backEnd
+    .getTask(mdl)(`data/Events/${state.eventId}`)
+    .map(toEventviewModel)
 
-  return event
-}
+const deleteEventTask = (http) => (mdl) => (state) =>
+  http.backEnd.deleteTask(mdl)(`data/Events/${state.eventId}`).map(log("wtf"))
 
 export const Event = ({ attrs: { mdl } }) => {
   const state = {
@@ -21,26 +24,38 @@ export const Event = ({ attrs: { mdl } }) => {
     status: "loading",
   }
 
-  const loadTask = (http) => (mdl) =>
-    http.backEnd
-      .getTask(mdl)(`data/Events/${state.eventId}`)
-      .map(toEventviewModel)
-      .map(log("wtf"))
-
-  const onError = (err) => {
-    state.error = jsonCopy(err)
-    console.log("state.e", state.error)
-    state.status = "failed"
-  }
-
-  const onSuccess = (event) => {
-    state.event = event
-    state.error = {}
-    state.status = "success"
-  }
-
   const load = ({ attrs: { mdl } }) => {
-    loadTask(HTTP)(mdl).fork(onError, onSuccess)
+    const onError = (err) => {
+      state.error = jsonCopy(err)
+      console.log("state.e", state.error)
+      state.status = "failed"
+    }
+
+    const onSuccess = (event) => {
+      state.event = event
+      state.error = {}
+      state.status = "success"
+    }
+
+    loadTask(HTTP)(mdl)(state).fork(onError, onSuccess)
+  }
+
+  const deleteEvent = (mdl) => {
+    const onError = (err) => {
+      state.error = jsonCopy(err)
+      console.log("state.e", state.error)
+      state.status = "failed"
+    }
+
+    const onSuccess = (event) => {
+      console.log("deleted")
+      m.route.set(`/${mdl.user.name}/${shortDateString(mdl.selectedDate)}`)
+      state.event = event
+      state.error = {}
+      state.status = "success"
+    }
+
+    deleteEventTask(HTTP)(mdl)(state).fork(onError, onSuccess)
   }
 
   return {
@@ -56,15 +71,17 @@ export const Event = ({ attrs: { mdl } }) => {
               {
                 onclick: (e) => {
                   mdl.toAnchor(state.event.startTime)
-                  gotoroute(mdl)
+                  m.route.set(
+                    `/${mdl.user.name}/${shortDateString(mdl.selectedDate)}`
+                  )
                 },
               },
               "Back"
             ),
             m("h1", state.event.title),
             m("label", "date: ", state.event.date),
-            m("label", "begins: ", state.event.startTime),
-            m("label", "ends: ", state.event.endTime),
+            m("label", "begins: ", state.event.begin),
+            m("label", "ends: ", state.event.end),
             m("label", "notes: ", state.event.notes),
             m("button", { onclick: (e) => deleteEvent(mdl) }, "delete"),
           ]),

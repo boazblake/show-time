@@ -4,7 +4,6 @@ import { dayModel } from "Models"
 import { map } from "ramda"
 import { calendarModel } from "Components/calendar/model"
 import { shortDateString, datesAreSame } from "Utils"
-import moment from "moment"
 
 const toDayViewModel = (dayViewModel, invite) => {
   dayViewModel[`${invite.start.hour}:00`].push(invite)

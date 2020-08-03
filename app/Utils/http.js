@@ -76,6 +76,8 @@ const backEnd = {
     HttpTask(BackEnd.headers())("POST")(mdl)(backEndUrl + url)(dto),
   putTask: (mdl) => (url) => (dto) =>
     HttpTask(BackEnd.headers())("PUT")(mdl)(backEndUrl + url)(dto),
+  deleteTask: (mdl) => (url) =>
+    HttpTask(BackEnd.headers())("DELETE")(mdl)(backEndUrl + url)(null),
 }
 
 export const HTTP = {

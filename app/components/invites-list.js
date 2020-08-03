@@ -1,5 +1,6 @@
 import { differenceInMinutes } from "date-fns"
 import { getFullDate } from "Utils"
+import moment from "moment"
 
 const Invite = ({ attrs: { mdl } }) => {
   const getHeight = ([startHour, startMin], [endHour, endMin]) => {
@@ -10,13 +11,7 @@ const Invite = ({ attrs: { mdl } }) => {
 
   return {
     view: ({ attrs: { mdl, invite, col } }) => {
-      // console.log(
-      //   invite,
-      //   differenceInMinutes(
-      //     new Date(invite.endTime),
-      //     new Date(invite.startTime)
-      //   ) * 2
-      // )
+      // console.log(invite)
       return m(
         `.col-xs-1-${col + 2}`,
         m(
@@ -33,10 +28,7 @@ const Invite = ({ attrs: { mdl } }) => {
             style: {
               top: `${invite.start.min}px`,
               height: `${
-                differenceInMinutes(
-                  new Date(invite.endTime),
-                  new Date(invite.startTime)
-                ) * 2
+                moment(invite.endTime).diff(invite.startTime, "minutes") * 2
               }px`,
             },
           },

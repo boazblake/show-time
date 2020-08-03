@@ -27,7 +27,6 @@ export const isLeapYear = (year) =>
 export const datesAreSame = (first) => (second) => {
   let f = moment(first).utc().format("YYYY-MM-DD")
   let s = moment(second).utc().format("YYYY-MM-DD")
-  console.log("dd", f, s)
 
   return moment(f).isSame(moment(s))
 }

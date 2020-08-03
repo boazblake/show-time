@@ -1,7 +1,7 @@
 import { getMonthMatrix, goToDate, calendarDay, getMonthByIdx } from "./model"
 import { daysOfTheWeek, shortDate, shortDateString } from "Utils"
 
-const Toolbar = ({ attrs: { mdl, calendar } }) => {
+const Toolbar = () => {
   return {
     view: ({ attrs: { mdl, calendar } }) =>
       m(".toolbar", [
@@ -12,10 +12,11 @@ const Toolbar = ({ attrs: { mdl, calendar } }) => {
           value: calendar.startDate,
         }),
         m(
-          "button.width-100",
+          m.route.Link,
           {
-            onclick: (_) =>
-              m.route.set(`/${mdl.user.name}/${shortDate(new Date())}`),
+            selector: "button",
+            class: "width-100",
+            href: `/${mdl.user.name}/${shortDate(new Date())}`,
           },
           "Today"
         ),
@@ -29,23 +30,19 @@ const MonthsToolbar = () => {
       return m(".frow width-100  mt-10", [
         m(".frow width-100 row-between mt-10", [
           m(
-            "button.prevMonth",
-            m(
-              "h3",
-              {
-                onclick: (_) => {
-                  m.route.set(
-                    `/${mdl.user.name}/${shortDateString({
-                      year: parseInt(calendar.selected.year) - 1,
-                      month: calendar.selected.month,
-                      day: calendar.selected.day,
-                    })}`
-                  )
-                },
-              },
-              parseInt(calendar.selected.year) - 1
-            )
+            m.route.Link,
+            {
+              selector: "button",
+              class: "prevMonth",
+              href: `/${mdl.user.name}/${shortDateString({
+                year: parseInt(calendar.selected.year) - 1,
+                month: calendar.selected.month,
+                day: calendar.selected.day,
+              })}`,
+            },
+            parseInt(calendar.selected.year) - 1
           ),
+
           m(".centerMonthGroup", [
             m(
               "h2.currentMonth",
@@ -53,23 +50,19 @@ const MonthsToolbar = () => {
             ),
             m("h3.text-center", parseInt(calendar.selected.year)),
           ]),
+
           m(
-            "button.nextMonth",
-            m(
-              "h3",
-              {
-                onclick: (_) => {
-                  m.route.set(
-                    `/${mdl.user.name}/${shortDateString({
-                      year: parseInt(calendar.selected.year) + 1,
-                      month: calendar.selected.month,
-                      day: calendar.selected.day,
-                    })}`
-                  )
-                },
-              },
-              parseInt(calendar.selected.year) + 1
-            )
+            m.route.Link,
+            {
+              selector: "button",
+              class: "nextMonth",
+              href: `/${mdl.user.name}/${shortDateString({
+                year: parseInt(calendar.selected.year) + 1,
+                month: calendar.selected.month,
+                day: calendar.selected.day,
+              })}`,
+            },
+            parseInt(calendar.selected.year) + 1
           ),
         ]),
         m(".frow width-100 row-between mt-10", [

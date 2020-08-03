@@ -202,25 +202,22 @@ var _model = require("./model");
 
 var _Utils = require("Utils");
 
-var Toolbar = function Toolbar(_ref) {
-  var _ref$attrs = _ref.attrs,
-      mdl = _ref$attrs.mdl,
-      calendar = _ref$attrs.calendar;
+var Toolbar = function Toolbar() {
   return {
-    view: function view(_ref2) {
-      var _ref2$attrs = _ref2.attrs,
-          mdl = _ref2$attrs.mdl,
-          calendar = _ref2$attrs.calendar;
+    view: function view(_ref) {
+      var _ref$attrs = _ref.attrs,
+          mdl = _ref$attrs.mdl,
+          calendar = _ref$attrs.calendar;
       return m(".toolbar", [m("input", {
         onchange: function onchange(e) {
           return m.route.set("/".concat(mdl.user.name, "/").concat(mdl.currentShortDate()));
         },
         type: "date",
         value: calendar.startDate
-      }), m("button.width-100", {
-        onclick: function onclick(_) {
-          return m.route.set("/".concat(mdl.user.name, "/").concat((0, _Utils.shortDate)(new Date())));
-        }
+      }), m(m.route.Link, {
+        selector: "button",
+        class: "width-100",
+        href: "/".concat(mdl.user.name, "/").concat((0, _Utils.shortDate)(new Date()))
       }, "Today")]);
     }
   };
@@ -228,27 +225,27 @@ var Toolbar = function Toolbar(_ref) {
 
 var MonthsToolbar = function MonthsToolbar() {
   return {
-    view: function view(_ref3) {
-      var _ref3$attrs = _ref3.attrs,
-          mdl = _ref3$attrs.mdl,
-          calendar = _ref3$attrs.calendar;
-      return m(".frow width-100  mt-10", [m(".frow width-100 row-between mt-10", [m("button.prevMonth", m("h3", {
-        onclick: function onclick(_) {
-          m.route.set("/".concat(mdl.user.name, "/").concat((0, _Utils.shortDateString)({
-            year: parseInt(calendar.selected.year) - 1,
-            month: calendar.selected.month,
-            day: calendar.selected.day
-          })));
-        }
-      }, parseInt(calendar.selected.year) - 1)), m(".centerMonthGroup", [m("h2.currentMonth", (0, _model.getMonthByIdx)(parseInt(calendar.selected.month) - 1)), m("h3.text-center", parseInt(calendar.selected.year))]), m("button.nextMonth", m("h3", {
-        onclick: function onclick(_) {
-          m.route.set("/".concat(mdl.user.name, "/").concat((0, _Utils.shortDateString)({
-            year: parseInt(calendar.selected.year) + 1,
-            month: calendar.selected.month,
-            day: calendar.selected.day
-          })));
-        }
-      }, parseInt(calendar.selected.year) + 1))]), m(".frow width-100 row-between mt-10", [m("button", {
+    view: function view(_ref2) {
+      var _ref2$attrs = _ref2.attrs,
+          mdl = _ref2$attrs.mdl,
+          calendar = _ref2$attrs.calendar;
+      return m(".frow width-100  mt-10", [m(".frow width-100 row-between mt-10", [m(m.route.Link, {
+        selector: "button",
+        class: "prevMonth",
+        href: "/".concat(mdl.user.name, "/").concat((0, _Utils.shortDateString)({
+          year: parseInt(calendar.selected.year) - 1,
+          month: calendar.selected.month,
+          day: calendar.selected.day
+        }))
+      }, parseInt(calendar.selected.year) - 1), m(".centerMonthGroup", [m("h2.currentMonth", (0, _model.getMonthByIdx)(parseInt(calendar.selected.month) - 1)), m("h3.text-center", parseInt(calendar.selected.year))]), m(m.route.Link, {
+        selector: "button",
+        class: "nextMonth",
+        href: "/".concat(mdl.user.name, "/").concat((0, _Utils.shortDateString)({
+          year: parseInt(calendar.selected.year) + 1,
+          month: calendar.selected.month,
+          day: calendar.selected.day
+        }))
+      }, parseInt(calendar.selected.year) + 1)]), m(".frow width-100 row-between mt-10", [m("button", {
         onclick: function onclick(_) {
           return (0, _model.goToDate)(mdl, {
             year: calendar.selected.year,
@@ -273,10 +270,10 @@ var MonthsToolbar = function MonthsToolbar() {
 
 var CalendarBody = function CalendarBody() {
   return {
-    view: function view(_ref4) {
-      var _ref4$attrs = _ref4.attrs,
-          mdl = _ref4$attrs.mdl,
-          calendar = _ref4$attrs.calendar;
+    view: function view(_ref3) {
+      var _ref3$attrs = _ref3.attrs,
+          mdl = _ref3$attrs.mdl,
+          calendar = _ref3$attrs.calendar;
       var dto = (0, _model.getMonthMatrix)(calendar);
       return m(".frow frow-container", [m(MonthsToolbar, {
         mdl: mdl,
@@ -284,9 +281,9 @@ var CalendarBody = function CalendarBody() {
       }), m(".frow width-100 row-between mt-10", _Utils.daysOfTheWeek.map(function (day) {
         return m(".col-xs-1-7 text-center", m("span.width-auto", day[0].toUpperCase()));
       })), m(".frow centered-column width-100 row-between mt-10 ", dto.map(function (week) {
-        return m(".frow width-100", week.map(function (_ref5) {
-          var day = _ref5.day,
-              dir = _ref5.dir;
+        return m(".frow width-100", week.map(function (_ref4) {
+          var day = _ref4.day,
+              dir = _ref4.dir;
           return m(".col-xs-1-7 text-center", {
             onclick: function onclick(_) {
               return (0, _model.goToDate)(mdl, {
@@ -306,8 +303,8 @@ var CalendarBody = function CalendarBody() {
 
 var Calendar = function Calendar() {
   return {
-    view: function view(_ref6) {
-      var mdl = _ref6.attrs.mdl;
+    view: function view(_ref5) {
+      var mdl = _ref5.attrs.mdl;
       return m(".calendar", [m(Toolbar, {
         mdl: mdl,
         calendar: mdl.Calendar.data
@@ -898,6 +895,10 @@ var _dateFns = require("date-fns");
 
 var _Utils = require("Utils");
 
+var _moment = _interopRequireDefault(require("moment"));
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
 function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _unsupportedIterableToArray(arr, i) || _nonIterableRest(); }
 
 function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
@@ -933,13 +934,7 @@ var Invite = function Invite(_ref) {
           mdl = _ref6$attrs.mdl,
           invite = _ref6$attrs.invite,
           col = _ref6$attrs.col;
-      // console.log(
-      //   invite,
-      //   differenceInMinutes(
-      //     new Date(invite.endTime),
-      //     new Date(invite.startTime)
-      //   ) * 2
-      // )
+      // console.log(invite)
       return m(".col-xs-1-".concat(col + 2), m(".invite-list-item ", {
         onclick: function onclick(e) {
           mdl.currentEventId(invite.eventId);
@@ -947,7 +942,7 @@ var Invite = function Invite(_ref) {
         },
         style: {
           top: "".concat(invite.start.min, "px"),
-          height: "".concat((0, _dateFns.differenceInMinutes)(new Date(invite.endTime), new Date(invite.startTime)) * 2, "px")
+          height: "".concat((0, _moment.default)(invite.endTime).diff(invite.startTime, "minutes") * 2, "px")
         }
       }, invite.title));
     }
@@ -1608,53 +1603,82 @@ exports.Event = void 0;
 
 var _Utils = require("Utils");
 
-var _Utils2 = require("../Utils");
+var _moment = _interopRequireDefault(require("moment"));
 
-var deleteEvent = function deleteEvent(mdl) {
-  var _m$route$param = m.route.param(),
-      date = _m$route$param.date,
-      hour = _m$route$param.hour,
-      min = _m$route$param.min;
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-  delete mdl.Day.data["".concat(hour, ":00")][min];
-  localStorage.setItem(date, JSON.stringify(mdl.Day.data));
+var toEventviewModel = function toEventviewModel(_ref) {
+  var startTime = _ref.startTime,
+      endTime = _ref.endTime,
+      title = _ref.title,
+      notes = _ref.notes;
+  return {
+    date: _moment.default.utc(startTime).format("DD-MM-YYYY"),
+    title: title.toUpperCase(),
+    begin: _moment.default.utc(startTime).format("HH:MM"),
+    end: _moment.default.utc(endTime).format("HH:MM"),
+    notes: notes
+  };
 };
 
-var toEventviewModel = function toEventviewModel(event) {
-  console.log("event", event);
-  console.log("start date", event.startTime, (0, _Utils2.fromFullDate)(event.startTime));
-  return event;
+var loadTask = function loadTask(http) {
+  return function (mdl) {
+    return function (state) {
+      return http.backEnd.getTask(mdl)("data/Events/".concat(state.eventId)).map(toEventviewModel);
+    };
+  };
 };
 
-var Event = function Event(_ref) {
-  var mdl = _ref.attrs.mdl;
+var deleteEventTask = function deleteEventTask(http) {
+  return function (mdl) {
+    return function (state) {
+      return http.backEnd.deleteTask(mdl)("data/Events/".concat(state.eventId)).map((0, _Utils.log)("wtf"));
+    };
+  };
+};
+
+var Event = function Event(_ref2) {
+  var mdl = _ref2.attrs.mdl;
   var state = {
     error: {},
     eventId: mdl.currentEventId(),
     status: "loading"
   };
 
-  var loadTask = function loadTask(http) {
-    return function (mdl) {
-      return http.backEnd.getTask(mdl)("data/Events/".concat(state.eventId)).map(toEventviewModel).map((0, _Utils.log)("wtf"));
+  var load = function load(_ref3) {
+    var mdl = _ref3.attrs.mdl;
+
+    var onError = function onError(err) {
+      state.error = (0, _Utils.jsonCopy)(err);
+      console.log("state.e", state.error);
+      state.status = "failed";
     };
+
+    var onSuccess = function onSuccess(event) {
+      state.event = event;
+      state.error = {};
+      state.status = "success";
+    };
+
+    loadTask(_Utils.HTTP)(mdl)(state).fork(onError, onSuccess);
   };
 
-  var onError = function onError(err) {
-    state.error = (0, _Utils.jsonCopy)(err);
-    console.log("state.e", state.error);
-    state.status = "failed";
-  };
+  var deleteEvent = function deleteEvent(mdl) {
+    var onError = function onError(err) {
+      state.error = (0, _Utils.jsonCopy)(err);
+      console.log("state.e", state.error);
+      state.status = "failed";
+    };
 
-  var onSuccess = function onSuccess(event) {
-    state.event = event;
-    state.error = {};
-    state.status = "success";
-  };
+    var onSuccess = function onSuccess(event) {
+      console.log("deleted");
+      m.route.set("/".concat(mdl.user.name, "/").concat((0, _Utils.shortDateString)(mdl.selectedDate)));
+      state.event = event;
+      state.error = {};
+      state.status = "success";
+    };
 
-  var load = function load(_ref2) {
-    var mdl = _ref2.attrs.mdl;
-    loadTask(_Utils.HTTP)(mdl).fork(onError, onSuccess);
+    deleteEventTask(_Utils.HTTP)(mdl)(state).fork(onError, onSuccess);
   };
 
   return {
@@ -1663,9 +1687,9 @@ var Event = function Event(_ref) {
       return m(".event", [state.status == "loading" && m(".", "Fetching Event..."), state.status == "failed" && m(".code", state.error.message), state.status == "success" && m(".event-container", [m("button", {
         onclick: function onclick(e) {
           mdl.toAnchor(state.event.startTime);
-          gotoroute(mdl);
+          m.route.set("/".concat(mdl.user.name, "/").concat((0, _Utils.shortDateString)(mdl.selectedDate)));
         }
-      }, "Back"), m("h1", state.event.title), m("label", "date: ", state.event.date), m("label", "begins: ", state.event.startTime), m("label", "ends: ", state.event.endTime), m("label", "notes: ", state.event.notes), m("button", {
+      }, "Back"), m("h1", state.event.title), m("label", "date: ", state.event.date), m("label", "begins: ", state.event.begin), m("label", "ends: ", state.event.end), m("label", "notes: ", state.event.notes), m("button", {
         onclick: function onclick(e) {
           return deleteEvent(mdl);
         }
@@ -1694,10 +1718,6 @@ var _Models = require("Models");
 var _ramda = require("ramda");
 
 var _model = require("Components/calendar/model");
-
-var _moment = _interopRequireDefault(require("moment"));
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 var toDayViewModel = function toDayViewModel(dayViewModel, invite) {
   dayViewModel["".concat(invite.start.hour, ":00")].push(invite);
@@ -2389,6 +2409,11 @@ var backEnd = {
         return HttpTask(_secrets.BackEnd.headers())("PUT")(mdl)(backEndUrl + url)(dto);
       };
     };
+  },
+  deleteTask: function deleteTask(mdl) {
+    return function (url) {
+      return HttpTask(_secrets.BackEnd.headers())("DELETE")(mdl)(backEndUrl + url)(null);
+    };
   }
 };
 var HTTP = {
@@ -2634,7 +2659,6 @@ var datesAreSame = function datesAreSame(first) {
   return function (second) {
     var f = (0, _moment.default)(first).utc().format("YYYY-MM-DD");
     var s = (0, _moment.default)(second).utc().format("YYYY-MM-DD");
-    console.log("dd", f, s);
     return (0, _moment.default)(f).isSame((0, _moment.default)(s));
   };
 };
