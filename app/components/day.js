@@ -47,10 +47,6 @@ export const Day = ({ attrs: { mdl } }) => {
   }
 
   return {
-    // oninit: load,
-    // oncreate: ({ attrs: { mdl } }) => planDay(mdl),
-    // onupdate: ({ attrs: { mdl } }) =>
-    //   mdl.updateDay() && planDay(mdl)({ dom: _dom }),
     view: ({ attrs: { mdl, invites } }) => {
       return m(
         ".day",
@@ -68,7 +64,6 @@ export const Day = ({ attrs: { mdl } }) => {
           m(".day-container", [
             mdl.state.modal() && m(Editor, { mdl }),
             getHoursInDay(mdl.timeFormats[mdl.format()]).map((hour, idx) => {
-              // console.log("day", invites[hour])
               return m(Hour, {
                 mdl,
                 hour: invites[hour],

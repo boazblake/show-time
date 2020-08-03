@@ -1,4 +1,3 @@
-import { calendarModel } from "Components/calendar/model"
 import { getHoursInDay } from "Utils"
 
 export const dayModel = (mdl, date = new Date()) =>
@@ -16,6 +15,7 @@ export const inviteModel = () => ({
 export const eventModel = () => ({})
 
 const model = {
+  reloadInvites: Stream(false),
   currentEventId: Stream(null),
   updateDay: Stream(false),
   toAnchor: Stream(false),
@@ -25,7 +25,7 @@ const model = {
   currentLongDate: Stream(""),
   selectedDate: { year: "", month: "", day: "" },
   Calendar: {
-    data: {}, //calendarModel(),
+    data: {},
   },
   Day: {
     timeFormat: Stream("kk:mm"),

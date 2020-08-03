@@ -36,6 +36,13 @@ export const Home = ({ attrs: { mdl } }) => {
     events: null,
   }
 
+  const getTodays = (invites) =>
+    invites
+      .filter((i) =>
+        datesAreSame(i.startTime)(shortDateString(mdl.selectedDate))
+      )
+      .reduce(toDayViewModel, dayModel(mdl, mdl.currentShortDate()))
+
   const loadTask = (http) => (mdl) =>
     http.backEnd
       .getTask(mdl)(`data/Invites?where=userId%3D'${mdl.user.objectId}'`)
@@ -47,12 +54,8 @@ export const Home = ({ attrs: { mdl } }) => {
   }
 
   const onSuccess = (invites) => {
+    mdl.reloadInvites(false)
     state.invites = invites
-    state.todaysInvites = invites
-      .filter((i) =>
-        datesAreSame(i.startTime)(shortDateString(mdl.selectedDate))
-      )
-      .reduce(toDayViewModel, dayModel(mdl, mdl.currentShortDate()))
     state.error = null
     state.status = "success"
   }
@@ -63,24 +66,28 @@ export const Home = ({ attrs: { mdl } }) => {
 
   return {
     oninit: load,
+    onupdate: ({ attrs: { mdl } }) =>
+      mdl.reloadInvites() && load({ attrs: { mdl } }),
     view: ({ attrs: { mdl } }) => {
-      return m(".frow", [
-        m(Calendar, {
-          mdl,
-          calendar: calendarModel({
-            invites: state.invites,
-            date: mdl.currentShortDate(),
-          }),
-          invites: state.invites,
-        }),
+      return m(
+        ".frow",
         state.status == "loading" && m("p", "FETCHING EVENTS..."),
         state.status == "failed" && m("p", "FAILED TO FETCH EVENTS"),
-        state.status == "success" &&
+        state.status == "success" && [
+          m(Calendar, {
+            mdl,
+            calendar: calendarModel({
+              invites: state.invites,
+              date: mdl.currentShortDate(),
+            }),
+            invites: state.invites,
+          }),
           m(Day, {
             mdl,
-            invites: state.todaysInvites,
+            invites: getTodays(state.invites),
           }),
-      ])
+        ]
+      )
     },
   }
 }

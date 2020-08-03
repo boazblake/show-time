@@ -15,7 +15,13 @@ const loadTask = (http) => (mdl) => (state) =>
     .map(toEventviewModel)
 
 const deleteEventTask = (http) => (mdl) => (state) =>
-  http.backEnd.deleteTask(mdl)(`data/Events/${state.eventId}`).map(log("wtf"))
+  http.backEnd
+    .deleteTask(mdl)(`data/Events/${state.eventId}`)
+    .chain(() =>
+      http.backEnd.deleteTask(mdl)(
+        `data/bulk/Invites?where=eventId%3D'${state.eventId}'`
+      )
+    )
 
 export const Event = ({ attrs: { mdl } }) => {
   const state = {

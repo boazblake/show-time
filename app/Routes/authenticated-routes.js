@@ -47,7 +47,7 @@ const AuthenticatedRoutes = [
       mdl.selectedDate = { year: _d[0], month: _d[1], day: _d[2] }
       mdl.Calendar.data = calendarModel({ invites: [], date })
     },
-    component: (mdl) => [m(Home, { mdl, key: new Date() })],
+    component: (mdl) => m(Home, { mdl }),
   },
   {
     id: "event",

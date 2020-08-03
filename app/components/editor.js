@@ -72,10 +72,12 @@ const EventForm = ({ attrs: { state, mdl } }) => {
         m(
           "label",
           m("input", {
-            onchange: (e) =>
-              m.route.set(`/${mdl.user.name}/${shortDate(state.shortDate)}`),
+            onchange: (e) => {
+              console.log("input", `/${mdl.user.name}/${e.target.value}`)
+              m.route.set(`/${mdl.user.name}/${e.target.value}`)
+            },
             type: "date",
-            value: state.shortDate,
+            value: mdl.currentShortDate(),
             disabled: state.allday,
           })
         ),
@@ -144,7 +146,6 @@ export const Editor = ({ attrs: { mdl } }) => {
     title: "",
     notes: "",
   }
-
   const addNewEvent = (state, mdl) => {
     const onError = (state) => (err) => {
       state.error = err
@@ -154,14 +155,15 @@ export const Editor = ({ attrs: { mdl } }) => {
     const onSuccess = (mdl, state) => (data) => {
       state.error = null
       state.status = "success"
+      mdl.reloadInvites(true)
       mdl.updateDay(true)
       mdl.state.modal(false)
     }
 
-    submitEventTask(HTTP)(mdl)(state)
-      .chain(() => mdl.reloadInvites())
-
-      .fork(onError(state), onSuccess(mdl, state))
+    submitEventTask(HTTP)(mdl)(state).fork(
+      onError(state),
+      onSuccess(mdl, state)
+    )
   }
 
   return {

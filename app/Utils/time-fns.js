@@ -10,7 +10,7 @@ export const getHoursInDay = (format) =>
     .map((n) => (n.toString().length == 1 ? pad0Left(n) : n))
     .map(pad00Min)
 
-export const shortDate = (date) => {
+export const shortDate = (date = new Date()) => {
   "double chec", date, new Date(date).toISOString().split("T")[0]
   return new Date(date).toISOString().split("T")[0]
 }

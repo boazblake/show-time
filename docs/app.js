@@ -555,10 +555,6 @@ var Day = function Day(_ref2) {
   };
 
   return {
-    // oninit: load,
-    // oncreate: ({ attrs: { mdl } }) => planDay(mdl),
-    // onupdate: ({ attrs: { mdl } }) =>
-    //   mdl.updateDay() && planDay(mdl)({ dom: _dom }),
     view: function view(_ref4) {
       var _ref4$attrs = _ref4.attrs,
           mdl = _ref4$attrs.mdl,
@@ -570,7 +566,6 @@ var Day = function Day(_ref2) {
       }, mdl.state.modal() ? "Cancel" : "Add Event")), m(".day-container", [mdl.state.modal() && m(_Components.Editor, {
         mdl: mdl
       }), (0, _Utils.getHoursInDay)(mdl.timeFormats[mdl.format()]).map(function (hour, idx) {
-        // console.log("day", invites[hour])
         return m(Hour, {
           mdl: mdl,
           hour: invites[hour],
@@ -673,10 +668,11 @@ var EventForm = function EventForm(_ref4) {
     view: function view() {
       return m("form.event-form", [m("label", m("input", {
         onchange: function onchange(e) {
-          return m.route.set("/".concat(mdl.user.name, "/").concat(shortDate(state.shortDate)));
+          console.log("input", "/".concat(mdl.user.name, "/").concat(e.target.value));
+          m.route.set("/".concat(mdl.user.name, "/").concat(e.target.value));
         },
         type: "date",
-        value: state.shortDate,
+        value: mdl.currentShortDate(),
         disabled: state.allday
       })), m(".frow row", [[m("label.col-xs-1-3", m("input", {
         oninput: function oninput(e) {
@@ -738,14 +734,13 @@ var Editor = function Editor(_ref5) {
       return function (data) {
         state.error = null;
         state.status = "success";
+        mdl.reloadInvites(true);
         mdl.updateDay(true);
         mdl.state.modal(false);
       };
     };
 
-    submitEventTask(_Utils.HTTP)(mdl)(state).chain(function () {
-      return mdl.reloadInvites();
-    }).fork(onError(state), onSuccess(mdl, state));
+    submitEventTask(_Utils.HTTP)(mdl)(state).fork(onError(state), onSuccess(mdl, state));
   };
 
   return {
@@ -1046,8 +1041,6 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.default = exports.eventModel = exports.inviteModel = exports.dayModel = void 0;
 
-var _model = require("Components/calendar/model");
-
 var _Utils = require("Utils");
 
 var dayModel = function dayModel(mdl) {
@@ -1076,6 +1069,7 @@ var eventModel = function eventModel() {
 
 exports.eventModel = eventModel;
 var model = {
+  reloadInvites: Stream(false),
   currentEventId: Stream(null),
   updateDay: Stream(false),
   toAnchor: Stream(false),
@@ -1089,8 +1083,7 @@ var model = {
     day: ""
   },
   Calendar: {
-    data: {} //calendarModel(),
-
+    data: {}
   },
   Day: {
     timeFormat: Stream("kk:mm"),
@@ -1632,7 +1625,9 @@ var loadTask = function loadTask(http) {
 var deleteEventTask = function deleteEventTask(http) {
   return function (mdl) {
     return function (state) {
-      return http.backEnd.deleteTask(mdl)("data/Events/".concat(state.eventId)).map((0, _Utils.log)("wtf"));
+      return http.backEnd.deleteTask(mdl)("data/Events/".concat(state.eventId)).chain(function () {
+        return http.backEnd.deleteTask(mdl)("data/bulk/Invites?where=eventId%3D'".concat(state.eventId, "'"));
+      });
     };
   };
 };
@@ -1752,6 +1747,12 @@ var Home = function Home(_ref2) {
     events: null
   };
 
+  var getTodays = function getTodays(invites) {
+    return invites.filter(function (i) {
+      return (0, _Utils.datesAreSame)(i.startTime)((0, _Utils.shortDateString)(mdl.selectedDate));
+    }).reduce(toDayViewModel, (0, _Models.dayModel)(mdl, mdl.currentShortDate()));
+  };
+
   var loadTask = function loadTask(http) {
     return function (mdl) {
       return http.backEnd.getTask(mdl)("data/Invites?where=userId%3D'".concat(mdl.user.objectId, "'")).map((0, _ramda.map)(toInviteViewModel));
@@ -1764,10 +1765,8 @@ var Home = function Home(_ref2) {
   };
 
   var onSuccess = function onSuccess(invites) {
+    mdl.reloadInvites(false);
     state.invites = invites;
-    state.todaysInvites = invites.filter(function (i) {
-      return (0, _Utils.datesAreSame)(i.startTime)((0, _Utils.shortDateString)(mdl.selectedDate));
-    }).reduce(toDayViewModel, (0, _Models.dayModel)(mdl, mdl.currentShortDate()));
     state.error = null;
     state.status = "success";
   };
@@ -1779,18 +1778,26 @@ var Home = function Home(_ref2) {
 
   return {
     oninit: load,
-    view: function view(_ref4) {
+    onupdate: function onupdate(_ref4) {
       var mdl = _ref4.attrs.mdl;
-      return m(".frow", [m(_Components.Calendar, {
+      return mdl.reloadInvites() && load({
+        attrs: {
+          mdl: mdl
+        }
+      });
+    },
+    view: function view(_ref5) {
+      var mdl = _ref5.attrs.mdl;
+      return m(".frow", state.status == "loading" && m("p", "FETCHING EVENTS..."), state.status == "failed" && m("p", "FAILED TO FETCH EVENTS"), state.status == "success" && [m(_Components.Calendar, {
         mdl: mdl,
         calendar: (0, _model.calendarModel)({
           invites: state.invites,
           date: mdl.currentShortDate()
         }),
         invites: state.invites
-      }), state.status == "loading" && m("p", "FETCHING EVENTS..."), state.status == "failed" && m("p", "FAILED TO FETCH EVENTS"), state.status == "success" && m(_Components.Day, {
+      }), m(_Components.Day, {
         mdl: mdl,
-        invites: state.todaysInvites
+        invites: getTodays(state.invites)
       })]);
     }
   };
@@ -1922,10 +1929,9 @@ var AuthenticatedRoutes = [{
     });
   },
   component: function component(mdl) {
-    return [m(_Pages.Home, {
-      mdl: mdl,
-      key: new Date()
-    })];
+    return m(_Pages.Home, {
+      mdl: mdl
+    });
   }
 }, {
   id: "event",
@@ -2642,7 +2648,8 @@ var getHoursInDay = function getHoursInDay(format) {
 
 exports.getHoursInDay = getHoursInDay;
 
-var shortDate = function shortDate(date) {
+var shortDate = function shortDate() {
+  var date = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : new Date();
   "double chec", date, new Date(date).toISOString().split("T")[0];
   return new Date(date).toISOString().split("T")[0];
 };
