@@ -16,15 +16,16 @@ export const inviteModel = () => ({
 export const eventModel = () => ({})
 
 const model = {
+  currentEventId: Stream(null),
   updateDay: Stream(false),
   toAnchor: Stream(false),
   timeFormats: ["12hrs", "24hrs"],
   format: Stream(1),
   currentShortDate: Stream(""),
-  currentLongDate: Stream(new Date()),
+  currentLongDate: Stream(""),
   selectedDate: { year: "", month: "", day: "" },
   Calendar: {
-    data: calendarModel(),
+    data: {}, //calendarModel(),
   },
   Day: {
     timeFormat: Stream("kk:mm"),

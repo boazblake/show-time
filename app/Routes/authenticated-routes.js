@@ -1,5 +1,6 @@
 import { Home, Event } from "Pages"
 import { scrollToAnchor } from "Utils"
+import { calendarModel } from "Components/calendar/model"
 
 const AuthenticatedRoutes = [
   {
@@ -44,9 +45,9 @@ const AuthenticatedRoutes = [
       mdl.currentShortDate(date)
       mdl.currentLongDate(new Date(date))
       mdl.selectedDate = { year: _d[0], month: _d[1], day: _d[2] }
-      console.log("DAY PLANNER")
+      mdl.Calendar.data = calendarModel({ invites: [], date })
     },
-    component: (mdl) => m(Home, { mdl, key: new Date() }),
+    component: (mdl) => [m(Home, { mdl, key: new Date() })],
   },
   {
     id: "event",

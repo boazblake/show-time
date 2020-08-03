@@ -148,7 +148,7 @@ input[type="time"] {
 }
 
 
-.event-list {
+.invite-list {
   position: absolute;
   z-index: 100;
   right: 0;
@@ -156,7 +156,7 @@ input[type="time"] {
   width: 100%
 }
 
-.event-list-item {
+.invite-list-item {
   position: absolute;
   padding-left: 12px;
   background-color: var(--purple);

@@ -53,6 +53,5 @@ if (sessionStorage.getItem("shindigit-user")) {
   model.user = JSON.parse(sessionStorage.getItem("shindigit-user"))
   model.state.isAuth(true)
 }
-console.log(model)
 
 m.route(root, "/login", App(model))

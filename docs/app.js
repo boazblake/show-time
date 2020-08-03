@@ -213,7 +213,7 @@ var Toolbar = function Toolbar(_ref) {
           calendar = _ref2$attrs.calendar;
       return m(".toolbar", [m("input", {
         onchange: function onchange(e) {
-          return m.route.set("/".concat(mdl.user.name, "/").concat((0, _Utils.shortDate)(new Date())));
+          return m.route.set("/".concat(mdl.user.name, "/").concat(mdl.currentShortDate()));
         },
         type: "date",
         value: calendar.startDate
@@ -234,7 +234,7 @@ var MonthsToolbar = function MonthsToolbar() {
           calendar = _ref3$attrs.calendar;
       return m(".frow width-100  mt-10", [m(".frow width-100 row-between mt-10", [m("button.prevMonth", m("h3", {
         onclick: function onclick(_) {
-          m.route.set("/".concat(mdl.user.name, "/").concat((0, _Utils.formatDateString)({
+          m.route.set("/".concat(mdl.user.name, "/").concat((0, _Utils.shortDateString)({
             year: parseInt(calendar.selected.year) - 1,
             month: calendar.selected.month,
             day: calendar.selected.day
@@ -242,7 +242,7 @@ var MonthsToolbar = function MonthsToolbar() {
         }
       }, parseInt(calendar.selected.year) - 1)), m(".centerMonthGroup", [m("h2.currentMonth", (0, _model.getMonthByIdx)(parseInt(calendar.selected.month) - 1)), m("h3.text-center", parseInt(calendar.selected.year))]), m("button.nextMonth", m("h3", {
         onclick: function onclick(_) {
-          m.route.set("/".concat(mdl.user.name, "/").concat((0, _Utils.formatDateString)({
+          m.route.set("/".concat(mdl.user.name, "/").concat((0, _Utils.shortDateString)({
             year: parseInt(calendar.selected.year) + 1,
             month: calendar.selected.month,
             day: calendar.selected.day
@@ -367,7 +367,7 @@ var goToDate = function goToDate(mdl, _ref) {
     _month = "12";
   }
 
-  m.route.set("/".concat(mdl.user.name, "/").concat((0, _Utils.formatDateString)({
+  m.route.set("/".concat(mdl.user.name, "/").concat((0, _Utils.shortDateString)({
     year: _year,
     month: _month,
     day: _day
@@ -431,14 +431,15 @@ var getMonthMatrix = function getMonthMatrix(_ref3) {
 
 exports.getMonthMatrix = getMonthMatrix;
 
-var calendarModel = function calendarModel() {
-  var invites = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : [];
-  var date = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : (0, _Utils.shortDate)();
-  console.log(date, new Date());
+var calendarModel = function calendarModel(_ref4) {
+  var _ref4$invites = _ref4.invites,
+      invites = _ref4$invites === void 0 ? [] : _ref4$invites,
+      _ref4$date = _ref4.date,
+      date = _ref4$date === void 0 ? (0, _Utils.shortDate)() : _ref4$date;
 
   var _date = (0, _Utils.shortDate)(date).split("-");
 
-  var today = (0, _Utils.shortDate)().split("-");
+  var today = (0, _Utils.shortDate)(new Date()).split("-");
   var year = _date[0];
   var month = _date[1];
   var day = _date[2];
@@ -461,15 +462,14 @@ var calendarModel = function calendarModel() {
     day: day,
     daysInMonth: daysInMonth(month, year)
   };
-  console.log(dto);
   return dto;
 };
 
 exports.calendarModel = calendarModel;
 
-var calendarDay = function calendarDay(_ref4) {
-  var today = _ref4.today,
-      selected = _ref4.selected;
+var calendarDay = function calendarDay(_ref5) {
+  var today = _ref5.today,
+      selected = _ref5.selected;
   return function (currentDay, dir) {
     if (dir !== 0) {
       return "notThisMonth";
@@ -479,7 +479,7 @@ var calendarDay = function calendarDay(_ref4) {
       return "isToday";
     }
 
-    if ((0, _Utils.isEqual)(currentDay, selected.day) && (0, _Utils.isEqual)(selected.month, selected.month)) {
+    if ((0, _Utils.isEqual)(currentDay, selected.day)) {
       return "selectedDay";
     }
   };
@@ -522,7 +522,7 @@ var Hour = function Hour() {
           events = _ref$attrs.events;
       return m(".frow ", m(".hour ", [m("p.hour-time", {
         id: time
-      }, time), [m(_Components.EventsList, {
+      }, time), [m(_Components.InvitesList, {
         mdl: mdl,
         events: events
       }), m(".half-hour", m(".top")), m(".half-hour", m(".bottom"))]]));
@@ -545,9 +545,8 @@ var Day = function Day(_ref2) {
   var planDay = function planDay(mdl) {
     return function (_ref3) {
       var dom = _ref3.dom;
-      // _dom = dom
-      console.log("create day");
 
+      // _dom = dom
       if (mdl.toAnchor()) {
         console.log("anchor", mdl.toAnchor(), dom, dom.querySelector("".concat(mdl.toAnchor().toString())));
         var el = document.getElementById(mdl.toAnchor());
@@ -608,8 +607,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 var submitEventTask = function submitEventTask(http) {
   return function (mdl) {
     return function (_ref) {
-      var shortDate = _ref.shortDate,
-          allday = _ref.allday,
+      var allday = _ref.allday,
           startTime = _ref.startTime,
           endTime = _ref.endTime,
           title = _ref.title,
@@ -631,7 +629,7 @@ var submitEventTask = function submitEventTask(http) {
       var dto = {
         endTime: new Date(year, month - 1, day, getHour(endTime), getMin(endTime)),
         startTime: new Date(year, month - 1, day, getHour(startTime), getMin(startTime)),
-        shortDate: shortDate,
+        // shortDate,
         notes: notes,
         title: title,
         allday: allday,
@@ -670,8 +668,6 @@ var submitEventTask = function submitEventTask(http) {
   };
 };
 
-"data/<table-name>/<parentObjectId>/<relationName>";
-
 var EventForm = function EventForm(_ref4) {
   var _ref4$attrs = _ref4.attrs,
       state = _ref4$attrs.state,
@@ -680,7 +676,7 @@ var EventForm = function EventForm(_ref4) {
     view: function view() {
       return m("form.event-form", [m("label", m("input", {
         onchange: function onchange(e) {
-          return m.route.set("/".concat(mdl.user.name, "/").concat(shortDate(new Date())));
+          return m.route.set("/".concat(mdl.user.name, "/").concat(shortDate(state.shortDate)));
         },
         type: "date",
         value: state.shortDate,
@@ -724,7 +720,6 @@ var EventForm = function EventForm(_ref4) {
 
 var Editor = function Editor(_ref5) {
   var mdl = _ref5.attrs.mdl;
-  // console.log("editor:: find event?", mdl)
   var state = {
     shortDate: mdl.currentShortDate(),
     allday: false,
@@ -751,7 +746,9 @@ var Editor = function Editor(_ref5) {
       };
     };
 
-    submitEventTask(_Utils.HTTP)(mdl)(state).fork(onError(state), onSuccess(mdl, state));
+    submitEventTask(_Utils.HTTP)(mdl)(state).chain(function () {
+      return mdl.reloadInvites();
+    }).fork(onError(state), onSuccess(mdl, state));
   };
 
   return {
@@ -776,87 +773,6 @@ var Editor = function Editor(_ref5) {
 };
 
 exports.Editor = Editor;
-});
-
-;require.register("Components/event-list.js", function(exports, require, module) {
-"use strict";
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.EventsList = void 0;
-
-var _dateFns = require("date-fns");
-
-var _Utils = require("Utils");
-
-function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _unsupportedIterableToArray(arr, i) || _nonIterableRest(); }
-
-function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
-
-function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
-
-function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
-
-function _iterableToArrayLimit(arr, i) { if (typeof Symbol === "undefined" || !(Symbol.iterator in Object(arr))) return; var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"] != null) _i["return"](); } finally { if (_d) throw _e; } } return _arr; }
-
-function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
-
-var Event = function Event(_ref) {
-  var mdl = _ref.attrs.mdl;
-
-  var getHeight = function getHeight(_ref2, _ref3) {
-    var _ref4 = _slicedToArray(_ref2, 2),
-        startHour = _ref4[0],
-        startMin = _ref4[1];
-
-    var _ref5 = _slicedToArray(_ref3, 2),
-        endHour = _ref5[0],
-        endMin = _ref5[1];
-
-    var startDate = (0, _Utils.getFullDate)(mdl.selectedDate, startHour, startMin);
-    var endDate = (0, _Utils.getFullDate)(mdl.selectedDate, endHour, endMin);
-    return (0, _dateFns.differenceInMinutes)(startDate, endDate);
-  };
-
-  return {
-    view: function view(_ref6) {
-      var _ref6$attrs = _ref6.attrs,
-          mdl = _ref6$attrs.mdl,
-          event = _ref6$attrs.event,
-          col = _ref6$attrs.col;
-      console.log((0, _dateFns.differenceInMinutes)(new Date(event.endTime), new Date(event.startTime)) * 2);
-      return m(".col-xs-1-".concat(col + 2), m(".event-list-item ", {
-        onclick: function onclick(e) {
-          return m.route.set("/".concat(mdl.user.name, "/").concat(mdl.currentShortDate(), "/").concat(event.start.hour, "/").concat(event.start.min));
-        },
-        style: {
-          top: "".concat(event.start.min, "px"),
-          height: "".concat((0, _dateFns.differenceInMinutes)(new Date(event.endTime), new Date(event.startTime)) * 2, "px")
-        }
-      }, event.title));
-    }
-  };
-};
-
-var EventsList = function EventsList(_ref7) {
-  var mdl = _ref7.attrs.mdl;
-  return {
-    view: function view(_ref8) {
-      var events = _ref8.attrs.events;
-      return m(".event-list frow ", events.map(function (event, idx) {
-        return m(Event, {
-          mdl: mdl,
-          event: event,
-          col: events.length,
-          key: idx
-        });
-      }));
-    }
-  };
-};
-
-exports.EventsList = EventsList;
 });
 
 ;require.register("Components/hour.js", function(exports, require, module) {
@@ -945,14 +861,14 @@ Object.keys(_editor).forEach(function (key) {
   });
 });
 
-var _eventList = require("./event-list.js");
+var _invitesList = require("./invites-list.js");
 
-Object.keys(_eventList).forEach(function (key) {
+Object.keys(_invitesList).forEach(function (key) {
   if (key === "default" || key === "__esModule") return;
   Object.defineProperty(exports, key, {
     enumerable: true,
     get: function get() {
-      return _eventList[key];
+      return _invitesList[key];
     }
   });
 });
@@ -968,6 +884,94 @@ Object.keys(_navLink).forEach(function (key) {
     }
   });
 });
+});
+
+;require.register("Components/invites-list.js", function(exports, require, module) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.InvitesList = void 0;
+
+var _dateFns = require("date-fns");
+
+var _Utils = require("Utils");
+
+function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _unsupportedIterableToArray(arr, i) || _nonIterableRest(); }
+
+function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
+
+function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
+
+function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
+
+function _iterableToArrayLimit(arr, i) { if (typeof Symbol === "undefined" || !(Symbol.iterator in Object(arr))) return; var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"] != null) _i["return"](); } finally { if (_d) throw _e; } } return _arr; }
+
+function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
+
+var Invite = function Invite(_ref) {
+  var mdl = _ref.attrs.mdl;
+
+  var getHeight = function getHeight(_ref2, _ref3) {
+    var _ref4 = _slicedToArray(_ref2, 2),
+        startHour = _ref4[0],
+        startMin = _ref4[1];
+
+    var _ref5 = _slicedToArray(_ref3, 2),
+        endHour = _ref5[0],
+        endMin = _ref5[1];
+
+    var startDate = (0, _Utils.getFullDate)(mdl.selectedDate, startHour, startMin);
+    var endDate = (0, _Utils.getFullDate)(mdl.selectedDate, endHour, endMin);
+    return (0, _dateFns.differenceInMinutes)(startDate, endDate);
+  };
+
+  return {
+    view: function view(_ref6) {
+      var _ref6$attrs = _ref6.attrs,
+          mdl = _ref6$attrs.mdl,
+          invite = _ref6$attrs.invite,
+          col = _ref6$attrs.col;
+      // console.log(
+      //   invite,
+      //   differenceInMinutes(
+      //     new Date(invite.endTime),
+      //     new Date(invite.startTime)
+      //   ) * 2
+      // )
+      return m(".col-xs-1-".concat(col + 2), m(".invite-list-item ", {
+        onclick: function onclick(e) {
+          mdl.currentEventId(invite.eventId);
+          m.route.set("/".concat(mdl.user.name, "/").concat(mdl.currentShortDate(), "/").concat(invite.start.hour, "/").concat(invite.start.min));
+        },
+        style: {
+          top: "".concat(invite.start.min, "px"),
+          height: "".concat((0, _dateFns.differenceInMinutes)(new Date(invite.endTime), new Date(invite.startTime)) * 2, "px")
+        }
+      }, invite.title));
+    }
+  };
+};
+
+var InvitesList = function InvitesList(_ref7) {
+  var mdl = _ref7.attrs.mdl;
+  return {
+    view: function view(_ref8) {
+      var events = _ref8.attrs.events;
+      return m(".invite-list frow ", events.map(function (invite, idx) {
+        return m(Invite, {
+          mdl: mdl,
+          invite: invite,
+          col: events.length,
+          key: idx
+        });
+      }));
+    }
+  };
+};
+
+exports.InvitesList = InvitesList;
 });
 
 ;require.register("Components/modal.js", function(exports, require, module) {
@@ -1077,19 +1081,21 @@ var eventModel = function eventModel() {
 
 exports.eventModel = eventModel;
 var model = {
+  currentEventId: Stream(null),
   updateDay: Stream(false),
   toAnchor: Stream(false),
   timeFormats: ["12hrs", "24hrs"],
   format: Stream(1),
   currentShortDate: Stream(""),
-  currentLongDate: Stream(new Date()),
+  currentLongDate: Stream(""),
   selectedDate: {
     year: "",
     month: "",
     day: ""
   },
   Calendar: {
-    data: (0, _model.calendarModel)()
+    data: {} //calendarModel(),
+
   },
   Day: {
     timeFormat: Stream("kk:mm"),
@@ -1600,9 +1606,9 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.Event = void 0;
 
-var gotoroute = function gotoroute(mdl) {
-  return m.route.set("/".concat(mdl.Event.date));
-};
+var _Utils = require("Utils");
+
+var _Utils2 = require("../Utils");
 
 var deleteEvent = function deleteEvent(mdl) {
   var _m$route$param = m.route.param(),
@@ -1612,25 +1618,58 @@ var deleteEvent = function deleteEvent(mdl) {
 
   delete mdl.Day.data["".concat(hour, ":00")][min];
   localStorage.setItem(date, JSON.stringify(mdl.Day.data));
-  m.redraw();
-  gotoroute(mdl);
+};
+
+var toEventviewModel = function toEventviewModel(event) {
+  console.log("event", event);
+  console.log("start date", event.startTime, (0, _Utils2.fromFullDate)(event.startTime));
+  return event;
 };
 
 var Event = function Event(_ref) {
   var mdl = _ref.attrs.mdl;
-  console.log(mdl);
+  var state = {
+    error: {},
+    eventId: mdl.currentEventId(),
+    status: "loading"
+  };
+
+  var loadTask = function loadTask(http) {
+    return function (mdl) {
+      return http.backEnd.getTask(mdl)("data/Events/".concat(state.eventId)).map(toEventviewModel).map((0, _Utils.log)("wtf"));
+    };
+  };
+
+  var onError = function onError(err) {
+    state.error = (0, _Utils.jsonCopy)(err);
+    console.log("state.e", state.error);
+    state.status = "failed";
+  };
+
+  var onSuccess = function onSuccess(event) {
+    state.event = event;
+    state.error = {};
+    state.status = "success";
+  };
+
+  var load = function load(_ref2) {
+    var mdl = _ref2.attrs.mdl;
+    loadTask(_Utils.HTTP)(mdl).fork(onError, onSuccess);
+  };
+
   return {
+    oninit: load,
     view: function view() {
-      return m(".event-container", [m("button", {
+      return m(".event", [state.status == "loading" && m(".", "Fetching Event..."), state.status == "failed" && m(".code", state.error.message), state.status == "success" && m(".event-container", [m("button", {
         onclick: function onclick(e) {
-          mdl.toAnchor(mdl.Event.startTime);
+          mdl.toAnchor(state.event.startTime);
           gotoroute(mdl);
         }
-      }, "Back"), m("h1", mdl.Event.title), m("label", "is All Day? ", mdl.Event.allday ? "yes" : "No"), m("label", "date: ", mdl.Event.date), m("label", "begins: ", mdl.Event.startTime), m("label", "ends: ", mdl.Event.endTime), m("label", "notes: ", mdl.Event.notes), m("button", {
+      }, "Back"), m("h1", state.event.title), m("label", "date: ", state.event.date), m("label", "begins: ", state.event.startTime), m("label", "ends: ", state.event.endTime), m("label", "notes: ", state.event.notes), m("button", {
         onclick: function onclick(e) {
           return deleteEvent(mdl);
         }
-      }, "delete")]);
+      }, "delete")])]);
     }
   };
 };
@@ -1656,9 +1695,12 @@ var _ramda = require("ramda");
 
 var _model = require("Components/calendar/model");
 
+var _moment = _interopRequireDefault(require("moment"));
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
 var toDayViewModel = function toDayViewModel(dayViewModel, invite) {
   dayViewModel["".concat(invite.start.hour, ":00")].push(invite);
-  console.log("ddd", dayViewModel);
   return dayViewModel;
 };
 
@@ -1704,16 +1746,14 @@ var Home = function Home(_ref2) {
   var onSuccess = function onSuccess(invites) {
     state.invites = invites;
     state.todaysInvites = invites.filter(function (i) {
-      return (0, _Utils.isToday)(i.startTime);
+      return (0, _Utils.datesAreSame)(i.startTime)((0, _Utils.shortDateString)(mdl.selectedDate));
     }).reduce(toDayViewModel, (0, _Models.dayModel)(mdl, mdl.currentShortDate()));
-    console.log("home succes", state.invites, mdl);
     state.error = null;
     state.status = "success";
   };
 
   var load = function load(_ref3) {
     var mdl = _ref3.attrs.mdl;
-    // console.log("loading")
     loadTask(_Utils.HTTP)(mdl).fork(onError, onSuccess);
   };
 
@@ -1723,7 +1763,10 @@ var Home = function Home(_ref2) {
       var mdl = _ref4.attrs.mdl;
       return m(".frow", [m(_Components.Calendar, {
         mdl: mdl,
-        calendar: (0, _model.calendarModel)(state.invites),
+        calendar: (0, _model.calendarModel)({
+          invites: state.invites,
+          date: mdl.currentShortDate()
+        }),
         invites: state.invites
       }), state.status == "loading" && m("p", "FETCHING EVENTS..."), state.status == "failed" && m("p", "FAILED TO FETCH EVENTS"), state.status == "success" && m(_Components.Day, {
         mdl: mdl,
@@ -1792,78 +1835,6 @@ Object.keys(_registerUser).forEach(function (key) {
 });
 });
 
-;require.register("Routes.js", function(exports, require, module) {
-"use strict";
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.default = void 0;
-
-var _Pages = require("Pages");
-
-var _model = require("Components/calendar/model");
-
-var _Components = require("Components");
-
-var routes = function routes(mdl) {
-  return {
-    "/login": {
-      render: function render() {
-        return m(_Pages.Login, {
-          mdl: mdl
-        });
-      }
-    },
-    "/register": {
-      render: function render() {
-        return m(_Pages.Register, {
-          mdl: mdl
-        });
-      }
-    },
-    "/:username/:date": {
-      onmatch: function onmatch(_ref) {
-        var date = _ref.date;
-
-        var _d = date.split("-");
-
-        mdl.currentShortDate(date);
-        mdl.currentLongDate(new Date(date));
-        mdl.selectedDate = {
-          year: _d[0],
-          month: _d[1],
-          day: _d[2]
-        }; // mdl.Calendar.data = calendarModel(date)
-        // mdl.Day.data = dayModel(mdl, date)
-      },
-      render: function render() {
-        return [m(_Pages.Home, {
-          mdl: mdl,
-          key: mdl.currentLongDate()
-        })];
-      }
-    },
-    "/:username/:date/:hour/:min": {
-      onmatch: function onmatch(_ref2) {
-        var hour = _ref2.hour,
-            min = _ref2.min;
-        mdl.Event = mdl.Day.data["".concat(hour, ":00")][min];
-      },
-      render: function render() {
-        return [m(_Pages.Event, {
-          mdl: mdl,
-          key: mdl.currentLongDate()
-        })];
-      }
-    }
-  };
-};
-
-var _default = routes;
-exports.default = _default;
-});
-
 ;require.register("Routes/authenticated-routes.js", function(exports, require, module) {
 "use strict";
 
@@ -1875,6 +1846,8 @@ exports.default = void 0;
 var _Pages = require("Pages");
 
 var _Utils = require("Utils");
+
+var _model = require("Components/calendar/model");
 
 var AuthenticatedRoutes = [{
   id: "profile",
@@ -1923,13 +1896,16 @@ var AuthenticatedRoutes = [{
       month: _d[1],
       day: _d[2]
     };
-    console.log("DAY PLANNER");
+    mdl.Calendar.data = (0, _model.calendarModel)({
+      invites: [],
+      date: date
+    });
   },
   component: function component(mdl) {
-    return m(_Pages.Home, {
+    return [m(_Pages.Home, {
       mdl: mdl,
       key: new Date()
-    });
+    })];
   }
 }, {
   id: "event",
@@ -2437,21 +2413,9 @@ var _exportNames = {
   jsonCopy: true,
   isSideBarActive: true,
   range: true,
-  shortDate: true,
-  isLeapYear: true,
-  isToday: true,
-  daysOfTheWeek: true,
-  monthsOfTheYear: true,
-  fromFullDate: true,
-  getFullDate: true,
-  toHourViewModel: true,
-  pad0Left: true,
-  formatDateString: true,
-  isEqual: true,
-  pad00Min: true,
-  getHoursInDay: true
+  isEqual: true
 };
-exports.getHoursInDay = exports.pad00Min = exports.isEqual = exports.formatDateString = exports.pad0Left = exports.toHourViewModel = exports.getFullDate = exports.fromFullDate = exports.monthsOfTheYear = exports.daysOfTheWeek = exports.isToday = exports.isLeapYear = exports.shortDate = exports.range = exports.isSideBarActive = exports.jsonCopy = exports.nameFromRoute = exports.NoOp = exports.Pause = exports.randomPause = exports.log = void 0;
+exports.isEqual = exports.range = exports.isSideBarActive = exports.jsonCopy = exports.nameFromRoute = exports.NoOp = exports.Pause = exports.randomPause = exports.log = void 0;
 
 var _http = require("./http.js");
 
@@ -2488,6 +2452,19 @@ Object.keys(_validations).forEach(function (key) {
     enumerable: true,
     get: function get() {
       return _validations[key];
+    }
+  });
+});
+
+var _timeFns = require("./time-fns.js");
+
+Object.keys(_timeFns).forEach(function (key) {
+  if (key === "default" || key === "__esModule") return;
+  if (Object.prototype.hasOwnProperty.call(_exportNames, key)) return;
+  Object.defineProperty(exports, key, {
+    enumerable: true,
+    get: function get() {
+      return _timeFns[key];
     }
   });
 });
@@ -2557,106 +2534,11 @@ var range = function range(size) {
 
 exports.range = range;
 
-var shortDate = function shortDate() {
-  var date = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : new Date();
-  console.log(date);
-  return new Date(date).toISOString().split("T")[0];
-};
-
-exports.shortDate = shortDate;
-
-var isLeapYear = function isLeapYear(year) {
-  return year % 4 == 0 ? false : year % 100 == 0 ? year % 400 == 0 ? true : false : false;
-};
-
-exports.isLeapYear = isLeapYear;
-
-var isToday = function isToday(someDate) {
-  var today = new Date();
-  var date = new Date(someDate);
-  return date.getDate() == today.getDate() && date.getMonth() == today.getMonth() && date.getFullYear() == today.getFullYear();
-};
-
-exports.isToday = isToday;
-var daysOfTheWeek = ["Monday", "Teusday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"];
-exports.daysOfTheWeek = daysOfTheWeek;
-var monthsOfTheYear = ["January", "Febuary", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
-exports.monthsOfTheYear = monthsOfTheYear;
-
-var fromFullDate = function fromFullDate(date) {
-  var d = new Date(date);
-  return {
-    day: d.getDate(),
-    month: d.getMonth(),
-    year: d.getFullYear(),
-    hour: d.getHours(),
-    min: d.getMinutes()
-  };
-};
-
-exports.fromFullDate = fromFullDate;
-
-var getFullDate = function getFullDate(_ref, startHour, startMin) {
-  var year = _ref.year,
-      month = _ref.month,
-      day = _ref.day;
-  console.log("getFullDate", new Date(year, month - 1, day, startHour, startMin));
-  return new Date(year, month - 1, day, startHour, startMin);
-};
-
-exports.getFullDate = getFullDate;
-
-var toHourViewModel = function toHourViewModel(date) {
-  return function (mdl, hour) {
-    if (!mdl[date][hour]) {
-      mdl[date][hour] = {};
-    }
-
-    return mdl;
-  };
-};
-
-exports.toHourViewModel = toHourViewModel;
-
-var pad0Left = function pad0Left(num) {
-  return "0".concat(num);
-};
-
-exports.pad0Left = pad0Left;
-
-var formatDateString = function formatDateString(_ref2) {
-  var year = _ref2.year,
-      month = _ref2.month,
-      day = _ref2.day;
-
-  var padded = function padded(d) {
-    return d.toString().length == 1 ? pad0Left(d) : d;
-  };
-
-  return "".concat(year, "-").concat(padded(month), "-").concat(padded(day));
-};
-
-exports.formatDateString = formatDateString;
-
 var isEqual = function isEqual(a, b) {
   return JSON.stringify(a) == JSON.stringify(b);
 };
 
 exports.isEqual = isEqual;
-
-var pad00Min = function pad00Min(num) {
-  return "".concat(num, ":00");
-};
-
-exports.pad00Min = pad00Min;
-
-var getHoursInDay = function getHoursInDay(format) {
-  return range(format == "24hrs" ? 24 : 12).map(function (n) {
-    return n.toString().length == 1 ? pad0Left(n) : n;
-  }).map(pad00Min);
-};
-
-exports.getHoursInDay = getHoursInDay;
 });
 
 ;require.register("Utils/local-storage.js", function(exports, require, module) {
@@ -2693,6 +2575,127 @@ var locals = {
   }
 };
 exports.locals = locals;
+});
+
+;require.register("Utils/time-fns.js", function(exports, require, module) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.shortDateString = exports.toHourViewModel = exports.getFullDate = exports.fromFullDate = exports.monthsOfTheYear = exports.daysOfTheWeek = exports.isToday = exports.datesAreSame = exports.isLeapYear = exports.shortDate = exports.getHoursInDay = exports.pad0Left = exports.pad00Min = exports.padding = void 0;
+
+var _index = require("./index");
+
+var _moment = _interopRequireDefault(require("moment"));
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var padding = function padding(d) {
+  return d.toString().length == 1 ? pad0Left(d) : d;
+};
+
+exports.padding = padding;
+
+var pad00Min = function pad00Min(num) {
+  return "".concat(num, ":00");
+};
+
+exports.pad00Min = pad00Min;
+
+var pad0Left = function pad0Left(num) {
+  return "0".concat(num);
+};
+
+exports.pad0Left = pad0Left;
+
+var getHoursInDay = function getHoursInDay(format) {
+  return (0, _index.range)(format == "24hrs" ? 24 : 12).map(function (n) {
+    return n.toString().length == 1 ? pad0Left(n) : n;
+  }).map(pad00Min);
+};
+
+exports.getHoursInDay = getHoursInDay;
+
+var shortDate = function shortDate(date) {
+  "double chec", date, new Date(date).toISOString().split("T")[0];
+  return new Date(date).toISOString().split("T")[0];
+};
+
+exports.shortDate = shortDate;
+
+var isLeapYear = function isLeapYear(year) {
+  return year % 4 == 0 ? false : year % 100 == 0 ? year % 400 == 0 ? true : false : false;
+};
+
+exports.isLeapYear = isLeapYear;
+
+var datesAreSame = function datesAreSame(first) {
+  return function (second) {
+    var f = (0, _moment.default)(first).utc().format("YYYY-MM-DD");
+    var s = (0, _moment.default)(second).utc().format("YYYY-MM-DD");
+    console.log("dd", f, s);
+    return (0, _moment.default)(f).isSame((0, _moment.default)(s));
+  };
+};
+
+exports.datesAreSame = datesAreSame;
+
+var isToday = function isToday(someDate) {
+  var today = new Date();
+  var date = new Date(someDate);
+  return date.getDate() == today.getDate() && date.getMonth() == today.getMonth() && date.getFullYear() == today.getFullYear();
+};
+
+exports.isToday = isToday;
+var daysOfTheWeek = ["Monday", "Teusday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"];
+exports.daysOfTheWeek = daysOfTheWeek;
+var monthsOfTheYear = ["January", "Febuary", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+exports.monthsOfTheYear = monthsOfTheYear;
+
+var fromFullDate = function fromFullDate(date) {
+  var d = new Date(date);
+  return {
+    day: padding(d.getDate()),
+    month: padding(d.getMonth() + 1),
+    year: d.getFullYear(),
+    hour: padding(d.getHours()),
+    min: padding(d.getMinutes())
+  };
+};
+
+exports.fromFullDate = fromFullDate;
+
+var getFullDate = function getFullDate(_ref, startHour, startMin) {
+  var year = _ref.year,
+      month = _ref.month,
+      day = _ref.day;
+  console.log("getFullDate", new Date(year, month - 1, day, startHour, startMin));
+  return new Date(year, month - 1, day, startHour, startMin);
+};
+
+exports.getFullDate = getFullDate;
+
+var toHourViewModel = function toHourViewModel(date) {
+  return function (mdl, hour) {
+    if (!mdl[date][hour]) {
+      mdl[date][hour] = {};
+    }
+
+    return mdl;
+  };
+};
+
+exports.toHourViewModel = toHourViewModel;
+
+var shortDateString = function shortDateString(_ref2) {
+  var year = _ref2.year,
+      month = _ref2.month,
+      day = _ref2.day;
+  return "".concat(year, "-").concat(padding(month), "-").concat(padding(day));
+};
+
+exports.shortDateString = shortDateString;
 });
 
 ;require.register("Utils/validations.js", function(exports, require, module) {
@@ -2867,7 +2870,6 @@ if (sessionStorage.getItem("shindigit-user")) {
   _Models.default.state.isAuth(true);
 }
 
-console.log(_Models.default);
 m.route(root, "/login", (0, _App.default)(_Models.default));
 });
 

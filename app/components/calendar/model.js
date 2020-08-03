@@ -12,7 +12,7 @@ import {
 } from "date-fns"
 import {
   isLeapYear,
-  formatDateString,
+  shortDateString,
   pad0Left,
   monthsOfTheYear,
   shortDate,
@@ -44,7 +44,7 @@ export const goToDate = (mdl, { year, month, day, dir }) => {
     _month = "12"
   }
   m.route.set(
-    `/${mdl.user.name}/${formatDateString({
+    `/${mdl.user.name}/${shortDateString({
       year: _year,
       month: _month,
       day: _day,
@@ -94,10 +94,9 @@ export const getMonthMatrix = ({ year, month }) => {
   )
 }
 
-export const calendarModel = (invites = [], date = shortDate()) => {
-  console.log(date, new Date())
+export const calendarModel = ({ invites = [], date = shortDate() }) => {
   let _date = shortDate(date).split("-")
-  let today = shortDate().split("-")
+  let today = shortDate(new Date()).split("-")
   let year = _date[0]
   let month = _date[1]
   let day = _date[2]
@@ -117,7 +116,6 @@ export const calendarModel = (invites = [], date = shortDate()) => {
     day,
     daysInMonth: daysInMonth(month, year),
   }
-  console.log(dto)
   return dto
 }
 
@@ -133,10 +131,7 @@ export const calendarDay = ({ today, selected }) => (currentDay, dir) => {
     return "isToday"
   }
 
-  if (
-    isEqual(currentDay, selected.day) &&
-    isEqual(selected.month, selected.month)
-  ) {
+  if (isEqual(currentDay, selected.day)) {
     return "selectedDay"
   }
 }

@@ -3,7 +3,7 @@ import { HTTP } from "Utils"
 import Task from "data.task"
 
 const submitEventTask = (http) => (mdl) => ({
-  shortDate,
+  // shortDate,
   allday,
   startTime,
   endTime,
@@ -24,7 +24,7 @@ const submitEventTask = (http) => (mdl) => ({
       getHour(startTime),
       getMin(startTime)
     ),
-    shortDate,
+    // shortDate,
     notes,
     title,
     allday,
@@ -65,8 +65,6 @@ const submitEventTask = (http) => (mdl) => ({
     })
 }
 
-;`data/<table-name>/<parentObjectId>/<relationName>`
-
 const EventForm = ({ attrs: { state, mdl } }) => {
   return {
     view: () =>
@@ -75,7 +73,7 @@ const EventForm = ({ attrs: { state, mdl } }) => {
           "label",
           m("input", {
             onchange: (e) =>
-              m.route.set(`/${mdl.user.name}/${shortDate(new Date())}`),
+              m.route.set(`/${mdl.user.name}/${shortDate(state.shortDate)}`),
             type: "date",
             value: state.shortDate,
             disabled: state.allday,
@@ -138,7 +136,6 @@ const EventForm = ({ attrs: { state, mdl } }) => {
 }
 
 export const Editor = ({ attrs: { mdl } }) => {
-  // console.log("editor:: find event?", mdl)
   const state = {
     shortDate: mdl.currentShortDate(),
     allday: false,
@@ -161,10 +158,10 @@ export const Editor = ({ attrs: { mdl } }) => {
       mdl.state.modal(false)
     }
 
-    submitEventTask(HTTP)(mdl)(state).fork(
-      onError(state),
-      onSuccess(mdl, state)
-    )
+    submitEventTask(HTTP)(mdl)(state)
+      .chain(() => mdl.reloadInvites())
+
+      .fork(onError(state), onSuccess(mdl, state))
   }
 
   return {

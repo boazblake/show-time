@@ -1,6 +1,6 @@
 import { Editor } from "Components"
 import { log, getHoursInDay } from "Utils"
-import { EventsList } from "Components"
+import { InvitesList } from "Components"
 
 export const Hour = () => {
   return {
@@ -10,7 +10,7 @@ export const Hour = () => {
         m(".hour ", [
           m("p.hour-time", { id: time }, time),
           [
-            m(EventsList, { mdl, events }),
+            m(InvitesList, { mdl, events }),
             m(".half-hour", m(".top")),
             m(".half-hour", m(".bottom")),
           ],
@@ -31,7 +31,6 @@ export const Day = ({ attrs: { mdl } }) => {
 
   const planDay = (mdl) => ({ dom }) => {
     // _dom = dom
-    console.log("create day")
     if (mdl.toAnchor()) {
       console.log(
         "anchor",

@@ -17,6 +17,7 @@
     "date-fns": "^2.15.0",
     "mithril": "^2.0.4",
     "mithril-stream": "^2.0.0",
+    "moment": "^2.27.0",
     "ramda": "^0.27.0"
   },
   "devDependencies": {

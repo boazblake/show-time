@@ -1,12 +1,13 @@
 import { Calendar, Day } from "Components"
-import { isToday, HTTP, fromFullDate } from "Utils"
+import { HTTP, fromFullDate } from "Utils"
 import { dayModel } from "Models"
 import { map } from "ramda"
 import { calendarModel } from "Components/calendar/model"
+import { shortDateString, datesAreSame } from "Utils"
+import moment from "moment"
 
 const toDayViewModel = (dayViewModel, invite) => {
   dayViewModel[`${invite.start.hour}:00`].push(invite)
-  console.log("ddd", dayViewModel)
   return dayViewModel
 }
 
@@ -49,15 +50,15 @@ export const Home = ({ attrs: { mdl } }) => {
   const onSuccess = (invites) => {
     state.invites = invites
     state.todaysInvites = invites
-      .filter((i) => isToday(i.startTime))
+      .filter((i) =>
+        datesAreSame(i.startTime)(shortDateString(mdl.selectedDate))
+      )
       .reduce(toDayViewModel, dayModel(mdl, mdl.currentShortDate()))
-    console.log("home succes", state.invites, mdl)
     state.error = null
     state.status = "success"
   }
 
   const load = ({ attrs: { mdl } }) => {
-    // console.log("loading")
     loadTask(HTTP)(mdl).fork(onError, onSuccess)
   }
 
@@ -67,7 +68,10 @@ export const Home = ({ attrs: { mdl } }) => {
       return m(".frow", [
         m(Calendar, {
           mdl,
-          calendar: calendarModel(state.invites),
+          calendar: calendarModel({
+            invites: state.invites,
+            date: mdl.currentShortDate(),
+          }),
           invites: state.invites,
         }),
         state.status == "loading" && m("p", "FETCHING EVENTS..."),

@@ -1,5 +1,5 @@
 import { getMonthMatrix, goToDate, calendarDay, getMonthByIdx } from "./model"
-import { daysOfTheWeek, shortDate, formatDateString } from "Utils"
+import { daysOfTheWeek, shortDate, shortDateString } from "Utils"
 
 const Toolbar = ({ attrs: { mdl, calendar } }) => {
   return {
@@ -7,7 +7,7 @@ const Toolbar = ({ attrs: { mdl, calendar } }) => {
       m(".toolbar", [
         m("input", {
           onchange: (e) =>
-            m.route.set(`/${mdl.user.name}/${shortDate(new Date())}`),
+            m.route.set(`/${mdl.user.name}/${mdl.currentShortDate()}`),
           type: "date",
           value: calendar.startDate,
         }),
@@ -35,7 +35,7 @@ const MonthsToolbar = () => {
               {
                 onclick: (_) => {
                   m.route.set(
-                    `/${mdl.user.name}/${formatDateString({
+                    `/${mdl.user.name}/${shortDateString({
                       year: parseInt(calendar.selected.year) - 1,
                       month: calendar.selected.month,
                       day: calendar.selected.day,
@@ -60,7 +60,7 @@ const MonthsToolbar = () => {
               {
                 onclick: (_) => {
                   m.route.set(
-                    `/${mdl.user.name}/${formatDateString({
+                    `/${mdl.user.name}/${shortDateString({
                       year: parseInt(calendar.selected.year) + 1,
                       month: calendar.selected.month,
                       day: calendar.selected.day,
