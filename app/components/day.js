@@ -48,25 +48,27 @@ export const Day = ({ attrs: { mdl } }) => {
         ".day",
         m(".frow-container", [
           m(
-            `.${mdl.state.modal() ? "bg-warn" : "bg-info"}`,
+            `.${mdl.State.modal() ? "bg-warn" : "bg-info"}`,
             m(
               "button.frow.width-100",
               {
-                onclick: (e) => mdl.state.modal(!mdl.state.modal()),
+                onclick: (e) => mdl.State.modal(!mdl.State.modal()),
               },
-              mdl.state.modal() ? "Cancel" : "Add Event"
+              mdl.State.modal() ? "Cancel" : "Add Event"
             )
           ),
           m(".day-container", [
-            mdl.state.modal() && m(Editor, { mdl }),
-            getHoursInDay(mdl.timeFormats[mdl.format()]).map((hour, idx) => {
-              return m(Hour, {
-                mdl,
-                hour: invites[hour],
-                time: hour,
-                events: invites[hour],
-              })
-            }),
+            mdl.State.modal() && m(Editor, { mdl }),
+            getHoursInDay(mdl.State.timeFormats[mdl.State.format()]).map(
+              (hour, idx) => {
+                return m(Hour, {
+                  mdl,
+                  hour: invites[hour],
+                  time: hour,
+                  events: invites[hour],
+                })
+              }
+            ),
           ]),
         ])
       )

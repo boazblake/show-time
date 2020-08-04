@@ -19,8 +19,8 @@ const validateForm = (mdl) => (data) => {
 
   const onSuccess = (mdl) => (account) => {
     state.errors = {}
-    mdl.user.account = account
-    m.route.set(`/${mdl.user.name}/${shortDate()}`)
+    mdl.User.account = account
+    m.route.set(`/${mdl.User.name}/${mdl.todayDate().format("YYYY-MM-DD")}`)
   }
 
   state.isSubmitted = true
@@ -120,7 +120,7 @@ export const Login = () => {
             // type: "submit",
             form: `login-form`,
             onclick: () => validateForm(mdl)(state.data),
-            class: mdl.state.isLoading() && "loading",
+            class: mdl.State.isLoading() && "loading",
           },
           "Login"
         ),

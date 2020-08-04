@@ -13,7 +13,7 @@ const Routes = [
     options: [],
     onmatch: (mdl, args, path, fullroute, isAnchor) => {
       isAnchor
-        ? scrollToAnchor(mdl.state.anchor)
+        ? scrollToAnchor(mdl.State.anchor)
         : window.scroll({
             top: 0,
             left: 0,
@@ -33,7 +33,7 @@ const Routes = [
     options: [],
     onmatch: (mdl, args, path, fullroute, isAnchor) => {
       isAnchor
-        ? scrollToAnchor(mdl.state.anchor)
+        ? scrollToAnchor(mdl.State.anchor)
         : window.scroll({
             top: 0,
             left: 0,
@@ -53,7 +53,7 @@ const Routes = [
     options: [],
     onmatch: (mdl, args, path, fullroute, isAnchor) => {
       isAnchor
-        ? scrollToAnchor(mdl.state.anchor)
+        ? scrollToAnchor(mdl.State.anchor)
         : window.scroll({
             top: 0,
             left: 0,

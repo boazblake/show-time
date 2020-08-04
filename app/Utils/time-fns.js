@@ -1,5 +1,5 @@
 import { range } from "./index"
-import moment from "moment"
+// import moment from "moment"
 
 export const padding = (d) => (d.toString().length == 1 ? pad0Left(d) : d)
 export const pad00Min = (num) => `${num}:00`
@@ -10,9 +10,18 @@ export const getHoursInDay = (format) =>
     .map((n) => (n.toString().length == 1 ? pad0Left(n) : n))
     .map(pad00Min)
 
-export const shortDate = (date = new Date()) => {
-  "double chec", date, new Date(date).toISOString().split("T")[0]
-  return new Date(date).toISOString().split("T")[0]
+export const shortDate = (date) => {
+  return console.error("huh")
+  // console.log(
+  //   "shortDate",
+  //   date,
+  //   date
+  //     ? new Date(date.toString()).toISOString().split("T")[0]
+  //     : new Date().toISOString().split("T")[0]
+  // )
+  // return date
+  //   ? new Date(date.toString()).toISOString().split("T")[0]
+  //   : new Date().toISOString().split("T")[0]
 }
 
 export const isLeapYear = (year) =>
@@ -25,14 +34,14 @@ export const isLeapYear = (year) =>
     : false
 
 export const datesAreSame = (first) => (second) => {
-  let f = moment(first).utc().format("YYYY-MM-DD")
-  let s = moment(second).utc().format("YYYY-MM-DD")
+  let f = M.utc(first).format("YYYY-MM-DD")
+  let s = M.utc(second).format("YYYY-MM-DD")
 
-  return moment(f).isSame(moment(s))
+  return M.utc(f).isSame(M.utc(s))
 }
 export const isToday = (someDate) => {
   const today = new Date()
-  const date = new Date(someDate)
+  const date = new Date(someDate.toString())
   return (
     date.getDate() == today.getDate() &&
     date.getMonth() == today.getMonth() &&

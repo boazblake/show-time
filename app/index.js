@@ -1,5 +1,5 @@
 import App from "./App.js"
-import model from "Models"
+import Model from "Models"
 import { FunConfig } from "@boazblake/fun-config"
 FunConfig.configure()
 
@@ -38,20 +38,20 @@ const checkWidth = (winW) => {
   const w = window.innerWidth
   if (winW !== w) {
     winW = w
-    var lastProfile = model.settings.profile
-    model.settings.profile = getProfile(w)
-    if (lastProfile != model.settings.profile) m.redraw()
+    var lastProfile = Model.Settings.profile
+    Model.Settings.profile = getProfile(w)
+    if (lastProfile != Model.Settings.profile) m.redraw()
   }
   return requestAnimationFrame(checkWidth)
 }
 
-model.settings.profile = getProfile(winW)
+Model.Settings.profile = getProfile(winW)
 
 checkWidth(winW)
 
 if (sessionStorage.getItem("shindigit-user")) {
-  model.user = JSON.parse(sessionStorage.getItem("shindigit-user"))
-  model.state.isAuth(true)
+  Model.User = JSON.parse(sessionStorage.getItem("shindigit-user"))
+  Model.State.isAuth(true)
 }
 
-m.route(root, "/login", App(model))
+m.route(root, "/login", App(Model))

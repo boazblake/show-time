@@ -1,4 +1,5 @@
 import { fromFullDate, getHoursInDay } from "Utils"
+import { calendarModel } from "Components/calendar/calendar-model"
 
 export const toInviteViewModel = ({
   startTime,
@@ -20,11 +21,26 @@ export const toInviteViewModel = ({
 
 export const inviteOptions = ["decline", "accept", "maybe"]
 
-export const dayModel = (mdl, date = new Date()) =>
-  getHoursInDay(mdl.timeFormats[mdl.format()]).reduce((day, hour) => {
-    day[hour] = []
-    return day
-  }, {})
+const State = {
+  isAuth: Stream(false),
+  modal: Stream(false),
+  isLoading: Stream(false),
+  loadingProgress: { max: 0, value: 0 },
+  isLoggedIn: () => sessionStorage.getItem("token"),
+  timeFormats: ["12hrs", "24hrs"],
+  format: Stream(1),
+  toAnchor: Stream(false),
+  slug: "",
+}
+
+export const dayModel = (mdl) =>
+  getHoursInDay(mdl.State.timeFormats[mdl.State.format()]).reduce(
+    (day, hour) => {
+      day[hour] = []
+      return day
+    },
+    {}
+  )
 
 export const inviteModel = () => ({
   eventId: "",
@@ -32,34 +48,37 @@ export const inviteModel = () => ({
   userId: "",
 })
 
-export const eventModel = () => ({})
-
-const model = {
-  reloadInvites: Stream(false),
+const Events = {
   currentEventId: Stream(null),
+}
+const Invites = {
+  fetch: Stream(false),
+}
+const Day = {
+  data: dayModel({ State }),
   updateDay: Stream(false),
-  toAnchor: Stream(false),
-  timeFormats: ["12hrs", "24hrs"],
-  format: Stream(1),
-  currentShortDate: Stream(""),
-  currentLongDate: Stream(""),
-  selectedDate: { year: "", month: "", day: "" },
-  Calendar: {
-    data: {},
-  },
-  Day: {
-    timeFormat: Stream("kk:mm"),
-    data: dayModel({ timeFormats: ["24hrs"], format: Stream(0) }, new Date()),
-  },
-  state: {
-    isAuth: Stream(false),
-    modal: Stream(false),
-    isLoading: Stream(false),
-    loadingProgress: { max: 0, value: 0 },
-    isLoggedIn: () => sessionStorage.getItem("token"),
-  },
-  settings: { profile: "", inspector: "" },
-  slug: "",
 }
 
-export default model
+const Settings = { profile: "", inspector: "" }
+
+const Calendar = {
+  data: calendarModel({ mdl: Model, invites: [], date: M.utc() }),
+}
+const User = {}
+
+const Model = {
+  // currentShortDate: Stream(""), //REMOVE
+  // currentLongDate: Stream(""), //REMOVE
+  selectedDate: Stream(""), //KEEP
+  todayDate: Stream(M.utc()),
+  // selectedDate: { year: "", month: "", day: "" }, //REMOVE
+  Calendar,
+  Day,
+  Events,
+  Invites,
+  State,
+  Settings,
+  User,
+}
+
+export default Model

@@ -1,6 +1,5 @@
 import { Home, Event } from "Pages"
 import { scrollToAnchor } from "Utils"
-import { calendarModel } from "Components/calendar/model"
 
 const AuthenticatedRoutes = [
   {
@@ -14,7 +13,7 @@ const AuthenticatedRoutes = [
     options: [],
     onmatch: (mdl, args, path, fullroute, isAnchor) => {
       isAnchor
-        ? scrollToAnchor(mdl.state.anchor)
+        ? scrollToAnchor(mdl.State.anchor)
         : window.scroll({
             top: 0,
             left: 0,
@@ -34,18 +33,15 @@ const AuthenticatedRoutes = [
     options: [],
     onmatch: (mdl, args, path, fullroute, isAnchor) => {
       isAnchor
-        ? scrollToAnchor(mdl.state.anchor)
+        ? scrollToAnchor(mdl.State.anchor)
         : window.scroll({
             top: 0,
             left: 0,
             behavior: "smooth",
           })
-      let date = args.date
-      let _d = date.split("-")
-      mdl.currentShortDate(date)
-      mdl.currentLongDate(new Date(date))
-      mdl.selectedDate = { year: _d[0], month: _d[1], day: _d[2] }
-      mdl.Calendar.data = calendarModel({ invites: [], date })
+      let date = M.utc(args.date).clone()
+      mdl.selectedDate(date)
+      console.log("date route", args.date, date)
     },
     component: (mdl) => m(Home, { mdl }),
   },

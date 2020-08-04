@@ -1,7 +1,7 @@
 import { Calendar, Day } from "Components"
 import { HTTP, fetchInvitesTask } from "Http"
 import { dayModel } from "Models"
-import { calendarModel } from "Components/calendar/model"
+import { calendarModel } from "Components/calendar/calendar-model"
 import { shortDateString, datesAreSame } from "Utils"
 
 const toDayViewModel = (dayViewModel, invite) => {
@@ -9,10 +9,12 @@ const toDayViewModel = (dayViewModel, invite) => {
   return dayViewModel
 }
 
-const getTodaysInvites = (mdl) => (invites) =>
+const getSelectedDayInvites = (mdl) => (invites) =>
   invites
-    .filter((i) => datesAreSame(i.startTime)(shortDateString(mdl.selectedDate)))
-    .reduce(toDayViewModel, dayModel(mdl, mdl.currentShortDate()))
+    .filter((i) => {
+      return datesAreSame(i.startTime)(mdl.selectedDate())
+    })
+    .reduce(toDayViewModel, dayModel(mdl, mdl.selectedDate()))
 
 export const Home = ({ attrs: { mdl } }) => {
   const state = {
@@ -28,7 +30,7 @@ export const Home = ({ attrs: { mdl } }) => {
   }
 
   const onSuccess = (invites) => {
-    mdl.reloadInvites(false)
+    mdl.Invites.fetch(false)
     state.invites = invites
     state.error = null
     state.status = "success"
@@ -41,7 +43,7 @@ export const Home = ({ attrs: { mdl } }) => {
   return {
     oninit: load,
     onupdate: ({ attrs: { mdl } }) =>
-      mdl.reloadInvites() && load({ attrs: { mdl } }),
+      mdl.Invites.fetch() && load({ attrs: { mdl } }),
     view: ({ attrs: { mdl } }) => {
       return m(
         ".frow",
@@ -50,15 +52,12 @@ export const Home = ({ attrs: { mdl } }) => {
         state.status == "success" && [
           m(Calendar, {
             mdl,
-            calendar: calendarModel({
-              invites: state.invites,
-              date: mdl.currentShortDate(),
-            }),
+            date: mdl.selectedDate(),
             invites: state.invites,
           }),
           m(Day, {
             mdl,
-            invites: getTodaysInvites(mdl)(state.invites),
+            invites: getSelectedDayInvites(mdl)(state.invites),
           }),
         ]
       )
