@@ -9,11 +9,11 @@ const EventForm = ({ attrs: { state, mdl } }) => {
           "label",
           m("input", {
             onchange: (e) => {
-              console.log("input", `/${mdl.user.name}/${e.target.value}`)
-              m.route.set(`/${mdl.user.name}/${e.target.value}`)
+              // console.log("input", `/${mdl.User.name}/${e.target.value}`)
+              m.route.set(`/${mdl.User.name}/${e.target.value}`)
             },
             type: "date",
-            value: mdl.currentShortDate(),
+            value: mdl.selectedDate().format("YYYY-MM-DD"),
             disabled: state.allday,
           })
         ),
@@ -74,8 +74,9 @@ const EventForm = ({ attrs: { state, mdl } }) => {
 }
 
 export const Editor = ({ attrs: { mdl } }) => {
+  // console.log(mdl)
   const state = {
-    shortDate: mdl.currentShortDate(),
+    shortDate: mdl.selectedDate().format("YYYY-MM-DD"),
     allday: false,
     startTime: "",
     endTime: "",
@@ -91,11 +92,10 @@ export const Editor = ({ attrs: { mdl } }) => {
     const onSuccess = (mdl, state) => (data) => {
       state.error = null
       state.status = "success"
-      mdl.reloadInvites(true)
-      mdl.updateDay(true)
-      mdl.state.modal(false)
+      mdl.Invites.fetch(true)
+      mdl.Day.update(true)
+      mdl.State.modal(false)
     }
-
     submitEventTask(HTTP)(mdl)(state).fork(
       onError(state),
       onSuccess(mdl, state)

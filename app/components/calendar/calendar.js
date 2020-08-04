@@ -7,7 +7,7 @@ const getInviteStatusColor = (status) =>
     `--${inviteOptions[status]}-invite`
   )
 
-const CalendarDay = ({ attrs: { mdl, invites, day, dir } }) => {
+const CalendarDay = () => {
   return {
     view: ({ attrs: { mdl, invites, day, dir } }) =>
       m(
@@ -39,9 +39,9 @@ const CalendarDay = ({ attrs: { mdl, invites, day, dir } }) => {
   }
 }
 
-const Toolbar = ({ attrs: { mdl } }) => {
+const Toolbar = () => {
   return {
-    view: ({ attrs: { mdl, date } }) =>
+    view: ({ attrs: { mdl } }) =>
       m(".toolbar", [
         m("input", {
           onchange: (e) =>
@@ -67,7 +67,6 @@ const Toolbar = ({ attrs: { mdl } }) => {
 const Navbar = () => {
   return {
     view: ({ attrs: { mdl, date } }) => {
-      console.log(date)
       return m(".frow width-100  mt-10", [
         m(".frow width-100 row-between mt-10", [
           m(

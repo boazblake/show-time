@@ -5,7 +5,7 @@ import { HTTP, getEventTask, deleteEventTask, updateEventTask } from "Http"
 export const Event = ({ attrs: { mdl } }) => {
   const state = {
     error: {},
-    eventId: mdl.currentEventId(),
+    eventId: mdl.Events.currentEventId(),
     status: "loading",
   }
 
@@ -34,7 +34,9 @@ export const Event = ({ attrs: { mdl } }) => {
 
     const onSuccess = (event) => {
       console.log("deleted")
-      m.route.set(`/${mdl.user.name}/${shortDateString(mdl.selectedDate)}`)
+      m.route.set(
+        `/${mdl.User.name}/${mdl.selectedDate().format("YYYY-MM-DD")}`
+      )
       state.event = event
       state.error = {}
       state.status = "success"
@@ -73,9 +75,11 @@ export const Event = ({ attrs: { mdl } }) => {
               "button",
               {
                 onclick: (e) => {
-                  mdl.toAnchor(state.event.startTime)
+                  mdl.State.toAnchor(state.event.startTime)
                   m.route.set(
-                    `/${mdl.user.name}/${shortDateString(mdl.selectedDate)}`
+                    `/${mdl.User.name}/${mdl
+                      .selectedDate()
+                      .format("YYYY-MM-DD")}`
                   )
                 },
               },

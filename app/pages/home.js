@@ -1,8 +1,7 @@
 import { Calendar, Day } from "Components"
 import { HTTP, fetchInvitesTask } from "Http"
 import { dayModel } from "Models"
-import { calendarModel } from "Components/calendar/calendar-model"
-import { shortDateString, datesAreSame } from "Utils"
+import { datesAreSame } from "Utils"
 
 const toDayViewModel = (dayViewModel, invite) => {
   dayViewModel[`${invite.start.hour}:00`].push(invite)
@@ -12,6 +11,7 @@ const toDayViewModel = (dayViewModel, invite) => {
 const getSelectedDayInvites = (mdl) => (invites) =>
   invites
     .filter((i) => {
+      // console.log(i, mdl.selectedDate())
       return datesAreSame(i.startTime)(mdl.selectedDate())
     })
     .reduce(toDayViewModel, dayModel(mdl, mdl.selectedDate()))

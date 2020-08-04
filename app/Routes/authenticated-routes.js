@@ -41,7 +41,6 @@ const AuthenticatedRoutes = [
           })
       let date = M.utc(args.date).clone()
       mdl.selectedDate(date)
-      console.log("date route", args.date, date)
     },
     component: (mdl) => m(Home, { mdl }),
   },
@@ -63,7 +62,7 @@ const AuthenticatedRoutes = [
             behavior: "smooth",
           })
     },
-    component: (mdl) => m(Event, { mdl, key: mdl.currentLongDate() }),
+    component: (mdl) => m(Event, { mdl, key: new Date() }),
   },
   {
     id: "logout",

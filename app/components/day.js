@@ -39,7 +39,7 @@ export const Day = ({ attrs: { mdl } }) => {
 
       console.log("el", el)
     }
-    mdl.updateDay(false)
+    mdl.Day.update(false)
   }
 
   return {

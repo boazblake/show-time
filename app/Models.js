@@ -56,7 +56,7 @@ const Invites = {
 }
 const Day = {
   data: dayModel({ State }),
-  updateDay: Stream(false),
+  update: Stream(false),
 }
 
 const Settings = { profile: "", inspector: "" }

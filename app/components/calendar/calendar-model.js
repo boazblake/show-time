@@ -5,14 +5,7 @@ import {
   eachWeekOfInterval,
   parseISO,
 } from "date-fns"
-import { monthsOfTheYear, isEqual, datesAreSame } from "Utils"
-
-export const getMonthByIdx = (idx) =>
-  idx >= 12
-    ? monthsOfTheYear[0]
-    : idx < 0
-    ? monthsOfTheYear[11]
-    : monthsOfTheYear[idx]
+import { datesAreSame } from "Utils"
 
 export const isCalenderDay = (invites, day) => ({
   day: day,
@@ -41,7 +34,6 @@ export const createCalendarDayViewModel = (
 }
 
 export const createCalendar = (invites, date) => {
-  // console.log(date)
   let start = parseISO(date.clone().startOf("month").toISOString())
   let end = parseISO(date.clone().endOf("month").toISOString())
 
@@ -88,8 +80,6 @@ export const calendarModel = ({ mdl, invites, date }) => {
 
 export const calendarDayStyle = (selectedDate, current, dir) => {
   let today = M.utc()
-  console.log(today.isSame(current, "date"), current.date())
-  // console.log(today, current, current)
   if (dir !== 0) {
     return "notThisMonth"
   }

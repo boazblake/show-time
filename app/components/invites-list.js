@@ -1,14 +1,4 @@
-import { differenceInMinutes } from "date-fns"
-import { getFullDate } from "Utils"
-import moment from "moment"
-
 const Invite = ({ attrs: { mdl } }) => {
-  const getHeight = ([startHour, startMin], [endHour, endMin]) => {
-    const startDate = getFullDate(mdl.selectedDate, startHour, startMin)
-    const endDate = getFullDate(mdl.selectedDate, endHour, endMin)
-    return differenceInMinutes(startDate, endDate)
-  }
-
   return {
     view: ({ attrs: { mdl, invite, col } }) => {
       // console.log(invite)
@@ -18,9 +8,9 @@ const Invite = ({ attrs: { mdl } }) => {
           ".invite-list-item ",
           {
             onclick: (e) => {
-              mdl.currentEventId(invite.eventId)
+              mdl.Events.currentEventId(invite.eventId)
               m.route.set(
-                `/${mdl.user.name}/${mdl.currentShortDate()}/${
+                `/${mdl.User.name}/${mdl.selectedDate().format("YYYY-MM-DD")}/${
                   invite.start.hour
                 }/${invite.start.min}`
               )
@@ -28,7 +18,7 @@ const Invite = ({ attrs: { mdl } }) => {
             style: {
               top: `${invite.start.min}px`,
               height: `${
-                moment(invite.endTime).diff(invite.startTime, "minutes") * 2
+                M.utc(invite.endTime).diff(invite.startTime, "minutes") * 2
               }px`,
             },
           },

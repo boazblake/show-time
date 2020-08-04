@@ -42,7 +42,18 @@ export const submitEventTask = (http) => (mdl) => ({
 }) => {
   let getHour = (time) => time.split(":")[0]
   let getMin = (time) => time.split(":")[1]
-  let { year, month, day } = mdl.selectedDate
+  let [year, month, day] = mdl.selectedDate().format("YYYY-MM-DD").split("-")
+  // return console.log(
+  //   "state",
+  //   allday,
+  //   startTime,
+  //   endTime,
+  //   title,
+  //   notes,
+  //   year,
+  //   month,
+  //   day
+  // )
 
   return http.backEnd
     .postTask(mdl)("data/Events")({
@@ -64,7 +75,7 @@ export const submitEventTask = (http) => (mdl) => ({
       notes,
       title,
       allday,
-      createdBy: mdl.user.objectId,
+      createdBy: mdl.User.objectId,
     })
     .chain(
       ({ objectId, ownerId, endTime, startTime, allDay, title, status }) => {
@@ -87,7 +98,7 @@ export const submitEventTask = (http) => (mdl) => ({
             }))
               .ap(
                 http.backEnd.postTask(mdl)(
-                  `data/Users/${mdl.user.objectId}/invites%3AInvites%3An`
+                  `data/Users/${mdl.User.objectId}/invites%3AInvites%3An`
                 )([inviteId])
               )
               .ap(
