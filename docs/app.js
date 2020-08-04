@@ -149,7 +149,33 @@ var __makeRelativeRequire = function(require, mappings, pref) {
     return require(name);
   }
 };
-require.register("App.js", function(exports, require, module) {
+require.register(".secrets.js", function(exports, require, module) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.BackEnd = void 0;
+
+//NEED TO MOVE THESE TO ENVIRONMENT/GITLAB IN PRODUCTION for manifest
+var getUserToken = function getUserToken() {
+  return sessionStorage.getItem("shindigit-user-token") ? sessionStorage.getItem("shindigit-user-token") : "";
+};
+
+var BackEnd = {
+  API_KEY: "3E894DDB-58BB-4F18-9E1D-809BBF807C1C",
+  APP_ID: "854DB087-FA48-0CF1-FFEE-7660CF37E100",
+  baseUrl: "https://api.backendless.com",
+  headers: function headers() {
+    return {
+      "user-token": getUserToken()
+    };
+  }
+};
+exports.BackEnd = BackEnd;
+});
+
+;require.register("App.js", function(exports, require, module) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -201,6 +227,13 @@ exports.Calendar = void 0;
 var _model = require("./model");
 
 var _Utils = require("Utils");
+
+var _Models = require("Models");
+
+var getInviteStatusColor = function getInviteStatusColor(status) {
+  console.log(_Models.inviteOptions[status], getComputedStyle(document.body).getPropertyValue("--".concat(_Models.inviteOptions[status], "-invite")));
+  return getComputedStyle(document.body).getPropertyValue("--".concat(_Models.inviteOptions[status], "-invite"));
+};
 
 var Toolbar = function Toolbar() {
   return {
@@ -286,7 +319,6 @@ var CalendarBody = function CalendarBody() {
           var invites = _ref4.invites,
               day = _ref4.day,
               dir = _ref4.dir;
-          console.log(invites);
           return m(".col-xs-1-7 text-center", m(".cal-day-container", {
             onclick: function onclick(_) {
               return (0, _model.goToDate)(mdl, {
@@ -298,7 +330,12 @@ var CalendarBody = function CalendarBody() {
             },
             class: (0, _model.calendarDay)(calendar)(day, dir)
           }, m("span.cal-day", day), m(".cal-invites-container", m(".frow", invites.map(function (i) {
-            return m(".cal-invites-item");
+            console.log(getInviteStatusColor(i.status));
+            return m(".cal-invites-item", {
+              style: {
+                "background-color": getInviteStatusColor(i.status)
+              }
+            });
           })))));
         }));
       }))]);
@@ -557,13 +594,10 @@ var Day = function Day(_ref2) {
     status: "loading"
   };
 
-  var _dom;
-
   var planDay = function planDay(mdl) {
     return function (_ref3) {
       var dom = _ref3.dom;
 
-      // _dom = dom
       if (mdl.toAnchor()) {
         console.log("anchor", mdl.toAnchor(), dom, dom.querySelector("".concat(mdl.toAnchor().toString())));
         var el = document.getElementById(mdl.toAnchor());
@@ -610,80 +644,12 @@ exports.Editor = void 0;
 
 var _Components = require("Components");
 
-var _Utils = require("Utils");
+var _Http = require("Http");
 
-var _data = _interopRequireDefault(require("data.task"));
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-var submitEventTask = function submitEventTask(http) {
-  return function (mdl) {
-    return function (_ref) {
-      var allday = _ref.allday,
-          startTime = _ref.startTime,
-          endTime = _ref.endTime,
-          title = _ref.title,
-          notes = _ref.notes;
-
-      var getHour = function getHour(time) {
-        return time.split(":")[0];
-      };
-
-      var getMin = function getMin(time) {
-        return time.split(":")[1];
-      };
-
-      var _mdl$selectedDate = mdl.selectedDate,
-          year = _mdl$selectedDate.year,
-          month = _mdl$selectedDate.month,
-          day = _mdl$selectedDate.day;
-      var url = "data/Events";
-      var dto = {
-        endTime: new Date(year, month - 1, day, getHour(endTime), getMin(endTime)),
-        startTime: new Date(year, month - 1, day, getHour(startTime), getMin(startTime)),
-        // shortDate,
-        notes: notes,
-        title: title,
-        allday: allday,
-        createdBy: mdl.user.objectId
-      };
-      return http.backEnd.postTask(mdl)(url)(dto).chain(function (_ref2) {
-        var objectId = _ref2.objectId,
-            ownerId = _ref2.ownerId,
-            endTime = _ref2.endTime,
-            startTime = _ref2.startTime,
-            allDay = _ref2.allDay,
-            title = _ref2.title;
-        var eventId = objectId;
-        return http.backEnd.postTask(mdl)("data/Invites")({
-          eventId: eventId,
-          userId: ownerId,
-          status: "accept",
-          endTime: endTime,
-          startTime: startTime,
-          allDay: allDay,
-          title: title
-        }).chain(function (_ref3) {
-          var objectId = _ref3.objectId;
-          var inviteId = objectId;
-          return _data.default.of(function (user) {
-            return function (event) {
-              return {
-                user: user,
-                event: event
-              };
-            };
-          }).ap(http.backEnd.postTask(mdl)("data/Users/".concat(mdl.user.objectId, "/invites%3AInvites%3An"))([inviteId])).ap(http.backEnd.postTask(mdl)("data/Events/".concat(eventId, "/invites%3AInvites%3An"))([inviteId]));
-        });
-      });
-    };
-  };
-};
-
-var EventForm = function EventForm(_ref4) {
-  var _ref4$attrs = _ref4.attrs,
-      state = _ref4$attrs.state,
-      mdl = _ref4$attrs.mdl;
+var EventForm = function EventForm(_ref) {
+  var _ref$attrs = _ref.attrs,
+      state = _ref$attrs.state,
+      mdl = _ref$attrs.mdl;
   return {
     view: function view() {
       return m("form.event-form", [m("label", m("input", {
@@ -731,8 +697,8 @@ var EventForm = function EventForm(_ref4) {
   };
 };
 
-var Editor = function Editor(_ref5) {
-  var mdl = _ref5.attrs.mdl;
+var Editor = function Editor(_ref2) {
+  var mdl = _ref2.attrs.mdl;
   var state = {
     shortDate: mdl.currentShortDate(),
     allday: false,
@@ -760,12 +726,12 @@ var Editor = function Editor(_ref5) {
       };
     };
 
-    submitEventTask(_Utils.HTTP)(mdl)(state).fork(onError(state), onSuccess(mdl, state));
+    (0, _Http.submitEventTask)(_Http.HTTP)(mdl)(state).fork(onError(state), onSuccess(mdl, state));
   };
 
   return {
-    view: function view(_ref6) {
-      var mdl = _ref6.attrs.mdl;
+    view: function view(_ref3) {
+      var mdl = _ref3.attrs.mdl;
       return m(_Components.Modal, {
         mdl: mdl
       }, {
@@ -785,37 +751,6 @@ var Editor = function Editor(_ref5) {
 };
 
 exports.Editor = Editor;
-});
-
-;require.register("Components/hour.js", function(exports, require, module) {
-"use strict";
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.Hour = void 0;
-
-var _Components = require("Components");
-
-var Hour = function Hour() {
-  return {
-    view: function view(_ref) {
-      var _ref$attrs = _ref.attrs,
-          mdl = _ref$attrs.mdl,
-          hour = _ref$attrs.hour,
-          time = _ref$attrs.time,
-          events = _ref$attrs.events;
-      return m(".frow ", m(".hour ", [m("p.hour-time", {
-        id: time
-      }, time), [m(_Components.EventsList, {
-        mdl: mdl,
-        events: events
-      }), m(".half-hour", m(".top")), m(".half-hour", m(".bottom"))]]));
-    }
-  };
-};
-
-exports.Hour = Hour;
 });
 
 ;require.register("Components/index.js", function(exports, require, module) {
@@ -1053,15 +988,454 @@ var NavLink = function NavLink() {
 exports.NavLink = NavLink;
 });
 
+;require.register("Http/auth-tasks.js", function(exports, require, module) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.registerUserTask = exports.loginTask = void 0;
+
+var _ramda = require("ramda");
+
+var setUserToken = function setUserToken(mdl) {
+  return function (user) {
+    sessionStorage.setItem("shindigit-user", JSON.stringify(user));
+    sessionStorage.setItem("shindigit-user-token", user["user-token"]);
+    mdl.state.isAuth(true);
+    mdl.user = user;
+    return user;
+  };
+};
+
+var loginTask = function loginTask(http) {
+  return function (mdl) {
+    return function (_ref) {
+      var email = _ref.email,
+          password = _ref.password;
+      return http.backEnd.postTask(mdl)("users/login")({
+        login: email,
+        password: password
+      }).map(setUserToken(mdl));
+    };
+  };
+};
+
+exports.loginTask = loginTask;
+
+var registerUserTask = function registerUserTask(http) {
+  return function (mdl) {
+    return function (_ref2) {
+      var name = _ref2.name,
+          email = _ref2.email,
+          password = _ref2.password,
+          isAdmin = _ref2.isAdmin;
+      return HTTP.backEnd.postTask(mdl)("users/register")({
+        name: name,
+        email: email,
+        password: password,
+        isAdmin: isAdmin
+      });
+    };
+  };
+};
+
+exports.registerUserTask = registerUserTask;
+});
+
+;require.register("Http/event-tasks.js", function(exports, require, module) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.submitEventTask = exports.updateEventTask = exports.deleteEventTask = exports.getEventTask = void 0;
+
+var _moment = _interopRequireDefault(require("moment"));
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var toEventviewModel = function toEventviewModel(_ref) {
+  var startTime = _ref.startTime,
+      endTime = _ref.endTime,
+      title = _ref.title,
+      notes = _ref.notes,
+      status = _ref.status;
+  return {
+    date: _moment.default.utc(startTime).format("DD-MM-YYYY"),
+    title: title.toUpperCase(),
+    begin: _moment.default.utc(startTime).format("HH:MM"),
+    end: _moment.default.utc(endTime).format("HH:MM"),
+    notes: notes,
+    status: status
+  };
+};
+
+var getEventTask = function getEventTask(http) {
+  return function (mdl) {
+    return function (state) {
+      return http.backEnd.getTask(mdl)("data/Events/".concat(state.eventId)).map(toEventviewModel);
+    };
+  };
+};
+
+exports.getEventTask = getEventTask;
+
+var deleteEventTask = function deleteEventTask(http) {
+  return function (mdl) {
+    return function (state) {
+      return http.backEnd.deleteTask(mdl)("data/Events/".concat(state.eventId)).chain(function () {
+        return http.backEnd.deleteTask(mdl)("data/bulk/Invites?where=eventId%3D'".concat(state.eventId, "'"));
+      });
+    };
+  };
+};
+
+exports.deleteEventTask = deleteEventTask;
+
+var updateEventTask = function updateEventTask(http) {
+  return function (mdl) {
+    return function (state) {
+      return http.backEnd.putTask(mdl)("data/Events/".concat(state.eventId)).chain(function () {
+        return http.backEnd.updateTask(mdl)("data/Invites?where=eventId%3D'".concat(state.eventId, "'"));
+      });
+    };
+  };
+};
+
+exports.updateEventTask = updateEventTask;
+
+var submitEventTask = function submitEventTask(http) {
+  return function (mdl) {
+    return function (_ref2) {
+      var allday = _ref2.allday,
+          startTime = _ref2.startTime,
+          endTime = _ref2.endTime,
+          title = _ref2.title,
+          notes = _ref2.notes;
+
+      var getHour = function getHour(time) {
+        return time.split(":")[0];
+      };
+
+      var getMin = function getMin(time) {
+        return time.split(":")[1];
+      };
+
+      var _mdl$selectedDate = mdl.selectedDate,
+          year = _mdl$selectedDate.year,
+          month = _mdl$selectedDate.month,
+          day = _mdl$selectedDate.day;
+      return http.backEnd.postTask(mdl)("data/Events")({
+        endTime: new Date(year, month - 1, day, getHour(endTime), getMin(endTime)),
+        startTime: new Date(year, month - 1, day, getHour(startTime), getMin(startTime)),
+        status: 1,
+        notes: notes,
+        title: title,
+        allday: allday,
+        createdBy: mdl.user.objectId
+      }).chain(function (_ref3) {
+        var objectId = _ref3.objectId,
+            ownerId = _ref3.ownerId,
+            endTime = _ref3.endTime,
+            startTime = _ref3.startTime,
+            allDay = _ref3.allDay,
+            title = _ref3.title,
+            status = _ref3.status;
+        var eventId = objectId;
+        return http.backEnd.postTask(mdl)("data/Invites")({
+          eventId: eventId,
+          userId: ownerId,
+          status: status,
+          endTime: endTime,
+          startTime: startTime,
+          allDay: allDay,
+          title: title
+        }).chain(function (_ref4) {
+          var objectId = _ref4.objectId;
+          var inviteId = objectId;
+          return Task.of(function (user) {
+            return function (event) {
+              return {
+                user: user,
+                event: event
+              };
+            };
+          }).ap(http.backEnd.postTask(mdl)("data/Users/".concat(mdl.user.objectId, "/invites%3AInvites%3An"))([inviteId])).ap(http.backEnd.postTask(mdl)("data/Events/".concat(eventId, "/invites%3AInvites%3An"))([inviteId]));
+        });
+      });
+    };
+  };
+};
+
+exports.submitEventTask = submitEventTask;
+});
+
+;require.register("Http/http.js", function(exports, require, module) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.HTTP = exports.parseHttpSuccess = exports.parseHttpError = void 0;
+
+var _data = _interopRequireDefault(require("data.task"));
+
+var _secrets = require("../.secrets.js");
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
+
+function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(Object(source), true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
+
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
+var onProgress = function onProgress(mdl) {
+  return function (e) {
+    if (e.lengthComputable) {
+      mdl.state.loadingProgress.max = e.total;
+      mdl.state.loadingProgress.value = e.loaded;
+      m.redraw();
+    }
+  };
+};
+
+function onLoad() {
+  return false;
+}
+
+var onLoadStart = function onLoadStart(mdl) {
+  return function (e) {
+    mdl.state.isLoading(true);
+    return false;
+  };
+};
+
+var onLoadEnd = function onLoadEnd(mdl) {
+  return function (e) {
+    mdl.state.isLoading(false);
+    mdl.state.loadingProgress.max = 0;
+    mdl.state.loadingProgress.value = 0;
+    return false;
+  };
+};
+
+var xhrProgress = function xhrProgress(mdl) {
+  return {
+    config: function config(xhr) {
+      xhr.onprogress = onProgress(mdl);
+      xhr.onload = onLoad;
+      xhr.onloadstart = onLoadStart(mdl);
+      xhr.onloadend = onLoadEnd(mdl);
+    }
+  };
+};
+
+var parseHttpError = function parseHttpError(mdl) {
+  return function (rej) {
+    return function (e) {
+      mdl.state.isLoading(false);
+      return rej(e.response);
+    };
+  };
+};
+
+exports.parseHttpError = parseHttpError;
+
+var parseHttpSuccess = function parseHttpSuccess(mdl) {
+  return function (res) {
+    return function (data) {
+      mdl.state.isLoading(false);
+      return res(data);
+    };
+  };
+};
+
+exports.parseHttpSuccess = parseHttpSuccess;
+
+var getUserToken = function getUserToken() {
+  return window.sessionStorage.getItem("user-token") ? window.sessionStorage.getItem("user-token") : "";
+};
+
+var HttpTask = function HttpTask(_headers) {
+  return function (method) {
+    return function (mdl) {
+      return function (url) {
+        return function (body) {
+          mdl.state.isLoading(true);
+          return new _data.default(function (rej, res) {
+            return m.request(_objectSpread({
+              method: method,
+              url: url,
+              headers: _objectSpread({
+                "content-type": "application/json"
+              }, _headers),
+              body: body,
+              withCredentials: false
+            }, xhrProgress(mdl))).then(parseHttpSuccess(mdl)(res), parseHttpError(mdl)(rej));
+          });
+        };
+      };
+    };
+  };
+};
+
+var backEndUrl = "".concat(_secrets.BackEnd.baseUrl, "/").concat(_secrets.BackEnd.APP_ID, "/").concat(_secrets.BackEnd.API_KEY, "/");
+var backEnd = {
+  getTask: function getTask(mdl) {
+    return function (url) {
+      return HttpTask(_secrets.BackEnd.headers())("GET")(mdl)(backEndUrl + url)(null);
+    };
+  },
+  postTask: function postTask(mdl) {
+    return function (url) {
+      return function (dto) {
+        return HttpTask(_secrets.BackEnd.headers())("POST")(mdl)(backEndUrl + url)(dto);
+      };
+    };
+  },
+  putTask: function putTask(mdl) {
+    return function (url) {
+      return function (dto) {
+        return HttpTask(_secrets.BackEnd.headers())("PUT")(mdl)(backEndUrl + url)(dto);
+      };
+    };
+  },
+  deleteTask: function deleteTask(mdl) {
+    return function (url) {
+      return HttpTask(_secrets.BackEnd.headers())("DELETE")(mdl)(backEndUrl + url)(null);
+    };
+  }
+};
+var HTTP = {
+  backEnd: backEnd,
+  HttpTask: HttpTask
+};
+exports.HTTP = HTTP;
+});
+
+;require.register("Http/index.js", function(exports, require, module) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _http = require("./http.js");
+
+Object.keys(_http).forEach(function (key) {
+  if (key === "default" || key === "__esModule") return;
+  Object.defineProperty(exports, key, {
+    enumerable: true,
+    get: function get() {
+      return _http[key];
+    }
+  });
+});
+
+var _inviteTasks = require("./invite-tasks.js");
+
+Object.keys(_inviteTasks).forEach(function (key) {
+  if (key === "default" || key === "__esModule") return;
+  Object.defineProperty(exports, key, {
+    enumerable: true,
+    get: function get() {
+      return _inviteTasks[key];
+    }
+  });
+});
+
+var _eventTasks = require("./event-tasks.js");
+
+Object.keys(_eventTasks).forEach(function (key) {
+  if (key === "default" || key === "__esModule") return;
+  Object.defineProperty(exports, key, {
+    enumerable: true,
+    get: function get() {
+      return _eventTasks[key];
+    }
+  });
+});
+
+var _authTasks = require("./auth-tasks.js");
+
+Object.keys(_authTasks).forEach(function (key) {
+  if (key === "default" || key === "__esModule") return;
+  Object.defineProperty(exports, key, {
+    enumerable: true,
+    get: function get() {
+      return _authTasks[key];
+    }
+  });
+});
+});
+
+;require.register("Http/invite-tasks.js", function(exports, require, module) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.fetchInvitesTask = void 0;
+
+var _data = _interopRequireDefault(require("data.task"));
+
+var _Models = require("Models");
+
+var _ramda = require("ramda");
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var fetchInvitesTask = function fetchInvitesTask(http) {
+  return function (mdl) {
+    return http.backEnd.getTask(mdl)("data/Invites?pageSize=100&where=userId%3D'".concat(mdl.user.objectId, "'")).map((0, _ramda.map)(_Models.toInviteViewModel));
+  };
+};
+
+exports.fetchInvitesTask = fetchInvitesTask;
+});
+
+;require.register("Http/login-tasks.js", function(exports, require, module) {
+"use strict";
+});
+
+;require.register("Http/register-tasks.js", function(exports, require, module) {
+"use strict";
+});
+
 ;require.register("Models.js", function(exports, require, module) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.default = exports.eventModel = exports.inviteModel = exports.dayModel = void 0;
+exports.default = exports.eventModel = exports.inviteModel = exports.dayModel = exports.inviteOptions = exports.toInviteViewModel = void 0;
 
 var _Utils = require("Utils");
+
+var toInviteViewModel = function toInviteViewModel(_ref) {
+  var startTime = _ref.startTime,
+      endTime = _ref.endTime,
+      title = _ref.title,
+      objectId = _ref.objectId,
+      eventId = _ref.eventId,
+      status = _ref.status;
+  return {
+    startTime: startTime,
+    endTime: endTime,
+    start: (0, _Utils.fromFullDate)(startTime),
+    end: (0, _Utils.fromFullDate)(endTime),
+    inviteId: objectId,
+    eventId: eventId,
+    title: title,
+    status: status
+  };
+};
+
+exports.toInviteViewModel = toInviteViewModel;
+var inviteOptions = ["decline", "accept", "maybe"];
+exports.inviteOptions = inviteOptions;
 
 var dayModel = function dayModel(mdl) {
   var date = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : new Date();
@@ -1201,112 +1575,6 @@ var validateLoginTask = function validateLoginTask(data) {
 exports.validateLoginTask = validateLoginTask;
 });
 
-;require.register("Pages/Auth/fns.js", function(exports, require, module) {
-"use strict";
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.linkAccountTask = exports.createAccountTask = exports.registerUserTask = exports.loginTask = exports.loginUserTask = void 0;
-
-var _Utils = require("Utils");
-
-var _ramda = require("ramda");
-
-var mergeCarts = function mergeCarts(accnt) {
-  return function (cart) {
-    return (0, _ramda.mergeDeepWith)(_ramda.add, cart, accnt);
-  };
-};
-
-var toAccountVM = function toAccountVM(mdl) {
-  return function (accnts) {
-    var cart = mergeCarts(JSON.parse(accnts[0].cart))(mdl.cart);
-    mdl.user.account = {
-      objectId: accnts[0].objectId,
-      cart: cart
-    };
-    mdl.user.address = JSON.parse(accnts[0].address);
-    mdl.cart = cart;
-    return cart;
-  };
-};
-
-var setUserToken = function setUserToken(mdl) {
-  return function (user) {
-    sessionStorage.setItem("shindigit-user", JSON.stringify(user));
-    sessionStorage.setItem("shindigit-user-token", user["user-token"]);
-    mdl.state.isAuth(true);
-    mdl.user = user;
-    return user;
-  };
-};
-
-var loginUserTask = function loginUserTask(mdl) {
-  return function (_ref) {
-    var email = _ref.email,
-        password = _ref.password;
-    return _Utils.HTTP.backEnd.postTask(mdl)("users/login")({
-      login: email,
-      password: password
-    }).map(setUserToken(mdl));
-  };
-};
-
-exports.loginUserTask = loginUserTask;
-
-var getUserAccountTask = function getUserAccountTask(mdl) {
-  return function (_) {
-    return _Utils.HTTP.backEnd.getTask(mdl)("data/Accounts?where=userId%3D'".concat(mdl.user.objectId, "'")).map(toAccountVM(mdl));
-  };
-};
-
-var loginTask = function loginTask(mdl) {
-  return function (_ref2) {
-    var email = _ref2.email,
-        password = _ref2.password;
-    return loginUserTask(mdl)({
-      email: email,
-      password: password
-    });
-  };
-};
-
-exports.loginTask = loginTask;
-
-var registerUserTask = function registerUserTask(mdl) {
-  return function (_ref3) {
-    var name = _ref3.name,
-        email = _ref3.email,
-        password = _ref3.password,
-        isAdmin = _ref3.isAdmin;
-    return _Utils.HTTP.backEnd.postTask(mdl)("users/register")({
-      name: name,
-      email: email,
-      password: password,
-      isAdmin: isAdmin
-    });
-  };
-};
-
-exports.registerUserTask = registerUserTask;
-
-var createAccountTask = function createAccountTask(mdl) {
-  return _Utils.HTTP.backEnd.postTask(mdl)("data/Accounts")({
-    cart: JSON.stringify(mdl.cart),
-    userId: mdl.user.objectId
-  });
-};
-
-exports.createAccountTask = createAccountTask;
-
-var linkAccountTask = function linkAccountTask(mdl) {
-  return _Utils.HTTP.backEnd.postTask(mdl)("data/Users/".concat(mdl.user.objectId, "/account%3AAccounts%3A1"))([mdl.user.account.objectId]);
-};
-
-exports.linkAccountTask = linkAccountTask;
-});
-
 ;require.register("Pages/Auth/login-user.js", function(exports, require, module) {
 "use strict";
 
@@ -1321,7 +1589,7 @@ var _Utils = require("Utils");
 
 var _Validations = require("./Validations.js");
 
-var _fns = require("./fns.js");
+var _Http = require("Http");
 
 var validateForm = function validateForm(mdl) {
   return function (data) {
@@ -1347,7 +1615,7 @@ var validateForm = function validateForm(mdl) {
     };
 
     state.isSubmitted = true;
-    (0, _Validations.validateLoginTask)(data.userModel).chain((0, _fns.loginTask)(mdl)).fork(onError, onSuccess(mdl));
+    (0, _Validations.validateLoginTask)(data.userModel).chain((0, _Http.loginTask)(_Http.HTTP)(mdl)).fork(onError, onSuccess(mdl));
   };
 };
 
@@ -1446,7 +1714,7 @@ var _Utils = require("Utils");
 
 var _Validations = require("./Validations");
 
-var _fns = require("./fns.js");
+var _Http = require("Http");
 
 var userModel = {
   name: "",
@@ -1502,8 +1770,8 @@ var validateForm = function validateForm(mdl) {
     };
 
     state.isSubmitted = true;
-    (0, _Validations.validateUserRegistrationTask)(data.userModel).chain((0, _fns.registerUserTask)(mdl)).chain(function (_) {
-      return (0, _fns.loginUserTask)(mdl)({
+    (0, _Validations.validateUserRegistrationTask)(data.userModel).chain((0, _Http.registerUserTask)(_Http.HTTP)(mdl)).chain(function (_) {
+      return (0, _Http.loginUserTask)(_Http.HTTP)(mdl)({
         email: data.userModel.email,
         password: data.userModel.password
       });
@@ -1616,52 +1884,20 @@ exports.Event = void 0;
 
 var _Utils = require("Utils");
 
-var _moment = _interopRequireDefault(require("moment"));
+var _Models = require("Models");
 
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+var _Http = require("Http");
 
-var toEventviewModel = function toEventviewModel(_ref) {
-  var startTime = _ref.startTime,
-      endTime = _ref.endTime,
-      title = _ref.title,
-      notes = _ref.notes;
-  return {
-    date: _moment.default.utc(startTime).format("DD-MM-YYYY"),
-    title: title.toUpperCase(),
-    begin: _moment.default.utc(startTime).format("HH:MM"),
-    end: _moment.default.utc(endTime).format("HH:MM"),
-    notes: notes
-  };
-};
-
-var loadTask = function loadTask(http) {
-  return function (mdl) {
-    return function (state) {
-      return http.backEnd.getTask(mdl)("data/Events/".concat(state.eventId)).map(toEventviewModel);
-    };
-  };
-};
-
-var deleteEventTask = function deleteEventTask(http) {
-  return function (mdl) {
-    return function (state) {
-      return http.backEnd.deleteTask(mdl)("data/Events/".concat(state.eventId)).chain(function () {
-        return http.backEnd.deleteTask(mdl)("data/bulk/Invites?where=eventId%3D'".concat(state.eventId, "'"));
-      });
-    };
-  };
-};
-
-var Event = function Event(_ref2) {
-  var mdl = _ref2.attrs.mdl;
+var Event = function Event(_ref) {
+  var mdl = _ref.attrs.mdl;
   var state = {
     error: {},
     eventId: mdl.currentEventId(),
     status: "loading"
   };
 
-  var load = function load(_ref3) {
-    var mdl = _ref3.attrs.mdl;
+  var load = function load(_ref2) {
+    var mdl = _ref2.attrs.mdl;
 
     var onError = function onError(err) {
       state.error = (0, _Utils.jsonCopy)(err);
@@ -1675,7 +1911,7 @@ var Event = function Event(_ref2) {
       state.status = "success";
     };
 
-    loadTask(_Utils.HTTP)(mdl)(state).fork(onError, onSuccess);
+    (0, _Http.getEventTask)(_Http.HTTP)(mdl)(state).fork(onError, onSuccess);
   };
 
   var deleteEvent = function deleteEvent(mdl) {
@@ -1693,7 +1929,26 @@ var Event = function Event(_ref2) {
       state.status = "success";
     };
 
-    deleteEventTask(_Utils.HTTP)(mdl)(state).fork(onError, onSuccess);
+    (0, _Http.deleteEventTask)(_Http.HTTP)(mdl)(state).fork(onError, onSuccess);
+  };
+
+  var updateEvent = function updateEvent(mdl) {
+    return function (status) {
+      var onError = function onError(err) {
+        state.error = (0, _Utils.jsonCopy)(err);
+        console.log("state.e", state.error);
+        state.status = "failed";
+      };
+
+      var onSuccess = function onSuccess(event) {
+        console.log("udpated", event);
+        state.event = toEventviewModel(event);
+        state.error = {};
+        state.status = "success";
+      };
+
+      (0, _Http.updateEventTask)(_Http.HTTP)(mdl)(status).fork(onError, onSuccess);
+    };
   };
 
   return {
@@ -1704,7 +1959,20 @@ var Event = function Event(_ref2) {
           mdl.toAnchor(state.event.startTime);
           m.route.set("/".concat(mdl.user.name, "/").concat((0, _Utils.shortDateString)(mdl.selectedDate)));
         }
-      }, "Back"), m("h1", state.event.title), m("label", "date: ", state.event.date), m("label", "begins: ", state.event.begin), m("label", "ends: ", state.event.end), m("label", "notes: ", state.event.notes), m("button", {
+      }, "Back"), m("h1", state.event.title), m("label", "date: ", state.event.date), m("label", "begins: ", state.event.begin), m("label", "ends: ", state.event.end), m("label", "notes: ", state.event.notes), m("label", m("select", {
+        onchange: function onchange(e) {
+          state.event.status = e.target.key;
+          updateEvent(mdl)({
+            status: state.event.status
+          });
+        },
+        value: _Models.inviteOptions[state.event.status]
+      }, _Models.inviteOptions.map(function (opt, idx) {
+        return m("option", {
+          value: opt,
+          key: idx
+        }, opt.toUpperCase());
+      })), "Status: "), m("button", {
         onclick: function onclick(e) {
           return deleteEvent(mdl);
         }
@@ -1726,57 +1994,34 @@ exports.Home = void 0;
 
 var _Components = require("Components");
 
-var _Utils = require("Utils");
+var _Http = require("Http");
 
 var _Models = require("Models");
 
-var _ramda = require("ramda");
-
 var _model = require("Components/calendar/model");
+
+var _Utils = require("Utils");
 
 var toDayViewModel = function toDayViewModel(dayViewModel, invite) {
   dayViewModel["".concat(invite.start.hour, ":00")].push(invite);
   return dayViewModel;
 };
 
-var toInviteViewModel = function toInviteViewModel(_ref) {
-  var startTime = _ref.startTime,
-      endTime = _ref.endTime,
-      title = _ref.title,
-      objectId = _ref.objectId,
-      eventId = _ref.eventId,
-      status = _ref.status;
-  return {
-    startTime: startTime,
-    endTime: endTime,
-    start: (0, _Utils.fromFullDate)(startTime),
-    end: (0, _Utils.fromFullDate)(endTime),
-    inviteId: objectId,
-    eventId: eventId,
-    title: title,
-    status: status
+var getTodaysInvites = function getTodaysInvites(mdl) {
+  return function (invites) {
+    return invites.filter(function (i) {
+      return (0, _Utils.datesAreSame)(i.startTime)((0, _Utils.shortDateString)(mdl.selectedDate));
+    }).reduce(toDayViewModel, (0, _Models.dayModel)(mdl, mdl.currentShortDate()));
   };
 };
 
-var Home = function Home(_ref2) {
-  var mdl = _ref2.attrs.mdl;
+var Home = function Home(_ref) {
+  var mdl = _ref.attrs.mdl;
   var state = {
     error: null,
     status: "loading",
     invites: null,
     events: null
-  };
-
-  var getTodays = function getTodays(invites) {
-    return invites.filter(function (i) {
-      return (0, _Utils.datesAreSame)(i.startTime)((0, _Utils.shortDateString)(mdl.selectedDate));
-    }).reduce(toDayViewModel, (0, _Models.dayModel)(mdl, mdl.currentShortDate()));
-  };
-
-  var loadTask = function loadTask(http) {
-    return function (mdl) {
-      return http.backEnd.getTask(mdl)("data/Invites?where=userId%3D'".concat(mdl.user.objectId, "'")).map((0, _ramda.map)(toInviteViewModel));
-    };
   };
 
   var onError = function onError(err) {
@@ -1791,23 +2036,23 @@ var Home = function Home(_ref2) {
     state.status = "success";
   };
 
-  var load = function load(_ref3) {
-    var mdl = _ref3.attrs.mdl;
-    loadTask(_Utils.HTTP)(mdl).fork(onError, onSuccess);
+  var load = function load(_ref2) {
+    var mdl = _ref2.attrs.mdl;
+    (0, _Http.fetchInvitesTask)(_Http.HTTP)(mdl).fork(onError, onSuccess);
   };
 
   return {
     oninit: load,
-    onupdate: function onupdate(_ref4) {
-      var mdl = _ref4.attrs.mdl;
+    onupdate: function onupdate(_ref3) {
+      var mdl = _ref3.attrs.mdl;
       return mdl.reloadInvites() && load({
         attrs: {
           mdl: mdl
         }
       });
     },
-    view: function view(_ref5) {
-      var mdl = _ref5.attrs.mdl;
+    view: function view(_ref4) {
+      var mdl = _ref4.attrs.mdl;
       return m(".frow", state.status == "loading" && m("p", "FETCHING EVENTS..."), state.status == "failed" && m("p", "FAILED TO FETCH EVENTS"), state.status == "success" && [m(_Components.Calendar, {
         mdl: mdl,
         calendar: (0, _model.calendarModel)({
@@ -1817,7 +2062,7 @@ var Home = function Home(_ref2) {
         invites: state.invites
       }), m(_Components.Day, {
         mdl: mdl,
-        invites: getTodays(state.invites)
+        invites: getTodaysInvites(mdl)(state.invites)
       })]);
     }
   };
@@ -2279,176 +2524,6 @@ var AnimateChildren = function AnimateChildren(animation, pause) {
 exports.AnimateChildren = AnimateChildren;
 });
 
-;require.register("Utils/.secrets.js", function(exports, require, module) {
-"use strict";
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.BackEnd = void 0;
-
-//NEED TO MOVE THESE TO ENVIRONMENT/GITLAB IN PRODUCTION for manifest
-var getUserToken = function getUserToken() {
-  return sessionStorage.getItem("shindigit-user-token") ? sessionStorage.getItem("shindigit-user-token") : "";
-};
-
-var BackEnd = {
-  API_KEY: "3E894DDB-58BB-4F18-9E1D-809BBF807C1C",
-  APP_ID: "854DB087-FA48-0CF1-FFEE-7660CF37E100",
-  baseUrl: "https://api.backendless.com",
-  headers: function headers() {
-    return {
-      "user-token": getUserToken()
-    };
-  }
-};
-exports.BackEnd = BackEnd;
-});
-
-;require.register("Utils/http.js", function(exports, require, module) {
-"use strict";
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.HTTP = exports.parseHttpSuccess = exports.parseHttpError = void 0;
-
-var _data = _interopRequireDefault(require("data.task"));
-
-var _secrets = require("./.secrets.js");
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
-
-function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(Object(source), true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
-
-function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
-
-var onProgress = function onProgress(mdl) {
-  return function (e) {
-    if (e.lengthComputable) {
-      mdl.state.loadingProgress.max = e.total;
-      mdl.state.loadingProgress.value = e.loaded;
-      m.redraw();
-    }
-  };
-};
-
-function onLoad() {
-  return false;
-}
-
-var onLoadStart = function onLoadStart(mdl) {
-  return function (e) {
-    mdl.state.isLoading(true);
-    return false;
-  };
-};
-
-var onLoadEnd = function onLoadEnd(mdl) {
-  return function (e) {
-    mdl.state.isLoading(false);
-    mdl.state.loadingProgress.max = 0;
-    mdl.state.loadingProgress.value = 0;
-    return false;
-  };
-};
-
-var xhrProgress = function xhrProgress(mdl) {
-  return {
-    config: function config(xhr) {
-      xhr.onprogress = onProgress(mdl);
-      xhr.onload = onLoad;
-      xhr.onloadstart = onLoadStart(mdl);
-      xhr.onloadend = onLoadEnd(mdl);
-    }
-  };
-};
-
-var parseHttpError = function parseHttpError(mdl) {
-  return function (rej) {
-    return function (e) {
-      mdl.state.isLoading(false);
-      return rej(e.response);
-    };
-  };
-};
-
-exports.parseHttpError = parseHttpError;
-
-var parseHttpSuccess = function parseHttpSuccess(mdl) {
-  return function (res) {
-    return function (data) {
-      mdl.state.isLoading(false);
-      return res(data);
-    };
-  };
-};
-
-exports.parseHttpSuccess = parseHttpSuccess;
-
-var getUserToken = function getUserToken() {
-  return window.sessionStorage.getItem("user-token") ? window.sessionStorage.getItem("user-token") : "";
-};
-
-var HttpTask = function HttpTask(_headers) {
-  return function (method) {
-    return function (mdl) {
-      return function (url) {
-        return function (body) {
-          mdl.state.isLoading(true);
-          return new _data.default(function (rej, res) {
-            return m.request(_objectSpread({
-              method: method,
-              url: url,
-              headers: _objectSpread({
-                "content-type": "application/json"
-              }, _headers),
-              body: body,
-              withCredentials: false
-            }, xhrProgress(mdl))).then(parseHttpSuccess(mdl)(res), parseHttpError(mdl)(rej));
-          });
-        };
-      };
-    };
-  };
-};
-
-var backEndUrl = "".concat(_secrets.BackEnd.baseUrl, "/").concat(_secrets.BackEnd.APP_ID, "/").concat(_secrets.BackEnd.API_KEY, "/");
-var backEnd = {
-  getTask: function getTask(mdl) {
-    return function (url) {
-      return HttpTask(_secrets.BackEnd.headers())("GET")(mdl)(backEndUrl + url)(null);
-    };
-  },
-  postTask: function postTask(mdl) {
-    return function (url) {
-      return function (dto) {
-        return HttpTask(_secrets.BackEnd.headers())("POST")(mdl)(backEndUrl + url)(dto);
-      };
-    };
-  },
-  putTask: function putTask(mdl) {
-    return function (url) {
-      return function (dto) {
-        return HttpTask(_secrets.BackEnd.headers())("PUT")(mdl)(backEndUrl + url)(dto);
-      };
-    };
-  },
-  deleteTask: function deleteTask(mdl) {
-    return function (url) {
-      return HttpTask(_secrets.BackEnd.headers())("DELETE")(mdl)(backEndUrl + url)(null);
-    };
-  }
-};
-var HTTP = {
-  backEnd: backEnd,
-  HttpTask: HttpTask
-};
-exports.HTTP = HTTP;
-});
-
 ;require.register("Utils/index.js", function(exports, require, module) {
 "use strict";
 
@@ -2457,6 +2532,7 @@ Object.defineProperty(exports, "__esModule", {
 });
 var _exportNames = {
   log: true,
+  rand: true,
   randomPause: true,
   Pause: true,
   NoOp: true,
@@ -2466,20 +2542,7 @@ var _exportNames = {
   range: true,
   isEqual: true
 };
-exports.isEqual = exports.range = exports.isSideBarActive = exports.jsonCopy = exports.nameFromRoute = exports.NoOp = exports.Pause = exports.randomPause = exports.log = void 0;
-
-var _http = require("./http.js");
-
-Object.keys(_http).forEach(function (key) {
-  if (key === "default" || key === "__esModule") return;
-  if (Object.prototype.hasOwnProperty.call(_exportNames, key)) return;
-  Object.defineProperty(exports, key, {
-    enumerable: true,
-    get: function get() {
-      return _http[key];
-    }
-  });
-});
+exports.isEqual = exports.range = exports.isSideBarActive = exports.jsonCopy = exports.nameFromRoute = exports.NoOp = exports.Pause = exports.randomPause = exports.rand = exports.log = void 0;
 
 var _localStorage = require("./local-storage.js");
 
@@ -2544,6 +2607,12 @@ exports.log = log;
 var secureImg = function secureImg(url) {
   return url.match(/(https)./) ? url : url.replace("http", "https");
 };
+
+var rand = function rand(min, max) {
+  return Math.floor(Math.random() * (max - min) + min);
+};
+
+exports.rand = rand;
 
 var randomPause = function randomPause() {
   return Math.random() * 1000;

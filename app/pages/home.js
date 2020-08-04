@@ -1,7 +1,6 @@
 import { Calendar, Day } from "Components"
-import { HTTP, fromFullDate } from "Utils"
+import { HTTP, fetchInvitesTask } from "Http"
 import { dayModel } from "Models"
-import { map } from "ramda"
 import { calendarModel } from "Components/calendar/model"
 import { shortDateString, datesAreSame } from "Utils"
 
@@ -10,23 +9,10 @@ const toDayViewModel = (dayViewModel, invite) => {
   return dayViewModel
 }
 
-const toInviteViewModel = ({
-  startTime,
-  endTime,
-  title,
-  objectId,
-  eventId,
-  status,
-}) => ({
-  startTime,
-  endTime,
-  start: fromFullDate(startTime),
-  end: fromFullDate(endTime),
-  inviteId: objectId,
-  eventId,
-  title,
-  status,
-})
+const getTodaysInvites = (mdl) => (invites) =>
+  invites
+    .filter((i) => datesAreSame(i.startTime)(shortDateString(mdl.selectedDate)))
+    .reduce(toDayViewModel, dayModel(mdl, mdl.currentShortDate()))
 
 export const Home = ({ attrs: { mdl } }) => {
   const state = {
@@ -35,18 +21,6 @@ export const Home = ({ attrs: { mdl } }) => {
     invites: null,
     events: null,
   }
-
-  const getTodays = (invites) =>
-    invites
-      .filter((i) =>
-        datesAreSame(i.startTime)(shortDateString(mdl.selectedDate))
-      )
-      .reduce(toDayViewModel, dayModel(mdl, mdl.currentShortDate()))
-
-  const loadTask = (http) => (mdl) =>
-    http.backEnd
-      .getTask(mdl)(`data/Invites?where=userId%3D'${mdl.user.objectId}'`)
-      .map(map(toInviteViewModel))
 
   const onError = (err) => {
     state.error = err
@@ -61,7 +35,7 @@ export const Home = ({ attrs: { mdl } }) => {
   }
 
   const load = ({ attrs: { mdl } }) => {
-    loadTask(HTTP)(mdl).fork(onError, onSuccess)
+    fetchInvitesTask(HTTP)(mdl).fork(onError, onSuccess)
   }
 
   return {
@@ -84,7 +58,7 @@ export const Home = ({ attrs: { mdl } }) => {
           }),
           m(Day, {
             mdl,
-            invites: getTodays(state.invites),
+            invites: getTodaysInvites(mdl)(state.invites),
           }),
         ]
       )

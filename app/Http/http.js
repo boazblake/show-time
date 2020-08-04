@@ -1,5 +1,5 @@
 import Task from "data.task"
-import { BackEnd } from "./.secrets.js"
+import { BackEnd } from "../.secrets.js"
 
 const onProgress = (mdl) => (e) => {
   if (e.lengthComputable) {

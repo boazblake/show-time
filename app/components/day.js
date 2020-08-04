@@ -1,6 +1,5 @@
-import { Editor } from "Components"
-import { log, getHoursInDay } from "Utils"
-import { InvitesList } from "Components"
+import { Editor, InvitesList } from "Components"
+import { getHoursInDay } from "Utils"
 
 export const Hour = () => {
   return {
@@ -27,10 +26,7 @@ export const Day = ({ attrs: { mdl } }) => {
     status: "loading",
   }
 
-  let _dom
-
   const planDay = (mdl) => ({ dom }) => {
-    // _dom = dom
     if (mdl.toAnchor()) {
       console.log(
         "anchor",

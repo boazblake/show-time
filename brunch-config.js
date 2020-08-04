@@ -89,7 +89,8 @@ exports.paths = {
     "app/Styles",
     "app/Pages",
     "app/assets",
-    "app/models",
+    "app/Models",
+    "app/Http",
   ],
 }
 

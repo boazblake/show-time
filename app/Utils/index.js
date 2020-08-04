@@ -1,4 +1,3 @@
-export * from "./http.js"
 export * from "./local-storage.js"
 export * from "./validations"
 export * from "./time-fns.js"
@@ -10,6 +9,7 @@ export const log = (m) => (v) => {
 
 const secureImg = (url) =>
   url.match(/(https)./) ? url : url.replace("http", "https")
+export const rand = (min, max) => Math.floor(Math.random() * (max - min) + min)
 
 export const randomPause = () => Math.random() * 1000
 export const Pause = (n) => n * 1000

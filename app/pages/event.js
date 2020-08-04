@@ -1,27 +1,6 @@
-import { log, jsonCopy, shortDateString, HTTP } from "Utils"
-import moment from "moment"
-
-const toEventviewModel = ({ startTime, endTime, title, notes }) => ({
-  date: moment.utc(startTime).format("DD-MM-YYYY"),
-  title: title.toUpperCase(),
-  begin: moment.utc(startTime).format("HH:MM"),
-  end: moment.utc(endTime).format("HH:MM"),
-  notes,
-})
-
-const loadTask = (http) => (mdl) => (state) =>
-  http.backEnd
-    .getTask(mdl)(`data/Events/${state.eventId}`)
-    .map(toEventviewModel)
-
-const deleteEventTask = (http) => (mdl) => (state) =>
-  http.backEnd
-    .deleteTask(mdl)(`data/Events/${state.eventId}`)
-    .chain(() =>
-      http.backEnd.deleteTask(mdl)(
-        `data/bulk/Invites?where=eventId%3D'${state.eventId}'`
-      )
-    )
+import { log, jsonCopy, shortDateString } from "Utils"
+import { inviteOptions } from "Models"
+import { HTTP, getEventTask, deleteEventTask, updateEventTask } from "Http"
 
 export const Event = ({ attrs: { mdl } }) => {
   const state = {
@@ -43,7 +22,7 @@ export const Event = ({ attrs: { mdl } }) => {
       state.status = "success"
     }
 
-    loadTask(HTTP)(mdl)(state).fork(onError, onSuccess)
+    getEventTask(HTTP)(mdl)(state).fork(onError, onSuccess)
   }
 
   const deleteEvent = (mdl) => {
@@ -62,6 +41,24 @@ export const Event = ({ attrs: { mdl } }) => {
     }
 
     deleteEventTask(HTTP)(mdl)(state).fork(onError, onSuccess)
+  }
+
+  const updateEvent = (mdl) => (status) => {
+    const onError = (err) => {
+      state.error = jsonCopy(err)
+      console.log("state.e", state.error)
+      state.status = "failed"
+    }
+
+    const onSuccess = (event) => {
+      console.log("udpated", event)
+
+      state.event = toEventviewModel(event)
+      state.error = {}
+      state.status = "success"
+    }
+
+    updateEventTask(HTTP)(mdl)(status).fork(onError, onSuccess)
   }
 
   return {
@@ -89,6 +86,24 @@ export const Event = ({ attrs: { mdl } }) => {
             m("label", "begins: ", state.event.begin),
             m("label", "ends: ", state.event.end),
             m("label", "notes: ", state.event.notes),
+            m(
+              "label",
+              m(
+                "select",
+                {
+                  onchange: (e) => {
+                    state.event.status = e.target.key
+                    updateEvent(mdl)({ status: state.event.status })
+                  },
+                  value: inviteOptions[state.event.status],
+                },
+                inviteOptions.map((opt, idx) =>
+                  m("option", { value: opt, key: idx }, opt.toUpperCase())
+                )
+              ),
+              "Status: "
+            ),
+
             m("button", { onclick: (e) => deleteEvent(mdl) }, "delete"),
           ]),
       ])

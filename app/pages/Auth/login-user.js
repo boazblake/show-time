@@ -1,7 +1,7 @@
 import { NavLink } from "Components"
 import { jsonCopy, shortDate } from "Utils"
 import { validateLoginTask } from "./Validations.js"
-import { loginTask } from "./fns.js"
+import { HTTP, loginTask } from "Http"
 
 const validateForm = (mdl) => (data) => {
   const onError = (errs) => {
@@ -26,7 +26,7 @@ const validateForm = (mdl) => (data) => {
   state.isSubmitted = true
 
   validateLoginTask(data.userModel)
-    .chain(loginTask(mdl))
+    .chain(loginTask(HTTP)(mdl))
     .fork(onError, onSuccess(mdl))
 }
 

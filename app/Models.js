@@ -1,4 +1,24 @@
-import { getHoursInDay } from "Utils"
+import { fromFullDate, getHoursInDay } from "Utils"
+
+export const toInviteViewModel = ({
+  startTime,
+  endTime,
+  title,
+  objectId,
+  eventId,
+  status,
+}) => ({
+  startTime,
+  endTime,
+  start: fromFullDate(startTime),
+  end: fromFullDate(endTime),
+  inviteId: objectId,
+  eventId,
+  title,
+  status,
+})
+
+export const inviteOptions = ["decline", "accept", "maybe"]
 
 export const dayModel = (mdl, date = new Date()) =>
   getHoursInDay(mdl.timeFormats[mdl.format()]).reduce((day, hour) => {

@@ -22,6 +22,9 @@
   --danger: #dc3545;
   --light: #f8f9fa;
   --dark: #343a40;
+  --accept-invite: #28a745;
+  --decline-invite: #dc3545;
+  --maybe-invite: #17a2b8;;
   --breakpoint-xs: 0;
   --breakpoint-sm: 576px;
   --breakpoint-md: 768px;
@@ -180,8 +183,8 @@ input[type="time"] {
 
 .cal-invites-item {
   margin: 2px;
-  background-color: var(--purple);
   color: var(--white);
+  border: 1px solid var(--white);
   min-width: 6px;
   min-height: 6px;
 }

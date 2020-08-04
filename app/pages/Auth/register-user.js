@@ -1,6 +1,6 @@
 import { jsonCopy, shortDate } from "Utils"
 import { validateUserRegistrationTask } from "./Validations"
-import { loginUserTask, registerUserTask } from "./fns.js"
+import { HTTP, loginUserTask, registerUserTask } from "Http"
 
 const userModel = {
   name: "",
@@ -54,9 +54,9 @@ export const validateForm = (mdl) => (data) => {
 
   state.isSubmitted = true
   validateUserRegistrationTask(data.userModel)
-    .chain(registerUserTask(mdl))
+    .chain(registerUserTask(HTTP)(mdl))
     .chain((_) =>
-      loginUserTask(mdl)({
+      loginUserTask(HTTP)(mdl)({
         email: data.userModel.email,
         password: data.userModel.password,
       })

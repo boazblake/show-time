@@ -1,5 +1,18 @@
 import { createCalendar, goToDate, calendarDay, getMonthByIdx } from "./model"
 import { daysOfTheWeek, shortDate, shortDateString } from "Utils"
+import { inviteOptions } from "Models"
+
+const getInviteStatusColor = (status) => {
+  console.log(
+    inviteOptions[status],
+    getComputedStyle(document.body).getPropertyValue(
+      `--${inviteOptions[status]}-invite`
+    )
+  )
+  return getComputedStyle(document.body).getPropertyValue(
+    `--${inviteOptions[status]}-invite`
+  )
+}
 
 const Toolbar = () => {
   return {
@@ -124,7 +137,6 @@ const CalendarBody = () => {
             m(
               ".frow width-100",
               week.map(({ invites, day, dir }) => {
-                console.log(invites)
                 return m(
                   ".col-xs-1-7 text-center",
                   m(
@@ -144,7 +156,16 @@ const CalendarBody = () => {
                       ".cal-invites-container",
                       m(
                         ".frow",
-                        invites.map((i) => m(".cal-invites-item"))
+                        invites.map((i) => {
+                          console.log(getInviteStatusColor(i.status))
+                          return m(".cal-invites-item", {
+                            style: {
+                              "background-color": getInviteStatusColor(
+                                i.status
+                              ),
+                            },
+                          })
+                        })
                       )
                     )
                   )
