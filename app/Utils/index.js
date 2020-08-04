@@ -9,6 +9,7 @@ export const log = (m) => (v) => {
 
 const secureImg = (url) =>
   url.match(/(https)./) ? url : url.replace("http", "https")
+
 export const rand = (min, max) => Math.floor(Math.random() * (max - min) + min)
 
 export const randomPause = () => Math.random() * 1000

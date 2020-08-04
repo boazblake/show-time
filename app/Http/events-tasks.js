@@ -1,11 +1,10 @@
 import Task from "data.task"
-import moment from "moment"
 
 const toEventviewModel = ({ startTime, endTime, title, notes, status }) => ({
-  date: moment.utc(startTime).format("DD-MM-YYYY"),
+  date: M.utc(startTime).format("DD-MM-YYYY"),
   title: title.toUpperCase(),
-  begin: moment.utc(startTime).format("HH:MM"),
-  end: moment.utc(endTime).format("HH:MM"),
+  begin: M.utc(startTime).format("HH:MM"),
+  end: M.utc(endTime).format("HH:MM"),
   notes,
   status,
 })
@@ -42,35 +41,17 @@ export const submitEventTask = (http) => (mdl) => ({
 }) => {
   let getHour = (time) => time.split(":")[0]
   let getMin = (time) => time.split(":")[1]
-  let [year, month, day] = mdl.selectedDate().format("YYYY-MM-DD").split("-")
-  // return console.log(
-  //   "state",
-  //   allday,
-  //   startTime,
-  //   endTime,
-  //   title,
-  //   notes,
-  //   year,
-  //   month,
-  //   day
-  // )
+  let _endTime = M.utc(mdl.selectedDate())
+    .hour(getHour(endTime))
+    .minute(getMin(endTime))
+  let _startTime = M.utc(mdl.selectedDate())
+    .hour(getHour(startTime))
+    .minute(getMin(startTime))
 
   return http.backEnd
     .postTask(mdl)("data/Events")({
-      endTime: new Date(
-        year,
-        month - 1,
-        day,
-        getHour(endTime),
-        getMin(endTime)
-      ),
-      startTime: new Date(
-        year,
-        month - 1,
-        day,
-        getHour(startTime),
-        getMin(startTime)
-      ),
+      endTime: _endTime,
+      startTime: _startTime,
       status: 1,
       notes,
       title,

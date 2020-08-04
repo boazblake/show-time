@@ -10,29 +10,6 @@ export const getHoursInDay = (format) =>
     .map((n) => (n.toString().length == 1 ? pad0Left(n) : n))
     .map(pad00Min)
 
-export const shortDate = (date) => {
-  return console.error("huh")
-  // console.log(
-  //   "shortDate",
-  //   date,
-  //   date
-  //     ? new Date(date.toString()).toISOString().split("T")[0]
-  //     : new Date().toISOString().split("T")[0]
-  // )
-  // return date
-  //   ? new Date(date.toString()).toISOString().split("T")[0]
-  //   : new Date().toISOString().split("T")[0]
-}
-
-export const isLeapYear = (year) =>
-  year % 4 == 0
-    ? false
-    : year % 100 == 0
-    ? year % 400 == 0
-      ? true
-      : false
-    : false
-
 export const datesAreSame = (first) => (second) => {
   let f = M.utc(first).format("YYYY-MM-DD")
   let s = M.utc(second).format("YYYY-MM-DD")

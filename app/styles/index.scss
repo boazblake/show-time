@@ -173,20 +173,25 @@ input[type="time"] {
 }
 
 
+.cal-toolbar-input {
+  display: inline-block;
+  width: 50%;
+}
+
 .cal-invites-container {
+  display: flex;
+  flex-flow: wrap;
   position: absolute;
   z-index: 100;
-  right: 0;
   top: 0;
-  width: 100%
 }
 
 .cal-invites-item {
   margin: 2px;
   color: var(--white);
   border: 1px solid var(--white);
-  min-width: 6px;
-  min-height: 6px;
+  width: 6px;
+  height: 6px;
 }
 
 

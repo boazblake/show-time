@@ -22,16 +22,13 @@ const CalendarDay = () => {
             m("span.cal-day", day.format("DD")),
             m(
               ".cal-invites-container",
-              m(
-                ".frow",
-                invites.map((i) => {
-                  return m(".cal-invites-item", {
-                    style: {
-                      "background-color": getInviteStatusColor(i.status),
-                    },
-                  })
+              invites.map((i) => {
+                return m(".cal-invites-item", {
+                  style: {
+                    "background-color": getInviteStatusColor(i.status),
+                  },
                 })
-              )
+              })
             ),
           ])
         )
@@ -43,7 +40,7 @@ const Toolbar = () => {
   return {
     view: ({ attrs: { mdl } }) =>
       m(".toolbar", [
-        m("input", {
+        m("input.cal-toolbar-input", {
           onchange: (e) =>
             m.route.set(
               `/${mdl.User.name}/${mdl.selectedDate().format("YYYY-MM-DD")}`
@@ -55,7 +52,7 @@ const Toolbar = () => {
           m.route.Link,
           {
             selector: "button",
-            class: "width-100",
+            class: "cal-toolbar-input",
             href: `/${mdl.User.name}/${M.utc().format("YYYY-MM-DD")}`,
           },
           "Today"
@@ -67,8 +64,8 @@ const Toolbar = () => {
 const Navbar = () => {
   return {
     view: ({ attrs: { mdl, date } }) => {
-      return m(".frow width-100  mt-10", [
-        m(".frow width-100 row-between mt-10", [
+      return m(".frow width-100 ", [
+        m(".frow width-100 row-between", [
           m(
             m.route.Link,
             {

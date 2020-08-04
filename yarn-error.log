@@ -1,30 +1,30 @@
 Arguments: 
-  /usr/local/opt/nvm/versions/node/v14.2.0/bin/node /Users/bblake/.yarn/bin/yarn.js install
+  /usr/local/Cellar/node/13.6.0/bin/node /Users/bblake/.yarn/bin/yarn.js install
 
 PATH: 
-  /var/folders/7s/ks_v5nmn4mv4lw0f1ffqpg8w0000gn/T/yarn--1596227651420-0.922436745601461:/Users/bblake/workspace/explorations/mithril/shindigit/node_modules/.bin:/Users/bblake/.config/yarn/link/node_modules/.bin:/usr/local/opt/nvm/versions/node/v14.2.0/libexec/lib/node_modules/npm/bin/node-gyp-bin:/usr/local/opt/nvm/versions/node/v14.2.0/lib/node_modules/npm/bin/node-gyp-bin:/usr/local/opt/nvm/versions/node/v14.2.0/bin/node_modules/npm/bin/node-gyp-bin:/usr/local/opt/nvm/versions/node/v14.2.0/bin:/Users/boazblake/.cargo/bin:/private/var/folders/7s/ks_v5nmn4mv4lw0f1ffqpg8w0000gn/T/AppTranslocation/FEE8BA79-830F-4867-AB72-4FAFD9D74824/d/Zed.app/bin:/Users/boazblake/.yarn/bin:/usr/local/opt/nvm/versions/node/v8.9.4/bin:/Users/boazblake/.yarn/bin:/Users/boazblake/.config/yarn/global/node_modules/.bin:/usr/local/opt/openssl/bin:/usr/local/mysql/bin:/usr/local/cmake/bin:/usr/local/mongodb/bin:/usr/local/au/bin:/usr/local/git/bin:/usr/local/autoconf/bin:/usr/local/git/bin:/sw/bin:/usr/local/bin:/usr/local:/usr/local/sbin:/usr/local/mysql/bin:/usr/local/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/Users/boazblake/.vimpkg/bin:/Users/bblake/.local/bin:/usr/local/opt/nvm/versions/node/v14.2.0/bin:/usr/local/share/npm/bin:/Users/bblake/Library/Android/sdk/platform-tools:/Users/bblake/Library/Android/sdk/tools/bin:/Users/bblake/Library/Android/sdk/tools:/Users/bblake/.config/yarn/global/node_modules/.bin:/Users/bblake/.yarn/bin:/Users/bblake/usr/local/bin:/Users/bblake/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/Library/Apple/usr/bin:/Library/Frameworks/Mono.framework/Versions/Current/Commands:/Users/boazblake/.cargo/bin:/private/var/folders/7s/ks_v5nmn4mv4lw0f1ffqpg8w0000gn/T/AppTranslocation/FEE8BA79-830F-4867-AB72-4FAFD9D74824/d/Zed.app/bin:/Users/boazblake/.yarn/bin:/usr/local/opt/nvm/versions/node/v8.9.4/bin:/Users/boazblake/.config/yarn/global/node_modules/.bin:/usr/local/opt/openssl/bin:/usr/local/mysql/bin:/usr/local/cmake/bin:/usr/local/mongodb/bin:/usr/local/au/bin:/usr/local/git/bin:/usr/local/autoconf/bin:/sw/bin:/usr/local:/usr/local/sbin:/Users/boazblake/.vimpkg/bin:/Users/bblake/.local/bin:/usr/local/opt/nvm/versions/node/v14.2.0/bin:/usr/local/share/npm/bin:/Users/bblake/Library/Android/sdk/platform-tools:/Users/bblake/Library/Android/sdk/tools/bin:/Users/bblake/Library/Android/sdk/tools:/Users/bblake/.config/yarn/global/node_modules/.bin:/Users/bblake/.yarn/bin:/Users/bblake/usr/local/bin:/Users/bblake/bin:/Users/bblake/Library/Android/sdk/build-tools/29.0.2:/Users/bblake/.rvm/bin:/Users/bblake/Library/Android/sdk/tools:/Users/bblake/Library/Android/sdk/platform-tools:/Users/bblake/Library/Android/sdk/build-tools/29.0.2:/Users/bblake/.rvm/bin
+  /var/folders/7s/ks_v5nmn4mv4lw0f1ffqpg8w0000gn/T/yarn--1596577028254-0.6011947810243574:/Users/bblake/workspace/explorations/mithril/shindigit/node_modules/.bin:/Users/bblake/.config/yarn/link/node_modules/.bin:/usr/local/Cellar/node/13.6.0/libexec/lib/node_modules/npm/bin/node-gyp-bin:/usr/local/Cellar/node/13.6.0/lib/node_modules/npm/bin/node-gyp-bin:/usr/local/Cellar/node/13.6.0/bin/node_modules/npm/bin/node-gyp-bin:/Users/boazblake/.cargo/bin:/private/var/folders/7s/ks_v5nmn4mv4lw0f1ffqpg8w0000gn/T/AppTranslocation/FEE8BA79-830F-4867-AB72-4FAFD9D74824/d/Zed.app/bin:/Users/boazblake/.yarn/bin:/usr/local/opt/nvm/versions/node/v8.9.4/bin:/Users/boazblake/.yarn/bin:/Users/boazblake/.config/yarn/global/node_modules/.bin:/usr/local/opt/openssl/bin:/usr/local/mysql/bin:/usr/local/cmake/bin:/usr/local/mongodb/bin:/usr/local/au/bin:/usr/local/git/bin:/usr/local/autoconf/bin:/usr/local/git/bin:/sw/bin:/usr/local/bin:/usr/local:/usr/local/sbin:/usr/local/mysql/bin:/usr/local/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/Users/boazblake/.vimpkg/bin:/Users/bblake/.local/bin:/usr/local/opt/nvm/versions/node/v14.2.0/bin:/usr/local/share/npm/bin:/Users/bblake/Library/Android/sdk/platform-tools:/Users/bblake/Library/Android/sdk/tools/bin:/Users/bblake/Library/Android/sdk/tools:/Users/bblake/.config/yarn/global/node_modules/.bin:/Users/bblake/.yarn/bin:/Users/bblake/usr/local/bin:/Users/bblake/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/Library/Apple/usr/bin:/Library/Frameworks/Mono.framework/Versions/Current/Commands:/Users/bblake/Library/Android/sdk/tools:/Users/bblake/Library/Android/sdk/platform-tools:/Users/bblake/Library/Android/sdk/build-tools/29.0.2:/Users/bblake/.rvm/bin
 
 Yarn version: 
   1.22.4
 
 Node version: 
-  14.2.0
+  13.6.0
 
 Platform: 
   darwin x64
 
 Trace: 
-  Error: https://npm.pkg.github.com/@boazblake%2ffun-config: Your request could not be authenticated by the GitHub Packages service. Please ensure your access token is valid and has the appropriate scopes configured.
-      at Request.params.callback [as _callback] (/Users/bblake/.yarn/lib/cli.js:66987:18)
-      at Request.self.callback (/Users/bblake/.yarn/lib/cli.js:140748:22)
-      at Request.emit (events.js:315:20)
-      at Request.<anonymous> (/Users/bblake/.yarn/lib/cli.js:141720:10)
-      at Request.emit (events.js:315:20)
-      at IncomingMessage.<anonymous> (/Users/bblake/.yarn/lib/cli.js:141642:12)
-      at Object.onceWrapper (events.js:421:28)
-      at IncomingMessage.emit (events.js:327:22)
-      at endReadableNT (_stream_readable.js:1225:12)
-      at processTicksAndRejections (internal/process/task_queues.js:84:21)
+  Error: connect ENETUNREACH 104.16.19.35:443 - Local (0.0.0.0:62735)
+      at internalConnect (net.js:917:16)
+      at defaultTriggerAsyncIdScope (internal/async_hooks.js:311:12)
+      at emitLookup (net.js:1059:9)
+      at /Users/bblake/.yarn/lib/cli.js:107523:28
+      at /Users/bblake/.yarn/lib/cli.js:107432:13
+      at RawTask.module.exports.RawTask.call (/Users/bblake/.yarn/lib/cli.js:83613:19)
+      at flush (/Users/bblake/.yarn/lib/cli.js:83695:29)
+      at processTicksAndRejections (internal/process/task_queues.js:79:11)
+      at runNextTicks (internal/process/task_queues.js:66:3)
+      at processImmediate (internal/timers.js:429:9)
 
 npm manifest: 
   {
@@ -42,10 +42,12 @@ npm manifest:
       "build": "yarn run build:pre && brunch build --production"
     },
     "dependencies": {
+      "@boazblake/fun-config": "1.0.0",
       "date-fns": "^2.15.0",
       "mithril": "^2.0.4",
-      "ramda": "^0.27.0",
-      "@boazblake/fun-config": "1.0.0"
+      "mithril-stream": "^2.0.0",
+      "moment": "^2.27.0",
+      "ramda": "^0.27.0"
     },
     "devDependencies": {
       "@babel/plugin-transform-spread": "^7.7.4",
@@ -899,6 +901,18 @@ Lockfile:
       "@babel/helper-validator-identifier" "^7.10.4"
       lodash "^4.17.19"
       to-fast-properties "^2.0.0"
+  
+  "@boazblake/fun-config@1.0.0":
+    version "1.0.0"
+    resolved "https://npm.pkg.github.com/download/@boazblake/fun-config/1.0.0/87c735fc02a09808ba1ea027e993307e103320581a78ff087690ab5625b6d800#8fe988102375f7be7ec5317ad94bebb6354af741"
+    integrity sha512-ty/wDxfDT+m3SpwggVqR838cKcqhvBOMnD8bWWOzigxMmJeOMWLW4QldobM5BsDY1dL1wbMFVdLnsCyFlVokeg==
+    dependencies:
+      daggy "^1.4.0"
+      data.either "^1.5.2"
+      data.maybe "^1.2.3"
+      data.task "^3.1.2"
+      data.validation "^1.3.1"
+      ramda "^0.27.0"
   
   "@nodelib/fs.scandir@2.1.3":
     version "2.1.3"
@@ -1873,12 +1887,10 @@ Lockfile:
     resolved "https://registry.yarnpkg.com/colors/-/colors-1.1.2.tgz#168a4701756b6a7f51a12ce0c97bfa28c084ed63"
     integrity sha1-FopHAXVran9RoSzgyXv6KMCE7WM=
   
-  commander@~2.8.1:
-    version "2.8.1"
-    resolved "https://registry.yarnpkg.com/commander/-/commander-2.8.1.tgz#06be367febfda0c330aa1e2a072d3dc9762425d4"
-    integrity sha1-Br42f+v9oMMwqh4qBy09yXYkJdQ=
-    dependencies:
-      graceful-readlink ">= 1.0.0"
+  commander@^2.8.1:
+    version "2.20.3"
+    resolved "https://registry.yarnpkg.com/commander/-/commander-2.20.3.tgz#fd485e84c03eb4881c20722ba48035e8531aeb33"
+    integrity sha512-GpVkmM8vF2vQUkj2LvZmD35JxeJOLCwJ9cUkugyk2nuhbv3+mJvpLYYt+0+USMxE+oj+ey/lJEnhZw75x/OMcQ==
   
   commander@~4.0.1:
     version "4.0.1"
@@ -2123,6 +2135,34 @@ Lockfile:
     integrity sha1-mI3zP+qxke95mmE2nddsF635V+o=
     dependencies:
       array-find-index "^1.0.1"
+  
+  daggy@^1.4.0:
+    version "1.4.0"
+    resolved "https://registry.yarnpkg.com/daggy/-/daggy-1.4.0.tgz#178b4722866e1c8fac7b91d4bbf171d3767c1573"
+    integrity sha512-6g8sOIPMzriYtyoCfpM2bUobu2yj0UPdaPy+Yzdqow8RqJy/Dv2PrqiNOzCvbxUuT6B1eSbr2EmFPlLNfKFDzQ==
+    dependencies:
+      sanctuary-type-classes "3.0.0"
+      sanctuary-type-identifiers "1.0.0"
+  
+  data.either@^1.5.2:
+    version "1.5.2"
+    resolved "https://registry.yarnpkg.com/data.either/-/data.either-1.5.2.tgz#5b25cafa7ff1361806e20937a1201c4472763dcf"
+    integrity sha512-ADXzxd3HiUzK+X0Txy8ZxzGKlQcVVMITkQ6yOWZ61EFxQ4a4YEHIMI4mPYc7U4q/3btGNMpJ9+Mt+Q/IWAQCZw==
+  
+  data.maybe@^1.2.3:
+    version "1.2.3"
+    resolved "https://registry.yarnpkg.com/data.maybe/-/data.maybe-1.2.3.tgz#940475f8ccddc10eb218b73125bdfb449d6d9ebc"
+    integrity sha512-iiw1TvVqHTOpnIwueo9jE3a2UFqblSHobzYTzvbvabNRnZq+D/tFi8J4olZ0viqbWkm7zKcPtu1/EzGhEyTH8A==
+  
+  data.task@^3.1.2:
+    version "3.1.2"
+    resolved "https://registry.yarnpkg.com/data.task/-/data.task-3.1.2.tgz#f61511339ad5c5ac6f417cc2666b95153dc7448d"
+    integrity sha512-gGDjno8m/FS1kdMU3EmKcLaO1enFyfCV/EscvDZ4+KZDSg9xHePa2VFfWd+QO5PUp18NdCIziOpaSUE4Efw8/w==
+  
+  data.validation@^1.3.1:
+    version "1.3.1"
+    resolved "https://registry.yarnpkg.com/data.validation/-/data.validation-1.3.1.tgz#0cc3185b61a1702ad71b840117b11717eec546fa"
+    integrity sha1-DMMYW2GhcCrXG4QBF7EXF+7FRvo=
   
   date-fns@^2.15.0:
     version "2.15.0"
@@ -2478,9 +2518,9 @@ Lockfile:
       set-immediate-shim "^1.0.0"
   
   electron-to-chromium@^1.3.488:
-    version "1.3.515"
-    resolved "https://registry.yarnpkg.com/electron-to-chromium/-/electron-to-chromium-1.3.515.tgz#96683d2c2be9bf83f6cca75d504a7b443d763c08"
-    integrity sha512-C9h2yLQwNSK/GTtWQsA9O6mLKv0ubmiAQgmz1HvHnAIH8g5Sje1shWxcooumbGiwgqvZ9yrTYULe4seMTgMYqQ==
+    version "1.3.516"
+    resolved "https://registry.yarnpkg.com/electron-to-chromium/-/electron-to-chromium-1.3.516.tgz#03ec071b061e462b786bf7e7ce226fd7ab7cf1f6"
+    integrity sha512-WDM5AAQdOrvLqSX8g3Zd5AujBXfMxf96oeZkff0U2HF5op3tjShE+on2yay3r1UD4M9I3p0iHpAS4+yV8U8A9A==
   
   elliptic@^6.0.0, elliptic@^6.5.2:
     version "6.5.3"
@@ -3141,11 +3181,6 @@ Lockfile:
     version "4.2.4"
     resolved "https://registry.yarnpkg.com/graceful-fs/-/graceful-fs-4.2.4.tgz#2256bde14d3632958c465ebc96dc467ca07a29fb"
     integrity sha512-WjKPNJF79dtJAVniUlGGWHYGz2jWxT6VhN/4m1NdkbZ2nOsEF+cI1Edgql5zCRhs/VsQYRvrXctxktVXZUkixw==
-  
-  "graceful-readlink@>= 1.0.0":
-    version "1.0.1"
-    resolved "https://registry.yarnpkg.com/graceful-readlink/-/graceful-readlink-1.0.1.tgz#4cafad76bc62f02fa039b2f94e9a3dd3a391a725"
-    integrity sha1-TK+tdrxi8C+gObL5Tpo906ORpyU=
   
   gulp-decompress@^1.2.0:
     version "1.2.0"
@@ -4460,6 +4495,11 @@ Lockfile:
     resolved "https://registry.yarnpkg.com/minimist/-/minimist-1.2.5.tgz#67d66014b66a6a8aaa0c083c5fd58df4e4e97602"
     integrity sha512-FM9nNUYrRBAELZQT3xeZQ7fmMOBg6nWNmJKTcgsJeaLstP/UODVpGsr5OhXhhXg6f+qtJ8uiZ+PUxkDWcgIXLw==
   
+  mithril-stream@^2.0.0:
+    version "2.0.0"
+    resolved "https://registry.yarnpkg.com/mithril-stream/-/mithril-stream-2.0.0.tgz#b33a9b8d1f1a93b50f79e13a3454d3a39d7e39fb"
+    integrity sha512-7anPud4n2FMGIXBQATVpFzclkddXHmJ1TzlqOP9STybk8JZYOPAD2otMYiMDc6sPrTNDY5S6GPDlYNIUY8Qs3Q==
+  
   mithril@^2.0.4:
     version "2.0.4"
     resolved "https://registry.yarnpkg.com/mithril/-/mithril-2.0.4.tgz#d125969d992b924c7185d24ff92d997e5c00116b"
@@ -4479,6 +4519,11 @@ Lockfile:
     integrity sha512-NKmAlESf6jMGym1++R0Ra7wvhV+wFW63FaSOFPwRahvea0gMUcGUhVeAg/0BC0wiv9ih5NYPB1Wn1UEI1/L+xQ==
     dependencies:
       minimist "^1.2.5"
+  
+  moment@^2.27.0:
+    version "2.27.0"
+    resolved "https://registry.yarnpkg.com/moment/-/moment-2.27.0.tgz#8bff4e3e26a236220dfe3e36de756b6ebaa0105d"
+    integrity sha512-al0MUK7cpIcglMv3YF13qSgdAIqxHTO7brRtaz3DlSULbqfazqkc5kEjNrLDOM7fsjshoFIihnU8snrP7zUvhQ==
   
   ms@2.0.0:
     version "2.0.0"
@@ -5541,6 +5586,18 @@ Lockfile:
     dependencies:
       ret "~0.1.10"
   
+  sanctuary-type-classes@3.0.0:
+    version "3.0.0"
+    resolved "https://registry.yarnpkg.com/sanctuary-type-classes/-/sanctuary-type-classes-3.0.0.tgz#e4cf422abceb8c78b6f625d84d61fdb5c6d44116"
+    integrity sha1-5M9CKrzrjHi29iXYTWH9tcbUQRY=
+    dependencies:
+      sanctuary-type-identifiers "1.0.x"
+  
+  sanctuary-type-identifiers@1.0.0, sanctuary-type-identifiers@1.0.x:
+    version "1.0.0"
+    resolved "https://registry.yarnpkg.com/sanctuary-type-identifiers/-/sanctuary-type-identifiers-1.0.0.tgz#e8f359f006cb5e624cfb8464603fc114608bde9f"
+    integrity sha1-6PNZ8AbLXmJM+4RkYD/BFGCL3p8=
+  
   sass-brunch@3.0.0:
     version "3.0.0"
     resolved "https://registry.yarnpkg.com/sass-brunch/-/sass-brunch-3.0.0.tgz#fdb011d2fe10636337bf45b075c3b28290968457"
@@ -5566,11 +5623,11 @@ Lockfile:
     integrity sha512-NqVDv9TpANUjFm0N8uM5GxL36UgKi9/atZw+x7YFnQ8ckwFGKrl4xX4yWtrey3UJm5nP1kUbnYgLopqWNSRhWw==
   
   seek-bzip@^1.0.3:
-    version "1.0.5"
-    resolved "https://registry.yarnpkg.com/seek-bzip/-/seek-bzip-1.0.5.tgz#cfe917cb3d274bcffac792758af53173eb1fabdc"
-    integrity sha1-z+kXyz0nS8/6x5J1ivUxc+sfq9w=
+    version "1.0.6"
+    resolved "https://registry.yarnpkg.com/seek-bzip/-/seek-bzip-1.0.6.tgz#35c4171f55a680916b52a07859ecf3b5857f21c4"
+    integrity sha512-e1QtP3YL5tWww8uKaOCQ18UxIT2laNBXHjV/S2WYCiK4udiv8lkG89KRIoCjUagnAmCBurjF4zEVX2ByBbnCjQ==
     dependencies:
-      commander "~2.8.1"
+      commander "^2.8.1"
   
   semver-diff@^2.0.0:
     version "2.1.0"
