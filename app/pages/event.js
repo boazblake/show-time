@@ -1,12 +1,21 @@
-import { log, jsonCopy, shortDateString } from "Utils"
-import { inviteOptions } from "Models"
-import { HTTP, getEventTask, deleteEventTask, updateEventTask } from "Http"
+import { jsonCopy, inviteOptions } from "Utils"
+
+import {
+  HTTP,
+  loadEventAndInviteTask,
+  deleteEventTask,
+  updateInviteTask,
+} from "Http"
 
 export const Event = ({ attrs: { mdl } }) => {
   const state = {
     error: {},
-    eventId: mdl.Events.currentEventId(),
     status: "loading",
+  }
+
+  const data = {
+    event: {},
+    invite: {},
   }
 
   const load = ({ attrs: { mdl } }) => {
@@ -16,13 +25,14 @@ export const Event = ({ attrs: { mdl } }) => {
       state.status = "failed"
     }
 
-    const onSuccess = (event) => {
-      state.event = event
+    const onSuccess = ({ event, invite }) => {
+      data.event = event
+      data.invite = invite
       state.error = {}
       state.status = "success"
     }
 
-    getEventTask(HTTP)(mdl)(state).fork(onError, onSuccess)
+    loadEventAndInviteTask(HTTP)(mdl).fork(onError, onSuccess)
   }
 
   const deleteEvent = (mdl) => {
@@ -32,35 +42,34 @@ export const Event = ({ attrs: { mdl } }) => {
       state.status = "failed"
     }
 
-    const onSuccess = (event) => {
-      console.log("deleted")
+    const onSuccess = () => {
+      state.error = {}
+      state.status = "success"
       m.route.set(
         `/${mdl.User.name}/${mdl.selectedDate().format("YYYY-MM-DD")}`
       )
-      state.event = event
-      state.error = {}
-      state.status = "success"
     }
 
-    deleteEventTask(HTTP)(mdl)(state).fork(onError, onSuccess)
+    deleteEventTask(HTTP)(mdl)(mdl.Events.currentEventId()).fork(
+      onError,
+      onSuccess
+    )
   }
 
-  const updateEvent = (mdl) => (status) => {
+  const updateInvite = (mdl) => (data) => {
     const onError = (err) => {
       state.error = jsonCopy(err)
       console.log("state.e", state.error)
       state.status = "failed"
     }
 
-    const onSuccess = (event) => {
-      console.log("udpated", event)
-
-      state.event = toEventviewModel(event)
+    const onSuccess = () => {
+      console.log("udpated", data)
       state.error = {}
       state.status = "success"
     }
 
-    updateEventTask(HTTP)(mdl)(status).fork(onError, onSuccess)
+    updateInviteTask(HTTP)(mdl)(data).fork(onError, onSuccess)
   }
 
   return {
@@ -75,7 +84,7 @@ export const Event = ({ attrs: { mdl } }) => {
               "button",
               {
                 onclick: (e) => {
-                  mdl.State.toAnchor(state.event.startTime)
+                  mdl.State.toAnchor(data.event.startTime)
                   m.route.set(
                     `/${mdl.User.name}/${mdl
                       .selectedDate()
@@ -85,24 +94,32 @@ export const Event = ({ attrs: { mdl } }) => {
               },
               "Back"
             ),
-            m("h1", state.event.title),
-            m("label", "date: ", state.event.date),
-            m("label", "begins: ", state.event.startTime),
-            m("label", "ends: ", state.event.endTime),
-            m("label", "notes: ", state.event.notes),
+            m("h1", data.event.title),
+            m("label", "date: ", data.event.date),
+            m("label", "begins: ", data.event.startTime),
+            m("label", "ends: ", data.event.endTime),
+            m("label", "notes: ", data.event.notes),
             m(
               "label",
               m(
                 "select",
                 {
-                  onchange: (e) => {
-                    state.event.status = e.target.key
-                    updateEvent(mdl)({ status: state.event.status })
+                  oninput: (e) => {
+                    data.invite.status = inviteOptions.indexOf(e.target.value)
+                    updateInvite(mdl)(data.invite)
                   },
-                  value: inviteOptions[state.event.status],
+                  value: inviteOptions[data.invite.status],
                 },
                 inviteOptions.map((opt, idx) =>
-                  m("option", { value: opt, key: idx }, opt.toUpperCase())
+                  m(
+                    "option",
+                    {
+                      value: opt,
+                      key: idx,
+                      id: idx,
+                    },
+                    opt.toUpperCase()
+                  )
                 )
               ),
               "Status: "

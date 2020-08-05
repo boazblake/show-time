@@ -24,7 +24,7 @@
   --dark: #343a40;
   --accept-invite: #28a745;
   --decline-invite: #dc3545;
-  --maybe-invite: #17a2b8;;
+  --maybe-invite: #c58a52;
   --breakpoint-xs: 0;
   --breakpoint-sm: 576px;
   --breakpoint-md: 768px;
@@ -183,15 +183,18 @@ input[type="time"] {
   flex-flow: wrap;
   position: absolute;
   z-index: 100;
-  top: 0;
+  top: -3px;
+  left: -30px;
 }
 
 .cal-invites-item {
-  margin: 2px;
-  color: var(--white);
-  border: 1px solid var(--white);
-  width: 6px;
-  height: 6px;
+  background-color: var(--white);
+  color: var(--blue);
+  border:1px solid var(--blue);
+  width: 25px;
+  height: 25px;
+  border-radius: 50%;
+  padding-top: 2px;
 }
 
 

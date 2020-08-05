@@ -1,6 +1,6 @@
-import { jsonCopy, shortDate } from "Utils"
+import { jsonCopy } from "Utils"
 import { validateUserRegistrationTask } from "./Validations"
-import { HTTP, loginUserTask, registerUserTask } from "Http"
+import { HTTP, loginTask, registerTask } from "Http"
 
 const userModel = {
   name: "",
@@ -47,16 +47,16 @@ export const validateForm = (mdl) => (data) => {
   const onSuccess = (mdl) => (data) => {
     console.log(mdl, data)
     state.errors = {}
-    sessionStorage.setItem("shindigit-user-token", mdl.user["user-token"])
-    sessionStorage.setItem("shindigit-user", JSON.stringify(mdl.user))
-    m.route.set(`/${mdl.user.name}/${shortDate()}`)
+    sessionStorage.setItem("shindigit-user-token", mdl.User["user-token"])
+    sessionStorage.setItem("shindigit-user", JSON.stringify(mdl.User))
+    m.route.set(`/${mdl.User.name}/${M.utc().format("YYYY-MM-DD")}`)
   }
 
   state.isSubmitted = true
   validateUserRegistrationTask(data.userModel)
-    .chain(registerUserTask(HTTP)(mdl))
+    .chain(registerTask(HTTP)(mdl))
     .chain((_) =>
-      loginUserTask(HTTP)(mdl)({
+      loginTask(HTTP)(mdl)({
         email: data.userModel.email,
         password: data.userModel.password,
       })
@@ -156,7 +156,7 @@ export const Register = () => {
               {
                 form: `register-form`,
                 onclick: () => validateForm(mdl)(state.data),
-                class: mdl.state.isLoading() && "loading",
+                class: mdl.State.isLoading() && "loading",
               },
               "Register"
             ),

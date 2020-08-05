@@ -8,13 +8,10 @@ const EventForm = ({ attrs: { state, mdl } }) => {
         m(
           "label",
           m("input", {
-            onchange: (e) => {
-              // console.log("input", `/${mdl.User.name}/${e.target.value}`)
-              m.route.set(`/${mdl.User.name}/${e.target.value}`)
-            },
+            onchange: (e) => m.route.set(`/${mdl.User.name}/${e.target.value}`),
             type: "date",
             value: mdl.selectedDate().format("YYYY-MM-DD"),
-            disabled: state.allday,
+            disabled: state.allDay,
           })
         ),
         m(".frow row", [
@@ -25,7 +22,7 @@ const EventForm = ({ attrs: { state, mdl } }) => {
                 oninput: (e) => (state.startTime = e.target.value),
                 value: state.startTime,
                 type: "time",
-                disabled: state.allday,
+                disabled: state.allDay,
               }),
               "Start Time"
             ),
@@ -35,7 +32,7 @@ const EventForm = ({ attrs: { state, mdl } }) => {
                 oninput: (e) => (state.endTime = e.target.value),
                 value: state.endTime,
                 type: "time",
-                disabled: state.allday,
+                disabled: state.allDay,
               }),
               "End Time"
             ),
@@ -44,8 +41,8 @@ const EventForm = ({ attrs: { state, mdl } }) => {
             "label.col-xs-1-3.pt-15 pl-60",
             m("input", {
               type: "checkbox",
-              checked: state.allday,
-              onclick: (e) => (state.allday = !state.allday),
+              checked: state.allDay,
+              onclick: (e) => (state.allDay = !state.allDay),
             }),
             "All Day"
           ),
@@ -74,32 +71,28 @@ const EventForm = ({ attrs: { state, mdl } }) => {
 }
 
 export const Editor = ({ attrs: { mdl } }) => {
-  // console.log(mdl)
   const state = {
     shortDate: mdl.selectedDate().format("YYYY-MM-DD"),
-    allday: false,
+    allDay: false,
     startTime: "",
     endTime: "",
     title: "",
     notes: "",
   }
   const addNewEvent = (state, mdl) => {
-    const onError = (state) => (err) => {
+    const onError = (err) => {
       state.error = err
       state.status = "failed"
     }
 
-    const onSuccess = (mdl, state) => (data) => {
+    const onSuccess = () => {
       state.error = null
       state.status = "success"
       mdl.Invites.fetch(true)
       mdl.Day.update(true)
       mdl.State.modal(false)
     }
-    submitEventTask(HTTP)(mdl)(state).fork(
-      onError(state),
-      onSuccess(mdl, state)
-    )
+    submitEventTask(HTTP)(mdl)(state).fork(onError, onSuccess)
   }
 
   return {

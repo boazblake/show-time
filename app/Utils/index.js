@@ -7,6 +7,13 @@ export const log = (m) => (v) => {
   return v
 }
 
+export const inviteOptions = ["decline", "accept", "maybe"]
+
+export const getInviteStatusColor = (status) =>
+  getComputedStyle(document.body).getPropertyValue(
+    `--${inviteOptions[status]}-invite`
+  )
+
 const secureImg = (url) =>
   url.match(/(https)./) ? url : url.replace("http", "https")
 

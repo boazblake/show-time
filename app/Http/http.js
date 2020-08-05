@@ -44,11 +44,6 @@ export const parseHttpSuccess = (mdl) => (res) => (data) => {
   return res(data)
 }
 
-// const getUserToken = () =>
-//   window.sessionStorage.getItem("user-token")
-//     ? window.sessionStorage.getItem("user-token")
-//     : ""
-
 const HttpTask = (_headers) => (method) => (mdl) => (url) => (body) => {
   mdl.State.isLoading(true)
   return new Task((rej, res) =>

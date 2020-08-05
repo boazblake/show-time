@@ -1,8 +1,6 @@
 import { getHoursInDay } from "Utils"
 import { calendarModel } from "Components/calendar/calendar-model"
 
-export const inviteOptions = ["decline", "accept", "maybe"]
-
 const State = {
   isAuth: Stream(false),
   modal: Stream(false),

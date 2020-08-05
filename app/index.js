@@ -50,7 +50,6 @@ Model.Settings.profile = getProfile(winW)
 checkWidth(winW)
 
 if (sessionStorage.getItem("shindigit-user")) {
-  console.log(m.route.params)
   Model.User = JSON.parse(sessionStorage.getItem("shindigit-user"))
   Model.State.isAuth(true)
 } else {

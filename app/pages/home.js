@@ -1,5 +1,5 @@
 import { Calendar, Day } from "Components"
-import { HTTP, fetchInvitesTask } from "Http"
+import { HTTP, getInvitesTask } from "Http"
 import { dayModel } from "Models"
 import { datesAreSame } from "Utils"
 
@@ -33,7 +33,8 @@ export const Home = ({ attrs: { mdl } }) => {
       state.error = null
       state.status = "success"
     }
-    fetchInvitesTask(HTTP)(mdl).fork(onError, onSuccess)
+
+    getInvitesTask(HTTP)(mdl).fork(onError, onSuccess)
   }
 
   return {

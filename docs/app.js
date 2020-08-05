@@ -345,13 +345,7 @@ var _calendarModel = require("./calendar-model");
 
 var _Utils = require("Utils");
 
-var _Models = require("Models");
-
 var _Http = require("Http");
-
-var getInviteStatusColor = function getInviteStatusColor(status) {
-  return getComputedStyle(document.body).getPropertyValue("--".concat(_Models.inviteOptions[status], "-invite"));
-};
 
 var load = function load(_ref) {
   var mdl = _ref.attrs.mdl;
@@ -440,13 +434,13 @@ var CalendarDay = function CalendarDay() {
       return m(".col-xs-1-7 text-center", m(m.route.Link, {
         class: "cal-day-container",
         href: "/".concat(mdl.User.name, "/").concat(day.format("YYYY-MM-DD"))
-      }, m(".".concat((0, _calendarModel.calendarDayStyle)(mdl.selectedDate(), day, dir)), [m("span.cal-day", day.format("DD")), m(".cal-invites-container", invites.map(function (i) {
-        return m(".cal-invites-item", {
-          style: {
-            "background-color": getInviteStatusColor(i.status)
-          }
-        });
-      }))])));
+      }, m(".".concat((0, _calendarModel.calendarDayStyle)(mdl.selectedDate(), day, dir)), [m("span.cal-day", day.format("D")), m(".cal-invites-container", invites.any() && m(".cal-invites-item", invites.length) // invites.map((i) => {
+      //     style: {
+      //       "background-color": getInviteStatusColor(i.status),
+      //     },
+      //   })
+      // })
+      )])));
     }
   };
 };
@@ -560,7 +554,12 @@ var Day = function Day(_ref2) {
       var dom = _ref3.dom;
 
       if (mdl.toAnchor()) {
-        console.log("anchor", mdl.toAnchor(), dom, dom.querySelector("".concat(mdl.toAnchor().toString())));
+        // console.log(
+        //   "anchor",
+        //   mdl.toAnchor(),
+        //   dom,
+        //   dom.querySelector(`${mdl.toAnchor().toString()}`)
+        // )
         var el = document.getElementById(mdl.toAnchor());
         console.log("el", el);
       }
@@ -615,31 +614,30 @@ var EventForm = function EventForm(_ref) {
     view: function view() {
       return m("form.event-form", [m("label", m("input", {
         onchange: function onchange(e) {
-          // console.log("input", `/${mdl.User.name}/${e.target.value}`)
-          m.route.set("/".concat(mdl.User.name, "/").concat(e.target.value));
+          return m.route.set("/".concat(mdl.User.name, "/").concat(e.target.value));
         },
         type: "date",
         value: mdl.selectedDate().format("YYYY-MM-DD"),
-        disabled: state.allday
+        disabled: state.allDay
       })), m(".frow row", [[m("label.col-xs-1-3", m("input", {
         oninput: function oninput(e) {
           return state.startTime = e.target.value;
         },
         value: state.startTime,
         type: "time",
-        disabled: state.allday
+        disabled: state.allDay
       }), "Start Time"), m("label.col-xs-1-3", m("input", {
         oninput: function oninput(e) {
           return state.endTime = e.target.value;
         },
         value: state.endTime,
         type: "time",
-        disabled: state.allday
+        disabled: state.allDay
       }), "End Time")], m("label.col-xs-1-3.pt-15 pl-60", m("input", {
         type: "checkbox",
-        checked: state.allday,
+        checked: state.allDay,
         onclick: function onclick(e) {
-          return state.allday = !state.allday;
+          return state.allDay = !state.allDay;
         }
       }), "All Day")]), m("label", m("input", {
         type: "text",
@@ -660,10 +658,9 @@ var EventForm = function EventForm(_ref) {
 
 var Editor = function Editor(_ref2) {
   var mdl = _ref2.attrs.mdl;
-  // console.log(mdl)
   var state = {
     shortDate: mdl.selectedDate().format("YYYY-MM-DD"),
-    allday: false,
+    allDay: false,
     startTime: "",
     endTime: "",
     title: "",
@@ -671,24 +668,20 @@ var Editor = function Editor(_ref2) {
   };
 
   var addNewEvent = function addNewEvent(state, mdl) {
-    var onError = function onError(state) {
-      return function (err) {
-        state.error = err;
-        state.status = "failed";
-      };
+    var onError = function onError(err) {
+      state.error = err;
+      state.status = "failed";
     };
 
-    var onSuccess = function onSuccess(mdl, state) {
-      return function (data) {
-        state.error = null;
-        state.status = "success";
-        mdl.Invites.fetch(true);
-        mdl.Day.update(true);
-        mdl.State.modal(false);
-      };
+    var onSuccess = function onSuccess() {
+      state.error = null;
+      state.status = "success";
+      mdl.Invites.fetch(true);
+      mdl.Day.update(true);
+      mdl.State.modal(false);
     };
 
-    (0, _Http.submitEventTask)(_Http.HTTP)(mdl)(state).fork(onError(state), onSuccess(mdl, state));
+    (0, _Http.submitEventTask)(_Http.HTTP)(mdl)(state).fork(onError, onSuccess);
   };
 
   return {
@@ -803,6 +796,12 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.InvitesList = void 0;
 
+var _Utils = require("Utils");
+
+var createEventUrl = function createEventUrl(invite) {
+  return "".concat(invite.start.format("YYYY-MM-DD"), "/").concat(invite.start.format("HH"), "/").concat(invite.start.format("mm"));
+};
+
 var Invite = function Invite(_ref) {
   var mdl = _ref.attrs.mdl;
   return {
@@ -814,10 +813,11 @@ var Invite = function Invite(_ref) {
       return m(".col-xs-1-".concat(col + 2), m(".invite-list-item ", {
         onclick: function onclick(e) {
           mdl.Events.currentEventId(invite.eventId);
-          m.route.set("/".concat(mdl.User.name, "/").concat(mdl.selectedDate().format("YYYY-MM-DD"), "/").concat(invite.start.hour, "/").concat(invite.start.format("MM")));
+          m.route.set("/".concat(mdl.User.name, "/").concat(createEventUrl(invite)));
         },
         style: {
-          top: "".concat(invite.start.format("MM"), "px"),
+          "background-color": (0, _Utils.getInviteStatusColor)(invite.status),
+          top: "".concat(invite.start.format("mm"), "px"),
           height: "".concat(invite.end.diff(invite.start, "minutes") * 2, "px")
         }
       }, invite.title));
@@ -920,7 +920,7 @@ exports.NavLink = NavLink;
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.registerUserTask = exports.loginTask = void 0;
+exports.registerTask = exports.loginTask = void 0;
 
 var setUserToken = function setUserToken(mdl) {
   return function (user) {
@@ -947,14 +947,14 @@ var loginTask = function loginTask(http) {
 
 exports.loginTask = loginTask;
 
-var registerUserTask = function registerUserTask(http) {
+var registerTask = function registerTask(http) {
   return function (mdl) {
     return function (_ref2) {
       var name = _ref2.name,
           email = _ref2.email,
           password = _ref2.password,
           isAdmin = _ref2.isAdmin;
-      return HTTP.backEnd.postTask(mdl)("users/register")({
+      return http.backEnd.postTask(mdl)("users/register")({
         name: name,
         email: email,
         password: password,
@@ -964,7 +964,7 @@ var registerUserTask = function registerUserTask(http) {
   };
 };
 
-exports.registerUserTask = registerUserTask;
+exports.registerTask = registerTask;
 });
 
 ;require.register("Http/events-tasks.js", function(exports, require, module) {
@@ -973,9 +973,13 @@ exports.registerUserTask = registerUserTask;
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.submitEventTask = exports.updateEventTask = exports.deleteEventTask = exports.getEventTask = void 0;
+exports.submitEventTask = exports.deleteEventTask = exports.loadEventAndInviteTask = exports.getEventTask = void 0;
 
 var _data = _interopRequireDefault(require("data.task"));
+
+var _invitesTasks = require("./invites-tasks");
+
+var _ramda = require("ramda");
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -984,34 +988,47 @@ var toEventviewModel = function toEventviewModel(_ref) {
       end = _ref.end,
       title = _ref.title,
       notes = _ref.notes,
-      status = _ref.status;
+      allDay = _ref.allDay;
   return {
     date: M.utc(start).format("DD-MM-YYYY"),
     title: title.toUpperCase(),
     start: start,
     end: end,
-    startTime: M.utc(start).format("HH:MM"),
-    endTime: M.utc(end).format("HH:MM"),
+    startTime: M.utc(start).format("HH:mm"),
+    endTime: M.utc(end).format("HH:mm"),
     notes: notes,
-    status: status
+    allDay: allDay
   };
 };
 
 var getEventTask = function getEventTask(http) {
   return function (mdl) {
-    return function (state) {
-      return http.backEnd.getTask(mdl)("data/Events/".concat(state.eventId)).map(toEventviewModel);
-    };
+    return http.backEnd.getTask(mdl)("data/Events/".concat(mdl.Events.currentEventId())).map(toEventviewModel);
   };
 };
 
 exports.getEventTask = getEventTask;
 
+var loadEventAndInviteTask = function loadEventAndInviteTask(http) {
+  return function (mdl) {
+    return _data.default.of(function (event) {
+      return function (invite) {
+        return {
+          event: event,
+          invite: invite
+        };
+      };
+    }).ap(getEventTask(http)(mdl)).ap((0, _invitesTasks.getInvitesTask)(http)(mdl).map((0, _ramda.compose)(_ramda.head, (0, _ramda.filter)((0, _ramda.propEq)("eventId", mdl.Events.currentEventId())))));
+  };
+};
+
+exports.loadEventAndInviteTask = loadEventAndInviteTask;
+
 var deleteEventTask = function deleteEventTask(http) {
   return function (mdl) {
-    return function (state) {
-      return http.backEnd.deleteTask(mdl)("data/Events/".concat(state.eventId)).chain(function () {
-        return http.backEnd.deleteTask(mdl)("data/bulk/Invites?where=eventId%3D'".concat(state.eventId, "'"));
+    return function (id) {
+      return http.backEnd.deleteTask(mdl)("data/Events/".concat(id)).chain(function () {
+        return http.backEnd.deleteTask(mdl)("data/bulk/Invites?where=eventId%3D'".concat(id, "'"));
       });
     };
   };
@@ -1019,22 +1036,10 @@ var deleteEventTask = function deleteEventTask(http) {
 
 exports.deleteEventTask = deleteEventTask;
 
-var updateEventTask = function updateEventTask(http) {
-  return function (mdl) {
-    return function (state) {
-      return http.backEnd.putTask(mdl)("data/Events/".concat(state.eventId)).chain(function () {
-        return http.backEnd.updateTask(mdl)("data/Invites?where=eventId%3D'".concat(state.eventId, "'"));
-      });
-    };
-  };
-};
-
-exports.updateEventTask = updateEventTask;
-
 var submitEventTask = function submitEventTask(http) {
   return function (mdl) {
     return function (_ref2) {
-      var allday = _ref2.allday,
+      var allDay = _ref2.allDay,
           startTime = _ref2.startTime,
           endTime = _ref2.endTime,
           title = _ref2.title,
@@ -1053,28 +1058,25 @@ var submitEventTask = function submitEventTask(http) {
       return http.backEnd.postTask(mdl)("data/Events")({
         end: end,
         start: start,
-        status: 1,
         notes: notes,
         title: title,
-        allday: allday,
+        allDay: allDay,
         createdBy: mdl.User.objectId
       }).chain(function (_ref3) {
         var objectId = _ref3.objectId,
             ownerId = _ref3.ownerId,
             end = _ref3.end,
             start = _ref3.start,
-            allDay = _ref3.allDay,
-            title = _ref3.title,
-            status = _ref3.status;
+            title = _ref3.title;
         var eventId = objectId;
         return http.backEnd.postTask(mdl)("data/Invites")({
           eventId: eventId,
           userId: ownerId,
-          status: status,
+          status: 1,
           end: end,
           start: start,
-          allDay: allDay,
-          title: title
+          title: title,
+          allDay: allDay
         }).chain(function (_ref4) {
           var objectId = _ref4.objectId;
           var inviteId = objectId;
@@ -1174,11 +1176,7 @@ var parseHttpSuccess = function parseHttpSuccess(mdl) {
       return res(data);
     };
   };
-}; // const getUserToken = () =>
-//   window.sessionStorage.getItem("user-token")
-//     ? window.sessionStorage.getItem("user-token")
-//     : ""
-
+};
 
 exports.parseHttpSuccess = parseHttpSuccess;
 
@@ -1301,7 +1299,7 @@ Object.keys(_authTasks).forEach(function (key) {
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.fetchInvitesTask = exports.toInviteViewModel = void 0;
+exports.getInvitesTask = exports.updateInviteTask = exports.toInviteViewModel = void 0;
 
 var _ramda = require("ramda");
 
@@ -1311,34 +1309,56 @@ var toInviteViewModel = function toInviteViewModel(_ref) {
       title = _ref.title,
       objectId = _ref.objectId,
       eventId = _ref.eventId,
-      status = _ref.status;
+      status = _ref.status,
+      userId = _ref.userId;
   return {
     start: M.utc(start),
     end: M.utc(end),
-    inviteId: objectId,
+    objectId: objectId,
     eventId: eventId,
     title: title,
-    status: status
+    status: status,
+    userId: userId
   };
 };
 
 exports.toInviteViewModel = toInviteViewModel;
 
-var fetchInvitesTask = function fetchInvitesTask(http) {
+var toInviteDto = function toInviteDto(_ref2) {
+  var start = _ref2.start,
+      end = _ref2.end,
+      title = _ref2.title,
+      eventId = _ref2.eventId,
+      status = _ref2.status,
+      userId = _ref2.userId;
+  return {
+    start: start,
+    end: end,
+    eventId: eventId,
+    title: title,
+    status: status,
+    userId: userId
+  };
+};
+
+var updateInviteTask = function updateInviteTask(http) {
+  return function (mdl) {
+    return function (invite) {
+      console.log("updating..", invite);
+      return http.backEnd.putTask(mdl)("data/Invites/".concat(invite.objectId))(toInviteDto(invite)).map(toInviteViewModel);
+    };
+  };
+};
+
+exports.updateInviteTask = updateInviteTask;
+
+var getInvitesTask = function getInvitesTask(http) {
   return function (mdl) {
     return http.backEnd.getTask(mdl)("data/Invites?pageSize=100&where=userId%3D'".concat(mdl.User.objectId, "'")).map((0, _ramda.map)(toInviteViewModel));
   };
 };
 
-exports.fetchInvitesTask = fetchInvitesTask;
-});
-
-;require.register("Http/login-tasks.js", function(exports, require, module) {
-"use strict";
-});
-
-;require.register("Http/register-tasks.js", function(exports, require, module) {
-"use strict";
+exports.getInvitesTask = getInvitesTask;
 });
 
 ;require.register("Models.js", function(exports, require, module) {
@@ -1347,14 +1367,12 @@ exports.fetchInvitesTask = fetchInvitesTask;
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.default = exports.inviteModel = exports.dayModel = exports.inviteOptions = void 0;
+exports.default = exports.inviteModel = exports.dayModel = void 0;
 
 var _Utils = require("Utils");
 
 var _calendarModel = require("Components/calendar/calendar-model");
 
-var inviteOptions = ["decline", "accept", "maybe"];
-exports.inviteOptions = inviteOptions;
 var State = {
   isAuth: Stream(false),
   modal: Stream(false),
@@ -1688,15 +1706,15 @@ var validateForm = function validateForm(mdl) {
       return function (data) {
         console.log(mdl, data);
         state.errors = {};
-        sessionStorage.setItem("shindigit-user-token", mdl.user["user-token"]);
-        sessionStorage.setItem("shindigit-user", JSON.stringify(mdl.user));
-        m.route.set("/".concat(mdl.user.name, "/").concat((0, _Utils.shortDate)()));
+        sessionStorage.setItem("shindigit-user-token", mdl.User["user-token"]);
+        sessionStorage.setItem("shindigit-user", JSON.stringify(mdl.User));
+        m.route.set("/".concat(mdl.User.name, "/").concat(M.utc().format("YYYY-MM-DD")));
       };
     };
 
     state.isSubmitted = true;
-    (0, _Validations.validateUserRegistrationTask)(data.userModel).chain((0, _Http.registerUserTask)(_Http.HTTP)(mdl)).chain(function (_) {
-      return (0, _Http.loginUserTask)(_Http.HTTP)(mdl)({
+    (0, _Validations.validateUserRegistrationTask)(data.userModel).chain((0, _Http.registerTask)(_Http.HTTP)(mdl)).chain(function (_) {
+      return (0, _Http.loginTask)(_Http.HTTP)(mdl)({
         email: data.userModel.email,
         password: data.userModel.password
       });
@@ -1785,7 +1803,7 @@ var Register = function Register() {
         onclick: function onclick() {
           return validateForm(mdl)(state.data);
         },
-        class: mdl.state.isLoading() && "loading"
+        class: mdl.State.isLoading() && "loading"
       }, "Register"), m(m.route.Link, {
         href: "/login",
         class: "bold"
@@ -1809,16 +1827,17 @@ exports.Event = void 0;
 
 var _Utils = require("Utils");
 
-var _Models = require("Models");
-
 var _Http = require("Http");
 
 var Event = function Event(_ref) {
   var mdl = _ref.attrs.mdl;
   var state = {
     error: {},
-    eventId: mdl.Events.currentEventId(),
     status: "loading"
+  };
+  var data = {
+    event: {},
+    invite: {}
   };
 
   var load = function load(_ref2) {
@@ -1830,13 +1849,16 @@ var Event = function Event(_ref) {
       state.status = "failed";
     };
 
-    var onSuccess = function onSuccess(event) {
-      state.event = event;
+    var onSuccess = function onSuccess(_ref3) {
+      var event = _ref3.event,
+          invite = _ref3.invite;
+      data.event = event;
+      data.invite = invite;
       state.error = {};
       state.status = "success";
     };
 
-    (0, _Http.getEventTask)(_Http.HTTP)(mdl)(state).fork(onError, onSuccess);
+    (0, _Http.loadEventAndInviteTask)(_Http.HTTP)(mdl).fork(onError, onSuccess);
   };
 
   var deleteEvent = function deleteEvent(mdl) {
@@ -1846,33 +1868,30 @@ var Event = function Event(_ref) {
       state.status = "failed";
     };
 
-    var onSuccess = function onSuccess(event) {
-      console.log("deleted");
-      m.route.set("/".concat(mdl.User.name, "/").concat(mdl.selectedDate().format("YYYY-MM-DD")));
-      state.event = event;
+    var onSuccess = function onSuccess() {
       state.error = {};
       state.status = "success";
+      m.route.set("/".concat(mdl.User.name, "/").concat(mdl.selectedDate().format("YYYY-MM-DD")));
     };
 
-    (0, _Http.deleteEventTask)(_Http.HTTP)(mdl)(state).fork(onError, onSuccess);
+    (0, _Http.deleteEventTask)(_Http.HTTP)(mdl)(mdl.Events.currentEventId()).fork(onError, onSuccess);
   };
 
-  var updateEvent = function updateEvent(mdl) {
-    return function (status) {
+  var updateInvite = function updateInvite(mdl) {
+    return function (data) {
       var onError = function onError(err) {
         state.error = (0, _Utils.jsonCopy)(err);
         console.log("state.e", state.error);
         state.status = "failed";
       };
 
-      var onSuccess = function onSuccess(event) {
-        console.log("udpated", event);
-        state.event = toEventviewModel(event);
+      var onSuccess = function onSuccess() {
+        console.log("udpated", data);
         state.error = {};
         state.status = "success";
       };
 
-      (0, _Http.updateEventTask)(_Http.HTTP)(mdl)(status).fork(onError, onSuccess);
+      (0, _Http.updateInviteTask)(_Http.HTTP)(mdl)(data).fork(onError, onSuccess);
     };
   };
 
@@ -1881,21 +1900,20 @@ var Event = function Event(_ref) {
     view: function view() {
       return m(".event", [state.status == "loading" && m(".", "Fetching Event..."), state.status == "failed" && m(".code", state.error.message), state.status == "success" && m(".event-container", [m("button", {
         onclick: function onclick(e) {
-          mdl.State.toAnchor(state.event.startTime);
+          mdl.State.toAnchor(data.event.startTime);
           m.route.set("/".concat(mdl.User.name, "/").concat(mdl.selectedDate().format("YYYY-MM-DD")));
         }
-      }, "Back"), m("h1", state.event.title), m("label", "date: ", state.event.date), m("label", "begins: ", state.event.startTime), m("label", "ends: ", state.event.endTime), m("label", "notes: ", state.event.notes), m("label", m("select", {
-        onchange: function onchange(e) {
-          state.event.status = e.target.key;
-          updateEvent(mdl)({
-            status: state.event.status
-          });
+      }, "Back"), m("h1", data.event.title), m("label", "date: ", data.event.date), m("label", "begins: ", data.event.startTime), m("label", "ends: ", data.event.endTime), m("label", "notes: ", data.event.notes), m("label", m("select", {
+        oninput: function oninput(e) {
+          data.invite.status = _Utils.inviteOptions.indexOf(e.target.value);
+          updateInvite(mdl)(data.invite);
         },
-        value: _Models.inviteOptions[state.event.status]
-      }, _Models.inviteOptions.map(function (opt, idx) {
+        value: _Utils.inviteOptions[data.invite.status]
+      }, _Utils.inviteOptions.map(function (opt, idx) {
         return m("option", {
           value: opt,
-          key: idx
+          key: idx,
+          id: idx
         }, opt.toUpperCase());
       })), "Status: "), m("button", {
         onclick: function onclick(e) {
@@ -1962,7 +1980,7 @@ var Home = function Home(_ref) {
       state.status = "success";
     };
 
-    (0, _Http.fetchInvitesTask)(_Http.HTTP)(mdl).fork(onError, onSuccess);
+    (0, _Http.getInvitesTask)(_Http.HTTP)(mdl).fork(onError, onSuccess);
   };
 
   return {
@@ -2438,6 +2456,8 @@ Object.defineProperty(exports, "__esModule", {
 });
 var _exportNames = {
   log: true,
+  inviteOptions: true,
+  getInviteStatusColor: true,
   rand: true,
   randomPause: true,
   Pause: true,
@@ -2448,7 +2468,7 @@ var _exportNames = {
   range: true,
   isEqual: true
 };
-exports.isEqual = exports.range = exports.isSideBarActive = exports.jsonCopy = exports.nameFromRoute = exports.NoOp = exports.Pause = exports.randomPause = exports.rand = exports.log = void 0;
+exports.isEqual = exports.range = exports.isSideBarActive = exports.jsonCopy = exports.nameFromRoute = exports.NoOp = exports.Pause = exports.randomPause = exports.rand = exports.getInviteStatusColor = exports.inviteOptions = exports.log = void 0;
 
 var _localStorage = require("./local-storage.js");
 
@@ -2509,6 +2529,14 @@ var log = function log(m) {
 };
 
 exports.log = log;
+var inviteOptions = ["decline", "accept", "maybe"];
+exports.inviteOptions = inviteOptions;
+
+var getInviteStatusColor = function getInviteStatusColor(status) {
+  return getComputedStyle(document.body).getPropertyValue("--".concat(inviteOptions[status], "-invite"));
+};
+
+exports.getInviteStatusColor = getInviteStatusColor;
 
 var secureImg = function secureImg(url) {
   return url.match(/(https)./) ? url : url.replace("http", "https");
@@ -2876,7 +2904,6 @@ _Models.default.Settings.profile = getProfile(winW);
 checkWidth(winW);
 
 if (sessionStorage.getItem("shindigit-user")) {
-  console.log(m.route.params);
   _Models.default.User = JSON.parse(sessionStorage.getItem("shindigit-user"));
 
   _Models.default.State.isAuth(true);

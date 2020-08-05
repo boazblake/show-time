@@ -1,12 +1,7 @@
 import { createCalendar, calendarDayStyle } from "./calendar-model"
 import { daysOfTheWeek } from "Utils"
-import { inviteOptions } from "Models"
-import { HTTP, logoutTask } from "Http"
 
-const getInviteStatusColor = (status) =>
-  getComputedStyle(document.body).getPropertyValue(
-    `--${inviteOptions[status]}-invite`
-  )
+import { HTTP, logoutTask } from "Http"
 
 const load = ({ attrs: { mdl } }) => {
   const onError = (err) => {
@@ -152,16 +147,16 @@ const CalendarDay = () => {
             href: `/${mdl.User.name}/${day.format("YYYY-MM-DD")}`,
           },
           m(`.${calendarDayStyle(mdl.selectedDate(), day, dir)}`, [
-            m("span.cal-day", day.format("DD")),
+            m("span.cal-day", day.format("D")),
             m(
               ".cal-invites-container",
-              invites.map((i) => {
-                return m(".cal-invites-item", {
-                  style: {
-                    "background-color": getInviteStatusColor(i.status),
-                  },
-                })
-              })
+              invites.any() && m(".cal-invites-item", invites.length)
+              // invites.map((i) => {
+              //     style: {
+              //       "background-color": getInviteStatusColor(i.status),
+              //     },
+              //   })
+              // })
             ),
           ])
         )

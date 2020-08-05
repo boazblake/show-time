@@ -1,3 +1,10 @@
+import { getInviteStatusColor } from "Utils"
+
+const createEventUrl = (invite) =>
+  `${invite.start.format("YYYY-MM-DD")}/${invite.start.format(
+    "HH"
+  )}/${invite.start.format("mm")}`
+
 const Invite = ({ attrs: { mdl } }) => {
   return {
     view: ({ attrs: { mdl, invite, col } }) => {
@@ -8,14 +15,11 @@ const Invite = ({ attrs: { mdl } }) => {
           {
             onclick: (e) => {
               mdl.Events.currentEventId(invite.eventId)
-              m.route.set(
-                `/${mdl.User.name}/${mdl.selectedDate().format("YYYY-MM-DD")}/${
-                  invite.start.hour
-                }/${invite.start.format("MM")}`
-              )
+              m.route.set(`/${mdl.User.name}/${createEventUrl(invite)}`)
             },
             style: {
-              top: `${invite.start.format("MM")}px`,
+              "background-color": getInviteStatusColor(invite.status),
+              top: `${invite.start.format("mm")}px`,
               height: `${invite.end.diff(invite.start, "minutes") * 2}px`,
             },
           },

@@ -28,12 +28,12 @@ export const Day = ({ attrs: { mdl } }) => {
 
   const planDay = (mdl) => ({ dom }) => {
     if (mdl.toAnchor()) {
-      console.log(
-        "anchor",
-        mdl.toAnchor(),
-        dom,
-        dom.querySelector(`${mdl.toAnchor().toString()}`)
-      )
+      // console.log(
+      //   "anchor",
+      //   mdl.toAnchor(),
+      //   dom,
+      //   dom.querySelector(`${mdl.toAnchor().toString()}`)
+      // )
 
       let el = document.getElementById(mdl.toAnchor())
 

@@ -14,13 +14,13 @@ export const loginTask = (http) => (mdl) => ({ email, password }) =>
     })
     .map(setUserToken(mdl))
 
-export const registerUserTask = (http) => (mdl) => ({
+export const registerTask = (http) => (mdl) => ({
   name,
   email,
   password,
   isAdmin,
 }) =>
-  HTTP.backEnd.postTask(mdl)("users/register")({
+  http.backEnd.postTask(mdl)("users/register")({
     name,
     email,
     password,
