@@ -3,7 +3,7 @@ import { getHoursInDay } from "Utils"
 
 export const Hour = () => {
   return {
-    view: ({ attrs: { mdl, hour, time, events } }) => {
+    view: ({ attrs: { mdl, time, events } }) => {
       return m(
         ".frow ",
         m(".hour ", [
@@ -20,29 +20,17 @@ export const Hour = () => {
 }
 
 export const Day = ({ attrs: { mdl } }) => {
-  const state = {
-    error: null,
-    data: null,
-    status: "loading",
-  }
-
-  const planDay = (mdl) => ({ dom }) => {
-    if (mdl.toAnchor()) {
-      // console.log(
-      //   "anchor",
-      //   mdl.toAnchor(),
-      //   dom,
-      //   dom.querySelector(`${mdl.toAnchor().toString()}`)
-      // )
-
-      let el = document.getElementById(mdl.toAnchor())
-
-      console.log("el", el)
-    }
-    mdl.Day.update(false)
-  }
-
   return {
+    oncreate: () => {
+      let time = M().format("HH")
+
+      if (mdl.State.toAnchor()) {
+        time = mdl.State.toAnchor().split(":")[0]
+      }
+
+      let el = document.getElementById(`${time}:00`)
+      el.scrollIntoView()
+    },
     view: ({ attrs: { mdl, invites } }) => {
       return m(
         ".day",

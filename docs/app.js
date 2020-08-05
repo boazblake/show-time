@@ -345,30 +345,24 @@ var _calendarModel = require("./calendar-model");
 
 var _Utils = require("Utils");
 
-var _Http = require("Http");
-
-var load = function load(_ref) {
-  var mdl = _ref.attrs.mdl;
-
-  var onError = function onError(err) {
-    state.error = err;
-    state.status = "failed";
-  };
-
-  var onSuccess = function onSuccess(invites) {
-    mdl.Invites.fetch(false);
-    state.invites = invites;
-    state.error = null;
-    state.status = "success";
-  };
-
-  (0, _Http.logoutTask)(_Http.HTTP)(mdl).fork(onError, onSuccess);
-};
-
+// import { HTTP, logoutTask } from "Http"
+// const load = ({ attrs: { mdl } }) => {
+//   const onError = (err) => {
+//     state.error = err
+//     state.status = "failed"
+//   }
+//   const onSuccess = (invites) => {
+//     mdl.Invites.fetch(false)
+//     state.invites = invites
+//     state.error = null
+//     state.status = "success"
+//   }
+//   logoutTask(HTTP)(mdl).fork(onError, onSuccess)
+// }
 var Toolbar = function Toolbar() {
   return {
-    view: function view(_ref2) {
-      var mdl = _ref2.attrs.mdl;
+    view: function view(_ref) {
+      var mdl = _ref.attrs.mdl;
       return m(".toolbar", [m("input.cal-toolbar-input", {
         onchange: function onchange(e) {
           return m.route.set("/".concat(mdl.User.name, "/").concat(mdl.selectedDate().format("YYYY-MM-DD")));
@@ -391,10 +385,10 @@ var Toolbar = function Toolbar() {
 
 var Navbar = function Navbar() {
   return {
-    view: function view(_ref3) {
-      var _ref3$attrs = _ref3.attrs,
-          mdl = _ref3$attrs.mdl,
-          date = _ref3$attrs.date;
+    view: function view(_ref2) {
+      var _ref2$attrs = _ref2.attrs,
+          mdl = _ref2$attrs.mdl,
+          date = _ref2$attrs.date;
       return m(".frow width-100 ", [m(".frow width-100 row-between", [m(m.route.Link, {
         selector: "button",
         href: "/".concat(mdl.User.name, "/").concat(date.clone().subtract(1, "year").format("YYYY-MM-DD"))
@@ -414,8 +408,8 @@ var Navbar = function Navbar() {
 
 var DaysOfWeek = function DaysOfWeek() {
   return {
-    view: function view(_ref4) {
-      var mdl = _ref4.attrs.mdl;
+    view: function view(_ref3) {
+      var mdl = _ref3.attrs.mdl;
       return m(".frow width-100 row-between mt-10", _Utils.daysOfTheWeek.map(function (day) {
         return m(".col-xs-1-7 text-center", m("span.width-auto.text-strong", day[0].toUpperCase()));
       }));
@@ -425,12 +419,12 @@ var DaysOfWeek = function DaysOfWeek() {
 
 var CalendarDay = function CalendarDay() {
   return {
-    view: function view(_ref5) {
-      var _ref5$attrs = _ref5.attrs,
-          mdl = _ref5$attrs.mdl,
-          invites = _ref5$attrs.invites,
-          day = _ref5$attrs.day,
-          dir = _ref5$attrs.dir;
+    view: function view(_ref4) {
+      var _ref4$attrs = _ref4.attrs,
+          mdl = _ref4$attrs.mdl,
+          invites = _ref4$attrs.invites,
+          day = _ref4$attrs.day,
+          dir = _ref4$attrs.dir;
       return m(".col-xs-1-7 text-center", m(m.route.Link, {
         class: "cal-day-container",
         href: "/".concat(mdl.User.name, "/").concat(day.format("YYYY-MM-DD"))
@@ -447,11 +441,11 @@ var CalendarDay = function CalendarDay() {
 
 var CalendarBody = function CalendarBody() {
   return {
-    view: function view(_ref6) {
-      var _ref6$attrs = _ref6.attrs,
-          mdl = _ref6$attrs.mdl,
-          date = _ref6$attrs.date,
-          invites = _ref6$attrs.invites;
+    view: function view(_ref5) {
+      var _ref5$attrs = _ref5.attrs,
+          mdl = _ref5$attrs.mdl,
+          date = _ref5$attrs.date,
+          invites = _ref5$attrs.invites;
       var matrix = (0, _calendarModel.createCalendar)(invites, date);
       return m(".frow frow-container", [m(Navbar, {
         mdl: mdl,
@@ -459,10 +453,10 @@ var CalendarBody = function CalendarBody() {
       }), m(DaysOfWeek, {
         mdl: mdl
       }), m(".frow centered-column width-100 row-between mt-10 ", matrix.map(function (week) {
-        return m(".frow width-100", week.map(function (_ref7) {
-          var invites = _ref7.invites,
-              day = _ref7.day,
-              dir = _ref7.dir;
+        return m(".frow width-100", week.map(function (_ref6) {
+          var invites = _ref6.invites,
+              day = _ref6.day,
+              dir = _ref6.dir;
           return m(CalendarDay, {
             mdl: mdl,
             invites: invites,
@@ -477,11 +471,11 @@ var CalendarBody = function CalendarBody() {
 
 var Calendar = function Calendar() {
   return {
-    view: function view(_ref8) {
-      var _ref8$attrs = _ref8.attrs,
-          mdl = _ref8$attrs.mdl,
-          date = _ref8$attrs.date,
-          invites = _ref8$attrs.invites;
+    view: function view(_ref7) {
+      var _ref7$attrs = _ref7.attrs,
+          mdl = _ref7$attrs.mdl,
+          date = _ref7$attrs.date,
+          invites = _ref7$attrs.invites;
       return m(".calendar", [m(Toolbar, {
         mdl: mdl,
         calendar: mdl.Calendar.data
@@ -526,7 +520,6 @@ var Hour = function Hour() {
     view: function view(_ref) {
       var _ref$attrs = _ref.attrs,
           mdl = _ref$attrs.mdl,
-          hour = _ref$attrs.hour,
           time = _ref$attrs.time,
           events = _ref$attrs.events;
       return m(".frow ", m(".hour ", [m("p.hour-time", {
@@ -543,36 +536,21 @@ exports.Hour = Hour;
 
 var Day = function Day(_ref2) {
   var mdl = _ref2.attrs.mdl;
-  var state = {
-    error: null,
-    data: null,
-    status: "loading"
-  };
+  return {
+    oncreate: function oncreate() {
+      var time = M().format("HH");
 
-  var planDay = function planDay(mdl) {
-    return function (_ref3) {
-      var dom = _ref3.dom;
-
-      if (mdl.toAnchor()) {
-        // console.log(
-        //   "anchor",
-        //   mdl.toAnchor(),
-        //   dom,
-        //   dom.querySelector(`${mdl.toAnchor().toString()}`)
-        // )
-        var el = document.getElementById(mdl.toAnchor());
-        console.log("el", el);
+      if (mdl.State.toAnchor()) {
+        time = mdl.State.toAnchor().split(":")[0];
       }
 
-      mdl.Day.update(false);
-    };
-  };
-
-  return {
-    view: function view(_ref4) {
-      var _ref4$attrs = _ref4.attrs,
-          mdl = _ref4$attrs.mdl,
-          invites = _ref4$attrs.invites;
+      var el = document.getElementById("".concat(time, ":00"));
+      el.scrollIntoView();
+    },
+    view: function view(_ref3) {
+      var _ref3$attrs = _ref3.attrs,
+          mdl = _ref3$attrs.mdl,
+          invites = _ref3$attrs.invites;
       return m(".day", m(".frow-container", [m(".".concat(mdl.State.modal() ? "bg-warn" : "bg-info"), m("button.frow.width-100", {
         onclick: function onclick(e) {
           return mdl.State.modal(!mdl.State.modal());
