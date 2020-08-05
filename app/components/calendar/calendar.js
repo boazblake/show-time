@@ -1,39 +1,26 @@
 import { createCalendar, calendarDayStyle } from "./calendar-model"
 import { daysOfTheWeek } from "Utils"
 import { inviteOptions } from "Models"
+import { HTTP, logoutTask } from "Http"
 
 const getInviteStatusColor = (status) =>
   getComputedStyle(document.body).getPropertyValue(
     `--${inviteOptions[status]}-invite`
   )
 
-const CalendarDay = () => {
-  return {
-    view: ({ attrs: { mdl, invites, day, dir } }) =>
-      m(
-        ".col-xs-1-7 text-center",
-        m(
-          m.route.Link,
-          {
-            class: "cal-day-container",
-            href: `/${mdl.User.name}/${day.format("YYYY-MM-DD")}`,
-          },
-          m(`.${calendarDayStyle(mdl.selectedDate(), day, dir)}`, [
-            m("span.cal-day", day.format("DD")),
-            m(
-              ".cal-invites-container",
-              invites.map((i) => {
-                return m(".cal-invites-item", {
-                  style: {
-                    "background-color": getInviteStatusColor(i.status),
-                  },
-                })
-              })
-            ),
-          ])
-        )
-      ),
+const load = ({ attrs: { mdl } }) => {
+  const onError = (err) => {
+    state.error = err
+    state.status = "failed"
   }
+
+  const onSuccess = (invites) => {
+    mdl.Invites.fetch(false)
+    state.invites = invites
+    state.error = null
+    state.status = "success"
+  }
+  logoutTask(HTTP)(mdl).fork(onError, onSuccess)
 }
 
 const Toolbar = () => {
@@ -56,6 +43,16 @@ const Toolbar = () => {
             href: `/${mdl.User.name}/${M.utc().format("YYYY-MM-DD")}`,
           },
           "Today"
+        ),
+        m(
+          m.route.Link,
+          {
+            selector: "button",
+            class: "cal-toolbar-input",
+            // onclick: (e) => logout,
+            href: `/logout`,
+          },
+          "Logout"
         ),
       ]),
   }
@@ -138,6 +135,35 @@ const DaysOfWeek = () => {
               day[0].toUpperCase()
             )
           )
+        )
+      ),
+  }
+}
+
+const CalendarDay = () => {
+  return {
+    view: ({ attrs: { mdl, invites, day, dir } }) =>
+      m(
+        ".col-xs-1-7 text-center",
+        m(
+          m.route.Link,
+          {
+            class: "cal-day-container",
+            href: `/${mdl.User.name}/${day.format("YYYY-MM-DD")}`,
+          },
+          m(`.${calendarDayStyle(mdl.selectedDate(), day, dir)}`, [
+            m("span.cal-day", day.format("DD")),
+            m(
+              ".cal-invites-container",
+              invites.map((i) => {
+                return m(".cal-invites-item", {
+                  style: {
+                    "background-color": getInviteStatusColor(i.status),
+                  },
+                })
+              })
+            ),
+          ])
         )
       ),
   }

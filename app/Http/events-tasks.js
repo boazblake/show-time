@@ -1,10 +1,12 @@
 import Task from "data.task"
 
-const toEventviewModel = ({ startTime, endTime, title, notes, status }) => ({
-  date: M.utc(startTime).format("DD-MM-YYYY"),
+const toEventviewModel = ({ start, end, title, notes, status }) => ({
+  date: M.utc(start).format("DD-MM-YYYY"),
   title: title.toUpperCase(),
-  begin: M.utc(startTime).format("HH:MM"),
-  end: M.utc(endTime).format("HH:MM"),
+  start,
+  end,
+  startTime: M.utc(start).format("HH:MM"),
+  endTime: M.utc(end).format("HH:MM"),
   notes,
   status,
 })
@@ -41,53 +43,51 @@ export const submitEventTask = (http) => (mdl) => ({
 }) => {
   let getHour = (time) => time.split(":")[0]
   let getMin = (time) => time.split(":")[1]
-  let _endTime = M.utc(mdl.selectedDate())
+  let end = M.utc(mdl.selectedDate())
     .hour(getHour(endTime))
     .minute(getMin(endTime))
-  let _startTime = M.utc(mdl.selectedDate())
+  let start = M.utc(mdl.selectedDate())
     .hour(getHour(startTime))
     .minute(getMin(startTime))
 
   return http.backEnd
     .postTask(mdl)("data/Events")({
-      endTime: _endTime,
-      startTime: _startTime,
+      end,
+      start,
       status: 1,
       notes,
       title,
       allday,
       createdBy: mdl.User.objectId,
     })
-    .chain(
-      ({ objectId, ownerId, endTime, startTime, allDay, title, status }) => {
-        let eventId = objectId
-        return http.backEnd
-          .postTask(mdl)("data/Invites")({
-            eventId,
-            userId: ownerId,
-            status,
-            endTime,
-            startTime,
-            allDay,
-            title,
-          })
-          .chain(({ objectId }) => {
-            let inviteId = objectId
-            return Task.of((user) => (event) => ({
-              user,
-              event,
-            }))
-              .ap(
-                http.backEnd.postTask(mdl)(
-                  `data/Users/${mdl.User.objectId}/invites%3AInvites%3An`
-                )([inviteId])
-              )
-              .ap(
-                http.backEnd.postTask(mdl)(
-                  `data/Events/${eventId}/invites%3AInvites%3An`
-                )([inviteId])
-              )
-          })
-      }
-    )
+    .chain(({ objectId, ownerId, end, start, allDay, title, status }) => {
+      let eventId = objectId
+      return http.backEnd
+        .postTask(mdl)("data/Invites")({
+          eventId,
+          userId: ownerId,
+          status,
+          end,
+          start,
+          allDay,
+          title,
+        })
+        .chain(({ objectId }) => {
+          let inviteId = objectId
+          return Task.of((user) => (event) => ({
+            user,
+            event,
+          }))
+            .ap(
+              http.backEnd.postTask(mdl)(
+                `data/Users/${mdl.User.objectId}/invites%3AInvites%3An`
+              )([inviteId])
+            )
+            .ap(
+              http.backEnd.postTask(mdl)(
+                `data/Events/${eventId}/invites%3AInvites%3An`
+              )([inviteId])
+            )
+        })
+    })
 }

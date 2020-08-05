@@ -1,7 +1,6 @@
 const Invite = ({ attrs: { mdl } }) => {
   return {
     view: ({ attrs: { mdl, invite, col } }) => {
-      // console.log(invite)
       return m(
         `.col-xs-1-${col + 2}`,
         m(
@@ -12,14 +11,12 @@ const Invite = ({ attrs: { mdl } }) => {
               m.route.set(
                 `/${mdl.User.name}/${mdl.selectedDate().format("YYYY-MM-DD")}/${
                   invite.start.hour
-                }/${invite.start.min}`
+                }/${invite.start.format("MM")}`
               )
             },
             style: {
-              top: `${invite.start.min}px`,
-              height: `${
-                M.utc(invite.endTime).diff(invite.startTime, "minutes") * 2
-              }px`,
+              top: `${invite.start.format("MM")}px`,
+              height: `${invite.end.diff(invite.start, "minutes") * 2}px`,
             },
           },
           invite.title

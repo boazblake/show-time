@@ -1,23 +1,5 @@
-import { fromFullDate, getHoursInDay } from "Utils"
+import { getHoursInDay } from "Utils"
 import { calendarModel } from "Components/calendar/calendar-model"
-
-export const toInviteViewModel = ({
-  startTime,
-  endTime,
-  title,
-  objectId,
-  eventId,
-  status,
-}) => ({
-  startTime,
-  endTime,
-  start: fromFullDate(startTime),
-  end: fromFullDate(endTime),
-  inviteId: objectId,
-  eventId,
-  title,
-  status,
-})
 
 export const inviteOptions = ["decline", "accept", "maybe"]
 

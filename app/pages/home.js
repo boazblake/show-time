@@ -4,16 +4,13 @@ import { dayModel } from "Models"
 import { datesAreSame } from "Utils"
 
 const toDayViewModel = (dayViewModel, invite) => {
-  dayViewModel[`${invite.start.hour}:00`].push(invite)
+  dayViewModel[`${invite.start.format("HH")}:00`].push(invite)
   return dayViewModel
 }
 
 const getSelectedDayInvites = (mdl) => (invites) =>
   invites
-    .filter((i) => {
-      // console.log(i, mdl.selectedDate())
-      return datesAreSame(i.startTime)(mdl.selectedDate())
-    })
+    .filter((i) => datesAreSame(i.start)(mdl.selectedDate())("YYYY-MM-DD"))
     .reduce(toDayViewModel, dayModel(mdl, mdl.selectedDate()))
 
 export const Home = ({ attrs: { mdl } }) => {
@@ -24,19 +21,18 @@ export const Home = ({ attrs: { mdl } }) => {
     events: null,
   }
 
-  const onError = (err) => {
-    state.error = err
-    state.status = "failed"
-  }
-
-  const onSuccess = (invites) => {
-    mdl.Invites.fetch(false)
-    state.invites = invites
-    state.error = null
-    state.status = "success"
-  }
-
   const load = ({ attrs: { mdl } }) => {
+    const onError = (err) => {
+      state.error = err
+      state.status = "failed"
+    }
+
+    const onSuccess = (invites) => {
+      mdl.Invites.fetch(false)
+      state.invites = invites
+      state.error = null
+      state.status = "success"
+    }
     fetchInvitesTask(HTTP)(mdl).fork(onError, onSuccess)
   }
 

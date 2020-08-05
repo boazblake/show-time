@@ -1,5 +1,3 @@
-import { mergeDeepWith, add } from "ramda"
-
 const setUserToken = (mdl) => (user) => {
   sessionStorage.setItem("shindigit-user", JSON.stringify(user))
   sessionStorage.setItem("shindigit-user-token", user["user-token"])

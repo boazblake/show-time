@@ -20,7 +20,7 @@ export const isNotCalenderDay = (invites, day, date) => ({
 })
 
 const filterBy = (day) => (invites) =>
-  invites.filter((i) => datesAreSame(i.startTime)(day))
+  invites.filter((i) => datesAreSame(i.start)(day)("YYYY-MM-DD"))
 
 export const createCalendarDayViewModel = (
   invites,

@@ -87,8 +87,8 @@ export const Event = ({ attrs: { mdl } }) => {
             ),
             m("h1", state.event.title),
             m("label", "date: ", state.event.date),
-            m("label", "begins: ", state.event.begin),
-            m("label", "ends: ", state.event.end),
+            m("label", "begins: ", state.event.startTime),
+            m("label", "ends: ", state.event.endTime),
             m("label", "notes: ", state.event.notes),
             m(
               "label",

@@ -10,9 +10,9 @@ export const getHoursInDay = (format) =>
     .map((n) => (n.toString().length == 1 ? pad0Left(n) : n))
     .map(pad00Min)
 
-export const datesAreSame = (first) => (second) => {
-  let f = M.utc(first).format("YYYY-MM-DD")
-  let s = M.utc(second).format("YYYY-MM-DD")
+export const datesAreSame = (first) => (second) => (format) => {
+  let f = M.utc(first).format(format)
+  let s = M.utc(second).format(format)
 
   return M.utc(f).isSame(M.utc(s))
 }
