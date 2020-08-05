@@ -64,14 +64,6 @@ input[type="time"] {
 }
 
 
-.cal-day-container {
-  position: relative;
-}
-
-.cal-day {
-  line-height: 2rem;
-}
-
 .notThisMonth {
   background-color:var(--yellow);
 }
@@ -126,10 +118,6 @@ input[type="time"] {
 }
 
 
-// background-image:
-// rgba(255, 255, 255, 1) 60%,
-// rgba(255, 255, 255, 0) 100%
-// );
 .modal-container {
   position: absolute;
   left:0;
@@ -178,24 +166,33 @@ input[type="time"] {
   width: 33%;
 }
 
-.cal-invites-container {
-  display: flex;
-  flex-flow: wrap;
+.cal-invites-item {
   position: absolute;
   z-index: 100;
-  top: -3px;
-  left: -3px;
-}
-
-.cal-invites-item {
+  top: -10px;
+  right: 0;
   background-color: var(--white);
   color: var(--blue);
   border:1px solid var(--blue);
   width: 25px;
   height: 25px;
   border-radius: 50%;
-  padding-top: 2px;
+  text-align: center;
 }
+
+.cal-day-link {
+  position: relative;
+  line-height: 2rem;
+}
+
+// .cal-day-invite-container {
+// }
+
+// .cal-date {
+// }
+
+// .cal-day {
+// }
 
 
 @media screen and (min-width: 600px) and (max-width: 899px) {

@@ -81,7 +81,7 @@ export const calendarModel = ({ mdl, invites, date }) => {
 export const calendarDayStyle = (selectedDate, current, dir) => {
   let today = M.utc()
   if (dir !== 0) {
-    return "notThisMonth"
+    return "cal-day notThisMonth"
   }
 
   if (
@@ -89,9 +89,9 @@ export const calendarDayStyle = (selectedDate, current, dir) => {
     today.isSame(current, "month") &&
     today.isSame(current, "year")
   ) {
-    return "isToday"
+    return "cal-day isToday"
   }
   if (selectedDate.isSame(current, "date")) {
-    return "selectedDay"
-  }
+    return "cal-day selectedDay"
+  } else return "cal-day"
 }

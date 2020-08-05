@@ -26,40 +26,39 @@ export const Day = ({ attrs: { mdl } }) => {
 
       if (mdl.State.toAnchor()) {
         time = mdl.State.toAnchor().split(":")[0]
+        console.log(time)
       }
 
       let el = document.getElementById(`${time}:00`)
       el.scrollIntoView()
     },
+    onupdate: ({ attrs: { mdl } }) => mdl.State.toAnchor(),
     view: ({ attrs: { mdl, invites } }) => {
-      return m(
-        ".day",
-        m(".frow-container", [
+      return m(".day", [
+        m(
+          `.${mdl.State.modal() ? "bg-warn" : "bg-info"}`,
           m(
-            `.${mdl.State.modal() ? "bg-warn" : "bg-info"}`,
-            m(
-              "button.frow.width-100",
-              {
-                onclick: (e) => mdl.State.modal(!mdl.State.modal()),
-              },
-              mdl.State.modal() ? "Cancel" : "Add Event"
-            )
+            "button.frow.width-100",
+            {
+              onclick: (e) => mdl.State.modal(!mdl.State.modal()),
+            },
+            mdl.State.modal() ? "Cancel" : "Add Event"
+          )
+        ),
+        m(".day-container", [
+          mdl.State.modal() && m(Editor, { mdl }),
+          getHoursInDay(mdl.State.timeFormats[mdl.State.format()]).map(
+            (hour, idx) => {
+              return m(Hour, {
+                mdl,
+                hour: invites[hour],
+                time: hour,
+                events: invites[hour],
+              })
+            }
           ),
-          m(".day-container", [
-            mdl.State.modal() && m(Editor, { mdl }),
-            getHoursInDay(mdl.State.timeFormats[mdl.State.format()]).map(
-              (hour, idx) => {
-                return m(Hour, {
-                  mdl,
-                  hour: invites[hour],
-                  time: hour,
-                  events: invites[hour],
-                })
-              }
-            ),
-          ]),
-        ])
-      )
+        ]),
+      ])
     },
   }
 }

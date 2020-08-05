@@ -1,30 +1,21 @@
 Arguments: 
-  /usr/local/Cellar/node/13.6.0/bin/node /Users/bblake/.yarn/bin/yarn.js install
+  /usr/local/opt/nvm/versions/node/v14.2.0/bin/node /Users/bblake/.yarn/bin/yarn.js install
 
 PATH: 
-  /var/folders/7s/ks_v5nmn4mv4lw0f1ffqpg8w0000gn/T/yarn--1596577028254-0.6011947810243574:/Users/bblake/workspace/explorations/mithril/shindigit/node_modules/.bin:/Users/bblake/.config/yarn/link/node_modules/.bin:/usr/local/Cellar/node/13.6.0/libexec/lib/node_modules/npm/bin/node-gyp-bin:/usr/local/Cellar/node/13.6.0/lib/node_modules/npm/bin/node-gyp-bin:/usr/local/Cellar/node/13.6.0/bin/node_modules/npm/bin/node-gyp-bin:/Users/boazblake/.cargo/bin:/private/var/folders/7s/ks_v5nmn4mv4lw0f1ffqpg8w0000gn/T/AppTranslocation/FEE8BA79-830F-4867-AB72-4FAFD9D74824/d/Zed.app/bin:/Users/boazblake/.yarn/bin:/usr/local/opt/nvm/versions/node/v8.9.4/bin:/Users/boazblake/.yarn/bin:/Users/boazblake/.config/yarn/global/node_modules/.bin:/usr/local/opt/openssl/bin:/usr/local/mysql/bin:/usr/local/cmake/bin:/usr/local/mongodb/bin:/usr/local/au/bin:/usr/local/git/bin:/usr/local/autoconf/bin:/usr/local/git/bin:/sw/bin:/usr/local/bin:/usr/local:/usr/local/sbin:/usr/local/mysql/bin:/usr/local/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/Users/boazblake/.vimpkg/bin:/Users/bblake/.local/bin:/usr/local/opt/nvm/versions/node/v14.2.0/bin:/usr/local/share/npm/bin:/Users/bblake/Library/Android/sdk/platform-tools:/Users/bblake/Library/Android/sdk/tools/bin:/Users/bblake/Library/Android/sdk/tools:/Users/bblake/.config/yarn/global/node_modules/.bin:/Users/bblake/.yarn/bin:/Users/bblake/usr/local/bin:/Users/bblake/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/Library/Apple/usr/bin:/Library/Frameworks/Mono.framework/Versions/Current/Commands:/Users/bblake/Library/Android/sdk/tools:/Users/bblake/Library/Android/sdk/platform-tools:/Users/bblake/Library/Android/sdk/build-tools/29.0.2:/Users/bblake/.rvm/bin
+  /var/folders/7s/ks_v5nmn4mv4lw0f1ffqpg8w0000gn/T/yarn--1596662580858-0.98443196426244:/Users/bblake/workspace/explorations/mithril/shindigit/node_modules/.bin:/Users/bblake/.config/yarn/link/node_modules/.bin:/usr/local/opt/nvm/versions/node/v14.2.0/libexec/lib/node_modules/npm/bin/node-gyp-bin:/usr/local/opt/nvm/versions/node/v14.2.0/lib/node_modules/npm/bin/node-gyp-bin:/usr/local/opt/nvm/versions/node/v14.2.0/bin/node_modules/npm/bin/node-gyp-bin:/usr/local/opt/nvm/versions/node/v14.2.0/bin:/Users/boazblake/.cargo/bin:/private/var/folders/7s/ks_v5nmn4mv4lw0f1ffqpg8w0000gn/T/AppTranslocation/FEE8BA79-830F-4867-AB72-4FAFD9D74824/d/Zed.app/bin:/Users/boazblake/.yarn/bin:/usr/local/opt/nvm/versions/node/v8.9.4/bin:/Users/boazblake/.yarn/bin:/Users/boazblake/.config/yarn/global/node_modules/.bin:/usr/local/opt/openssl/bin:/usr/local/mysql/bin:/usr/local/cmake/bin:/usr/local/mongodb/bin:/usr/local/au/bin:/usr/local/git/bin:/usr/local/autoconf/bin:/usr/local/git/bin:/sw/bin:/usr/local/bin:/usr/local:/usr/local/sbin:/usr/local/mysql/bin:/usr/local/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/Users/boazblake/.vimpkg/bin:/Users/bblake/.local/bin:/usr/local/opt/nvm/versions/node/v14.2.0/bin:/usr/local/share/npm/bin:/Users/bblake/Library/Android/sdk/platform-tools:/Users/bblake/Library/Android/sdk/tools/bin:/Users/bblake/Library/Android/sdk/tools:/Users/bblake/.config/yarn/global/node_modules/.bin:/Users/bblake/.yarn/bin:/Users/bblake/usr/local/bin:/Users/bblake/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/Library/Apple/usr/bin:/Library/Frameworks/Mono.framework/Versions/Current/Commands:/Users/boazblake/.cargo/bin:/private/var/folders/7s/ks_v5nmn4mv4lw0f1ffqpg8w0000gn/T/AppTranslocation/FEE8BA79-830F-4867-AB72-4FAFD9D74824/d/Zed.app/bin:/Users/boazblake/.yarn/bin:/usr/local/opt/nvm/versions/node/v8.9.4/bin:/Users/boazblake/.config/yarn/global/node_modules/.bin:/usr/local/opt/openssl/bin:/usr/local/mysql/bin:/usr/local/cmake/bin:/usr/local/mongodb/bin:/usr/local/au/bin:/usr/local/git/bin:/usr/local/autoconf/bin:/sw/bin:/usr/local:/usr/local/sbin:/Users/boazblake/.vimpkg/bin:/Users/bblake/.local/bin:/usr/local/opt/nvm/versions/node/v14.2.0/bin:/usr/local/share/npm/bin:/Users/bblake/Library/Android/sdk/platform-tools:/Users/bblake/Library/Android/sdk/tools/bin:/Users/bblake/Library/Android/sdk/tools:/Users/bblake/.config/yarn/global/node_modules/.bin:/Users/bblake/.yarn/bin:/Users/bblake/usr/local/bin:/Users/bblake/bin:/Users/bblake/Library/Android/sdk/build-tools/29.0.2:/Users/bblake/.rvm/bin:/Users/bblake/Library/Android/sdk/tools:/Users/bblake/Library/Android/sdk/platform-tools:/Users/bblake/Library/Android/sdk/build-tools/29.0.2:/Users/bblake/.rvm/bin
 
 Yarn version: 
   1.22.4
 
 Node version: 
-  13.6.0
+  14.2.0
 
 Platform: 
   darwin x64
 
 Trace: 
-  Error: connect ENETUNREACH 104.16.19.35:443 - Local (0.0.0.0:62735)
-      at internalConnect (net.js:917:16)
-      at defaultTriggerAsyncIdScope (internal/async_hooks.js:311:12)
-      at emitLookup (net.js:1059:9)
-      at /Users/bblake/.yarn/lib/cli.js:107523:28
-      at /Users/bblake/.yarn/lib/cli.js:107432:13
-      at RawTask.module.exports.RawTask.call (/Users/bblake/.yarn/lib/cli.js:83613:19)
-      at flush (/Users/bblake/.yarn/lib/cli.js:83695:29)
-      at processTicksAndRejections (internal/process/task_queues.js:79:11)
-      at runNextTicks (internal/process/task_queues.js:66:3)
-      at processImmediate (internal/timers.js:429:9)
+  Error: getaddrinfo ENOTFOUND registry.yarnpkg.com
+      at GetAddrInfoReqWrap.onlookup [as oncomplete] (dns.js:66:26)
 
 npm manifest: 
   {

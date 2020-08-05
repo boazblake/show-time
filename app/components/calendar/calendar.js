@@ -1,22 +1,6 @@
 import { createCalendar, calendarDayStyle } from "./calendar-model"
-import { daysOfTheWeek } from "Utils"
-
-// import { HTTP, logoutTask } from "Http"
-
-// const load = ({ attrs: { mdl } }) => {
-//   const onError = (err) => {
-//     state.error = err
-//     state.status = "failed"
-//   }
-
-//   const onSuccess = (invites) => {
-//     mdl.Invites.fetch(false)
-//     state.invites = invites
-//     state.error = null
-//     state.status = "success"
-//   }
-//   logoutTask(HTTP)(mdl).fork(onError, onSuccess)
-// }
+import { daysOfTheWeek, log } from "Utils"
+import { compose, head, prop, propEq, pluck } from "ramda"
 
 const Toolbar = () => {
   return {
@@ -143,21 +127,12 @@ const CalendarDay = () => {
         m(
           m.route.Link,
           {
-            class: "cal-day-container",
             href: `/${mdl.User.name}/${day.format("YYYY-MM-DD")}`,
+            class: "cal-day-link",
           },
           m(`.${calendarDayStyle(mdl.selectedDate(), day, dir)}`, [
-            m("span.cal-day", day.format("D")),
-            m(
-              ".cal-invites-container",
-              invites.any() && m(".cal-invites-item", invites.length)
-              // invites.map((i) => {
-              //     style: {
-              //       "background-color": getInviteStatusColor(i.status),
-              //     },
-              //   })
-              // })
-            ),
+            m("span.cal-date", day.format("D")),
+            invites.any() && m(".cal-invites-item", invites.length),
           ])
         )
       ),
