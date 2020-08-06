@@ -2,7 +2,16 @@ import Task from "data.task"
 import { getInvitesTask } from "./invites-tasks"
 import { compose, filter, head, propEq } from "ramda"
 
-const toEventviewModel = ({ start, end, title, notes, allDay }) => {
+const toEventviewModel = ({
+  start,
+  end,
+  title,
+  notes,
+  allDay,
+  location,
+  inPerson,
+  latlong,
+}) => {
   return {
     date: M.utc(start).format("DD-MM-YYYY"),
     title: title.toUpperCase(),
@@ -12,6 +21,9 @@ const toEventviewModel = ({ start, end, title, notes, allDay }) => {
     endTime: M.utc(end).format("HH:mm"),
     notes,
     allDay,
+    location,
+    inPerson,
+    latlong,
   }
 }
 
@@ -47,6 +59,9 @@ export const submitEventTask = (http) => (mdl) => ({
   endTime,
   title,
   notes,
+  inPerson,
+  location,
+  latlong,
 }) => {
   let getHour = (time) => time.split(":")[0]
   let getMin = (time) => time.split(":")[1]
@@ -64,6 +79,9 @@ export const submitEventTask = (http) => (mdl) => ({
       notes,
       title,
       allDay,
+      inPerson,
+      location,
+      latlong,
       createdBy: mdl.User.objectId,
     })
     .chain(({ objectId, ownerId, end, start, title }) => {
@@ -77,6 +95,9 @@ export const submitEventTask = (http) => (mdl) => ({
           start,
           title,
           allDay,
+          inPerson,
+          location,
+          latlong,
         })
         .chain(({ objectId }) => {
           let inviteId = objectId

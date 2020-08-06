@@ -1,6 +1,5 @@
 import Task from "data.task"
-import { BackEnd } from "../.secrets.js"
-
+import { BackEnd, OpenCage } from "../.secrets.js"
 const onProgress = (mdl) => (e) => {
   if (e.lengthComputable) {
     mdl.State.loadingProgress.max = e.total
@@ -36,6 +35,8 @@ const xhrProgress = (mdl) => ({
 
 export const parseHttpError = (mdl) => (rej) => (e) => {
   mdl.State.isLoading(false)
+  console.error(e)
+  e.response && e.response.code == 3064 && m.route.set("/logout")
   return rej(e.response)
 }
 
@@ -64,6 +65,15 @@ const HttpTask = (_headers) => (method) => (mdl) => (url) => (body) => {
 }
 
 const backEndUrl = `${BackEnd.baseUrl}/${BackEnd.APP_ID}/${BackEnd.API_KEY}/`
+const OpenCageUrl = `${OpenCage.baseUrl}?key=${OpenCage.key}&q=`
+
+const openCage = {
+  getLocationTask: (mdl) => (query) =>
+    HttpTask(OpenCage.headers())("GET")(mdl)(OpenCageUrl + query + "&pretty=1")(
+      null
+    ),
+}
+
 const backEnd = {
   getTask: (mdl) => (url) =>
     HttpTask(BackEnd.headers())("GET")(mdl)(backEndUrl + url)(null),
@@ -76,6 +86,7 @@ const backEnd = {
 }
 
 export const HTTP = {
+  openCage,
   backEnd,
   HttpTask,
 }
