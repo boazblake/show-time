@@ -84,7 +84,7 @@ export const Event = ({ attrs: { mdl } }) => {
               "button",
               {
                 onclick: (e) => {
-                  mdl.State.toAnchor(data.event.startTime)
+                  mdl.State.toAnchor(data.event.startTime.split(":")[0])
                   m.route.set(
                     `/${mdl.User.name}/${mdl
                       .selectedDate()

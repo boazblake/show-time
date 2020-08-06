@@ -32,10 +32,23 @@
   --breakpoint-xl: 1200px;
 }
 
+*,
+*:before,
+*:after {
+  box-sizing: border-box;
+}
 
-html, body {
+body,
+html {
+  scroll-behavior: smooth;
   margin: 0;
-  overflow: hidden
+  overflow: hidden;
+  position: fixed;
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  max-height: 100vh;
 }
 
 html > * {

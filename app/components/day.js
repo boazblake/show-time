@@ -1,13 +1,28 @@
 import { Editor, InvitesList } from "Components"
-import { getHoursInDay } from "Utils"
+import { log, getHoursInDay, firstInviteHour } from "Utils"
+
+const scrollToCurrentTimeOrInvite = (mdl, invites) => {
+  let first = firstInviteHour(invites)
+  let hour = mdl.State.toAnchor()
+    ? mdl.State.toAnchor()
+    : first
+    ? first
+    : M().format("HH")
+  let el = document.getElementById(`${hour}:00`)
+  el.scrollIntoView({
+    top: 0,
+    left: 0,
+    behavior: "smooth",
+  })
+}
 
 export const Hour = () => {
   return {
-    view: ({ attrs: { mdl, time, events } }) => {
+    view: ({ attrs: { mdl, hour, events } }) => {
       return m(
         ".frow ",
         m(".hour ", [
-          m("p.hour-time", { id: time }, time),
+          m("p.hour-time", { id: hour }, hour),
           [
             m(InvitesList, { mdl, events }),
             m(".half-hour", m(".top")),
@@ -21,19 +36,11 @@ export const Hour = () => {
 
 export const Day = ({ attrs: { mdl } }) => {
   return {
-    oncreate: () => {
-      let time = M().format("HH")
-
-      if (mdl.State.toAnchor()) {
-        time = mdl.State.toAnchor().split(":")[0]
-        console.log(time)
-      }
-
-      let el = document.getElementById(`${time}:00`)
-      el.scrollIntoView()
-    },
-    onupdate: ({ attrs: { mdl } }) => mdl.State.toAnchor(),
-    view: ({ attrs: { mdl, invites } }) => {
+    oncreate: ({ attrs: { mdl, invites } }) =>
+      scrollToCurrentTimeOrInvite(mdl, invites),
+    onupdate: ({ attrs: { mdl, invites } }) =>
+      mdl.State.toAnchor() && scrollToCurrentTimeOrInvite(mdl, invites),
+    view: ({ attrs: { mdl, day } }) => {
       return m(".day", [
         m(
           `.${mdl.State.modal() ? "bg-warn" : "bg-info"}`,
@@ -51,9 +58,9 @@ export const Day = ({ attrs: { mdl } }) => {
             (hour, idx) => {
               return m(Hour, {
                 mdl,
-                hour: invites[hour],
-                time: hour,
-                events: invites[hour],
+                invites: day[hour],
+                hour,
+                events: day[hour],
               })
             }
           ),

@@ -1,6 +1,5 @@
 import { createCalendar, calendarDayStyle } from "./calendar-model"
-import { daysOfTheWeek, log } from "Utils"
-import { compose, head, prop, propEq, pluck } from "ramda"
+import { daysOfTheWeek, firstInviteHour } from "Utils"
 
 const Toolbar = () => {
   return {
@@ -129,6 +128,10 @@ const CalendarDay = () => {
           {
             href: `/${mdl.User.name}/${day.format("YYYY-MM-DD")}`,
             class: "cal-day-link",
+            onclick: (e) =>
+              mdl.State.toAnchor(
+                firstInviteHour(invites) || M.utc().format("HH")
+              ),
           },
           m(`.${calendarDayStyle(mdl.selectedDate(), day, dir)}`, [
             m("span.cal-date", day.format("D")),

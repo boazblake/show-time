@@ -11,15 +11,7 @@ const AuthenticatedRoutes = [
     group: ["authenticated"],
     children: [],
     options: [],
-    onmatch: (mdl, args, path, fullroute, isAnchor) => {
-      isAnchor
-        ? scrollToAnchor(mdl.State.anchor)
-        : window.scroll({
-            top: 0,
-            left: 0,
-            behavior: "smooth",
-          })
-    },
+    onmatch: (mdl, args, path, fullroute, isAnchor) => {},
     component: (mdl) => m(Home, { mdl }),
   },
   {
@@ -32,13 +24,6 @@ const AuthenticatedRoutes = [
     children: [],
     options: [],
     onmatch: (mdl, args, path, fullroute, isAnchor) => {
-      isAnchor
-        ? scrollToAnchor(mdl.State.anchor)
-        : window.scroll({
-            top: 0,
-            left: 0,
-            behavior: "smooth",
-          })
       let date = M.utc(args.date).clone()
       mdl.selectedDate(date)
     },
@@ -54,13 +39,12 @@ const AuthenticatedRoutes = [
     children: [],
     options: [],
     onmatch: (mdl, args, path, fullroute, isAnchor) => {
-      isAnchor
-        ? scrollToAnchor(mdl.state.anchor)
-        : window.scroll({
-            top: 0,
-            left: 0,
-            behavior: "smooth",
-          })
+      // if (
+      //   m.route.param().username == mdl.User.name &&
+      //   !mdl.Events.currentEventId()
+      // ) {
+      //   mdl.Events.currentEventId(localStorage.getItem("eventId"))
+      // }
     },
     component: (mdl) => m(Event, { mdl, key: new Date() }),
   },
@@ -74,12 +58,6 @@ const AuthenticatedRoutes = [
     children: [],
     options: [],
     onmatch: (mdl, args, path, fullroute, isAnchor) => {
-      window.scroll({
-        top: 0,
-        left: 0,
-        behavior: "smooth",
-      })
-
       localStorage.clear()
       sessionStorage.clear()
       mdl.state.isAuth(false)

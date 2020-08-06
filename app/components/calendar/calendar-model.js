@@ -87,6 +87,15 @@ export const calendarDayStyle = (selectedDate, current, dir) => {
   if (
     today.isSame(current, "day") &&
     today.isSame(current, "month") &&
+    today.isSame(current, "year") &&
+    selectedDate.isSame(current, "date")
+  ) {
+    return "selectedDay isToday"
+  }
+
+  if (
+    today.isSame(current, "day") &&
+    today.isSame(current, "month") &&
     today.isSame(current, "year")
   ) {
     return "cal-day isToday"

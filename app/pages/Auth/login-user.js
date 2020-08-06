@@ -60,7 +60,6 @@ const resetState = () => {
 }
 
 export const Login = () => {
-  console.log("login")
   return {
     onremove: () => resetState(),
     view: ({ attrs: { mdl } }) =>

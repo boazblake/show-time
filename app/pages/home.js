@@ -1,17 +1,19 @@
 import { Calendar, Day } from "Components"
 import { HTTP, getInvitesTask } from "Http"
 import { dayModel } from "Models"
-import { datesAreSame } from "Utils"
+import { datesAreSame, log } from "Utils"
+import { compose } from "ramda"
 
 const toDayViewModel = (dayViewModel, invite) => {
   dayViewModel[`${invite.start.format("HH")}:00`].push(invite)
   return dayViewModel
 }
 
+const createDayVM = (mdl) => (invites) =>
+  invites.reduce(toDayViewModel, dayModel(mdl, mdl.selectedDate()))
+
 const getSelectedDayInvites = (mdl) => (invites) =>
-  invites
-    .filter((i) => datesAreSame(i.start)(mdl.selectedDate())("YYYY-MM-DD"))
-    .reduce(toDayViewModel, dayModel(mdl, mdl.selectedDate()))
+  invites.filter((i) => datesAreSame(i.start)(mdl.selectedDate())("YYYY-MM-DD"))
 
 export const Home = ({ attrs: { mdl } }) => {
   const state = {
@@ -54,6 +56,7 @@ export const Home = ({ attrs: { mdl } }) => {
           }),
           m(Day, {
             mdl,
+            day: createDayVM(mdl)(getSelectedDayInvites(mdl)(state.invites)),
             invites: getSelectedDayInvites(mdl)(state.invites),
           }),
         ]

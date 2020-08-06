@@ -1,5 +1,4 @@
 import { Home, Login, Register } from "Pages"
-import { scrollToAnchor } from "Utils/index.js"
 
 const Routes = [
   {
@@ -11,15 +10,7 @@ const Routes = [
     group: ["toolbar"],
     children: [],
     options: [],
-    onmatch: (mdl, args, path, fullroute, isAnchor) => {
-      isAnchor
-        ? scrollToAnchor(mdl.State.anchor)
-        : window.scroll({
-            top: 0,
-            left: 0,
-            behavior: "smooth",
-          })
-    },
+    onmatch: (mdl, args, path, fullroute) => {},
     component: (mdl) => m(Home, { mdl }),
   },
   {
@@ -31,15 +22,7 @@ const Routes = [
     group: [],
     children: [],
     options: [],
-    onmatch: (mdl, args, path, fullroute, isAnchor) => {
-      isAnchor
-        ? scrollToAnchor(mdl.State.anchor)
-        : window.scroll({
-            top: 0,
-            left: 0,
-            behavior: "smooth",
-          })
-    },
+    onmatch: (mdl, args, path, fullroute) => {},
     component: (mdl) => m(Login, { mdl }),
   },
   {
@@ -51,15 +34,7 @@ const Routes = [
     group: [],
     children: [],
     options: [],
-    onmatch: (mdl, args, path, fullroute, isAnchor) => {
-      isAnchor
-        ? scrollToAnchor(mdl.State.anchor)
-        : window.scroll({
-            top: 0,
-            left: 0,
-            behavior: "smooth",
-          })
-    },
+    onmatch: (mdl, args, path, fullroute) => {},
     component: (mdl) => m(Register, { mdl }),
   },
 ]

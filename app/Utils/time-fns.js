@@ -1,5 +1,5 @@
 import { range } from "./index"
-// import moment from "moment"
+import { compose, map, head, sort, pluck } from "ramda"
 
 export const padding = (d) => (d.toString().length == 1 ? pad0Left(d) : d)
 export const pad00Min = (num) => `${num}:00`
@@ -79,3 +79,10 @@ export const toHourViewModel = (date) => (mdl, hour) => {
 
 export const shortDateString = ({ year, month, day }) =>
   `${year}-${padding(month)}-${padding(day)}`
+
+export const firstInviteHour = compose(
+  head,
+  sort((a, b) => a - b),
+  map((mStart) => mStart && parseInt(mStart.format("HH"))),
+  pluck("start")
+)
