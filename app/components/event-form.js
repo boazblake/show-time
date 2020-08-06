@@ -1,14 +1,20 @@
-import { log } from "Utils"
 import { HTTP } from "Http"
-import { compose, map, prop, pick } from "ramda"
+import { paths, map, prop } from "ramda"
 
 const toOpenCageFormat = (q) => q.replace(/\s/g, "+").replace(/,/g, "%2C")
+const toLocationViewModel = ([map, address, ll]) => ({
+  map,
+  address,
+  latlong: JSON.stringify(ll),
+})
 const locateQueryTask = (http) => (mdl) => (query) =>
   http.openCage
     .getLocationTask(mdl)(query)
     .map(prop("results"))
-    .map(map(pick(["formatted", "geometry"])))
-    .map(log("wtf"))
+    .map(
+      map(paths([["annotations", "OSM", "url"], ["formatted"], ["geometry"]]))
+    )
+    .map(map(toLocationViewModel))
 
 export const EventForm = ({ attrs: { data, mdl } }) => {
   let state = {
@@ -123,19 +129,20 @@ export const EventForm = ({ attrs: { data, mdl } }) => {
             state.queryResults.any() &&
             m(
               "ul.event-form-query-container",
-              state.queryResults.map(({ formatted, geometry }) =>
+              state.queryResults.map(({ map, address, latlong }) =>
                 m(
                   "li",
                   m(
                     "code.form-event-query-result",
                     {
                       onclick: (e) => {
-                        data.location = formatted
-                        data.latlong = JSON.stringify(geometry)
+                        data.location = address
+                        data.latlong = latlong
+                        data.map = map
                         resetState()
                       },
                     },
-                    formatted
+                    address
                   )
                 )
               )

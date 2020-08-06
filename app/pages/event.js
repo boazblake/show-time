@@ -1,11 +1,14 @@
 import { jsonCopy, inviteOptions } from "Utils"
-
+import mapboxgl from "mapbox-gl/dist/mapbox-gl.js"
 import {
   HTTP,
   loadEventAndInviteTask,
   deleteEventTask,
   updateInviteTask,
 } from "Http"
+
+mapboxgl.accessToken =
+  "pk.eyJ1IjoiYm9hemJsYWtlIiwiYSI6ImNqdWJ4OGk4YzBpYXU0ZG5wNDI1OGM0eTIifQ.5UV0HkEGPiKUzFdbgdr5ww"
 
 export const Event = ({ attrs: { mdl } }) => {
   const state = {
@@ -29,6 +32,7 @@ export const Event = ({ attrs: { mdl } }) => {
       data.event = event
       data.invite = invite
       state.error = {}
+      console.log("udpated", data)
       state.status = "success"
     }
 
@@ -64,12 +68,29 @@ export const Event = ({ attrs: { mdl } }) => {
     }
 
     const onSuccess = () => {
-      console.log("udpated", data)
       state.error = {}
       state.status = "success"
     }
 
     updateInviteTask(HTTP)(mdl)(data).fork(onError, onSuccess)
+  }
+
+  const setupMap = ({ dom }) => {
+    let coords = JSON.parse(data.event.latlong)
+    console.log("latlong", JSON.parse(data.event.latlong))
+
+    const createMarker = () =>
+      new mapboxgl.Marker().setLngLat(coords).addTo(map)
+
+    let map = new mapboxgl.Map({
+      container: dom,
+      center: coords,
+      zoom: 15,
+      hash: true,
+      style: "mapbox://styles/mapbox/streets-v11",
+    })
+
+    createMarker()
   }
 
   return {
@@ -124,6 +145,11 @@ export const Event = ({ attrs: { mdl } }) => {
               ),
               "Status: "
             ),
+
+            m(".map", {
+              style: { width: "500px", height: "500px" },
+              oncreate: setupMap,
+            }),
 
             m("button", { onclick: (e) => deleteEvent(mdl) }, "delete"),
           ]),

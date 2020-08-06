@@ -514,7 +514,7 @@ var scrollToCurrentTimeOrInvite = function scrollToCurrentTimeOrInvite(mdl, invi
   var first = (0, _Utils.firstInviteHour)(invites);
   var hour = mdl.State.toAnchor() ? mdl.State.toAnchor() : first ? first : M().format("HH");
   var el = document.getElementById("".concat(hour, ":00"));
-  el.scrollIntoView({
+  el && el.scrollIntoView({
     top: 0,
     left: 0,
     behavior: "smooth"
@@ -600,6 +600,7 @@ var Editor = function Editor(_ref) {
     inPerson: true,
     location: "",
     latlong: "",
+    map: "",
     startTime: "",
     endTime: "",
     title: "",
@@ -661,28 +662,51 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.EventForm = void 0;
 
-var _Utils = require("Utils");
-
 var _Http = require("Http");
 
 var _ramda = require("ramda");
+
+function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _unsupportedIterableToArray(arr, i) || _nonIterableRest(); }
+
+function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
+
+function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
+
+function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
+
+function _iterableToArrayLimit(arr, i) { if (typeof Symbol === "undefined" || !(Symbol.iterator in Object(arr))) return; var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"] != null) _i["return"](); } finally { if (_d) throw _e; } } return _arr; }
+
+function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
 
 var toOpenCageFormat = function toOpenCageFormat(q) {
   return q.replace(/\s/g, "+").replace(/,/g, "%2C");
 };
 
+var toLocationViewModel = function toLocationViewModel(_ref) {
+  var _ref2 = _slicedToArray(_ref, 3),
+      map = _ref2[0],
+      address = _ref2[1],
+      ll = _ref2[2];
+
+  return {
+    map: map,
+    address: address,
+    latlong: JSON.stringify(ll)
+  };
+};
+
 var locateQueryTask = function locateQueryTask(http) {
   return function (mdl) {
     return function (query) {
-      return http.openCage.getLocationTask(mdl)(query).map((0, _ramda.prop)("results")).map((0, _ramda.map)((0, _ramda.pick)(["formatted", "geometry"]))).map((0, _Utils.log)("wtf"));
+      return http.openCage.getLocationTask(mdl)(query).map((0, _ramda.prop)("results")).map((0, _ramda.map)((0, _ramda.paths)([["annotations", "OSM", "url"], ["formatted"], ["geometry"]]))).map((0, _ramda.map)(toLocationViewModel));
     };
   };
 };
 
-var EventForm = function EventForm(_ref) {
-  var _ref$attrs = _ref.attrs,
-      data = _ref$attrs.data,
-      mdl = _ref$attrs.mdl;
+var EventForm = function EventForm(_ref3) {
+  var _ref3$attrs = _ref3.attrs,
+      data = _ref3$attrs.data,
+      mdl = _ref3$attrs.mdl;
   var state = {
     status: "loading",
     isSubmitted: false,
@@ -766,16 +790,18 @@ var EventForm = function EventForm(_ref) {
         oninput: function oninput(e) {
           return data.url = e.target.value;
         }
-      }), "Url link - Location"), state.status == "success" && state.queryResults.any() && m("ul.event-form-query-container", state.queryResults.map(function (_ref2) {
-        var formatted = _ref2.formatted,
-            geometry = _ref2.geometry;
+      }), "Url link - Location"), state.status == "success" && state.queryResults.any() && m("ul.event-form-query-container", state.queryResults.map(function (_ref4) {
+        var map = _ref4.map,
+            address = _ref4.address,
+            latlong = _ref4.latlong;
         return m("li", m("code.form-event-query-result", {
           onclick: function onclick(e) {
-            data.location = formatted;
-            data.latlong = JSON.stringify(geometry);
+            data.location = address;
+            data.latlong = latlong;
+            data.map = map;
             resetState();
           }
-        }, formatted));
+        }, address));
       }))]), m("label", m("input", {
         type: "text",
         value: data.text,
@@ -1092,7 +1118,8 @@ var toEventviewModel = function toEventviewModel(_ref) {
       allDay = _ref.allDay,
       location = _ref.location,
       inPerson = _ref.inPerson,
-      latlong = _ref.latlong;
+      latlong = _ref.latlong,
+      map = _ref.map;
   return {
     date: M.utc(start).format("DD-MM-YYYY"),
     title: title.toUpperCase(),
@@ -1104,7 +1131,8 @@ var toEventviewModel = function toEventviewModel(_ref) {
     allDay: allDay,
     location: location,
     inPerson: inPerson,
-    latlong: latlong
+    latlong: latlong,
+    map: map
   };
 };
 
@@ -1153,7 +1181,8 @@ var submitEventTask = function submitEventTask(http) {
           notes = _ref2.notes,
           inPerson = _ref2.inPerson,
           location = _ref2.location,
-          latlong = _ref2.latlong;
+          latlong = _ref2.latlong,
+          map = _ref2.map;
 
       var getHour = function getHour(time) {
         return time.split(":")[0];
@@ -1174,6 +1203,7 @@ var submitEventTask = function submitEventTask(http) {
         inPerson: inPerson,
         location: location,
         latlong: latlong,
+        map: map,
         createdBy: mdl.User.objectId
       }).chain(function (_ref3) {
         var objectId = _ref3.objectId,
@@ -1192,7 +1222,8 @@ var submitEventTask = function submitEventTask(http) {
           allDay: allDay,
           inPerson: inPerson,
           location: location,
-          latlong: latlong
+          latlong: latlong,
+          map: map
         }).chain(function (_ref4) {
           var objectId = _ref4.objectId;
           var inviteId = objectId;
@@ -1952,7 +1983,13 @@ exports.Event = void 0;
 
 var _Utils = require("Utils");
 
+var _mapboxGl = _interopRequireDefault(require("mapbox-gl/dist/mapbox-gl.js"));
+
 var _Http = require("Http");
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+_mapboxGl.default.accessToken = "pk.eyJ1IjoiYm9hemJsYWtlIiwiYSI6ImNqdWJ4OGk4YzBpYXU0ZG5wNDI1OGM0eTIifQ.5UV0HkEGPiKUzFdbgdr5ww";
 
 var Event = function Event(_ref) {
   var mdl = _ref.attrs.mdl;
@@ -1980,6 +2017,7 @@ var Event = function Event(_ref) {
       data.event = event;
       data.invite = invite;
       state.error = {};
+      console.log("udpated", data);
       state.status = "success";
     };
 
@@ -2011,13 +2049,31 @@ var Event = function Event(_ref) {
       };
 
       var onSuccess = function onSuccess() {
-        console.log("udpated", data);
         state.error = {};
         state.status = "success";
       };
 
       (0, _Http.updateInviteTask)(_Http.HTTP)(mdl)(data).fork(onError, onSuccess);
     };
+  };
+
+  var setupMap = function setupMap(_ref4) {
+    var dom = _ref4.dom;
+    var coords = JSON.parse(data.event.latlong);
+    console.log("latlong", JSON.parse(data.event.latlong));
+
+    var createMarker = function createMarker() {
+      return new _mapboxGl.default.Marker().setLngLat(coords).addTo(map);
+    };
+
+    var map = new _mapboxGl.default.Map({
+      container: dom,
+      center: coords,
+      zoom: 15,
+      hash: true,
+      style: "mapbox://styles/mapbox/streets-v11"
+    });
+    createMarker();
   };
 
   return {
@@ -2040,7 +2096,13 @@ var Event = function Event(_ref) {
           key: idx,
           id: idx
         }, opt.toUpperCase());
-      })), "Status: "), m("button", {
+      })), "Status: "), m(".map", {
+        style: {
+          width: "500px",
+          height: "500px"
+        },
+        oncreate: setupMap
+      }), m("button", {
         onclick: function onclick(e) {
           return deleteEvent(mdl);
         }

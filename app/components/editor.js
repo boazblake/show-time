@@ -8,6 +8,7 @@ export const Editor = ({ attrs: { mdl } }) => {
     inPerson: true,
     location: "",
     latlong: "",
+    map: "",
     startTime: "",
     endTime: "",
     title: "",

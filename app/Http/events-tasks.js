@@ -11,6 +11,7 @@ const toEventviewModel = ({
   location,
   inPerson,
   latlong,
+  map,
 }) => {
   return {
     date: M.utc(start).format("DD-MM-YYYY"),
@@ -24,6 +25,7 @@ const toEventviewModel = ({
     location,
     inPerson,
     latlong,
+    map,
   }
 }
 
@@ -62,6 +64,7 @@ export const submitEventTask = (http) => (mdl) => ({
   inPerson,
   location,
   latlong,
+  map,
 }) => {
   let getHour = (time) => time.split(":")[0]
   let getMin = (time) => time.split(":")[1]
@@ -82,6 +85,7 @@ export const submitEventTask = (http) => (mdl) => ({
       inPerson,
       location,
       latlong,
+      map,
       createdBy: mdl.User.objectId,
     })
     .chain(({ objectId, ownerId, end, start, title }) => {
@@ -98,6 +102,7 @@ export const submitEventTask = (http) => (mdl) => ({
           inPerson,
           location,
           latlong,
+          map,
         })
         .chain(({ objectId }) => {
           let inviteId = objectId

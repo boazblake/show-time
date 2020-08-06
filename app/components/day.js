@@ -9,11 +9,12 @@ const scrollToCurrentTimeOrInvite = (mdl, invites) => {
     ? first
     : M().format("HH")
   let el = document.getElementById(`${hour}:00`)
-  el.scrollIntoView({
-    top: 0,
-    left: 0,
-    behavior: "smooth",
-  })
+  el &&
+    el.scrollIntoView({
+      top: 0,
+      left: 0,
+      behavior: "smooth",
+    })
 }
 
 export const Hour = () => {
