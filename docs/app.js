@@ -559,13 +559,7 @@ var Day = function Day(_ref2) {
       var _ref5$attrs = _ref5.attrs,
           mdl = _ref5$attrs.mdl,
           day = _ref5$attrs.day;
-      return m(".day", [m(".".concat(mdl.State.modal() ? "bg-warn" : "bg-info"), m("button.frow.width-100", {
-        onclick: function onclick(e) {
-          return mdl.State.modal(!mdl.State.modal());
-        }
-      }, mdl.State.modal() ? "Cancel" : "Add Event")), m(".day-container", [mdl.State.modal() && m(_Components.Editor, {
-        mdl: mdl
-      }), (0, _Utils.getHoursInDay)(mdl.State.timeFormats[mdl.State.format()]).map(function (hour, idx) {
+      return m(".day", [m(".day-container", [(0, _Utils.getHoursInDay)(mdl.State.timeFormats[mdl.State.format()]).map(function (hour, idx) {
         return m(Hour, {
           mdl: mdl,
           invites: day[hour],
@@ -2248,8 +2242,6 @@ var _Models = require("Models");
 
 var _Utils = require("Utils");
 
-var _ramda = require("ramda");
-
 var toDayViewModel = function toDayViewModel(dayViewModel, invite) {
   dayViewModel["".concat(invite.start.format("HH"), ":00")].push(invite);
   return dayViewModel;
@@ -2312,6 +2304,12 @@ var Home = function Home(_ref) {
         mdl: mdl,
         date: mdl.selectedDate(),
         invites: state.invites
+      }), m(".".concat(mdl.State.modal() ? "bg-warn" : "bg-info"), m("button.full-width", {
+        onclick: function onclick(e) {
+          return mdl.State.modal(!mdl.State.modal());
+        }
+      }, mdl.State.modal() ? "Cancel" : "Add Event")), mdl.State.modal() && m(_Components.Editor, {
+        mdl: mdl
       }), m(_Components.Day, {
         mdl: mdl,
         day: createDayVM(mdl)(getSelectedDayInvites(mdl)(state.invites)),

@@ -123,23 +123,32 @@ input[type="time"] {
   left: 0;
 }
 
+.full-width {
+  width: 100vw;
+}
+
 
 .modal-container {
-  position: absolute;
-  left:0;
+  // position: absolute;
+  overflow: auto;
+  // left:0;
   z-index: 1000;
   width: 100vw;
   height: 100vw;
   background-color: var(--white);
   .modal {
     .modal-header{}
-    .modal-body {}
+    .modal-body {
+      width: 80%;
+      height:80%;
+    }
     .modal-footer {}
   }
 }
 
 
-.event-form{min-width:345px;}
+.event-form {
+}
 
 .bg-warn > * {
   background-color: var(--warning) !important;

@@ -1,8 +1,7 @@
-import { Calendar, Day } from "Components"
+import { Calendar, Day, Editor } from "Components"
 import { HTTP, getInvitesTask } from "Http"
 import { dayModel } from "Models"
 import { datesAreSame, log } from "Utils"
-import { compose } from "ramda"
 
 const toDayViewModel = (dayViewModel, invite) => {
   dayViewModel[`${invite.start.format("HH")}:00`].push(invite)
@@ -54,6 +53,19 @@ export const Home = ({ attrs: { mdl } }) => {
             date: mdl.selectedDate(),
             invites: state.invites,
           }),
+
+          m(
+            `.${mdl.State.modal() ? "bg-warn" : "bg-info"}`,
+            m(
+              "button.full-width",
+              {
+                onclick: (e) => mdl.State.modal(!mdl.State.modal()),
+              },
+              mdl.State.modal() ? "Cancel" : "Add Event"
+            )
+          ),
+          mdl.State.modal() && m(Editor, { mdl }),
+
           m(Day, {
             mdl,
             day: createDayVM(mdl)(getSelectedDayInvites(mdl)(state.invites)),

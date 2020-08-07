@@ -1,4 +1,4 @@
-import { Editor, InvitesList } from "Components"
+import { InvitesList } from "Components"
 import { log, getHoursInDay, firstInviteHour } from "Utils"
 
 const scrollToCurrentTimeOrInvite = (mdl, invites) => {
@@ -39,18 +39,7 @@ export const Day = ({ attrs: { mdl } }) => {
       mdl.State.toAnchor() && scrollToCurrentTimeOrInvite(mdl, invites),
     view: ({ attrs: { mdl, day } }) => {
       return m(".day", [
-        m(
-          `.${mdl.State.modal() ? "bg-warn" : "bg-info"}`,
-          m(
-            "button.frow.width-100",
-            {
-              onclick: (e) => mdl.State.modal(!mdl.State.modal()),
-            },
-            mdl.State.modal() ? "Cancel" : "Add Event"
-          )
-        ),
         m(".day-container", [
-          mdl.State.modal() && m(Editor, { mdl }),
           getHoursInDay(mdl.State.timeFormats[mdl.State.format()]).map(
             (hour, idx) => {
               return m(Hour, {
