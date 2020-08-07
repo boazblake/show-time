@@ -12,21 +12,15 @@ const latLongLense = lensProp("latlong")
 const titleLense = lensProp("title")
 
 const FIELD_REQUIRED_MSG = (field) => `${field} is required`
-const INVALID_END_DATE_MSG = "Start time must be before end time"
+const INVALID_END_DATE_MSG = "End time must be after Start time"
 
-const isChronological = (startTime) => (endTime) => {
-  console.log(
-    "chrono?",
-    M()
-      .hours(getHour(startTime))
-      .minutes(getMin(startTime))
-      .isBefore(M().hours(getHour(endTime)).minutes(getMin(endTime)))
-  )
-  return M()
+const isChronological = (startTime) => (endTime) =>
+  startTime &&
+  endTime &&
+  M()
     .hours(getHour(startTime))
     .minutes(getMin(startTime))
     .isBefore(M().hours(getHour(endTime)).minutes(getMin(endTime)))
-}
 
 const validateDate = (data) =>
   Success(data).apLeft(

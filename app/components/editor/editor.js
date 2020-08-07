@@ -26,7 +26,7 @@ export const Editor = ({ attrs: { mdl } }) => {
   }
 
   const resetState = (state) => {
-    state = {
+    EventFormState = {
       status: "loading",
       errors: null,
       isSubmitted: false,
@@ -34,6 +34,7 @@ export const Editor = ({ attrs: { mdl } }) => {
       queryResults: [],
       querySelected: "",
     }
+    console.log(EventFormState)
   }
 
   const validate = (state, data) => {

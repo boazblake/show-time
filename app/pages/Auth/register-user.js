@@ -45,7 +45,6 @@ export const validateForm = (mdl) => (data) => {
   }
 
   const onSuccess = (mdl) => (data) => {
-    console.log(mdl, data)
     state.errors = {}
     sessionStorage.setItem("shindigit-user-token", mdl.User["user-token"])
     sessionStorage.setItem("shindigit-user", JSON.stringify(mdl.User))
