@@ -126,12 +126,14 @@ input[type="time"] {
 .full-width {
   width: 100vw;
 }
-
+.modal {
+  width: 100vw;
+}
 
 .modal-container {
   overflow: auto;
   background-color: var(--white);
-  max-height: 50vh;
+  height: 300px;
   .modal-container {
     .modal-header{}
     .modal-body {

@@ -2,9 +2,9 @@ export const Modal = () => {
   return {
     view: ({ children }) => {
       return m(
-        ".day",
+        ".modal",
         m(
-          ".day-container",
+          ".modal-container",
           children.map((child) =>
             m(".modal.full-width", [
               m(".modal-header", child.header),
