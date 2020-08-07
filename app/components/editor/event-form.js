@@ -1,54 +1,24 @@
-import { HTTP } from "Http"
-import { paths, map, prop } from "ramda"
-import { validateTask } from "./validations"
+import { HTTP, locateQueryTask } from "Http"
 
-const toOpenCageFormat = (q) => q.replace(/\s/g, "+").replace(/,/g, "%2C")
-
-const toLocationViewModel = ([address, ll]) => ({
-  address,
-  latlong: JSON.stringify(ll),
-})
-
-const locateQueryTask = (http) => (mdl) => (query) =>
-  http.openCage
-    .getLocationTask(mdl)(query)
-    .map(prop("results"))
-    .map(map(paths([["formatted"], ["geometry"]])))
-    .map(map(toLocationViewModel))
-
-export const EventForm = ({ attrs: { data, state, resetState, mdl } }) => {
-  const locateQuery = (mdl) => (query) => {
-    const onError = (err) => {
-      console.log("err q", err)
-      state.status = "failure"
-    }
-
-    const onSuccess = (data) => {
-      state.queryResults = data
-      state.status = "success"
-      console.log("succ d", state)
-    }
-
-    locateQueryTask(HTTP)(mdl)(toOpenCageFormat(query)).fork(onError, onSuccess)
+const locateQuery = (mdl) => (state) => (query) => {
+  const onError = (err) => {
+    console.log("err q", err)
+    state.status = "failure"
   }
 
-  const validate = () => {
-    const onError = (errors) => {
-      state.errors = errors
-      state.isValid = false
-    }
-
-    const onSuccess = () => {
-      state.errors = null
-      state.isValid = true
-    }
-
-    validateTask(data).fork(onError, onSuccess)
+  const onSuccess = (data) => {
+    state.queryResults = data
+    state.status = "success"
+    console.log("succ d", state)
   }
 
+  locateQueryTask(HTTP)(mdl)(query).fork(onError, onSuccess)
+}
+
+export const EventForm = () => {
   return {
-    view: () =>
-      m("form.event-form", [
+    view: ({ attrs: { data, state, resetState, mdl, validate } }) => {
+      return m("form.event-form", [
         m("label", [
           m("input", {
             onchange: (e) => m.route.set(`/${mdl.User.name}/${e.target.value}`),
@@ -74,10 +44,11 @@ export const EventForm = ({ attrs: { data, state, resetState, mdl } }) => {
                 value: data.startTime,
                 type: "time",
                 disabled: data.allDay,
-                blur: (e) => validate(),
+                onblur: (e) => state.isSubmitted && validate(state)(data),
               }),
               "Start Time",
               m("span.required-field", "*"),
+              state.error && m("code.required-field", state.error.startTime),
             ]),
             m("label.col-xs-1-3", [
               m("input", {
@@ -85,10 +56,11 @@ export const EventForm = ({ attrs: { data, state, resetState, mdl } }) => {
                 value: data.endTime,
                 type: "time",
                 disabled: data.allDay,
-                blur: (e) => validate(),
+                onblur: (e) => state.isSubmitted && validate(state)(data),
               }),
               "End Time",
               m("span.required-field", "*"),
+              state.error && m("code.required-field", state.error.endTime),
             ]),
           ],
         ]),
@@ -97,6 +69,7 @@ export const EventForm = ({ attrs: { data, state, resetState, mdl } }) => {
           m(
             "label.col-xs-1-5",
             m("span.required-field", "*"),
+            state.error && m("code.required-field", state.error.location),
             "In Person",
             m("input", {
               type: "checkbox",
@@ -111,8 +84,8 @@ export const EventForm = ({ attrs: { data, state, resetState, mdl } }) => {
                   type: "address",
                   value: data.location,
                   oninput: (e) => (data.location = e.target.value),
-                  onchange: (e) => locateQuery(mdl)(e.target.value),
-                  blur: (e) => validate(),
+                  onchange: (e) => locateQuery(mdl)(state)(e.target.value),
+                  onblur: (e) => state.isSubmitted && validate(state)(data),
                 }),
                 "Address - Location"
               )
@@ -122,13 +95,12 @@ export const EventForm = ({ attrs: { data, state, resetState, mdl } }) => {
                   type: "url",
                   value: data.url,
                   oninput: (e) => (data.url = e.target.value),
-                  blur: (e) => validate(),
+                  onblur: (e) => state.isSubmitted && validate(state)(data),
                 }),
                 "Url link - Location"
               ),
 
-          state.status == "success" &&
-            state.queryResults.any() &&
+          state.queryResults.any() &&
             m(
               "ul.event-form-query-container",
               state.queryResults.map(({ address, latlong }) =>
@@ -140,7 +112,7 @@ export const EventForm = ({ attrs: { data, state, resetState, mdl } }) => {
                       onclick: (e) => {
                         data.location = address
                         data.latlong = latlong
-                        resetState(state)
+                        resetState()
                       },
                     },
                     address
@@ -156,10 +128,11 @@ export const EventForm = ({ attrs: { data, state, resetState, mdl } }) => {
             type: "text",
             value: data.text,
             oninput: (e) => (data.title = e.target.value),
-            blur: (e) => validate(),
+            onblur: (e) => state.isSubmitted && validate(state)(data),
           }),
           "Title",
-          m("span.required-field", "*")
+          m("span.required-field", "*"),
+          state.error && m("code.required-field", state.error.title)
         ),
         m(
           "label",
@@ -167,10 +140,11 @@ export const EventForm = ({ attrs: { data, state, resetState, mdl } }) => {
             type: "text",
             value: data.notes,
             oninput: (e) => (data.notes = e.target.value),
-            blur: (e) => validate(),
+            onblur: (e) => state.isSubmitted && validate(state)(data),
           }),
           "Notes"
         ),
-      ]),
+      ])
+    },
   }
 }

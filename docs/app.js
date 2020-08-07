@@ -594,6 +594,8 @@ var _Components = require("Components");
 
 var _Http = require("Http");
 
+var _validations = require("./validations");
+
 var Editor = function Editor(_ref) {
   var mdl = _ref.attrs.mdl;
   var EventFormData = {
@@ -616,14 +618,30 @@ var Editor = function Editor(_ref) {
     querySelected: ""
   };
 
-  var resetState = function resetState(state) {
-    state = {
+  var resetState = function resetState() {
+    EventFormState = {
       status: "loading",
       errors: null,
       isSubmitted: false,
       isValid: false,
       queryResults: [],
       querySelected: ""
+    };
+  };
+
+  var validate = function validate(state) {
+    return function (data) {
+      var onError = function onError(errors) {
+        state.errors = errors;
+        state.isValid = false;
+      };
+
+      var onSuccess = function onSuccess() {
+        state.errors = null;
+        state.isValid = true;
+      };
+
+      (0, _validations.validateTask)(data).fork(onError, onSuccess);
     };
   };
 
@@ -645,8 +663,8 @@ var Editor = function Editor(_ref) {
       mdl.State.modal(false);
     };
 
-    console.log(state, data);
-    (0, _Http.submitEventTask)(_Http.HTTP)(mdl)(data).fork(onError, onSuccess);
+    state.isSubmitted = true;
+    (0, _validations.validateTask)(data).chain((0, _Http.submitEventTask)(_Http.HTTP)(mdl)).fork(onError, onSuccess);
   };
 
   return {
@@ -660,6 +678,7 @@ var Editor = function Editor(_ref) {
           mdl: mdl,
           data: EventFormData,
           state: EventFormState,
+          validate: validate,
           resetState: resetState
         }),
         footer: m("button", {
@@ -689,53 +708,8 @@ exports.EventForm = void 0;
 
 var _Http = require("Http");
 
-var _ramda = require("ramda");
-
-var _validations = require("./validations");
-
-function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _unsupportedIterableToArray(arr, i) || _nonIterableRest(); }
-
-function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
-
-function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
-
-function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
-
-function _iterableToArrayLimit(arr, i) { if (typeof Symbol === "undefined" || !(Symbol.iterator in Object(arr))) return; var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"] != null) _i["return"](); } finally { if (_d) throw _e; } } return _arr; }
-
-function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
-
-var toOpenCageFormat = function toOpenCageFormat(q) {
-  return q.replace(/\s/g, "+").replace(/,/g, "%2C");
-};
-
-var toLocationViewModel = function toLocationViewModel(_ref) {
-  var _ref2 = _slicedToArray(_ref, 2),
-      address = _ref2[0],
-      ll = _ref2[1];
-
-  return {
-    address: address,
-    latlong: JSON.stringify(ll)
-  };
-};
-
-var locateQueryTask = function locateQueryTask(http) {
-  return function (mdl) {
-    return function (query) {
-      return http.openCage.getLocationTask(mdl)(query).map((0, _ramda.prop)("results")).map((0, _ramda.map)((0, _ramda.paths)([["formatted"], ["geometry"]]))).map((0, _ramda.map)(toLocationViewModel));
-    };
-  };
-};
-
-var EventForm = function EventForm(_ref3) {
-  var _ref3$attrs = _ref3.attrs,
-      data = _ref3$attrs.data,
-      state = _ref3$attrs.state,
-      resetState = _ref3$attrs.resetState,
-      mdl = _ref3$attrs.mdl;
-
-  var locateQuery = function locateQuery(mdl) {
+var locateQuery = function locateQuery(mdl) {
+  return function (state) {
     return function (query) {
       var onError = function onError(err) {
         console.log("err q", err);
@@ -748,26 +722,20 @@ var EventForm = function EventForm(_ref3) {
         console.log("succ d", state);
       };
 
-      locateQueryTask(_Http.HTTP)(mdl)(toOpenCageFormat(query)).fork(onError, onSuccess);
+      (0, _Http.locateQueryTask)(_Http.HTTP)(mdl)(query).fork(onError, onSuccess);
     };
   };
+};
 
-  var validate = function validate() {
-    var onError = function onError(errors) {
-      state.errors = errors;
-      state.isValid = false;
-    };
-
-    var onSuccess = function onSuccess() {
-      state.errors = null;
-      state.isValid = true;
-    };
-
-    (0, _validations.validateTask)(data).fork(onError, onSuccess);
-  };
-
+var EventForm = function EventForm() {
   return {
-    view: function view() {
+    view: function view(_ref) {
+      var _ref$attrs = _ref.attrs,
+          data = _ref$attrs.data,
+          state = _ref$attrs.state,
+          resetState = _ref$attrs.resetState,
+          mdl = _ref$attrs.mdl,
+          validate = _ref$attrs.validate;
       return m("form.event-form", [m("label", [m("input", {
         onchange: function onchange(e) {
           return m.route.set("/".concat(mdl.User.name, "/").concat(e.target.value));
@@ -788,20 +756,20 @@ var EventForm = function EventForm(_ref3) {
         value: data.startTime,
         type: "time",
         disabled: data.allDay,
-        blur: function blur(e) {
-          return validate();
+        onblur: function onblur(e) {
+          return state.isSubmitted && validate(state)(data);
         }
-      }), "Start Time", m("span.required-field", "*")]), m("label.col-xs-1-3", [m("input", {
+      }), "Start Time", m("span.required-field", "*"), state.error && m("code.required-field", state.error.startTime)]), m("label.col-xs-1-3", [m("input", {
         oninput: function oninput(e) {
           return data.endTime = e.target.value;
         },
         value: data.endTime,
         type: "time",
         disabled: data.allDay,
-        blur: function blur(e) {
-          return validate();
+        onblur: function onblur(e) {
+          return state.isSubmitted && validate(state)(data);
         }
-      }), "End Time", m("span.required-field", "*")])]]), m(".frow row row-between", [m("label.col-xs-1-5", m("span.required-field", "*"), "In Person", m("input", {
+      }), "End Time", m("span.required-field", "*"), state.error && m("code.required-field", state.error.endTime)])]]), m(".frow row row-between", [m("label.col-xs-1-5", m("span.required-field", "*"), state.error && m("code.required-field", state.error.location), "In Person", m("input", {
         type: "checkbox",
         checked: data.inPerson,
         onclick: function onclick(e) {
@@ -814,10 +782,10 @@ var EventForm = function EventForm(_ref3) {
           return data.location = e.target.value;
         },
         onchange: function onchange(e) {
-          return locateQuery(mdl)(e.target.value);
+          return locateQuery(mdl)(state)(e.target.value);
         },
-        blur: function blur(e) {
-          return validate();
+        onblur: function onblur(e) {
+          return state.isSubmitted && validate(state)(data);
         }
       }), "Address - Location") : m("label.col-xs-4-5", m("input", {
         type: "url",
@@ -825,17 +793,17 @@ var EventForm = function EventForm(_ref3) {
         oninput: function oninput(e) {
           return data.url = e.target.value;
         },
-        blur: function blur(e) {
-          return validate();
+        onblur: function onblur(e) {
+          return state.isSubmitted && validate(state)(data);
         }
-      }), "Url link - Location"), state.status == "success" && state.queryResults.any() && m("ul.event-form-query-container", state.queryResults.map(function (_ref4) {
-        var address = _ref4.address,
-            latlong = _ref4.latlong;
+      }), "Url link - Location"), state.queryResults.any() && m("ul.event-form-query-container", state.queryResults.map(function (_ref2) {
+        var address = _ref2.address,
+            latlong = _ref2.latlong;
         return m("li", m("code.form-event-query-result", {
           onclick: function onclick(e) {
             data.location = address;
             data.latlong = latlong;
-            resetState(state);
+            resetState();
           }
         }, address));
       }))]), m("label", m("input", {
@@ -844,17 +812,17 @@ var EventForm = function EventForm(_ref3) {
         oninput: function oninput(e) {
           return data.title = e.target.value;
         },
-        blur: function blur(e) {
-          return validate();
+        onblur: function onblur(e) {
+          return state.isSubmitted && validate(state)(data);
         }
-      }), "Title", m("span.required-field", "*")), m("label", m("input", {
+      }), "Title", m("span.required-field", "*"), state.error && m("code.required-field", state.error.title)), m("label", m("input", {
         type: "text",
         value: data.notes,
         oninput: function oninput(e) {
           return data.notes = e.target.value;
         },
-        blur: function blur(e) {
-          return validate();
+        onblur: function onblur(e) {
+          return state.isSubmitted && validate(state)(data);
         }
       }), "Notes")]);
     }
@@ -878,7 +846,7 @@ var _data = require("data.validation");
 
 var _Utils = require("Utils");
 
-var Validate = (0, _data.Success)((0, _ramda.curryN)(2, _ramda.identity));
+var Validate = (0, _data.Success)((0, _ramda.curryN)(5, _ramda.identity));
 var dateLense = (0, _ramda.lensProp)("shortDate");
 var startTimeLense = (0, _ramda.lensProp)("startTime");
 var endTimeLense = (0, _ramda.lensProp)("endTime");
@@ -886,7 +854,7 @@ var locationLense = (0, _ramda.lensProp)("location");
 var latLongLense = (0, _ramda.lensProp)("latlong");
 var titleLense = (0, _ramda.lensProp)("title");
 
-var REQUIRED_FIELD_MSG = function REQUIRED_FIELD_MSG(field) {
+var FIELD_REQUIRED_MSG = function FIELD_REQUIRED_MSG(field) {
   return "".concat(field, " is required");
 };
 
@@ -894,9 +862,8 @@ var INVALID_END_DATE_MSG = "Start time must be before end time";
 
 var isChronological = function isChronological(startTime) {
   return function (endTime) {
-    console.log("start", startTime);
-    console.log("end".endTime);
-    return true;
+    console.log("chrono?", M().hours((0, _Utils.getHour)(startTime)).minutes((0, _Utils.getMin)(startTime)).isBefore(M().hours((0, _Utils.getHour)(endTime)).minutes((0, _Utils.getMin)(endTime))));
+    return M().hours((0, _Utils.getHour)(startTime)).minutes((0, _Utils.getMin)(startTime)).isBefore(M().hours((0, _Utils.getHour)(endTime)).minutes((0, _Utils.getMin)(endTime)));
   };
 };
 
@@ -1213,6 +1180,8 @@ var _invitesTasks = require("./invites-tasks");
 
 var _ramda = require("ramda");
 
+var _Utils = require("Utils");
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 var toEventviewModel = function toEventviewModel(_ref) {
@@ -1285,17 +1254,8 @@ var submitEventTask = function submitEventTask(http) {
           inPerson = _ref2.inPerson,
           location = _ref2.location,
           latlong = _ref2.latlong;
-
-      var getHour = function getHour(time) {
-        return time.split(":")[0];
-      };
-
-      var getMin = function getMin(time) {
-        return time.split(":")[1];
-      };
-
-      var end = M.utc(mdl.selectedDate()).hour(getHour(endTime)).minute(getMin(endTime));
-      var start = M.utc(mdl.selectedDate()).hour(getHour(startTime)).minute(getMin(startTime));
+      var end = M.utc(mdl.selectedDate()).hour((0, _Utils.getHour)(endTime)).minute((0, _Utils.getMin)(endTime));
+      var start = M.utc(mdl.selectedDate()).hour((0, _Utils.getHour)(startTime)).minute((0, _Utils.getMin)(startTime));
       return http.backEnd.postTask(mdl)("data/Events")({
         end: end,
         start: start,
@@ -1549,6 +1509,18 @@ Object.keys(_authTasks).forEach(function (key) {
     }
   });
 });
+
+var _openCage = require("./open-cage.js");
+
+Object.keys(_openCage).forEach(function (key) {
+  if (key === "default" || key === "__esModule") return;
+  Object.defineProperty(exports, key, {
+    enumerable: true,
+    get: function get() {
+      return _openCage[key];
+    }
+  });
+});
 });
 
 ;require.register("Http/invites-tasks.js", function(exports, require, module) {
@@ -1616,6 +1588,54 @@ var getInvitesTask = function getInvitesTask(http) {
 };
 
 exports.getInvitesTask = getInvitesTask;
+});
+
+;require.register("Http/open-cage.js", function(exports, require, module) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.locateQueryTask = void 0;
+
+var _ramda = require("ramda");
+
+function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _unsupportedIterableToArray(arr, i) || _nonIterableRest(); }
+
+function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
+
+function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
+
+function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
+
+function _iterableToArrayLimit(arr, i) { if (typeof Symbol === "undefined" || !(Symbol.iterator in Object(arr))) return; var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"] != null) _i["return"](); } finally { if (_d) throw _e; } } return _arr; }
+
+function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
+
+var toOpenCageFormat = function toOpenCageFormat(q) {
+  return q.replace(/\s/g, "+").replace(/,/g, "%2C");
+};
+
+var toLocationViewModel = function toLocationViewModel(_ref) {
+  var _ref2 = _slicedToArray(_ref, 2),
+      address = _ref2[0],
+      ll = _ref2[1];
+
+  return {
+    address: address,
+    latlong: JSON.stringify(ll)
+  };
+};
+
+var locateQueryTask = function locateQueryTask(http) {
+  return function (mdl) {
+    return function (query) {
+      return http.openCage.getLocationTask(mdl)(toOpenCageFormat(query)).map((0, _ramda.prop)("results")).map((0, _ramda.map)((0, _ramda.paths)([["formatted"], ["geometry"]]))).map((0, _ramda.map)(toLocationViewModel));
+    };
+  };
+};
+
+exports.locateQueryTask = locateQueryTask;
 });
 
 ;require.register("Models.js", function(exports, require, module) {
@@ -2179,7 +2199,7 @@ var Event = function Event(_ref) {
     view: function view() {
       return m(".event", [state.status == "loading" && m(".", "Fetching Event..."), state.status == "failed" && m(".code", state.error.message), state.status == "success" && m(".event-container", [m("button", {
         onclick: function onclick(e) {
-          mdl.State.toAnchor(data.event.startTime.split(":")[0]);
+          mdl.State.toAnchor((0, _Utils.getHour)(data.event.startTime));
           m.route.set("/".concat(mdl.User.name, "/").concat(mdl.selectedDate().format("YYYY-MM-DD")));
         }
       }, "Back"), m("h1", data.event.title), m("label", "date: ", data.event.date), m("label", "begins: ", data.event.startTime), m("label", "ends: ", data.event.endTime), m("label", "notes: ", data.event.notes), m("label", m("select", {
@@ -2919,7 +2939,7 @@ exports.locals = locals;
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.firstInviteHour = exports.shortDateString = exports.toHourViewModel = exports.getFullDate = exports.fromFullDate = exports.monthsOfTheYear = exports.daysOfTheWeek = exports.isToday = exports.datesAreSame = exports.getHoursInDay = exports.pad0Left = exports.pad00Min = exports.padding = void 0;
+exports.firstInviteHour = exports.shortDateString = exports.toHourViewModel = exports.getFullDate = exports.fromFullDate = exports.monthsOfTheYear = exports.daysOfTheWeek = exports.isToday = exports.datesAreSame = exports.getHoursInDay = exports.getMin = exports.getHour = exports.pad0Left = exports.pad00Min = exports.padding = void 0;
 
 var _index = require("./index");
 
@@ -2942,6 +2962,18 @@ var pad0Left = function pad0Left(num) {
 };
 
 exports.pad0Left = pad0Left;
+
+var getHour = function getHour(time) {
+  return time.split(":")[0];
+};
+
+exports.getHour = getHour;
+
+var getMin = function getMin(time) {
+  return time.split(":")[1];
+};
+
+exports.getMin = getMin;
 
 var getHoursInDay = function getHoursInDay(format) {
   return (0, _index.range)(format == "24hrs" ? 24 : 12).map(function (n) {

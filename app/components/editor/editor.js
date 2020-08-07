@@ -1,6 +1,7 @@
 import { EventForm } from "./event-form"
 import { Modal } from "Components"
 import { HTTP, submitEventTask } from "Http"
+import { validateTask } from "./validations"
 
 export const Editor = ({ attrs: { mdl } }) => {
   const EventFormData = {
@@ -24,8 +25,8 @@ export const Editor = ({ attrs: { mdl } }) => {
     querySelected: "",
   }
 
-  const resetState = (state) => {
-    state = {
+  const resetState = () => {
+    EventFormState = {
       status: "loading",
       errors: null,
       isSubmitted: false,
@@ -33,6 +34,20 @@ export const Editor = ({ attrs: { mdl } }) => {
       queryResults: [],
       querySelected: "",
     }
+  }
+
+  const validate = (state) => (data) => {
+    const onError = (errors) => {
+      state.errors = errors
+      state.isValid = false
+    }
+
+    const onSuccess = () => {
+      state.errors = null
+      state.isValid = true
+    }
+
+    validateTask(data).fork(onError, onSuccess)
   }
 
   const addNewEvent = ({ mdl, state, data }) => {
@@ -48,9 +63,11 @@ export const Editor = ({ attrs: { mdl } }) => {
       mdl.Day.update(true)
       mdl.State.modal(false)
     }
-    console.log(state, data)
 
-    submitEventTask(HTTP)(mdl)(data).fork(onError, onSuccess)
+    state.isSubmitted = true
+    validateTask(data)
+      .chain(submitEventTask(HTTP)(mdl))
+      .fork(onError, onSuccess)
   }
 
   return {
@@ -64,6 +81,7 @@ export const Editor = ({ attrs: { mdl } }) => {
             mdl,
             data: EventFormData,
             state: EventFormState,
+            validate,
             resetState,
           }),
           footer: m(

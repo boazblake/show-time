@@ -5,6 +5,9 @@ export const padding = (d) => (d.toString().length == 1 ? pad0Left(d) : d)
 export const pad00Min = (num) => `${num}:00`
 export const pad0Left = (num) => `0${num}`
 
+export const getHour = (time) => time.split(":")[0]
+export const getMin = (time) => time.split(":")[1]
+
 export const getHoursInDay = (format) =>
   range(format == "24hrs" ? 24 : 12)
     .map((n) => (n.toString().length == 1 ? pad0Left(n) : n))

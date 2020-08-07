@@ -1,8 +1,8 @@
 import { curryN, identity, lensProp, mergeAll } from "ramda"
 import { Success } from "data.validation"
-import { validate, isRequired, emailFormat } from "Utils"
+import { validate, isRequired, getHour, getMin } from "Utils"
 
-const Validate = Success(curryN(2, identity))
+const Validate = Success(curryN(5, identity))
 
 const dateLense = lensProp("shortDate")
 const startTimeLense = lensProp("startTime")
@@ -11,13 +11,21 @@ const locationLense = lensProp("location")
 const latLongLense = lensProp("latlong")
 const titleLense = lensProp("title")
 
-const REQUIRED_FIELD_MSG = (field) => `${field} is required`
+const FIELD_REQUIRED_MSG = (field) => `${field} is required`
 const INVALID_END_DATE_MSG = "Start time must be before end time"
 
 const isChronological = (startTime) => (endTime) => {
-  console.log("start", startTime)
-  console.log("end".endTime)
-  return true
+  console.log(
+    "chrono?",
+    M()
+      .hours(getHour(startTime))
+      .minutes(getMin(startTime))
+      .isBefore(M().hours(getHour(endTime)).minutes(getMin(endTime)))
+  )
+  return M()
+    .hours(getHour(startTime))
+    .minutes(getMin(startTime))
+    .isBefore(M().hours(getHour(endTime)).minutes(getMin(endTime)))
 }
 
 const validateDate = (data) =>

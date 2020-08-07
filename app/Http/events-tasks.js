@@ -1,6 +1,7 @@
 import Task from "data.task"
 import { getInvitesTask } from "./invites-tasks"
 import { compose, filter, head, propEq } from "ramda"
+import { getHour, getMin } from "Utils"
 
 const toEventviewModel = ({
   start,
@@ -63,8 +64,6 @@ export const submitEventTask = (http) => (mdl) => ({
   location,
   latlong,
 }) => {
-  let getHour = (time) => time.split(":")[0]
-  let getMin = (time) => time.split(":")[1]
   let end = M.utc(mdl.selectedDate())
     .hour(getHour(endTime))
     .minute(getMin(endTime))

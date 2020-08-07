@@ -1,4 +1,4 @@
-import { jsonCopy, inviteOptions } from "Utils"
+import { jsonCopy, inviteOptions, getHour } from "Utils"
 import mapboxgl from "mapbox-gl/dist/mapbox-gl.js"
 import {
   HTTP,
@@ -103,7 +103,7 @@ export const Event = ({ attrs: { mdl } }) => {
               "button",
               {
                 onclick: (e) => {
-                  mdl.State.toAnchor(data.event.startTime.split(":")[0])
+                  mdl.State.toAnchor(getHour(data.event.startTime))
                   m.route.set(
                     `/${mdl.User.name}/${mdl
                       .selectedDate()
