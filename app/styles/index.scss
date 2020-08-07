@@ -103,16 +103,10 @@ input[type="time"] {
   overflow: auto;
 }
 
-// .half-hour {
-//   display: flex;
-//   flex: 1;
-//   flex-direction: row;
-//   justify-content: center;
-
-//   .top {
-//     // min-width: 90vw;
-//   }
-// }
+.required-field {
+  color: var(--red);
+  flex-direction: row;
+}
 
 .hour {
   position: relative;
@@ -168,8 +162,8 @@ input[type="time"] {
 .invite-list-item {
   position: absolute;
   padding-left: 12px;
-  background-color: var(--purple);
   color: var(--white);
+  border: 1px solid var(--white);
   min-width: 200px;
 }
 

@@ -77,7 +77,6 @@ export const Event = ({ attrs: { mdl } }) => {
 
   const setupMap = ({ dom }) => {
     let coords = JSON.parse(data.event.latlong)
-    console.log("latlong", JSON.parse(data.event.latlong))
 
     const createMarker = () =>
       new mapboxgl.Marker().setLngLat(coords).addTo(map)
@@ -86,7 +85,6 @@ export const Event = ({ attrs: { mdl } }) => {
       container: dom,
       center: coords,
       zoom: 15,
-      hash: true,
       style: "mapbox://styles/mapbox/streets-v11",
     })
 

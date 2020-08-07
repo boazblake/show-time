@@ -24,11 +24,7 @@ export const Hour = () => {
         ".frow ",
         m(".hour ", [
           m("p.hour-time", { id: hour }, hour),
-          [
-            m(InvitesList, { mdl, events }),
-            m(".half-hour", m(".top")),
-            m(".half-hour", m(".bottom")),
-          ],
+          [m(InvitesList, { mdl, events })],
         ])
       )
     },
