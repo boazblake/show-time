@@ -21,6 +21,17 @@ const locateQuery = (mdl) => (state) => (query) => {
 }
 
 export const EventForm = () => {
+  const setAllDay = (data) => {
+    data.allDay = !data.allDay
+    if (data.allDay) {
+      data.startTime = "00:00"
+      data.endTime = "23:59"
+    } else {
+      data.startTime = ""
+      data.endTime = ""
+    }
+  }
+
   return {
     view: ({ attrs: { data, state, resetState, mdl, validate, submit } }) => {
       return m(
@@ -41,7 +52,7 @@ export const EventForm = () => {
                 m("input", {
                   type: "checkbox",
                   checked: data.allDay,
-                  onclick: (e) => (data.allDay = !data.allDay),
+                  onclick: (e) => setAllDay(data),
                 })
               ),
             ])
@@ -49,17 +60,19 @@ export const EventForm = () => {
           m(".full-width", [
             m(".frow row row-evenly gutters", [
               m("label.col-xs-1-2", [
-                m("input", {
+                m("input.", {
                   oninput: (e) => (data.startTime = e.target.value),
                   value: data.startTime,
                   type: "time",
                   disabled: data.allDay,
                   onblur: (e) => state.isSubmitted && validate(state, data),
                 }),
-                "Start Time",
-                m("span.required-field", "*"),
-                state.errors &&
-                  m("code.required-field", state.errors.startTime),
+                m(".frow row-start", [
+                  "Start Time",
+                  m("span.required-field", "*"),
+                ]),
+
+                state.errors && m("code.error-field", state.errors.startTime),
               ]),
               m("label.col-xs-1-2", [
                 m("input", {
@@ -69,9 +82,12 @@ export const EventForm = () => {
                   disabled: data.allDay,
                   onblur: (e) => state.isSubmitted && validate(state, data),
                 }),
-                "End Time",
-                m("span.required-field", "*"),
-                state.errors && m("code.required-field", state.errors.endTime),
+                m(".frow row-start", [
+                  "End Time",
+                  m("span.required-field", "*"),
+                ]),
+
+                state.errors && m("code.error-field", state.errors.endTime),
               ]),
             ]),
           ]),
@@ -80,8 +96,7 @@ export const EventForm = () => {
             m(".frow row row-evenly gutters", [
               m(
                 "label.col-xs-1-5",
-                m("span.required-field", "*"),
-                state.errors && m("code.required-field", state.errors.location),
+
                 "In Person",
                 m("input", {
                   type: "checkbox",
@@ -89,6 +104,7 @@ export const EventForm = () => {
                   onclick: (e) => (data.inPerson = !data.inPerson),
                 })
               ),
+
               data.inPerson
                 ? m(
                     "label.col-xs-4-5",
@@ -99,17 +115,23 @@ export const EventForm = () => {
                       onchange: (e) => locateQuery(mdl)(state)(e.target.value),
                       onblur: (e) => state.isSubmitted && validate(state, data),
                     }),
-                    "Address - Location"
+                    m(".frow row-start", [
+                      "Address",
+                      m("span.required-field", "*"),
+                    ])
                   )
                 : m(
                     "label.col-xs-4-5",
                     m("input", {
                       type: "url",
                       value: data.url,
-                      oninput: (e) => (data.url = e.target.value),
+                      oninput: (e) => (data.location = e.target.value),
                       onblur: (e) => state.isSubmitted && validate(state, data),
                     }),
-                    "Url link - Location"
+                    m(".frow row-start", [
+                      "URL link",
+                      m("span.required-field", "*"),
+                    ])
                   ),
               state.locationWarning() &&
                 m("p.location-info-text", state.locationWarning()),
@@ -133,6 +155,7 @@ export const EventForm = () => {
                     )
                   )
                 ),
+              state.errors && m("code.error-field", state.errors.location),
             ])
           ),
 
@@ -144,9 +167,9 @@ export const EventForm = () => {
               oninput: (e) => (data.title = e.target.value),
               onblur: (e) => state.isSubmitted && validate(state, data),
             }),
-            "Title",
-            m("span.required-field", "*"),
-            state.errors && m("code.required-field", state.errors.title)
+            m(".frow row-start", ["Title", m("span.required-field", "*")]),
+
+            state.errors && m("code.error-field", state.errors.title)
           ),
           m(
             "label",

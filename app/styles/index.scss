@@ -103,6 +103,11 @@ a {
   color: var(--red);
 }
 
+
+.error-field {
+  color: var(--red);
+}
+
 .hour {
   position: relative;
   display: flex;
@@ -157,7 +162,7 @@ a {
   padding: 20px;
   overflow-y: auto;
   overflow-x: hidden;
-  height: 680px;
+  height: 700px;
 }
 
 .bg-warn > * {

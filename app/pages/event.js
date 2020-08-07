@@ -7,13 +7,13 @@ import {
   updateInviteTask,
 } from "Http"
 
-mapboxgl.accessToken =
-  "pk.eyJ1IjoiYm9hemJsYWtlIiwiYSI6ImNqdWJ4OGk4YzBpYXU0ZG5wNDI1OGM0eTIifQ.5UV0HkEGPiKUzFdbgdr5ww"
-
 export const Event = ({ attrs: { mdl } }) => {
   const state = {
     error: {},
     status: "loading",
+    info: { show: Stream(false) },
+    rsvp: { show: Stream(false) },
+    edit: { show: Stream(false) },
   }
 
   const data = {
@@ -32,7 +32,7 @@ export const Event = ({ attrs: { mdl } }) => {
       data.event = event
       data.invite = invite
       state.error = {}
-      console.log("loaded event", data)
+      console.log("loaded event", data, state.info.show())
       state.status = "success"
     }
 
@@ -76,6 +76,8 @@ export const Event = ({ attrs: { mdl } }) => {
   }
 
   const setupMap = ({ dom }) => {
+    mapboxgl.accessToken =
+      "pk.eyJ1IjoiYm9hemJsYWtlIiwiYSI6ImNqdWJ4OGk4YzBpYXU0ZG5wNDI1OGM0eTIifQ.5UV0HkEGPiKUzFdbgdr5ww"
     let coords = JSON.parse(data.event.latlong)
 
     const createMarker = () =>
@@ -100,42 +102,116 @@ export const Event = ({ attrs: { mdl } }) => {
         state.status == "success" &&
           m(".event-container", [
             m("h1", data.event.title),
-            m("label", "date: ", data.event.date),
-            m("label", "begins: ", data.event.startTime),
-            m("label", "ends: ", data.event.endTime),
-            m("label", "notes: ", data.event.notes),
             m(
-              "label",
-              m(
-                "select",
-                {
-                  oninput: (e) => {
-                    data.invite.status = inviteOptions.indexOf(e.target.value)
-                    updateInvite(mdl)(data.invite)
-                  },
-                  value: inviteOptions[data.invite.status],
-                },
-                inviteOptions.map((opt, idx) =>
-                  m(
-                    "option",
-                    {
-                      value: opt,
-                      key: idx,
-                      id: idx,
-                    },
-                    opt.toUpperCase()
-                  )
-                )
-              ),
-              "Status: "
+              "h3",
+              `${data.event.date}: ${data.event.startTime} - ${data.event.endTime}`
             ),
 
-            m(".map", {
-              style: { width: "500px", height: "500px" },
-              oncreate: setupMap,
-            }),
+            m(".accordian", [
+              m(".accordian-item.full-width", [
+                m(".accordian-item-title", [
+                  m(
+                    ".frow columns",
+                    m(".col-xs-1-2", m("h4", "INFO")),
+                    m(
+                      ".frow row-end col-xs-1-3",
+                      m(
+                        "button",
+                        {
+                          onclick: (e) =>
+                            state["info"].show(!state["info"].show()),
+                        },
+                        "<"
+                      )
+                    )
+                  ),
+                ]),
 
-            m("button", { onclick: (e) => deleteEvent(mdl) }, "delete"),
+                state.info.show() &&
+                  m(".accordian-item-body.column", [
+                    m("label", "notes", m("p", data.event.notes)),
+
+                    m(".map", {
+                      style: { width: "500px", height: "500px" },
+                      oncreate: setupMap,
+                    }),
+                  ]),
+              ]),
+
+              m(".accordian-item.full-width", [
+                m(".accordian-item-title", [
+                  m(
+                    ".frow columns",
+                    m(".col-xs-1-2", m("h4", "RSVP")),
+                    m(
+                      ".frow row-end col-xs-1-3",
+                      m(
+                        "button",
+                        {
+                          onclick: (e) =>
+                            state["rsvp"].show(!state["rsvp"].show()),
+                        },
+                        "<"
+                      )
+                    )
+                  ),
+                ]),
+                state.rsvp.show() &&
+                  m(".accordian-item-body.column", [
+                    m(
+                      "label",
+                      m(
+                        "select",
+                        {
+                          oninput: (e) => {
+                            data.invite.status = inviteOptions.indexOf(
+                              e.target.value
+                            )
+                            updateInvite(mdl)(data.invite)
+                          },
+                          value: inviteOptions[data.invite.status],
+                        },
+                        inviteOptions.map((opt, idx) =>
+                          m(
+                            "option",
+                            {
+                              value: opt,
+                              key: idx,
+                              id: idx,
+                            },
+                            opt.toUpperCase()
+                          )
+                        )
+                      ),
+                      "Status: "
+                    ),
+                  ]),
+              ]),
+
+              m(".accordian-item.full-width", [
+                m(".accordian-item-title", [
+                  m(
+                    ".frow columns",
+                    m(".col-xs-1-2", m("h4", "EDIT EVENT")),
+                    m(
+                      ".frow row-end col-xs-1-3",
+                      m(
+                        "button",
+                        {
+                          onclick: (e) =>
+                            state["edit"].show(!state["edit"].show()),
+                        },
+                        "<"
+                      )
+                    )
+                  ),
+                ]),
+                state.edit.show() &&
+                  m(".accordian-item-body.column", [
+                    m("button", { onclick: (e) => deleteEvent(mdl) }, "delete"),
+                  ]),
+              ]),
+            ]),
           ]),
       ])
     },
