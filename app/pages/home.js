@@ -23,6 +23,7 @@ export const Home = ({ attrs: { mdl } }) => {
   }
 
   const load = ({ attrs: { mdl } }) => {
+    mdl.State.modal(false)
     const onError = (err) => {
       state.error = err
       state.status = "failed"

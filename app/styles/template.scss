@@ -1,0 +1,18 @@
+.lt-grid-container {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  grid-template-rows: 1 2 1 ;// repeat(3, 1fr);
+  gap: 1px 1px;
+ grid-template-areas:
+  "lt-header lt-header lt-header lt-header"
+  "lt-body lt-body lt-body lt-body"
+  "lt-footer lt-footer lt-footer lt-footer"
+}
+
+.lt-header { grid-area: lt-header; }
+
+.lt-body { grid-area: lt-body; }
+
+.lt-footer { grid-area: lt-footer; }
+
+

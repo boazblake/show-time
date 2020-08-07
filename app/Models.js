@@ -30,6 +30,7 @@ export const inviteModel = () => ({
 
 const Events = {
   currentEventId: Stream(null),
+  currentEventStartTime: Stream(null),
 }
 const Invites = {
   fetch: Stream(false),

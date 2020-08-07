@@ -1,41 +1,6 @@
 import { createCalendar, calendarDayStyle } from "./calendar-model"
+import { Toolbar } from "Components"
 import { daysOfTheWeek, firstInviteHour } from "Utils"
-
-const Toolbar = () => {
-  return {
-    view: ({ attrs: { mdl } }) =>
-      m(".toolbar", [
-        m("input.cal-toolbar-input", {
-          onchange: (e) =>
-            m.route.set(
-              `/${mdl.User.name}/${mdl.selectedDate().format("YYYY-MM-DD")}`
-            ),
-          type: "date",
-          value: mdl.selectedDate().format("YYYY-MM-DD"),
-        }),
-        m(
-          m.route.Link,
-          {
-            selector: "button",
-            class: "cal-toolbar-input",
-            href: `/${mdl.User.name}/${M.utc().format("YYYY-MM-DD")}`,
-          },
-          "Today"
-        ),
-        m(
-          m.route.Link,
-          {
-            selector: "button",
-            class: "cal-toolbar-input",
-            // onclick: (e) => logout,
-            href: `/logout`,
-          },
-          "Logout"
-        ),
-      ]),
-  }
-}
-
 const Navbar = () => {
   return {
     view: ({ attrs: { mdl, date } }) => {
@@ -144,34 +109,32 @@ const CalendarDay = () => {
 
 const CalendarBody = () => {
   return {
-    view: ({ attrs: { mdl, date, invites } }) => {
-      let matrix = createCalendar(invites, date)
-      return m(".frow frow-container", [
-        m(Navbar, { mdl, date }),
-        m(DaysOfWeek, { mdl }),
-        m(
-          ".frow centered-column width-100 row-between mt-10 ",
-          matrix.map((week) =>
-            m(
-              ".frow width-100",
-              week.map(({ invites, day, dir }) => {
-                return m(CalendarDay, { mdl, invites, day, dir })
-              })
-            )
-          )
-        ),
-      ])
-    },
+    view: ({ attrs: { mdl, date, invites } }) => {},
   }
 }
 
 export const Calendar = () => {
   return {
     view: ({ attrs: { mdl, date, invites } }) => {
-      return m(".calendar", [
-        m(Toolbar, { mdl, calendar: mdl.Calendar.data }),
-        m(CalendarBody, { mdl, date, invites }),
-      ])
+      let matrix = createCalendar(invites, date)
+      return m(
+        ".calendar",
+        m(".frow frow-container", [
+          m(Navbar, { mdl, date }),
+          m(DaysOfWeek, { mdl }),
+          m(
+            ".frow centered-column width-100 row-between mt-10 ",
+            matrix.map((week) =>
+              m(
+                ".frow width-100",
+                week.map(({ invites, day, dir }) => {
+                  return m(CalendarDay, { mdl, invites, day, dir })
+                })
+              )
+            )
+          ),
+        ])
+      )
     },
   }
 }

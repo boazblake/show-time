@@ -62,10 +62,6 @@ a {
 }
 
 
-input[type="time"] {
-  max-width: 100px;;
-}
-
 .centerMonthGroup {
   position: relative;
   top: 20px;
@@ -131,7 +127,9 @@ input[type="time"] {
 }
 
 .modal-container {
-  overflow: auto;
+  overflow-y: auto;
+  overflow-x: hidden;
+
   background-color: var(--white);
   height: 300px;
   .modal-container {
@@ -147,6 +145,8 @@ input[type="time"] {
 
 
 .event-form {
+  margin: 0 auto;
+  max-width: 90%;
 }
 
 .bg-warn > * {
@@ -155,6 +155,11 @@ input[type="time"] {
 
 .bg-info > * {
   background-color: var(--info) !important;
+}
+
+.location-info-text {
+  color: var(--green) ;
+
 }
 
 

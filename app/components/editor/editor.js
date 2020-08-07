@@ -23,6 +23,7 @@ export const Editor = ({ attrs: { mdl } }) => {
     isValid: false,
     queryResults: [],
     querySelected: "",
+    locationWarning: Stream(null),
   }
 
   const resetState = (state) => {
@@ -33,6 +34,7 @@ export const Editor = ({ attrs: { mdl } }) => {
       isValid: false,
       queryResults: [],
       querySelected: "",
+      locationWarning: Stream(null),
     }
     console.log(EventFormState)
   }
@@ -41,11 +43,11 @@ export const Editor = ({ attrs: { mdl } }) => {
     const onError = (errors) => {
       state.errors = errors
       state.isValid = false
-      console.log("v err", state, errors)
+      // console.log("v err", state, errors)
     }
 
     const onSuccess = (data) => {
-      console.log("v succ", data)
+      // console.log("v succ", data)
       state.errors = null
       state.isValid = true
     }
@@ -85,7 +87,7 @@ export const Editor = ({ attrs: { mdl } }) => {
             resetState,
           }),
           footer: m(
-            "button",
+            "button.full-width",
             {
               onclick: (e) =>
                 addNewEvent({

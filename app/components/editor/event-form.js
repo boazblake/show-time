@@ -3,12 +3,17 @@ import { HTTP, locateQueryTask } from "Http"
 const locateQuery = (mdl) => (state) => (query) => {
   const onError = (err) => {
     console.log("err q", err)
+    state.locationWarning(
+      "Exact address not found. You may continue with this address or try again"
+    )
     state.status = "failure"
   }
 
   const onSuccess = (data) => {
     state.queryResults = data
     state.status = "success"
+    state.locationWarning(null)
+
     console.log("succ d", state)
   }
 
@@ -27,7 +32,7 @@ export const EventForm = () => {
             disabled: data.allDay,
           }),
         ]),
-        m(".frow row row-between", [
+        m(".frow row row-between gutters", [
           m(
             "label.col-xs-1-3",
             "All Day",
@@ -99,7 +104,8 @@ export const EventForm = () => {
                 }),
                 "Url link - Location"
               ),
-
+          state.locationWarning() &&
+            m("p.location-info-text", state.locationWarning()),
           state.queryResults.any() &&
             m(
               "ul.event-form-query-container",

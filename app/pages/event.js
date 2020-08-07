@@ -1,4 +1,4 @@
-import { jsonCopy, inviteOptions, getHour } from "Utils"
+import { jsonCopy, inviteOptions } from "Utils"
 import mapboxgl from "mapbox-gl/dist/mapbox-gl.js"
 import {
   HTTP,
@@ -32,7 +32,7 @@ export const Event = ({ attrs: { mdl } }) => {
       data.event = event
       data.invite = invite
       state.error = {}
-      console.log("udpated", data)
+      console.log("loaded event", data)
       state.status = "success"
     }
 
@@ -99,20 +99,6 @@ export const Event = ({ attrs: { mdl } }) => {
         state.status == "failed" && m(".code", state.error.message),
         state.status == "success" &&
           m(".event-container", [
-            m(
-              "button",
-              {
-                onclick: (e) => {
-                  mdl.State.toAnchor(getHour(data.event.startTime))
-                  m.route.set(
-                    `/${mdl.User.name}/${mdl
-                      .selectedDate()
-                      .format("YYYY-MM-DD")}`
-                  )
-                },
-              },
-              "Back"
-            ),
             m("h1", data.event.title),
             m("label", "date: ", data.event.date),
             m("label", "begins: ", data.event.startTime),

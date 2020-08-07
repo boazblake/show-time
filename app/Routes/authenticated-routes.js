@@ -1,3 +1,4 @@
+import { Layout } from "Components"
 import { Home, Event } from "Pages"
 import { scrollToAnchor } from "Utils"
 
@@ -27,7 +28,7 @@ const AuthenticatedRoutes = [
       let date = M.utc(args.date).clone()
       mdl.selectedDate(date)
     },
-    component: (mdl) => m(Home, { mdl }),
+    component: (mdl) => m(Layout, { mdl }, m(Home, { mdl })),
   },
   {
     id: "event",
@@ -46,7 +47,7 @@ const AuthenticatedRoutes = [
       //   mdl.Events.currentEventId(localStorage.getItem("eventId"))
       // }
     },
-    component: (mdl) => m(Event, { mdl, key: new Date() }),
+    component: (mdl) => m(Layout, { mdl }, m(Event, { mdl })),
   },
   {
     id: "logout",

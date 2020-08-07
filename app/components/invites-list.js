@@ -15,6 +15,7 @@ const Invite = ({ attrs: { mdl } }) => {
           {
             onclick: (e) => {
               mdl.Events.currentEventId(invite.eventId)
+              mdl.Events.currentEventStartTime(invite.start)
               localStorage.setItem("eventId", invite.eventId)
               m.route.set(`/${mdl.User.name}/${createEventUrl(invite)}`)
             },
