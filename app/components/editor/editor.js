@@ -25,8 +25,8 @@ export const Editor = ({ attrs: { mdl } }) => {
     querySelected: "",
   }
 
-  const resetState = () => {
-    EventFormState = {
+  const resetState = (state) => {
+    state = {
       status: "loading",
       errors: null,
       isSubmitted: false,
@@ -36,26 +36,26 @@ export const Editor = ({ attrs: { mdl } }) => {
     }
   }
 
-  const validate = (data) => {
+  const validate = (state, data) => {
     const onError = (errors) => {
-      console.log("v err", errors)
-      EventFormState.errors = errors
-      EventFormState.isValid = false
+      state.errors = errors
+      state.isValid = false
+      console.log("v err", state, errors)
     }
 
     const onSuccess = (data) => {
       console.log("v succ", data)
-      EventFormState.errors = null
-      EventFormState.isValid = true
+      state.errors = null
+      state.isValid = true
     }
 
     validateTask(data).fork(onError, onSuccess)
   }
 
-  const addNewEvent = ({ mdl, data }) => {
-    const onError = (err) => {
-      EventFormState.error = err
-      EventFormState.status = "failed"
+  const addNewEvent = ({ mdl, data, state }) => {
+    const onError = (errors) => {
+      state.errors = errors
+      state.status = "failed"
     }
 
     const onSuccess = () => {
@@ -63,7 +63,7 @@ export const Editor = ({ attrs: { mdl } }) => {
       mdl.State.modal(false)
     }
 
-    EventFormState.isSubmitted = true
+    state.isSubmitted = true
     validateTask(data)
       .chain(submitEventTask(HTTP)(mdl))
       .fork(onError, onSuccess)
@@ -90,6 +90,7 @@ export const Editor = ({ attrs: { mdl } }) => {
                 addNewEvent({
                   mdl,
                   data: EventFormData,
+                  state: EventFormState,
                 }),
             },
             "Submit"
