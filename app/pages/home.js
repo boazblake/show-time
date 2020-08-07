@@ -66,11 +66,12 @@ export const Home = ({ attrs: { mdl } }) => {
           ),
           mdl.State.modal() && m(Editor, { mdl }),
 
-          m(Day, {
-            mdl,
-            day: createDayVM(mdl)(getSelectedDayInvites(mdl)(state.invites)),
-            invites: getSelectedDayInvites(mdl)(state.invites),
-          }),
+          !mdl.State.modal() &&
+            m(Day, {
+              mdl,
+              day: createDayVM(mdl)(getSelectedDayInvites(mdl)(state.invites)),
+              invites: getSelectedDayInvites(mdl)(state.invites),
+            }),
         ]
       )
     },

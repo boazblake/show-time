@@ -44,7 +44,7 @@ export const EventForm = () => {
                 value: data.startTime,
                 type: "time",
                 disabled: data.allDay,
-                onblur: (e) => state.isSubmitted && validate(state)(data),
+                onblur: (e) => state.isSubmitted && validate(data),
               }),
               "Start Time",
               m("span.required-field", "*"),
@@ -56,7 +56,7 @@ export const EventForm = () => {
                 value: data.endTime,
                 type: "time",
                 disabled: data.allDay,
-                onblur: (e) => state.isSubmitted && validate(state)(data),
+                onblur: (e) => state.isSubmitted && validate(data),
               }),
               "End Time",
               m("span.required-field", "*"),
@@ -85,7 +85,7 @@ export const EventForm = () => {
                   value: data.location,
                   oninput: (e) => (data.location = e.target.value),
                   onchange: (e) => locateQuery(mdl)(state)(e.target.value),
-                  onblur: (e) => state.isSubmitted && validate(state)(data),
+                  onblur: (e) => state.isSubmitted && validate(data),
                 }),
                 "Address - Location"
               )
@@ -95,7 +95,7 @@ export const EventForm = () => {
                   type: "url",
                   value: data.url,
                   oninput: (e) => (data.url = e.target.value),
-                  onblur: (e) => state.isSubmitted && validate(state)(data),
+                  onblur: (e) => state.isSubmitted && validate(data),
                 }),
                 "Url link - Location"
               ),
@@ -128,7 +128,7 @@ export const EventForm = () => {
             type: "text",
             value: data.text,
             oninput: (e) => (data.title = e.target.value),
-            onblur: (e) => state.isSubmitted && validate(state)(data),
+            onblur: (e) => state.isSubmitted && validate(data),
           }),
           "Title",
           m("span.required-field", "*"),
@@ -140,7 +140,7 @@ export const EventForm = () => {
             type: "text",
             value: data.notes,
             oninput: (e) => (data.notes = e.target.value),
-            onblur: (e) => state.isSubmitted && validate(state)(data),
+            onblur: (e) => state.isSubmitted && validate(data),
           }),
           "Notes"
         ),

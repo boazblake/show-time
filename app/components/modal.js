@@ -4,9 +4,9 @@ export const Modal = () => {
       return m(
         ".modal-container",
         m(
-          ".frow-container",
+          ".frow column",
           children.map((child) =>
-            m(".modal.frow column-center", [
+            m(".modal.full-width", [
               m(".modal-header", child.header),
               m(".modal-body", child.body),
               m(".modal-footer", child.footer),

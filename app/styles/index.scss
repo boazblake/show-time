@@ -129,18 +129,15 @@ input[type="time"] {
 
 
 .modal-container {
-  // position: absolute;
   overflow: auto;
-  // left:0;
-  z-index: 1000;
-  width: 100vw;
-  height: 100vw;
   background-color: var(--white);
-  .modal {
+  max-height: 50vh;
+  .modal-container {
     .modal-header{}
     .modal-body {
       width: 80%;
-      height:80%;
+      overflow: auto;
+  // height:80%;
     }
     .modal-footer {}
   }

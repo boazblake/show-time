@@ -64,11 +64,11 @@ export const Login = () => {
     onremove: () => resetState(),
     view: ({ attrs: { mdl } }) =>
       m(
-        ".frow centered pt-30",
+        ".frow centered-column mt-100",
         [
           state.showErrorMsg() && m("code.warning", state.errorMsg()),
           m(
-            "form.frow-container frow-center",
+            "form.frow column-centered",
             {
               role: "form",
               id: "Login-form",
@@ -114,20 +114,20 @@ export const Login = () => {
           state.httpError && m(".toast toast-error", state.httpError),
         ],
         m(
-          "a.button.auth-btn",
+          "a.button.auth-btn.full-width frow",
           {
             // type: "submit",
             form: `login-form`,
             onclick: () => validateForm(mdl)(state.data),
             class: mdl.State.isLoading() && "loading",
           },
-          "Login"
+          m("p.text-centered", "Login")
         ),
         m(
           m.route.Link,
           {
             href: "/register",
-            class: "bold",
+            class: "full-width",
           },
           "Need to  register ?"
         )

@@ -3466,14 +3466,12 @@ input[type=time] {
 
 .modal-container {
   overflow: auto;
-  z-index: 1000;
-  width: 100vw;
-  height: 100vw;
   background-color: var(--white);
+  max-height: 50vh;
 }
-.modal-container .modal .modal-body {
+.modal-container .modal-container .modal-body {
   width: 80%;
-  height: 80%;
+  overflow: auto;
 }
 .bg-warn > * {
   background-color: var(--warning) !important;

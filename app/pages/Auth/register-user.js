@@ -136,10 +136,10 @@ export const Register = () => {
   return {
     onremove: () => resetState(),
     view: ({ attrs: { mdl } }) => [
-      m(".frow centered pt-30", [
+      m(".frow centered-column mt-100", [
         state.showErrorMsg() && m("code.warning", state.errorMsg()),
         m(
-          "form.frow-container column-center",
+          "form.full-width",
           {
             role: "form",
             id: "Register-form",
@@ -152,19 +152,19 @@ export const Register = () => {
               isSubmitted: state.isSubmitted,
             }),
             m(
-              "a.button.auth-btn",
+              "a.button.auth-btn.full-width",
               {
                 form: `register-form`,
                 onclick: () => validateForm(mdl)(state.data),
                 class: mdl.State.isLoading() && "loading",
               },
-              "Register"
+              m("p", "Register")
             ),
             m(
               m.route.Link,
               {
                 href: "/login",
-                class: "bold",
+                class: "full-width",
               },
               "Need to  login ?"
             ),

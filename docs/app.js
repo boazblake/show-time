@@ -623,41 +623,37 @@ var Editor = function Editor(_ref) {
     };
   };
 
-  var validate = function validate(state) {
-    return function (data) {
-      var onError = function onError(errors) {
-        state.errors = errors;
-        state.isValid = false;
-      };
-
-      var onSuccess = function onSuccess() {
-        state.errors = null;
-        state.isValid = true;
-      };
-
-      (0, _validations.validateTask)(data).fork(onError, onSuccess);
+  var validate = function validate(data) {
+    var onError = function onError(errors) {
+      console.log("v err", errors);
+      EventFormState.errors = errors;
+      EventFormState.isValid = false;
     };
+
+    var onSuccess = function onSuccess(data) {
+      console.log("v succ", data);
+      EventFormState.errors = null;
+      EventFormState.isValid = true;
+    };
+
+    (0, _validations.validateTask)(data).fork(onError, onSuccess);
   };
 
   var addNewEvent = function addNewEvent(_ref2) {
     var mdl = _ref2.mdl,
-        state = _ref2.state,
         data = _ref2.data;
 
     var onError = function onError(err) {
-      state.error = err;
-      state.status = "failed";
+      EventFormState.error = err;
+      EventFormState.status = "failed";
     };
 
     var onSuccess = function onSuccess() {
-      state.error = null;
-      state.status = "success";
       mdl.Invites.fetch(true);
-      mdl.Day.update(true);
       mdl.State.modal(false);
     };
 
-    state.isSubmitted = true;
+    EventFormState.isSubmitted = true;
     (0, _validations.validateTask)(data).chain((0, _Http.submitEventTask)(_Http.HTTP)(mdl)).fork(onError, onSuccess);
   };
 
@@ -667,7 +663,7 @@ var Editor = function Editor(_ref) {
       return m(_Components.Modal, {
         mdl: mdl
       }, {
-        header: m("h3", "Add Event"),
+        header: m("h1.frow text-centered", "Add Event"),
         body: m(_eventForm.EventForm, {
           mdl: mdl,
           data: EventFormData,
@@ -679,8 +675,7 @@ var Editor = function Editor(_ref) {
           onclick: function onclick(e) {
             return addNewEvent({
               mdl: mdl,
-              data: EventFormData,
-              state: EventFormState
+              data: EventFormData
             });
           }
         }, "Submit")
@@ -751,7 +746,7 @@ var EventForm = function EventForm() {
         type: "time",
         disabled: data.allDay,
         onblur: function onblur(e) {
-          return state.isSubmitted && validate(state)(data);
+          return state.isSubmitted && validate(data);
         }
       }), "Start Time", m("span.required-field", "*"), state.error && m("code.required-field", state.error.startTime)]), m("label.col-xs-1-3", [m("input", {
         oninput: function oninput(e) {
@@ -761,7 +756,7 @@ var EventForm = function EventForm() {
         type: "time",
         disabled: data.allDay,
         onblur: function onblur(e) {
-          return state.isSubmitted && validate(state)(data);
+          return state.isSubmitted && validate(data);
         }
       }), "End Time", m("span.required-field", "*"), state.error && m("code.required-field", state.error.endTime)])]]), m(".frow row row-between", [m("label.col-xs-1-5", m("span.required-field", "*"), state.error && m("code.required-field", state.error.location), "In Person", m("input", {
         type: "checkbox",
@@ -779,7 +774,7 @@ var EventForm = function EventForm() {
           return locateQuery(mdl)(state)(e.target.value);
         },
         onblur: function onblur(e) {
-          return state.isSubmitted && validate(state)(data);
+          return state.isSubmitted && validate(data);
         }
       }), "Address - Location") : m("label.col-xs-4-5", m("input", {
         type: "url",
@@ -788,7 +783,7 @@ var EventForm = function EventForm() {
           return data.url = e.target.value;
         },
         onblur: function onblur(e) {
-          return state.isSubmitted && validate(state)(data);
+          return state.isSubmitted && validate(data);
         }
       }), "Url link - Location"), state.queryResults.any() && m("ul.event-form-query-container", state.queryResults.map(function (_ref2) {
         var address = _ref2.address,
@@ -807,7 +802,7 @@ var EventForm = function EventForm() {
           return data.title = e.target.value;
         },
         onblur: function onblur(e) {
-          return state.isSubmitted && validate(state)(data);
+          return state.isSubmitted && validate(data);
         }
       }), "Title", m("span.required-field", "*"), state.error && m("code.required-field", state.error.title)), m("label", m("input", {
         type: "text",
@@ -816,7 +811,7 @@ var EventForm = function EventForm() {
           return data.notes = e.target.value;
         },
         onblur: function onblur(e) {
-          return state.isSubmitted && validate(state)(data);
+          return state.isSubmitted && validate(data);
         }
       }), "Notes")]);
     }
@@ -1050,8 +1045,8 @@ var Modal = function Modal() {
   return {
     view: function view(_ref) {
       var children = _ref.children;
-      return m(".modal-container", m(".frow-container", children.map(function (child) {
-        return m(".modal.frow column-center", [m(".modal-header", child.header), m(".modal-body", child.body), m(".modal-footer", child.footer)]);
+      return m(".modal-container", m(".frow column", children.map(function (child) {
+        return m(".modal.full-width", [m(".modal-header", child.header), m(".modal-body", child.body), m(".modal-footer", child.footer)]);
       })));
     }
   };
@@ -1869,7 +1864,7 @@ var Login = function Login() {
     },
     view: function view(_ref) {
       var mdl = _ref.attrs.mdl;
-      return m(".frow centered pt-30", [state.showErrorMsg() && m("code.warning", state.errorMsg()), m("form.frow-container frow-center", {
+      return m(".frow centered-column mt-100", [state.showErrorMsg() && m("code.warning", state.errorMsg()), m("form.frow column-centered", {
         role: "form",
         id: "Login-form",
         onsubmit: function onsubmit(e) {
@@ -1895,16 +1890,16 @@ var Login = function Login() {
           state.data.userModel.password = e.target.value;
         },
         value: state.data.userModel.password
-      }), state.errors.password && m("p.auth-input-hint", state.errors.password)]), state.httpError && m(".toast toast-error", state.httpError)], m("a.button.auth-btn", {
+      }), state.errors.password && m("p.auth-input-hint", state.errors.password)]), state.httpError && m(".toast toast-error", state.httpError)], m("a.button.auth-btn.full-width frow", {
         // type: "submit",
         form: "login-form",
         onclick: function onclick() {
           return validateForm(mdl)(state.data);
         },
         class: mdl.State.isLoading() && "loading"
-      }, "Login"), m(m.route.Link, {
+      }, m("p.text-centered", "Login")), m(m.route.Link, {
         href: "/register",
-        class: "bold"
+        class: "full-width"
       }, "Need to  register ?"));
     }
   };
@@ -2058,7 +2053,7 @@ var Register = function Register() {
     },
     view: function view(_ref2) {
       var mdl = _ref2.attrs.mdl;
-      return [m(".frow centered pt-30", [state.showErrorMsg() && m("code.warning", state.errorMsg()), m("form.frow-container column-center", {
+      return [m(".frow centered-column mt-100", [state.showErrorMsg() && m("code.warning", state.errorMsg()), m("form.full-width", {
         role: "form",
         id: "Register-form",
         onsubmit: function onsubmit(e) {
@@ -2068,15 +2063,15 @@ var Register = function Register() {
         data: state.data.userModel,
         errors: state.errors,
         isSubmitted: state.isSubmitted
-      }), m("a.button.auth-btn", {
+      }), m("a.button.auth-btn.full-width", {
         form: "register-form",
         onclick: function onclick() {
           return validateForm(mdl)(state.data);
         },
         class: mdl.State.isLoading() && "loading"
-      }, "Register"), m(m.route.Link, {
+      }, m("p", "Register")), m(m.route.Link, {
         href: "/login",
-        class: "bold"
+        class: "full-width"
       }, "Need to  login ?")])]), state.httpError && m(".toast toast-error", state.httpError)];
     }
   };
@@ -2310,7 +2305,7 @@ var Home = function Home(_ref) {
         }
       }, mdl.State.modal() ? "Cancel" : "Add Event")), mdl.State.modal() && m(_Components.Editor, {
         mdl: mdl
-      }), m(_Components.Day, {
+      }), !mdl.State.modal() && m(_Components.Day, {
         mdl: mdl,
         day: createDayVM(mdl)(getSelectedDayInvites(mdl)(state.invites)),
         invites: getSelectedDayInvites(mdl)(state.invites)
