@@ -145,8 +145,19 @@ a {
 
 
 .event-form {
-  margin: 0 auto;
-  max-width: 90%;
+  width: 100vw;
+  padding: 20px;
+  overflow-y: auto;
+  overflow-x: hidden;
+  height: 310px;
+}
+
+.event-page {
+  width: 100vw;
+  padding: 20px;
+  overflow-y: auto;
+  overflow-x: hidden;
+  height: 680px;
 }
 
 .bg-warn > * {
@@ -204,14 +215,6 @@ a {
   line-height: 2rem;
 }
 
-// .cal-day-invite-container {
-// }
-
-// .cal-date {
-// }
-
-// .cal-day {
-// }
 
 
 @media screen and (min-width: 600px) and (max-width: 899px) {

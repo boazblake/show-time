@@ -2,7 +2,7 @@ import { HomeToolbar, EventToolbar } from "Components"
 
 const Header = () => {
   const getRoute = (mdl) => {
-    console.log("route", mdl)
+    // console.log("route", mdl)
     return mdl.State.route.id
   }
   return {

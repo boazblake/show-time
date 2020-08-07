@@ -94,7 +94,7 @@ export const Event = ({ attrs: { mdl } }) => {
   return {
     oninit: load,
     view: () => {
-      return m(".event", [
+      return m(".event-page", [
         state.status == "loading" && m(".", "Fetching Event..."),
         state.status == "failed" && m(".code", state.error.message),
         state.status == "success" &&

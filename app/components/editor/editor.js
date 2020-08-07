@@ -1,5 +1,4 @@
 import { EventForm } from "./event-form"
-import { Modal } from "Components"
 import { HTTP, submitEventTask } from "Http"
 import { validateTask } from "./validations"
 
@@ -74,31 +73,13 @@ export const Editor = ({ attrs: { mdl } }) => {
 
   return {
     view: ({ attrs: { mdl } }) =>
-      m(
-        Modal,
-        { mdl },
-        {
-          header: m("h1.frow text-centered", `Add Event`),
-          body: m(EventForm, {
-            mdl,
-            data: EventFormData,
-            state: EventFormState,
-            validate,
-            resetState,
-          }),
-          footer: m(
-            "button.full-width",
-            {
-              onclick: (e) =>
-                addNewEvent({
-                  mdl,
-                  data: EventFormData,
-                  state: EventFormState,
-                }),
-            },
-            "Submit"
-          ),
-        }
-      ),
+      m(EventForm, {
+        mdl,
+        data: EventFormData,
+        state: EventFormState,
+        validate,
+        resetState,
+        submit: addNewEvent,
+      }),
   }
 }
