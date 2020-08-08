@@ -1,10 +1,8 @@
-import { getHour } from "Utils"
-
 export const EventToolbar = () => {
   return {
-    view: ({ attrs: { mdl } }) =>
+    view: ({ attrs: { mdl } }) => [
       m(
-        "button",
+        "button.col-xs-1-1",
         {
           onclick: (e) => {
             mdl.State.toAnchor(mdl.Events.currentEventStartTime().format("HH"))
@@ -15,5 +13,6 @@ export const EventToolbar = () => {
         },
         "Back"
       ),
+    ],
   }
 }

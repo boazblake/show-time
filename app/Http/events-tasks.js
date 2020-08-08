@@ -1,9 +1,9 @@
 import Task from "data.task"
 import { getInvitesTask } from "./invites-tasks"
 import { compose, filter, head, propEq } from "ramda"
-import { getHour, getMin } from "Utils"
+import { getHour, getMin, displayTimeFormat } from "Utils"
 
-const toEventviewModel = ({
+const toEventviewModel = (mdl) => ({
   start,
   end,
   title,
@@ -18,8 +18,8 @@ const toEventviewModel = ({
     title: title.toUpperCase(),
     start,
     end,
-    startTime: M.utc(start).format("HH:mm"),
-    endTime: M.utc(end).format("HH:mm"),
+    startTime: M.utc(start).format(displayTimeFormat(mdl)),
+    endTime: M.utc(end).format(displayTimeFormat(mdl)),
     notes,
     allDay,
     location,
@@ -31,7 +31,7 @@ const toEventviewModel = ({
 export const getEventTask = (http) => (mdl) =>
   http.backEnd
     .getTask(mdl)(`data/Events/${mdl.Events.currentEventId()}`)
-    .map(toEventviewModel)
+    .map(toEventviewModel(mdl))
 
 export const loadEventAndInviteTask = (http) => (mdl) =>
   Task.of((event) => (invite) => {

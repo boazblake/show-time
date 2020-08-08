@@ -10,8 +10,6 @@ if (module.hot) {
   module.hot.accept()
 }
 
-console.log(process)
-
 if (process.env.NODE_ENV == "development") {
   console.log("Looks like we are in development mode!")
 } else {
@@ -54,6 +52,7 @@ checkWidth(winW)
 if (sessionStorage.getItem("shindigit-user")) {
   Model.User = JSON.parse(sessionStorage.getItem("shindigit-user"))
   Model.State.isAuth(true)
+  Model.User.profile && Model.State.is24Hrs(Model.User.profile.is24Hrs)
 } else {
   m.route.set("/logout")
 }

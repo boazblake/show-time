@@ -1,5 +1,5 @@
 import { Layout } from "Components"
-import { Home, Event } from "Pages"
+import { Home, Event, Profile } from "Pages"
 import { scrollToAnchor } from "Utils"
 
 const AuthenticatedRoutes = [
@@ -13,7 +13,7 @@ const AuthenticatedRoutes = [
     children: [],
     options: [],
     onmatch: (mdl, args, path, fullroute, isAnchor) => {},
-    component: (mdl) => m(Home, { mdl }),
+    component: (mdl) => m(Layout, { mdl }, m(Profile, { mdl })),
   },
   {
     id: "day-planner",

@@ -7,20 +7,17 @@ const State = {
   isLoading: Stream(false),
   loadingProgress: { max: 0, value: 0 },
   isLoggedIn: () => sessionStorage.getItem("token"),
-  timeFormats: ["12hrs", "24hrs"],
-  format: Stream(1),
+  is24Hrs: Stream(true),
   toAnchor: Stream(false),
   slug: "",
 }
 
 export const dayModel = (mdl) =>
-  getHoursInDay(mdl.State.timeFormats[mdl.State.format()]).reduce(
-    (day, hour) => {
-      day[hour] = []
-      return day
-    },
-    {}
-  )
+  getHoursInDay().reduce((day, hour) => {
+    day[hour] = []
+    // console.log(day, hour)
+    return day
+  }, {})
 
 export const inviteModel = () => ({
   eventId: "",
@@ -38,7 +35,7 @@ const Invites = {
 const Day = {
   data: dayModel({ State }),
   update: Stream(false),
-  listView: Stream(false),
+  listView: Stream(true),
 }
 
 const Home = {
@@ -51,6 +48,10 @@ const Calendar = {
   data: calendarModel({ mdl: Model, invites: [], date: M.utc() }),
 }
 const User = {}
+
+const Sidebar = {
+  isShowing: Stream(false),
+}
 
 const Model = {
   // currentShortDate: Stream(""), //REMOVE
@@ -66,6 +67,7 @@ const Model = {
   Settings,
   User,
   Home,
+  Sidebar,
 }
 
 export default Model

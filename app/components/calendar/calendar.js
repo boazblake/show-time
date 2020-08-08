@@ -1,5 +1,4 @@
 import { createCalendar, calendarDayStyle } from "./calendar-model"
-import { Toolbar } from "Components"
 import { daysOfTheWeek, firstInviteHour } from "Utils"
 const Navbar = () => {
   return {

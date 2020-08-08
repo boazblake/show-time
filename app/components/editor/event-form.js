@@ -1,4 +1,5 @@
 import { HTTP, locateQueryTask } from "Http"
+import { displayTimeFormat } from "Utils"
 
 const locateQuery = (mdl) => (state) => (query) => {
   const onError = (err) => {
@@ -39,15 +40,15 @@ export const EventForm = () => {
         m(".frow column-centered", [
           m(
             ".full-width",
-            m("label.frow row row-evenly gutters", [
-              m("input.col-xs-2-3", {
+            m("label.frow row row-evenly ", [
+              m("input.col-xs-2-3 ", {
                 onchange: (e) =>
                   m.route.set(`/${mdl.User.name}/${e.target.value}`),
                 type: "date",
                 value: mdl.selectedDate().format("YYYY-MM-DD"),
               }),
               m(
-                "label.col-xs-1-3",
+                "label.pl-30.col-xs-1-3",
                 "All Day",
                 m("input", {
                   type: "checkbox",

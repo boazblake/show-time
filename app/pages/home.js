@@ -1,7 +1,7 @@
 import { Calendar, Day, Editor } from "Components"
 import { HTTP, getInvitesTask } from "Http"
 import { dayModel } from "Models"
-import { datesAreSame, log } from "Utils"
+import { datesAreSame } from "Utils"
 
 const toDayViewModel = (dayViewModel, invite) => {
   dayViewModel[`${invite.start.format("HH")}:00`].push(invite)
@@ -57,7 +57,9 @@ export const Home = ({ attrs: { mdl } }) => {
 
           m(`.frow-container frow`, [
             m(
-              `.col-xs-2-3.${mdl.Home.modal() ? "bg-warn" : "bg-info"}`,
+              `.${
+                mdl.Home.modal() ? "bg-warn.col-xs-1-1." : "bg-info.col-xs-2-3"
+              }`,
               m(
                 `button.max-width`,
                 {

@@ -3,11 +3,12 @@ import {
   firstInviteHour,
   inviteOptions,
   getInviteStatusColor,
+  displayTimeFormat,
 } from "Utils"
 
 const createEventUrl = (invite) =>
   `${invite.start.format("YYYY-MM-DD")}/${invite.start.format(
-    "HH"
+    "h"
   )}/${invite.start.format("mm")}`
 
 const HourInvite = () => {
@@ -43,7 +44,7 @@ const scrollToCurrentTimeOrInvite = (mdl, invites) => {
     ? mdl.State.toAnchor()
     : first
     ? first
-    : M().format("HH")
+    : M().format("h")
   let el = document.getElementById(`${hour}:00`)
   el &&
     el.scrollIntoView({
@@ -78,7 +79,7 @@ const ListView = () => {
       m(
         "ul",
         invites.map((invite) => {
-          console.log(invite)
+          // console.log(invite)
           return m(
             "li.frow-container",
             {
@@ -95,9 +96,9 @@ const ListView = () => {
               m(".frow row-start", [
                 m(
                   "label.col-xs-1-3",
-                  `${invite.start.format("HH:mm")} - ${invite.end.format(
-                    "HH:mm"
-                  )}`
+                  `${invite.start.format(
+                    displayTimeFormat(mdl)
+                  )} - ${invite.end.format(displayTimeFormat(mdl))}`
                 ),
                 m("label.col-xs-1-4"),
               ]),
@@ -119,16 +120,14 @@ export const Day = ({ attrs: { mdl } }) => {
         m(".day-container", [
           mdl.Day.listView()
             ? m(ListView, { mdl, invites })
-            : getHoursInDay(mdl.State.timeFormats[mdl.State.format()]).map(
-                (hour, idx) => {
-                  return m(HourView, {
-                    mdl,
-                    invites: day[hour],
-                    hour,
-                    events: day[hour],
-                  })
-                }
-              ),
+            : getHoursInDay().map((hour, idx) => {
+                return m(HourView, {
+                  mdl,
+                  invites: day[hour],
+                  hour,
+                  events: day[hour],
+                })
+              }),
         ]),
       ])
     },

@@ -1,7 +1,7 @@
-import { NavLink } from "Components"
-import { jsonCopy, shortDate } from "Utils"
+import { jsonCopy } from "Utils"
 import { validateLoginTask } from "./Validations.js"
-import { HTTP, loginTask } from "Http"
+import { HTTP, loginTask, getUserProfileTask, setUserToken } from "Http"
+import { map } from "ramda"
 
 const validateForm = (mdl) => (data) => {
   const onError = (errs) => {
@@ -27,6 +27,16 @@ const validateForm = (mdl) => (data) => {
 
   validateLoginTask(data.userModel)
     .chain(loginTask(HTTP)(mdl))
+    .chain((user) => {
+      mdl.User = user
+      return getUserProfileTask(HTTP)(mdl)
+    })
+    .map(
+      map((profile) => {
+        mdl.User.profile = profile
+        setUserToken(mdl)(mdl.User)
+      })
+    )
     .fork(onError, onSuccess(mdl))
 }
 

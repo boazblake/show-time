@@ -65,36 +65,31 @@ ul {
   list-style: none;
 }
 
-ul li.decline::before {
+%invite-list::before {
   content: "\2022";
-  color: var(--decline-invite);
   font-weight: bold;
   display: inline-block;
-  width: 1em;
-  margin-left: -1em;
   font-size: 40px;
+  position: relative;
+  top:30px;
+  left: -30px;
+}
+
+ul li.decline::before {
+  @extend %invite-list;
+  color: var(--decline-invite);
 }
 
 
 ul li.accept::before {
-  content: "\2022";
+  @extend %invite-list;
   color: var(--accept-invite);
-  font-weight: bold;
-  display: inline-block;
-  width: 1em;
-  margin-left: -1em;
-  font-size: 40px;
 }
 
 
 ul li.maybe::before {
-  content: "\2022";
+  @extend %invite-list;
   color: var(--maybe-invite);
-  font-weight: bold;
-  display: inline-block;
-  width: 1em;
-  margin-left: -1em;
-  font-size: 40px;
 }
 
 .centerMonthGroup {
@@ -258,7 +253,12 @@ ul li.maybe::before {
   line-height: 2rem;
 }
 
-
+.sidebar {
+  width: 100vw;
+  height: 100vh;
+  background-color: var(--dark);
+  color: var(--white);
+}
 
 @media screen and (min-width: 600px) and (max-width: 899px) {
 

@@ -1,6 +1,12 @@
 import { jsonCopy } from "Utils"
 import { validateUserRegistrationTask } from "./Validations"
-import { HTTP, loginTask, registerTask } from "Http"
+import {
+  HTTP,
+  loginTask,
+  registerTask,
+  createProfileTask,
+  linkProfileTask,
+} from "Http"
 
 const userModel = {
   name: "",
@@ -59,6 +65,11 @@ export const validateForm = (mdl) => (data) => {
         email: data.userModel.email,
         password: data.userModel.password,
       })
+        .chain((_) => createProfileTask(HTTP)(mdl))
+        .chain((profile) => {
+          mdl.User.profile = profile
+          return linkProfileTask(HTTP)(mdl)
+        })
     )
     .fork(onError, onSuccess(mdl))
 }

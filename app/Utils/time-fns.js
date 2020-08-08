@@ -8,10 +8,18 @@ export const pad0Left = (num) => `0${num}`
 export const getHour = (time) => time.split(":")[0]
 export const getMin = (time) => time.split(":")[1]
 
-export const getHoursInDay = (format) =>
-  range(format == "24hrs" ? 24 : 12)
-    .map((n) => (n.toString().length == 1 ? pad0Left(n) : n))
+export const displayTimeFormat = (mdl) =>
+  mdl.User.profile.is24Hrs ? "HH:mm" : "h:mm a"
+
+//need to fix to work for 12 hrs
+export const getHoursInDay = (format) => {
+  return range(24)
+    .map((n) => {
+      // console.log("n", n, M().hour(n).format('HH'))
+      return M().hour(n).format("HH")
+    })
     .map(pad00Min)
+}
 
 export const datesAreSame = (first) => (second) => (format) => {
   let f = M.utc(first).format(format)

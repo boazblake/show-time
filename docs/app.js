@@ -206,6 +206,7 @@ var toRoutes = function toRoutes(mdl) {
 
         mdl.State.route = route;
         mdl.State.anchor = path.split("#")[1];
+        mdl.Sidebar.isShowing(false);
         route.onmatch(mdl, args, path, fullroute);
       },
       render: function render() {
@@ -378,8 +379,6 @@ exports.Calendar = void 0;
 
 var _calendarModel = require("./calendar-model");
 
-var _Components = require("Components");
-
 var _Utils = require("Utils");
 
 var Navbar = function Navbar() {
@@ -502,7 +501,7 @@ exports.Day = exports.HourView = void 0;
 var _Utils = require("Utils");
 
 var createEventUrl = function createEventUrl(invite) {
-  return "".concat(invite.start.format("YYYY-MM-DD"), "/").concat(invite.start.format("HH"), "/").concat(invite.start.format("mm"));
+  return "".concat(invite.start.format("YYYY-MM-DD"), "/").concat(invite.start.format("h"), "/").concat(invite.start.format("mm"));
 };
 
 var HourInvite = function HourInvite() {
@@ -531,7 +530,7 @@ var HourInvite = function HourInvite() {
 
 var scrollToCurrentTimeOrInvite = function scrollToCurrentTimeOrInvite(mdl, invites) {
   var first = (0, _Utils.firstInviteHour)(invites);
-  var hour = mdl.State.toAnchor() ? mdl.State.toAnchor() : first ? first : M().format("HH");
+  var hour = mdl.State.toAnchor() ? mdl.State.toAnchor() : first ? first : M().format("h");
   var el = document.getElementById("".concat(hour, ":00"));
   el && el.scrollIntoView({
     top: 0,
@@ -570,7 +569,7 @@ var ListView = function ListView() {
           mdl = _ref3$attrs.mdl,
           invites = _ref3$attrs.invites;
       return m("ul", invites.map(function (invite) {
-        console.log(invite);
+        // console.log(invite)
         return m("li.frow-container", {
           class: _Utils.inviteOptions[invite.status],
           onclick: function onclick(e) {
@@ -579,7 +578,7 @@ var ListView = function ListView() {
             localStorage.setItem("eventId", invite.eventId);
             m.route.set("/".concat(mdl.User.name, "/").concat(createEventUrl(invite)));
           }
-        }, [m("h3", invite.title), m(".frow row-start", [m("label.col-xs-1-3", "".concat(invite.start.format("HH:mm"), " - ").concat(invite.end.format("HH:mm"))), m("label.col-xs-1-4")])]);
+        }, [m("h3", invite.title), m(".frow row-start", [m("label.col-xs-1-3", "".concat(invite.start.format((0, _Utils.displayTimeFormat)(mdl)), " - ").concat(invite.end.format((0, _Utils.displayTimeFormat)(mdl)))), m("label.col-xs-1-4")])]);
       }));
     }
   };
@@ -608,7 +607,7 @@ var Day = function Day(_ref4) {
       return m(".day", [m(".day-container", [mdl.Day.listView() ? m(ListView, {
         mdl: mdl,
         invites: invites
-      }) : (0, _Utils.getHoursInDay)(mdl.State.timeFormats[mdl.State.format()]).map(function (hour, idx) {
+      }) : (0, _Utils.getHoursInDay)().map(function (hour, idx) {
         return m(HourView, {
           mdl: mdl,
           invites: day[hour],
@@ -735,6 +734,8 @@ exports.EventForm = void 0;
 
 var _Http = require("Http");
 
+var _Utils = require("Utils");
+
 var locateQuery = function locateQuery(mdl) {
   return function (state) {
     return function (query) {
@@ -778,13 +779,13 @@ var EventForm = function EventForm() {
           mdl = _ref$attrs.mdl,
           validate = _ref$attrs.validate,
           submit = _ref$attrs.submit;
-      return m("form.event-form", m(".frow column-centered", [m(".full-width", m("label.frow row row-evenly gutters", [m("input.col-xs-2-3", {
+      return m("form.event-form", m(".frow column-centered", [m(".full-width", m("label.frow row row-evenly ", [m("input.col-xs-2-3 ", {
         onchange: function onchange(e) {
           return m.route.set("/".concat(mdl.User.name, "/").concat(e.target.value));
         },
         type: "date",
         value: mdl.selectedDate().format("YYYY-MM-DD")
-      }), m("label.col-xs-1-3", "All Day", m("input", {
+      }), m("label.pl-30.col-xs-1-3", "All Day", m("input", {
         type: "checkbox",
         checked: data.allDay,
         onclick: function onclick(e) {
@@ -951,18 +952,16 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.EventToolbar = void 0;
 
-var _Utils = require("Utils");
-
 var EventToolbar = function EventToolbar() {
   return {
     view: function view(_ref) {
       var mdl = _ref.attrs.mdl;
-      return m("button", {
+      return [m("button.col-xs-1-1", {
         onclick: function onclick(e) {
           mdl.State.toAnchor(mdl.Events.currentEventStartTime().format("HH"));
           m.route.set("/".concat(mdl.User.name, "/").concat(mdl.selectedDate().format("YYYY-MM-DD")));
         }
-      }, "Back");
+      }, "Back")];
     }
   };
 };
@@ -982,22 +981,17 @@ var HomeToolbar = function HomeToolbar() {
   return {
     view: function view(_ref) {
       var mdl = _ref.attrs.mdl;
-      return m(".toolbar", [m("input.cal-toolbar-input", {
+      return [m("input.col-xs-1-2", {
         onchange: function onchange(e) {
           return m.route.set("/".concat(mdl.User.name, "/").concat(mdl.selectedDate().format("YYYY-MM-DD")));
         },
         type: "date",
         value: mdl.selectedDate().format("YYYY-MM-DD")
       }), m(m.route.Link, {
+        class: "col-xs-1-2",
         selector: "button",
-        class: "cal-toolbar-input",
         href: "/".concat(mdl.User.name, "/").concat(M.utc().format("YYYY-MM-DD"))
-      }, "Today"), m(m.route.Link, {
-        selector: "button",
-        class: "cal-toolbar-input",
-        // onclick: (e) => logout,
-        href: "/logout"
-      }, "Logout")]);
+      }, "Today")];
     }
   };
 };
@@ -1131,6 +1125,18 @@ Object.keys(_authLayout).forEach(function (key) {
     }
   });
 });
+
+var _sidebar = require("./sidebar.js");
+
+Object.keys(_sidebar).forEach(function (key) {
+  if (key === "default" || key === "__esModule") return;
+  Object.defineProperty(exports, key, {
+    enumerable: true,
+    get: function get() {
+      return _sidebar[key];
+    }
+  });
+});
 });
 
 ;require.register("Components/layout.js", function(exports, require, module) {
@@ -1152,23 +1158,40 @@ var Header = function Header() {
   return {
     view: function view(_ref) {
       var mdl = _ref.attrs.mdl;
-      return [getRoute(mdl) == "day-planner" && m(_Components.HomeToolbar, {
+      return m(".col-xs-4-5.frow row row-start", [getRoute(mdl) == "day-planner" && m(_Components.HomeToolbar, {
         mdl: mdl
       }), getRoute(mdl) == "event" && m(_Components.EventToolbar, {
         mdl: mdl
-      })];
+      })]);
+    }
+  };
+};
+
+var Hamburger = function Hamburger() {
+  return {
+    view: function view(_ref2) {
+      var mdl = _ref2.attrs.mdl;
+      return m("button.col-xs-1-5", {
+        onclick: function onclick(e) {
+          return mdl.Sidebar.isShowing(!mdl.Sidebar.isShowing());
+        }
+      }, mdl.Sidebar.isShowing() ? "Close" : "Menu");
     }
   };
 };
 
 var Layout = function Layout() {
   return {
-    view: function view(_ref2) {
-      var children = _ref2.children,
-          mdl = _ref2.attrs.mdl;
-      return m(".lt-grid-container", [m(".lt-header", m(Header, {
+    view: function view(_ref3) {
+      var children = _ref3.children,
+          mdl = _ref3.attrs.mdl;
+      return m(".lt-grid-container", [m(".lt-header.frow row row-start", [m(Header, {
         mdl: mdl
-      })), m(".lt-body", children), m(".lt-footer", "FOOTER")]);
+      }), m(Hamburger, {
+        mdl: mdl
+      })]), mdl.Sidebar.isShowing() ? m(_Components.Sidebar, {
+        mdl: mdl
+      }) : m(".lt-body", children), m(".lt-footer", "FOOTER")]);
     }
   };
 };
@@ -1245,13 +1268,48 @@ var NavLink = function NavLink() {
 exports.NavLink = NavLink;
 });
 
+;require.register("Components/sidebar.js", function(exports, require, module) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.Sidebar = void 0;
+
+var Sidebar = function Sidebar() {
+  return {
+    view: function view(_ref) {
+      var mdl = _ref.attrs.mdl;
+      return m(".sidebar", [m("ul", [m("li", m(m.route.Link, {
+        selector: "button",
+        class: "col-xs-1-3",
+        // onclick: (e) => logout,
+        href: "/".concat(mdl.User.name, "/").concat(M(mdl.selectedDate()).format("YYYY-MM-DD"))
+      }, "Home")), m("li", m(m.route.Link, {
+        selector: "button",
+        class: "col-xs-1-3",
+        // onclick: (e) => logout,
+        href: "/profile/".concat(mdl.User.name)
+      }, "Profile")), m("li", m(m.route.Link, {
+        selector: "button",
+        class: "col-xs-1-3",
+        // onclick: (e) => logout,
+        href: "/logout"
+      }, "Logout"))])]);
+    }
+  };
+};
+
+exports.Sidebar = Sidebar;
+});
+
 ;require.register("Http/auth-tasks.js", function(exports, require, module) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.registerTask = exports.loginTask = void 0;
+exports.updateUserProfile = exports.getUserProfileTask = exports.linkProfileTask = exports.createProfileTask = exports.registerTask = exports.loginTask = exports.setUserToken = void 0;
 
 var setUserToken = function setUserToken(mdl) {
   return function (user) {
@@ -1262,6 +1320,8 @@ var setUserToken = function setUserToken(mdl) {
     return user;
   };
 };
+
+exports.setUserToken = setUserToken;
 
 var loginTask = function loginTask(http) {
   return function (mdl) {
@@ -1296,6 +1356,42 @@ var registerTask = function registerTask(http) {
 };
 
 exports.registerTask = registerTask;
+
+var createProfileTask = function createProfileTask(http) {
+  return function (mdl) {
+    return http.backEnd.postTask(mdl)("data/Profiles")({
+      userId: mdl.User.objectId
+    });
+  };
+};
+
+exports.createProfileTask = createProfileTask;
+
+var linkProfileTask = function linkProfileTask(http) {
+  return function (mdl) {
+    return http.backEnd.postTask(mdl)("data/Users/".concat(mdl.User.objectId, "/profile%3AProfiles%3A1"))([mdl.User.profile.objectId]);
+  };
+};
+
+exports.linkProfileTask = linkProfileTask;
+
+var getUserProfileTask = function getUserProfileTask(http) {
+  return function (mdl) {
+    return http.backEnd.getTask(mdl)("data/Profiles?where=userId%3D'".concat(mdl.User.objectId, "'"));
+  };
+};
+
+exports.getUserProfileTask = getUserProfileTask;
+
+var updateUserProfile = function updateUserProfile(http) {
+  return function (mdl) {
+    return function (profile) {
+      return http.backEnd.putTask(mdl)("data/Profiles/".concat(mdl.User.profile.objectId))(profile);
+    };
+  };
+};
+
+exports.updateUserProfile = updateUserProfile;
 });
 
 ;require.register("Http/events-tasks.js", function(exports, require, module) {
@@ -1316,33 +1412,35 @@ var _Utils = require("Utils");
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-var toEventviewModel = function toEventviewModel(_ref) {
-  var start = _ref.start,
-      end = _ref.end,
-      title = _ref.title,
-      notes = _ref.notes,
-      allDay = _ref.allDay,
-      location = _ref.location,
-      inPerson = _ref.inPerson,
-      latlong = _ref.latlong;
-  return {
-    date: M.utc(start).format("DD-MM-YYYY"),
-    title: title.toUpperCase(),
-    start: start,
-    end: end,
-    startTime: M.utc(start).format("HH:mm"),
-    endTime: M.utc(end).format("HH:mm"),
-    notes: notes,
-    allDay: allDay,
-    location: location,
-    inPerson: inPerson,
-    latlong: latlong
+var toEventviewModel = function toEventviewModel(mdl) {
+  return function (_ref) {
+    var start = _ref.start,
+        end = _ref.end,
+        title = _ref.title,
+        notes = _ref.notes,
+        allDay = _ref.allDay,
+        location = _ref.location,
+        inPerson = _ref.inPerson,
+        latlong = _ref.latlong;
+    return {
+      date: M.utc(start).format("DD-MM-YYYY"),
+      title: title.toUpperCase(),
+      start: start,
+      end: end,
+      startTime: M.utc(start).format((0, _Utils.displayTimeFormat)(mdl)),
+      endTime: M.utc(end).format((0, _Utils.displayTimeFormat)(mdl)),
+      notes: notes,
+      allDay: allDay,
+      location: location,
+      inPerson: inPerson,
+      latlong: latlong
+    };
   };
 };
 
 var getEventTask = function getEventTask(http) {
   return function (mdl) {
-    return http.backEnd.getTask(mdl)("data/Events/".concat(mdl.Events.currentEventId())).map(toEventviewModel);
+    return http.backEnd.getTask(mdl)("data/Events/".concat(mdl.Events.currentEventId())).map(toEventviewModel(mdl));
   };
 };
 
@@ -1793,15 +1891,15 @@ var State = {
   isLoggedIn: function isLoggedIn() {
     return sessionStorage.getItem("token");
   },
-  timeFormats: ["12hrs", "24hrs"],
-  format: Stream(1),
+  is24Hrs: Stream(true),
   toAnchor: Stream(false),
   slug: ""
 };
 
 var dayModel = function dayModel(mdl) {
-  return (0, _Utils.getHoursInDay)(mdl.State.timeFormats[mdl.State.format()]).reduce(function (day, hour) {
-    day[hour] = [];
+  return (0, _Utils.getHoursInDay)().reduce(function (day, hour) {
+    day[hour] = []; // console.log(day, hour)
+
     return day;
   }, {});
 };
@@ -1829,7 +1927,7 @@ var Day = {
     State: State
   }),
   update: Stream(false),
-  listView: Stream(false)
+  listView: Stream(true)
 };
 var Home = {
   modal: Stream(false)
@@ -1846,6 +1944,9 @@ var Calendar = {
   })
 };
 var User = {};
+var Sidebar = {
+  isShowing: Stream(false)
+};
 var Model = {
   // currentShortDate: Stream(""), //REMOVE
   // currentLongDate: Stream(""), //REMOVE
@@ -1860,7 +1961,8 @@ var Model = {
   State: State,
   Settings: Settings,
   User: User,
-  Home: Home
+  Home: Home,
+  Sidebar: Sidebar
 };
 var _default = Model;
 exports.default = _default;
@@ -1941,13 +2043,13 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.default = exports.Login = void 0;
 
-var _Components = require("Components");
-
 var _Utils = require("Utils");
 
 var _Validations = require("./Validations.js");
 
 var _Http = require("Http");
+
+var _ramda = require("ramda");
 
 var validateForm = function validateForm(mdl) {
   return function (data) {
@@ -1973,7 +2075,13 @@ var validateForm = function validateForm(mdl) {
     };
 
     state.isSubmitted = true;
-    (0, _Validations.validateLoginTask)(data.userModel).chain((0, _Http.loginTask)(_Http.HTTP)(mdl)).fork(onError, onSuccess(mdl));
+    (0, _Validations.validateLoginTask)(data.userModel).chain((0, _Http.loginTask)(_Http.HTTP)(mdl)).chain(function (user) {
+      mdl.User = user;
+      return (0, _Http.getUserProfileTask)(_Http.HTTP)(mdl);
+    }).map((0, _ramda.map)(function (profile) {
+      mdl.User.profile = profile;
+      (0, _Http.setUserToken)(mdl)(mdl.User);
+    })).fork(onError, onSuccess(mdl));
   };
 };
 
@@ -2130,6 +2238,11 @@ var validateForm = function validateForm(mdl) {
       return (0, _Http.loginTask)(_Http.HTTP)(mdl)({
         email: data.userModel.email,
         password: data.userModel.password
+      }).chain(function (_) {
+        return (0, _Http.createProfileTask)(_Http.HTTP)(mdl);
+      }).chain(function (profile) {
+        mdl.User.profile = profile;
+        return (0, _Http.linkProfileTask)(_Http.HTTP)(mdl);
       });
     }).fork(onError, onSuccess(mdl));
   };
@@ -2463,7 +2576,7 @@ var Home = function Home(_ref) {
         mdl: mdl,
         date: mdl.selectedDate(),
         invites: state.invites
-      }), m(".frow-container frow", [m(".col-xs-2-3.".concat(mdl.Home.modal() ? "bg-warn" : "bg-info"), m("button.max-width", {
+      }), m(".frow-container frow", [m(".".concat(mdl.Home.modal() ? "bg-warn.col-xs-1-1." : "bg-info.col-xs-2-3"), m("button.max-width", {
         onclick: function onclick(e) {
           return mdl.Home.modal(!mdl.Home.modal());
         }
@@ -2516,6 +2629,18 @@ Object.keys(_event).forEach(function (key) {
   });
 });
 
+var _profile = require("./profile.js");
+
+Object.keys(_profile).forEach(function (key) {
+  if (key === "default" || key === "__esModule") return;
+  Object.defineProperty(exports, key, {
+    enumerable: true,
+    get: function get() {
+      return _profile[key];
+    }
+  });
+});
+
 var _loginUser = require("./Auth/login-user");
 
 Object.keys(_loginUser).forEach(function (key) {
@@ -2539,6 +2664,57 @@ Object.keys(_registerUser).forEach(function (key) {
     }
   });
 });
+});
+
+;require.register("Pages/profile.js", function(exports, require, module) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.Profile = void 0;
+
+var _Http = require("Http");
+
+var Profile = function Profile() {
+  var state = {
+    errors: null,
+    status: "loading"
+  };
+
+  var updatePrefs = function updatePrefs(mdl) {
+    var onError = function onError(err) {
+      state.error = err;
+      state.status = "failed";
+    };
+
+    var onSuccess = function onSuccess(profile) {
+      mdl.User.profile = profile;
+      state.error = null;
+      state.status = "success";
+      (0, _Http.setUserToken)(mdl)(mdl.User);
+    };
+
+    (0, _Http.updateUserProfile)(_Http.HTTP)(mdl)(mdl.User.profile).fork(onError, onSuccess);
+  };
+
+  return {
+    view: function view(_ref) {
+      var mdl = _ref.attrs.mdl;
+      console.log(mdl);
+      return m(".profile", [m("h1", "Profile Page"), m("label", "Use 24 Hrs", m("input", {
+        type: "checkbox",
+        checked: mdl.User.profile.is24Hrs,
+        onclick: function onclick(e) {
+          mdl.User.profile.is24Hrs = !mdl.User.profile.is24Hrs;
+          updatePrefs(mdl);
+        }
+      }))]);
+    }
+  };
+};
+
+exports.Profile = Profile;
 });
 
 ;require.register("Routes/authenticated-routes.js", function(exports, require, module) {
@@ -2566,9 +2742,11 @@ var AuthenticatedRoutes = [{
   options: [],
   onmatch: function onmatch(mdl, args, path, fullroute, isAnchor) {},
   component: function component(mdl) {
-    return m(_Pages.Home, {
+    return m(_Components.Layout, {
       mdl: mdl
-    });
+    }, m(_Pages.Profile, {
+      mdl: mdl
+    }));
   }
 }, {
   id: "day-planner",
@@ -3107,7 +3285,7 @@ exports.locals = locals;
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.firstInviteHour = exports.shortDateString = exports.toHourViewModel = exports.getFullDate = exports.fromFullDate = exports.monthsOfTheYear = exports.daysOfTheWeek = exports.isToday = exports.datesAreSame = exports.getHoursInDay = exports.getMin = exports.getHour = exports.pad0Left = exports.pad00Min = exports.padding = void 0;
+exports.firstInviteHour = exports.shortDateString = exports.toHourViewModel = exports.getFullDate = exports.fromFullDate = exports.monthsOfTheYear = exports.daysOfTheWeek = exports.isToday = exports.datesAreSame = exports.getHoursInDay = exports.displayTimeFormat = exports.getMin = exports.getHour = exports.pad0Left = exports.pad00Min = exports.padding = void 0;
 
 var _index = require("./index");
 
@@ -3143,9 +3321,17 @@ var getMin = function getMin(time) {
 
 exports.getMin = getMin;
 
+var displayTimeFormat = function displayTimeFormat(mdl) {
+  return mdl.User.profile.is24Hrs ? "HH:mm" : "h:mm a";
+}; //need to fix to work for 12 hrs
+
+
+exports.displayTimeFormat = displayTimeFormat;
+
 var getHoursInDay = function getHoursInDay(format) {
-  return (0, _index.range)(format == "24hrs" ? 24 : 12).map(function (n) {
-    return n.toString().length == 1 ? pad0Left(n) : n;
+  return (0, _index.range)(24).map(function (n) {
+    // console.log("n", n, M().hour(n).format('HH'))
+    return M().hour(n).format("HH");
   }).map(pad00Min);
 };
 
@@ -3355,8 +3541,6 @@ if (module.hot) {
   module.hot.accept();
 }
 
-console.log(process);
-
 if ('development' == "development") {
   console.log("Looks like we are in development mode!");
 } else {
@@ -3398,6 +3582,8 @@ if (sessionStorage.getItem("shindigit-user")) {
   _Models.default.User = JSON.parse(sessionStorage.getItem("shindigit-user"));
 
   _Models.default.State.isAuth(true);
+
+  _Models.default.User.profile && _Models.default.State.is24Hrs(_Models.default.User.profile.is24Hrs);
 } else {
   m.route.set("/logout");
 }

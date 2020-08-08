@@ -8,6 +8,7 @@ const toRoutes = (mdl) => (acc, route) => {
       }
       mdl.State.route = route
       mdl.State.anchor = path.split("#")[1]
+      mdl.Sidebar.isShowing(false)
       route.onmatch(mdl, args, path, fullroute)
     },
     render: () => route.component(mdl),
