@@ -184,12 +184,14 @@ export const EventForm = () => {
           m(
             "button.full-width",
             {
-              onclick: (e) =>
+              onclick: (e) => {
+                e.preventDefault()
                 submit({
                   mdl,
                   data,
                   state,
-                }),
+                })
+              },
             },
             "Submit"
           ),

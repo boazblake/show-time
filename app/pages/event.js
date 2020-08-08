@@ -111,7 +111,7 @@ export const Event = ({ attrs: { mdl } }) => {
               m(".accordian-item.full-width", [
                 m(".accordian-item-title", [
                   m(
-                    ".frow columns",
+                    ".frow",
                     m(".col-xs-1-2", m("h4", "INFO")),
                     m(
                       ".frow row-end col-xs-1-3",
@@ -141,7 +141,7 @@ export const Event = ({ attrs: { mdl } }) => {
               m(".accordian-item.full-width", [
                 m(".accordian-item-title", [
                   m(
-                    ".frow columns",
+                    ".frow",
                     m(".col-xs-1-2", m("h4", "RSVP")),
                     m(
                       ".frow row-end col-xs-1-3",
@@ -191,7 +191,7 @@ export const Event = ({ attrs: { mdl } }) => {
               m(".accordian-item.full-width", [
                 m(".accordian-item-title", [
                   m(
-                    ".frow columns",
+                    ".frow",
                     m(".col-xs-1-2", m("h4", "EDIT EVENT")),
                     m(
                       ".frow row-end col-xs-1-3",

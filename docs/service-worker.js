@@ -37,7 +37,7 @@
 /* eslint-disable indent, no-unused-vars, no-multiple-empty-lines, max-nested-callbacks, space-before-function-paren, quotes, comma-spacing */
 'use strict';
 
-var precacheConfig = [["app.css","ed3fd557fce33ec5c648174e6f82826e"],["app.js","0f52f05f90d1f22ea82c854d3da14e28"],["index.html","968449701a6117fd26f52b48a49d846e"]];
+var precacheConfig = [["app.css","dce53dc28c3816ea878a05947a393761"],["app.js","c9fa55959f3d3d095298d257b5c483f2"],["index.html","968449701a6117fd26f52b48a49d846e"],["vendor.js","2ecf9c040477481830af50804b12036e"]];
 var cacheName = 'sw-precache-v3--' + (self.registration ? self.registration.scope : '');
 
 
