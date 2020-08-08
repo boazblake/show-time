@@ -56,11 +56,10 @@ exports.plugins = {
     ],
   },
   copycat: {
-    // fonts: [
-    //   "node_modules/@mithril-icons/clarity/cjs"
-    //   "bower_components/material-design-iconic-font",
-    //   "bower_components/font-awesome/fonts"
-    // ],
+    fonts: [
+      // "app/assets/fonts",
+      "node_modules/@mithril-icons/clarity/cjs",
+    ],
     images: ["app/assets/images"],
     verbose: true, //shows each file that is copied to the destination directory
     onlyChanged: true, //only copy a file if it's modified time has changed (only effective when using brunch watch)

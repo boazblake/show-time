@@ -1,2 +1,3428 @@
-!function(){"use strict";var e="undefined"==typeof global?self:global;if("function"!=typeof e.require){var t={},r={},n={},o={}.hasOwnProperty,a=/^\.\.?(\/|$)/,i=function(e,t){for(var r,n=[],o=(a.test(t)?e+"/"+t:t).split("/"),i=0,u=o.length;i<u;i++)r=o[i],".."===r?n.pop():"."!==r&&""!==r&&n.push(r);return n.join("/")},u=function(e){return e.split("/").slice(0,-1).join("/")},s=function(t){return function(r){var n=i(u(t),r);return e.require(n,t)}},c=function(e,t){var n=g&&g.createHot(e),o={id:e,exports:{},hot:n};return r[e]=o,t(o.exports,s(e),o),o.exports},l=function(e){var t=n[e];return t&&e!==t?l(t):e},d=function(e,t){return l(i(u(e),t))},f=function(e,n){null==n&&(n="/");var a=l(e);if(o.call(r,a))return r[a].exports;if(o.call(t,a))return c(a,t[a]);throw new Error("Cannot find module '"+e+"' from '"+n+"'")};f.alias=function(e,t){n[t]=e};var m=/\.[^.\/]+$/,v=/\/index(\.[^\/]+)?$/,p=function(e){if(m.test(e)){var t=e.replace(m,"");o.call(n,t)&&n[t].replace(m,"")!==t+"/index"||(n[t]=e)}if(v.test(e)){var r=e.replace(v,"");o.call(n,r)||(n[r]=e)}};f.register=f.define=function(e,n){if(e&&"object"==typeof e)for(var a in e)o.call(e,a)&&f.register(a,e[a]);else t[e]=n,delete r[e],p(e)},f.list=function(){var e=[];for(var r in t)o.call(t,r)&&e.push(r);return e};var g=e._hmr&&new e._hmr(d,f,t,r);f._cache=r,f.hmr=g&&g.wrap,f.brunch=!0,e.require=f}}(),function(){var e;"undefined"==typeof window?this:window;require.register(".secrets.js",function(e,t,r){"use strict";Object.defineProperty(e,"__esModule",{value:!0}),e.OpenCage=e.BackEnd=void 0;var n=function(){return sessionStorage.getItem("shindigit-user-token")?sessionStorage.getItem("shindigit-user-token"):""},o={key:"c36ea23c619f436cba0eab3f939e6ed6",baseUrl:"https://api.opencagedata.com/geocode/v1/json",headers:function(){return{}}};e.OpenCage=o;var a={API_KEY:"3E894DDB-58BB-4F18-9E1D-809BBF807C1C",APP_ID:"854DB087-FA48-0CF1-FFEE-7660CF37E100",baseUrl:"https://api.backendless.com",headers:function(){return{"user-token":n()}}};e.BackEnd=a}),require.register("App.js",function(e,t,r){"use strict";function n(e){return e&&e.__esModule?e:{"default":e}}Object.defineProperty(e,"__esModule",{value:!0}),e["default"]=void 0;var o=n(t("./Routes/index")),a=function(e){return function(t,r){return t[r.route]={onmatch:function(t,n,o){r.group.includes("authenticated")&&!e.State.isAuth()&&m.route.set(m.route.get()),e.State.route=r,e.State.anchor=n.split("#")[1],r.onmatch(e,t,n,o)},render:function(){return r.component(e)}},t}},i=function(e){return o["default"].reduce(a(e),{})},u=i;e["default"]=u}),require.register("Components/auth-layout.js",function(e,t,r){"use strict";Object.defineProperty(e,"__esModule",{value:!0}),e.AuthLayout=void 0;var n=m("img.frow",{src:"images/logo.svg",style:{width:"80%",margin:"0 auto"}}),o={view:function(e){var t=e.children;return m(".frow-container",[n,t])}};e.AuthLayout=o}),require.register("Components/calendar/calendar-model.js",function(e,t,r){"use strict";Object.defineProperty(e,"__esModule",{value:!0}),e.calendarDayStyle=e.calendarModel=e.createCalendar=e.createCalendarDayViewModel=e.isNotCalenderDay=e.isCalenderDay=void 0;var n=t("date-fns"),o=t("Utils"),a=function(e,t){return{day:t,dir:0,invites:e}};e.isCalenderDay=a;var i=function(e,t,r){return{day:t,dir:t.isBefore(r)?-1:t.isAfter(r)?1:0,invites:e}};e.isNotCalenderDay=i;var u=function(e){return function(t){return t.filter(function(t){return(0,o.datesAreSame)(t.start)(e)("YYYY-MM-DD")})}},s=function(e,t,r,n){var o=n.isSameMonth;return o?a(u(t)(e),M.utc(t)):i(u(t)(e),M.utc(t),r)};e.createCalendarDayViewModel=s;var c=function(e,t){var r=(0,n.parseISO)(t.clone().startOf("month").toISOString()),o=(0,n.parseISO)(t.clone().endOf("month").toISOString()),a=(0,n.eachWeekOfInterval)({start:r,end:o},{weekStartsOn:1});return a.map(function(r){return(0,n.eachDayOfInterval)({start:(0,n.startOfISOWeek)(r),end:(0,n.endOfISOWeek)(r)}).map(function(r){return s(e,r,t,{isSameMonth:t.isSame(r,"month")})})})};e.createCalendar=c;var l=function(e){var t=(e.mdl,e.invites),r=e.date,n=M.utc(),o=M.utc(r),a={invites:t,startDate:o,selected:{year:o.year(),month:o.month()+1,day:o.day()},today:{year:n.year(),month:n.month(),day:n.day()},daysInMonth:o.daysInMonth()};return a};e.calendarModel=l;var d=function(e,t,r){var n=M.utc();return 0!==r?"cal-day notThisMonth":n.isSame(t,"day")&&n.isSame(t,"month")&&n.isSame(t,"year")&&e.isSame(t,"date")?"selectedDay isToday":n.isSame(t,"day")&&n.isSame(t,"month")&&n.isSame(t,"year")?"cal-day isToday":e.isSame(t,"date")?"cal-day selectedDay":"cal-day"};e.calendarDayStyle=d}),require.register("Components/calendar/calendar.js",function(e,t,r){"use strict";Object.defineProperty(e,"__esModule",{value:!0}),e.Calendar=void 0;var n=t("./calendar-model"),o=(t("Components"),t("Utils")),a=function(){return{view:function(e){var t=e.attrs,r=t.mdl,n=t.date;return m(".frow width-100 ",[m(".frow width-100 row-between",[m(m.route.Link,{selector:"button",href:"/".concat(r.User.name,"/").concat(n.clone().subtract(1,"year").format("YYYY-MM-DD"))},n.clone().subtract(1,"year").format("YYYY")),m(".centerMonthGroup",[m("h2.currentMonth",n.format("MMMM")),m("h3.text-center",n.format("YYYY"))]),m(m.route.Link,{selector:"button",href:"/".concat(r.User.name,"/").concat(n.clone().add(1,"year").format("YYYY-MM-DD"))},n.clone().add(1,"year").format("YYYY"))]),m(".frow width-100 row-between mt-10",[m(m.route.Link,{selector:"button",href:"/".concat(r.User.name,"/").concat(n.clone().subtract(1,"month").format("YYYY-MM-DD"))},m("h4",n.clone().subtract(1,"month").format("MMMM"))),m(m.route.Link,{selector:"button",href:"/".concat(r.User.name,"/").concat(n.clone().add(1,"month").format("YYYY-MM-DD"))},m("h4",n.clone().add(1,"month").format("MMMM")))])])}}},i=function(){return{view:function(e){e.attrs.mdl;return m(".frow width-100 row-between mt-10",o.daysOfTheWeek.map(function(e){return m(".col-xs-1-7 text-center",m("span.width-auto.text-strong",e[0].toUpperCase()))}))}}},u=function(){return{view:function(e){var t=e.attrs,r=t.mdl,a=t.invites,i=t.day,u=t.dir;return m(".col-xs-1-7 text-center",m(m.route.Link,{href:"/".concat(r.User.name,"/").concat(i.format("YYYY-MM-DD")),"class":"cal-day-link",onclick:function(e){return r.State.toAnchor((0,o.firstInviteHour)(a)||M.utc().format("HH"))}},m(".".concat((0,n.calendarDayStyle)(r.selectedDate(),i,u)),[m("span.cal-date",i.format("D")),a.any()&&m(".cal-invites-item",a.length)])))}}},s=function(){return{view:function(e){var t=e.attrs,r=t.mdl,o=t.date,s=t.invites,c=(0,n.createCalendar)(s,o);return m(".calendar",m(".frow frow-container",[m(a,{mdl:r,date:o}),m(i,{mdl:r}),m(".frow centered-column width-100 row-between mt-10 ",c.map(function(e){return m(".frow width-100",e.map(function(e){var t=e.invites,n=e.day,o=e.dir;return m(u,{mdl:r,invites:t,day:n,dir:o})}))}))]))}}};e.Calendar=s}),require.register("Components/component.js",function(e,t,r){"use strict"}),require.register("Components/day.js",function(e,t,r){"use strict";Object.defineProperty(e,"__esModule",{value:!0}),e.Day=e.HourView=void 0;var n=t("Utils"),o=function(e){return"".concat(e.start.format("YYYY-MM-DD"),"/").concat(e.start.format("HH"),"/").concat(e.start.format("mm"))},a=function(){return{view:function(e){var t=e.attrs,r=t.mdl,a=t.invite,i=t.col;return m(".col-xs-1-".concat(i+2),m(".invite-list-item ",{onclick:function(e){r.Events.currentEventId(a.eventId),r.Events.currentEventStartTime(a.start),localStorage.setItem("eventId",a.eventId),m.route.set("/".concat(r.User.name,"/").concat(o(a)))},style:{"background-color":(0,n.getInviteStatusColor)(a.status),top:"".concat(a.start.format("mm"),"px"),height:"".concat(2*a.end.diff(a.start,"minutes"),"px")}},a.title))}}},i=function(e,t){var r=(0,n.firstInviteHour)(t),o=e.State.toAnchor()?e.State.toAnchor():r?r:M().format("HH"),a=document.getElementById("".concat(o,":00"));a&&a.scrollIntoView({top:0,left:0,behavior:"smooth"})},u=function(){return{view:function(e){var t=e.attrs,r=t.mdl,n=t.hour,o=t.events;return m(".frow ",m(".hour ",[m("p.hour-time",{id:n},n),m(".invite-list frow ",o.map(function(e,t){return m(a,{mdl:r,invite:e,col:o.length,key:t})}))]))}}};e.HourView=u;var s=function(){return{view:function(e){var t=e.attrs,r=t.mdl,a=t.invites;return m("ul",a.map(function(e){return console.log(e),m("li.frow-container",{"class":n.inviteOptions[e.status],onclick:function(t){r.Events.currentEventId(e.eventId),r.Events.currentEventStartTime(e.start),localStorage.setItem("eventId",e.eventId),m.route.set("/".concat(r.User.name,"/").concat(o(e)))}},[m("h3",e.title),m(".frow row-start",[m("label.col-xs-1-3","".concat(e.start.format("HH:mm")," - ").concat(e.end.format("HH:mm"))),m("label.col-xs-1-4")])])}))}}},c=function(e){e.attrs.mdl;return{oncreate:function(e){var t=e.attrs,r=t.mdl,n=t.invites;return i(r,n)},onupdate:function(e){var t=e.attrs,r=t.mdl,n=t.invites;return r.State.toAnchor()&&i(r,n)},view:function(e){var t=e.attrs,r=t.mdl,o=t.day,a=t.invites;return m(".day",[m(".day-container",[r.Day.listView()?m(s,{mdl:r,invites:a}):(0,n.getHoursInDay)(r.State.timeFormats[r.State.format()]).map(function(e,t){return m(u,{mdl:r,invites:o[e],hour:e,events:o[e]})})])])}}};e.Day=c}),require.register("Components/editor/editor.js",function(e,t,r){"use strict";Object.defineProperty(e,"__esModule",{value:!0}),e.Editor=void 0;var n=t("./event-form"),o=t("Http"),a=t("./validations"),i=function(e){var t=e.attrs.mdl,r={shortDate:t.selectedDate().format("YYYY-MM-DD"),allDay:!1,inPerson:!0,location:"",latlong:"",startTime:"",endTime:"",title:"",notes:""},i={status:"loading",errors:null,isSubmitted:!1,isValid:!1,queryResults:[],querySelected:"",locationWarning:Stream(null)},u=function(e){i={status:"loading",errors:null,isSubmitted:!1,isValid:!1,queryResults:[],querySelected:"",locationWarning:Stream(null)},console.log(i)},s=function(e,t){var r=function(t){e.errors=t,e.isValid=!1},n=function(t){e.errors=null,e.isValid=!0};(0,a.validateTask)(t).fork(r,n)},c=function(e){var t=e.mdl,r=e.data,n=e.state,i=function(e){n.errors=e,n.status="failed"},u=function(){t.Invites.fetch(!0),t.State.modal(!1)};n.isSubmitted=!0,(0,a.validateTask)(r).chain((0,o.submitEventTask)(o.HTTP)(t)).fork(i,u)};return{view:function(e){var t=e.attrs.mdl;return m(n.EventForm,{mdl:t,data:r,state:i,validate:s,resetState:u,submit:c})}}};e.Editor=i}),require.register("Components/editor/event-form.js",function(e,t,r){"use strict";Object.defineProperty(e,"__esModule",{value:!0}),e.EventForm=void 0;var n=t("Http"),o=function(e){return function(t){return function(r){var o=function(e){console.log("err q",e),t.locationWarning("Exact address not found. You may continue with this address or try again"),t.status="failure"},a=function(e){t.queryResults=e,t.status="success",t.locationWarning(null),console.log("succ d",t)};(0,n.locateQueryTask)(n.HTTP)(e)(r).fork(o,a)}}},a=function(){var e=function(e){e.allDay=!e.allDay,e.allDay?(e.startTime="00:00",e.endTime="23:59"):(e.startTime="",e.endTime="")};return{view:function(t){var r=t.attrs,n=r.data,a=r.state,i=r.resetState,u=r.mdl,s=r.validate,c=r.submit;return m("form.event-form",m(".frow column-centered",[m(".full-width",m("label.frow row row-evenly gutters",[m("input.col-xs-2-3",{onchange:function(e){return m.route.set("/".concat(u.User.name,"/").concat(e.target.value))},type:"date",value:u.selectedDate().format("YYYY-MM-DD")}),m("label.col-xs-1-3","All Day",m("input",{type:"checkbox",checked:n.allDay,onclick:function(t){return e(n)}}))])),m(".full-width",[m(".frow row row-evenly gutters",[m("label.col-xs-1-2",[m("input.",{oninput:function(e){return n.startTime=e.target.value},value:n.startTime,type:"time",disabled:n.allDay,onblur:function(e){return a.isSubmitted&&s(a,n)}}),m(".frow row-start",["Start Time",m("span.required-field","*")]),a.errors&&m("code.error-field",a.errors.startTime)]),m("label.col-xs-1-2",[m("input",{oninput:function(e){return n.endTime=e.target.value},value:n.endTime,type:"time",disabled:n.allDay,onblur:function(e){return a.isSubmitted&&s(a,n)}}),m(".frow row-start",["End Time",m("span.required-field","*")]),a.errors&&m("code.error-field",a.errors.endTime)])])]),m(".full-width",m(".frow row row-evenly gutters",[m("label.col-xs-1-5","In Person",m("input",{type:"checkbox",checked:n.inPerson,onclick:function(e){return n.inPerson=!n.inPerson}})),n.inPerson?m("label.col-xs-4-5",m("input",{type:"address",value:n.location,oninput:function(e){return n.location=e.target.value},onchange:function(e){return o(u)(a)(e.target.value)},onblur:function(e){return a.isSubmitted&&s(a,n)}}),m(".frow row-start",["Address",m("span.required-field","*")])):m("label.col-xs-4-5",m("input",{type:"url",value:n.url,oninput:function(e){return n.location=e.target.value},onblur:function(e){return a.isSubmitted&&s(a,n)}}),m(".frow row-start",["URL link",m("span.required-field","*")])),a.locationWarning()&&m("p.location-info-text",a.locationWarning()),a.queryResults.any()&&m("ul.event-form-query-container",a.queryResults.map(function(e){var t=e.address,r=e.latlong;return m("li",m("code.form-event-query-result",{onclick:function(e){n.location=t,n.latlong=r,i(a)}},t))})),a.errors&&m("code.error-field",a.errors.location)])),m("label",m("input",{type:"text",value:n.text,oninput:function(e){return n.title=e.target.value},onblur:function(e){return a.isSubmitted&&s(a,n)}}),m(".frow row-start",["Title",m("span.required-field","*")]),a.errors&&m("code.error-field",a.errors.title)),m("label",m("input",{type:"text",value:n.notes,oninput:function(e){return n.notes=e.target.value},onblur:function(e){return a.isSubmitted&&s(a,n)}}),"Notes"),m("button.full-width",{onclick:function(e){e.preventDefault(),c({mdl:u,data:n,state:a})}},"Submit")]))}}};e.EventForm=a}),require.register("Components/editor/validations.js",function(e,t,r){"use strict";Object.defineProperty(e,"__esModule",{value:!0}),e.validateTask=void 0;var n=t("ramda"),o=t("data.validation"),a=t("Utils"),i=(0,o.Success)((0,n.curryN)(5,n.identity)),u=(0,n.lensProp)("shortDate"),s=(0,n.lensProp)("startTime"),c=(0,n.lensProp)("endTime"),l=(0,n.lensProp)("location"),d=((0,n.lensProp)("latlong"),(0,n.lensProp)("title")),f=function(e){return"".concat(e," is required")},m="End time must be after Start time",v=function(e){return function(t){return e&&t&&M().hours((0,a.getHour)(e)).minutes((0,a.getMin)(e)).isBefore(M().hours((0,a.getHour)(t)).minutes((0,a.getMin)(t)))}},p=function(e){return(0,o.Success)(e).apLeft((0,a.validate)(a.isRequired,u,f("Date"),e))},g=function(e){return(0,o.Success)(e).apLeft((0,a.validate)(a.isRequired,s,f("Start Time"),e))},y=function(e){return(0,o.Success)(e).apLeft((0,a.validate)(a.isRequired,c,f("End Time"),e)).apLeft((0,a.validate)(v(e.startTime),c,m,e))},h=function(e){return(0,o.Success)(e).apLeft((0,a.validate)(a.isRequired,l,f("Location"),e))},b=function(e){return(0,o.Success)(e).apLeft((0,a.validate)(a.isRequired,d,f("Title"),e))},w=function(e){return i.ap(p(e)).ap(g(e)).ap(y(e)).ap(h(e)).ap(b(e)).failureMap(n.mergeAll).toTask()};e.validateTask=w}),require.register("Components/event-toolbar.js",function(e,t,r){"use strict";Object.defineProperty(e,"__esModule",{value:!0}),e.EventToolbar=void 0;var n=(t("Utils"),function(){return{view:function(e){var t=e.attrs.mdl;return m("button",{onclick:function(e){t.State.toAnchor(t.Events.currentEventStartTime().format("HH")),m.route.set("/".concat(t.User.name,"/").concat(t.selectedDate().format("YYYY-MM-DD")))}},"Back")}}});e.EventToolbar=n}),require.register("Components/home-toolbar.js",function(e,t,r){"use strict";Object.defineProperty(e,"__esModule",{value:!0}),e.HomeToolbar=void 0;var n=function(){return{view:function(e){var t=e.attrs.mdl;return m(".toolbar",[m("input.cal-toolbar-input",{onchange:function(e){return m.route.set("/".concat(t.User.name,"/").concat(t.selectedDate().format("YYYY-MM-DD")))},type:"date",value:t.selectedDate().format("YYYY-MM-DD")}),m(m.route.Link,{selector:"button","class":"cal-toolbar-input",href:"/".concat(t.User.name,"/").concat(M.utc().format("YYYY-MM-DD"))},"Today"),m(m.route.Link,{selector:"button","class":"cal-toolbar-input",href:"/logout"},"Logout")])}}};e.HomeToolbar=n}),require.register("Components/index.js",function(e,t,r){"use strict";Object.defineProperty(e,"__esModule",{value:!0});var n=t("./home-toolbar.js");Object.keys(n).forEach(function(t){"default"!==t&&"__esModule"!==t&&Object.defineProperty(e,t,{enumerable:!0,get:function(){return n[t]}})});var o=t("./event-toolbar.js");Object.keys(o).forEach(function(t){"default"!==t&&"__esModule"!==t&&Object.defineProperty(e,t,{enumerable:!0,get:function(){return o[t]}})});var a=t("./calendar/calendar.js");Object.keys(a).forEach(function(t){"default"!==t&&"__esModule"!==t&&Object.defineProperty(e,t,{enumerable:!0,get:function(){return a[t]}})});var i=t("./day.js");Object.keys(i).forEach(function(t){"default"!==t&&"__esModule"!==t&&Object.defineProperty(e,t,{enumerable:!0,get:function(){return i[t]}})});var u=t("./modal.js");Object.keys(u).forEach(function(t){"default"!==t&&"__esModule"!==t&&Object.defineProperty(e,t,{enumerable:!0,get:function(){return u[t]}})});var s=t("./editor/editor.js");Object.keys(s).forEach(function(t){"default"!==t&&"__esModule"!==t&&Object.defineProperty(e,t,{enumerable:!0,get:function(){return s[t]}})});var c=t("./nav-link.js");Object.keys(c).forEach(function(t){"default"!==t&&"__esModule"!==t&&Object.defineProperty(e,t,{enumerable:!0,get:function(){return c[t]}})});var l=t("./editor/event-form.js");Object.keys(l).forEach(function(t){"default"!==t&&"__esModule"!==t&&Object.defineProperty(e,t,{enumerable:!0,get:function(){return l[t]}})});var d=t("./layout.js");Object.keys(d).forEach(function(t){"default"!==t&&"__esModule"!==t&&Object.defineProperty(e,t,{enumerable:!0,get:function(){return d[t]}})});var f=t("./auth-layout.js");Object.keys(f).forEach(function(t){"default"!==t&&"__esModule"!==t&&Object.defineProperty(e,t,{enumerable:!0,get:function(){return f[t]}})})}),require.register("Components/layout.js",function(e,t,r){"use strict";Object.defineProperty(e,"__esModule",{value:!0}),e.Layout=void 0;var n=t("Components"),o=function(){var e=function(e){return e.State.route.id};return{view:function(t){var r=t.attrs.mdl;return["day-planner"==e(r)&&m(n.HomeToolbar,{mdl:r}),"event"==e(r)&&m(n.EventToolbar,{mdl:r})]}}},a=function(){return{view:function(e){var t=e.children,r=e.attrs.mdl;return m(".lt-grid-container",[m(".lt-header.frow row",[m(".col-xs-2-3",m(o,{mdl:r})),m(".col-xs-1-3","X")]),m(".lt-body",t),m(".lt-footer","FOOTER")])}}};e.Layout=a}),require.register("Components/modal.js",function(e,t,r){"use strict";Object.defineProperty(e,"__esModule",{value:!0}),e.Modal=void 0;var n=function(){return{view:function(e){var t=e.children;return m(".modal",m(".modal-container",t.map(function(e){return m(".modal.full-width",[m(".modal-header",e.header),m(".modal-body",e.body),m(".modal-footer",e.footer)])})))}}};e.Modal=n}),require.register("Components/nav-link.js",function(e,t,r){"use strict";function n(e,t){var r=Object.keys(e);if(Object.getOwnPropertySymbols){var n=Object.getOwnPropertySymbols(e);t&&(n=n.filter(function(t){return Object.getOwnPropertyDescriptor(e,t).enumerable})),r.push.apply(r,n)}return r}function o(e){for(var t=1;t<arguments.length;t++){var r=null!=arguments[t]?arguments[t]:{};t%2?n(Object(r),!0).forEach(function(t){u(e,t,r[t])}):Object.getOwnPropertyDescriptors?Object.defineProperties(e,Object.getOwnPropertyDescriptors(r)):n(Object(r)).forEach(function(t){Object.defineProperty(e,t,Object.getOwnPropertyDescriptor(r,t))})}return e}function a(e,t){if(null==e)return{};var r,n,o=i(e,t);if(Object.getOwnPropertySymbols){var a=Object.getOwnPropertySymbols(e);for(n=0;n<a.length;n++)r=a[n],t.indexOf(r)>=0||Object.prototype.propertyIsEnumerable.call(e,r)&&(o[r]=e[r])}return o}function i(e,t){if(null==e)return{};var r,n,o={},a=Object.keys(e);for(n=0;n<a.length;n++)r=a[n],t.indexOf(r)>=0||(o[r]=e[r]);return o}function u(e,t,r){return t in e?Object.defineProperty(e,t,{value:r,enumerable:!0,configurable:!0,writable:!0}):e[t]=r,e}Object.defineProperty(e,"__esModule",{value:!0}),e.NavLink=void 0;var s=function(e,t){return e.reduce(function(e,r){return Object.assign(e,u({},r,t))},{})},c=function(){return{view:function(e){var t=e.attrs,r=t.mdl,n=t.href,i=t.link,u=t.classList,c=a(t,["mdl","href","link","classList"]);return m(m.route.Link,o(o({},s(["onclick","onmouseover","onmouseout"],function(e){return console.log(e.type)})),{},{href:n,"class":"nav-link ".concat(u," ").concat(r.state.navSelected()==i&&"shadow")},c),i)}}};e.NavLink=c}),require.register("Http/auth-tasks.js",function(e,t,r){"use strict";Object.defineProperty(e,"__esModule",{value:!0}),e.registerTask=e.loginTask=void 0;var n=function(e){return function(t){return sessionStorage.setItem("shindigit-user",JSON.stringify(t)),sessionStorage.setItem("shindigit-user-token",t["user-token"]),e.State.isAuth(!0),e.User=t,t}},o=function(e){return function(t){return function(r){var o=r.email,a=r.password;return e.backEnd.postTask(t)("users/login")({login:o,password:a}).map(n(t))}}};e.loginTask=o;var a=function(e){return function(t){return function(r){var n=r.name,o=r.email,a=r.password,i=r.isAdmin;return e.backEnd.postTask(t)("users/register")({name:n,email:o,password:a,isAdmin:i})}}};e.registerTask=a}),require.register("Http/events-tasks.js",function(e,t,r){"use strict";function n(e){return e&&e.__esModule?e:{"default":e}}Object.defineProperty(e,"__esModule",{value:!0}),e.submitEventTask=e.deleteEventTask=e.loadEventAndInviteTask=e.getEventTask=void 0;var o=n(t("data.task")),a=t("./invites-tasks"),i=t("ramda"),u=t("Utils"),s=function(e){var t=e.start,r=e.end,n=e.title,o=e.notes,a=e.allDay,i=e.location,u=e.inPerson,s=e.latlong;return{date:M.utc(t).format("DD-MM-YYYY"),title:n.toUpperCase(),start:t,end:r,startTime:M.utc(t).format("HH:mm"),endTime:M.utc(r).format("HH:mm"),notes:o,allDay:a,location:i,inPerson:u,latlong:s}},c=function(e){return function(t){return e.backEnd.getTask(t)("data/Events/".concat(t.Events.currentEventId())).map(s)}};e.getEventTask=c;var l=function(e){return function(t){return o["default"].of(function(e){return function(t){return{event:e,invite:t}}}).ap(c(e)(t)).ap((0,a.getInvitesTask)(e)(t).map((0,i.compose)(i.head,(0,i.filter)((0,i.propEq)("eventId",t.Events.currentEventId())))))}};e.loadEventAndInviteTask=l;var d=function(e){return function(t){return function(r){return e.backEnd.deleteTask(t)("data/Events/".concat(r)).chain(function(){return e.backEnd.deleteTask(t)("data/bulk/Invites?where=eventId%3D'".concat(r,"'"))})}}};e.deleteEventTask=d;var f=function(e){return function(t){return function(r){var n=r.allDay,a=r.startTime,i=r.endTime,s=r.title,c=r.notes,l=r.inPerson,d=r.location,f=r.latlong,m=M.utc(t.selectedDate()).hour((0,u.getHour)(i)).minute((0,u.getMin)(i)),v=M.utc(t.selectedDate()).hour((0,u.getHour)(a)).minute((0,u.getMin)(a));return e.backEnd.postTask(t)("data/Events")({end:m,start:v,notes:c,title:s,allDay:n,inPerson:l,location:d,latlong:f,createdBy:t.User.objectId}).chain(function(r){var a=r.objectId,i=r.ownerId,u=r.end,s=r.start,c=r.title,m=a;return e.backEnd.postTask(t)("data/Invites")({eventId:m,userId:i,status:1,end:u,start:s,title:c,allDay:n,inPerson:l,location:d,latlong:f}).chain(function(r){var n=r.objectId,a=n;return o["default"].of(function(e){return function(t){return{user:e,event:t}}}).ap(e.backEnd.postTask(t)("data/Users/".concat(t.User.objectId,"/invites%3AInvites%3An"))([a])).ap(e.backEnd.postTask(t)("data/Events/".concat(m,"/invites%3AInvites%3An"))([a]))})})}}};e.submitEventTask=f}),require.register("Http/http.js",function(e,t,r){"use strict";function n(e){return e&&e.__esModule?e:{"default":e}}function o(e,t){var r=Object.keys(e);if(Object.getOwnPropertySymbols){var n=Object.getOwnPropertySymbols(e);t&&(n=n.filter(function(t){return Object.getOwnPropertyDescriptor(e,t).enumerable})),r.push.apply(r,n)}return r}function a(e){for(var t=1;t<arguments.length;t++){var r=null!=arguments[t]?arguments[t]:{};t%2?o(Object(r),!0).forEach(function(t){i(e,t,r[t])}):Object.getOwnPropertyDescriptors?Object.defineProperties(e,Object.getOwnPropertyDescriptors(r)):o(Object(r)).forEach(function(t){Object.defineProperty(e,t,Object.getOwnPropertyDescriptor(r,t))})}return e}function i(e,t,r){return t in e?Object.defineProperty(e,t,{value:r,enumerable:!0,configurable:!0,writable:!0}):e[t]=r,e}function u(){return!1}Object.defineProperty(e,"__esModule",{value:!0}),e.HTTP=e.parseHttpSuccess=e.parseHttpError=void 0;var s=n(t("data.task")),c=t("../.secrets.js"),l=function(e){return function(t){t.lengthComputable&&(e.State.loadingProgress.max=t.total,e.State.loadingProgress.value=t.loaded,m.redraw())}},d=function(e){return function(t){return e.State.isLoading(!0),!1}},f=function(e){return function(t){return e.State.isLoading(!1),e.State.loadingProgress.max=0,e.State.loadingProgress.value=0,!1}},v=function(e){return{config:function(t){t.onprogress=l(e),t.onload=u,t.onloadstart=d(e),t.onloadend=f(e)}}},p=function(e){return function(t){return function(r){return e.State.isLoading(!1),console.error(r),r.response&&3064==r.response.code&&m.route.set("/logout"),t(r.response)}}};e.parseHttpError=p;var g=function(e){return function(t){return function(r){return e.State.isLoading(!1),t(r)}}};e.parseHttpSuccess=g;var y=function(e){return function(t){return function(r){return function(n){return function(o){return r.State.isLoading(!0),new s["default"](function(i,u){return m.request(a({method:t,url:n,headers:a({"content-type":"application/json"},e),body:o,withCredentials:!1},v(r))).then(g(r)(u),p(r)(i))})}}}}},h="".concat(c.BackEnd.baseUrl,"/").concat(c.BackEnd.APP_ID,"/").concat(c.BackEnd.API_KEY,"/"),b="".concat(c.OpenCage.baseUrl,"?key=").concat(c.OpenCage.key,"&q="),w={getLocationTask:function(e){return function(t){return y(c.OpenCage.headers())("GET")(e)(b+t+"&pretty=1")(null)}}},M={getTask:function(e){return function(t){return y(c.BackEnd.headers())("GET")(e)(h+t)(null)}},postTask:function(e){return function(t){return function(r){return y(c.BackEnd.headers())("POST")(e)(h+t)(r)}}},putTask:function(e){return function(t){return function(r){return y(c.BackEnd.headers())("PUT")(e)(h+t)(r)}}},deleteTask:function(e){return function(t){return y(c.BackEnd.headers())("DELETE")(e)(h+t)(null)}}},j={openCage:w,backEnd:M,HttpTask:y};e.HTTP=j}),require.register("Http/index.js",function(e,t,r){"use strict";Object.defineProperty(e,"__esModule",{value:!0});var n=t("./http.js");Object.keys(n).forEach(function(t){"default"!==t&&"__esModule"!==t&&Object.defineProperty(e,t,{enumerable:!0,get:function(){return n[t]}})});var o=t("./invites-tasks.js");Object.keys(o).forEach(function(t){"default"!==t&&"__esModule"!==t&&Object.defineProperty(e,t,{enumerable:!0,get:function(){return o[t]}})});var a=t("./events-tasks.js");Object.keys(a).forEach(function(t){"default"!==t&&"__esModule"!==t&&Object.defineProperty(e,t,{enumerable:!0,get:function(){return a[t]}})});var i=t("./auth-tasks.js");Object.keys(i).forEach(function(t){"default"!==t&&"__esModule"!==t&&Object.defineProperty(e,t,{enumerable:!0,get:function(){return i[t]}})});var u=t("./open-cage.js");Object.keys(u).forEach(function(t){"default"!==t&&"__esModule"!==t&&Object.defineProperty(e,t,{enumerable:!0,get:function(){return u[t]}})})}),require.register("Http/invites-tasks.js",function(e,t,r){"use strict";Object.defineProperty(e,"__esModule",{value:!0}),e.getInvitesTask=e.updateInviteTask=e.toInviteViewModel=void 0;var n=t("ramda"),o=function(e){var t=e.start,r=e.end,n=e.title,o=e.objectId,a=e.eventId,i=e.status,u=e.userId;return{start:M.utc(t),end:M.utc(r),objectId:o,eventId:a,title:n,status:i,userId:u}};e.toInviteViewModel=o;var a=function(e){var t=e.start,r=e.end,n=e.title,o=e.eventId,a=e.status,i=e.userId;return{start:t,end:r,eventId:o,title:n,status:a,userId:i}},i=function(e){return function(t){return function(r){return e.backEnd.putTask(t)("data/Invites/".concat(r.objectId))(a(r)).map(o)}}};e.updateInviteTask=i;var u=function(e){return function(t){return e.backEnd.getTask(t)("data/Invites?pageSize=100&where=userId%3D'".concat(t.User.objectId,"'")).map((0,n.map)(o))}};e.getInvitesTask=u}),require.register("Http/open-cage.js",function(e,t,r){"use strict";function n(e,t){return s(e)||u(e,t)||a(e,t)||o()}function o(){throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method.")}function a(e,t){if(e){if("string"==typeof e)return i(e,t);var r=Object.prototype.toString.call(e).slice(8,-1);return"Object"===r&&e.constructor&&(r=e.constructor.name),"Map"===r||"Set"===r?Array.from(e):"Arguments"===r||/^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(r)?i(e,t):void 0}}function i(e,t){(null==t||t>e.length)&&(t=e.length);for(var r=0,n=new Array(t);r<t;r++)n[r]=e[r];return n}function u(e,t){if("undefined"!=typeof Symbol&&Symbol.iterator in Object(e)){var r=[],n=!0,o=!1,a=void 0;try{for(var i,u=e[Symbol.iterator]();!(n=(i=u.next()).done)&&(r.push(i.value),!t||r.length!==t);n=!0);}catch(s){o=!0,a=s}finally{try{n||null==u["return"]||u["return"]()}finally{if(o)throw a}}return r}}function s(e){if(Array.isArray(e))return e}Object.defineProperty(e,"__esModule",{value:!0}),e.locateQueryTask=void 0;var c=t("ramda"),l=function(e){return e.replace(/\s/g,"+").replace(/,/g,"%2C")},d=function(e){var t=n(e,2),r=t[0],o=t[1];return{address:r,latlong:JSON.stringify(o)}},f=function(e){return function(t){return function(r){return e.openCage.getLocationTask(t)(l(r)).map((0,c.prop)("results")).map((0,c.map)((0,c.paths)([["formatted"],["geometry"]]))).map((0,c.map)(d))}}};e.locateQueryTask=f}),require.register("Models.js",function(e,t,r){"use strict";Object.defineProperty(e,"__esModule",{value:!0}),e["default"]=e.inviteModel=e.dayModel=void 0;var n=t("Utils"),o=t("Components/calendar/calendar-model"),a={isAuth:Stream(!1),modal:Stream(!1),isLoading:Stream(!1),loadingProgress:{max:0,value:0},isLoggedIn:function(){return sessionStorage.getItem("token")},timeFormats:["12hrs","24hrs"],format:Stream(1),toAnchor:Stream(!1),slug:""},i=function(e){return(0,n.getHoursInDay)(e.State.timeFormats[e.State.format()]).reduce(function(e,t){return e[t]=[],e},{})};e.dayModel=i;var u=function(){return{eventId:"",status:"",userId:""}};e.inviteModel=u;var s={currentEventId:Stream(null),currentEventStartTime:Stream(null)},c={fetch:Stream(!1)},l={data:i({State:a}),update:Stream(!1),listView:Stream(!1)},d={modal:Stream(!1)},f={profile:"",inspector:""},m={data:(0,o.calendarModel)({mdl:p,invites:[],date:M.utc()})},v={},p={selectedDate:Stream(""),todayDate:Stream(M.utc()),Calendar:m,Day:l,Events:s,Invites:c,State:a,Settings:f,User:v,Home:d},g=p;e["default"]=g}),require.register("Pages/Auth/Validations.js",function(e,t,r){"use strict";Object.defineProperty(e,"__esModule",{value:!0}),e.validateLoginTask=e.validateUserRegistrationTask=void 0;var n=t("ramda"),o=t("data.validation"),a=t("Utils"),i=(0,o.Success)((0,n.curryN)(3,n.identity)),u=(0,o.Success)((0,n.curryN)(2,n.identity)),s=(0,n.lensProp)("name"),c=(0,n.lensProp)("password"),l=(0,n.lensProp)("confirmPassword"),d=(0,n.lensProp)("email"),f=(0,n.lensProp)("confirmEmail"),m="A Name is required",v="A Password is required",p="An Email is required",g="Emails do not match",y="Email must be a valid format",h="Passwords do not match",b=function(e){return function(t){return t===e}},w=function(e){return(0,o.Success)(e).apLeft((0,a.validate)(a.isRequired,s,m,e))},M=function(e){return(0,o.Success)(e).apLeft((0,a.validate)(a.isRequired,d,p,e)).apLeft((0,a.validate)(a.isRequired,f,p,e)).apLeft((0,a.validate)(b(e.confirmEmail),d,g,e)).apLeft((0,a.validate)(b(e.email),f,g,e)).apLeft((0,a.validate)(a.emailFormat,f,y,e)).apLeft((0,a.validate)(a.emailFormat,d,y,e))},j=function(e){return(0,o.Success)(e).apLeft((0,a.validate)(a.isRequired,d,p,e)).apLeft((0,a.validate)(a.emailFormat,d,y,e))},S=function(e){return(0,o.Success)(e).apLeft((0,a.validate)(a.isRequired,c,v,e)).apLeft((0,a.validate)(a.isRequired,l,v,e)).apLeft((0,a.validate)(b(e.password),l,h,e)).apLeft((0,
-a.validate)(b(e.confirmPassword),c,h,e))},O=function(e){return(0,o.Success)(e).apLeft((0,a.validate)(a.isRequired,c,v,e))},k=function(e){return i.ap(w(e)).ap(M(e)).ap(S(e)).failureMap(n.mergeAll).toTask()};e.validateUserRegistrationTask=k;var E=function(e){return u.ap(j(e)).ap(O(e)).failureMap(n.mergeAll).toTask()};e.validateLoginTask=E}),require.register("Pages/Auth/login-user.js",function(e,t,r){"use strict";Object.defineProperty(e,"__esModule",{value:!0}),e["default"]=e.Login=void 0;var n=(t("Components"),t("Utils")),o=t("./Validations.js"),a=t("Http"),i=function(e){return function(t){var r=function(e){e?(c.errors=e,c.errorMsg(e.message),c.showErrorMsg(!0),console.log("failed - state",c)):(c.errorMsg("Issue with logging in. Have you registered?"),c.showErrorMsg(!0),console.log("failed - other?",c))},n=function(e){return function(t){c.errors={},e.User.account=t,m.route.set("/".concat(e.User.name,"/").concat(e.todayDate().format("YYYY-MM-DD")))}};c.isSubmitted=!0,(0,o.validateLoginTask)(t.userModel).chain((0,a.loginTask)(a.HTTP)(e)).fork(r,n(e))}},u={name:"",email:"",password:"",confirmEmail:"",confirmPassword:"",isAdmin:!1},s={userModel:u},c={isSubmitted:!1,errors:{},httpError:void 0,data:(0,n.jsonCopy)(s),showErrorMsg:Stream(!1),errorMsg:Stream("")},l=function(){c.data=(0,n.jsonCopy)(s),c.errors={},c.httpError=void 0,c.isSubmitted=!1,c.showErrorMsg(!1),c.errorMsg("")},d=function(){return{onremove:function(){return l()},view:function(e){var t=e.attrs.mdl;return m(".frow centered-column mt-100",[c.showErrorMsg()&&m("code.warning",c.errorMsg()),m("form.frow column-centered",{role:"form",id:"Login-form",onsubmit:function(e){return e.preventDefault()}},[m("input.auth-input",{"class":c.isSubmitted?c.errors.email?"has-error":"has-success":"",id:"reg-email",type:"email",placeholder:"Email",onkeyup:function(e){c.data.userModel.email=e.target.value},value:c.data.userModel.email}),c.errors.email&&m("p.auth-input-hint",c.errors.email),m("input.auth-input",{"class":c.isSubmitted?c.errors.password?"has-error":"has-success":"",id:"reg-pass",type:"password",placeholder:"Password",onkeyup:function(e){c.data.userModel.password=e.target.value},value:c.data.userModel.password}),c.errors.password&&m("p.auth-input-hint",c.errors.password)]),c.httpError&&m(".toast toast-error",c.httpError)],m("a.button.auth-btn.full-width frow",{form:"login-form",onclick:function(){return i(t)(c.data)},"class":t.State.isLoading()&&"loading"},m("p.text-centered","Login")),m(m.route.Link,{href:"/register","class":"full-width"},"Need to  register ?"))}}};e.Login=d;var f=d;e["default"]=f}),require.register("Pages/Auth/register-user.js",function(e,t,r){"use strict";Object.defineProperty(e,"__esModule",{value:!0}),e["default"]=e.Register=e.validateForm=void 0;var n=t("Utils"),o=t("./Validations"),a=t("Http"),i={name:"",email:"",password:"",confirmEmail:"",confirmPassword:""},u={userModel:i},s={isSubmitted:!1,errors:{},httpError:void 0,data:(0,n.jsonCopy)(u),showErrorMsg:Stream(!1),errorMsg:Stream("")},c=function(){s.data=(0,n.jsonCopy)(u),s.errors={},s.httpError=void 0,s.isSubmitted=!1,s.showErrorMsg(!1),s.errorMsg("")},l=function(e){return function(t){var r=function(e){e?(s.errors=e,s.errorMsg(e.message),s.showErrorMsg(!0),console.log("failed - state",s)):(s.errorMsg("There seems to be a problem please contact web support"),s.showErrorMsg(!0),console.log("failed - state",s))},n=function(e){return function(t){s.errors={},sessionStorage.setItem("shindigit-user-token",e.User["user-token"]),sessionStorage.setItem("shindigit-user",JSON.stringify(e.User)),m.route.set("/".concat(e.User.name,"/").concat(M.utc().format("YYYY-MM-DD")))}};s.isSubmitted=!0,(0,o.validateUserRegistrationTask)(t.userModel).chain((0,a.registerTask)(a.HTTP)(e)).chain(function(r){return(0,a.loginTask)(a.HTTP)(e)({email:t.userModel.email,password:t.userModel.password})}).fork(r,n(e))}};e.validateForm=l;var d=function(){return{view:function(e){var t=e.attrs,r=t.data,n=t.errors,o=t.isSubmitted;return[m("input.auth-input",{"class":o?n.name?"has-error":"has-success":"",id:"reg-name",type:"text",placeholder:"Full Name",onkeyup:function(e){return r.name=e.target.value},value:r.name}),n.name&&m("p.auth-input-hint",n.name),m("input.auth-input",{"class":o?n.email?"has-error":"has-success":"",id:"reg-email",type:"email",placeholder:"Email",onkeyup:function(e){return r.email=e.target.value},value:r.email}),n.email&&m("p.auth-input-hint",n.email),m("input.auth-input",{id:"confirmEmail","class":o?n.confirmEmail?"has-error":"has-success":"",type:"email",placeholder:"Confirm Email",onkeyup:function(e){return r.confirmEmail=e.target.value},value:r.confirmEmail}),n.confirmEmail&&m("p.auth-input-hint",n.confirmEmail),m("input.auth-input",{"class":o?n.password?"has-error":"has-success":"",id:"reg-pass",type:"password",placeholder:"Password",onkeyup:function(e){return r.password=e.target.value},value:r.password}),n.password&&m("p.auth-input-hint",n.password),m("input.auth-input",{"class":o?n.confirmPassword?"has-error":"has-success":"",id:"pass-confirm",type:"password",placeholder:"Confirm Password",onkeyup:function(e){return r.confirmPassword=e.target.value},value:r.confirmPassword}),n.confirmPassword&&m("p.auth-input-hint",n.confirmPassword)]}}},f=function(){return{onremove:function(){return c()},view:function(e){var t=e.attrs.mdl;return[m(".frow centered-column mt-100",[s.showErrorMsg()&&m("code.warning",s.errorMsg()),m("form.full-width",{role:"form",id:"Register-form",onsubmit:function(e){return e.preventDefault()}},[m(d,{data:s.data.userModel,errors:s.errors,isSubmitted:s.isSubmitted}),m("a.button.auth-btn.full-width",{form:"register-form",onclick:function(){return l(t)(s.data)},"class":t.State.isLoading()&&"loading"},m("p","Register")),m(m.route.Link,{href:"/login","class":"full-width"},"Need to  login ?")])]),s.httpError&&m(".toast toast-error",s.httpError)]}}};e.Register=f;var v=f;e["default"]=v}),require.register("Pages/event.js",function(e,t,r){"use strict";function n(e){return e&&e.__esModule?e:{"default":e}}Object.defineProperty(e,"__esModule",{value:!0}),e.Event=void 0;var o=t("Utils"),a=n(t("mapbox-gl/dist/mapbox-gl.js")),i=t("Http"),u=function(e){var t=e.attrs.mdl,r={error:{},status:"loading",info:{show:Stream(!1)},rsvp:{show:Stream(!1)},edit:{show:Stream(!1)}},n={event:{},invite:{}},u=function(e){var t=e.attrs.mdl,a=function(e){r.error=(0,o.jsonCopy)(e),console.log("state.e",r.error),r.status="failed"},u=function(e){var t=e.event,o=e.invite;n.event=t,n.invite=o,r.error={},console.log("loaded event",n,r.info.show()),r.status="success"};(0,i.loadEventAndInviteTask)(i.HTTP)(t).fork(a,u)},s=function(e){var t=function(e){r.error=(0,o.jsonCopy)(e),console.log("state.e",r.error),r.status="failed"},n=function(){r.error={},r.status="success",m.route.set("/".concat(e.User.name,"/").concat(e.selectedDate().format("YYYY-MM-DD")))};(0,i.deleteEventTask)(i.HTTP)(e)(e.Events.currentEventId()).fork(t,n)},c=function(e){return function(t){var n=function(e){r.error=(0,o.jsonCopy)(e),console.log("state.e",r.error),r.status="failed"},a=function(){r.error={},r.status="success"};(0,i.updateInviteTask)(i.HTTP)(e)(t).fork(n,a)}},l=function(e){var t=e.dom;a["default"].accessToken="pk.eyJ1IjoiYm9hemJsYWtlIiwiYSI6ImNqdWJ4OGk4YzBpYXU0ZG5wNDI1OGM0eTIifQ.5UV0HkEGPiKUzFdbgdr5ww";var r=JSON.parse(n.event.latlong),o=function(){return(new a["default"].Marker).setLngLat(r).addTo(i)},i=new a["default"].Map({container:t,center:r,zoom:15,style:"mapbox://styles/mapbox/streets-v11"});o()};return{oninit:u,view:function(){return m(".event-page",["loading"==r.status&&m(".","Fetching Event..."),"failed"==r.status&&m(".code",r.error.message),"success"==r.status&&m(".event-container",[m("h1",n.event.title),m("h3","".concat(n.event.date,": ").concat(n.event.startTime," - ").concat(n.event.endTime)),m(".accordian",[m(".accordian-item.full-width",[m(".accordian-item-title",[m(".frow",m(".col-xs-1-2",m("h4","INFO")),m(".frow row-end col-xs-1-3",m("button",{onclick:function(e){return r.info.show(!r.info.show())}},"<")))]),r.info.show()&&m(".accordian-item-body.column",[m("label","notes",m("p",n.event.notes)),m(".map",{style:{width:"500px",height:"500px"},oncreate:l})])]),m(".accordian-item.full-width",[m(".accordian-item-title",[m(".frow",m(".col-xs-1-2",m("h4","RSVP")),m(".frow row-end col-xs-1-3",m("button",{onclick:function(e){return r.rsvp.show(!r.rsvp.show())}},"<")))]),r.rsvp.show()&&m(".accordian-item-body.column",[m("label",m("select",{oninput:function(e){n.invite.status=o.inviteOptions.indexOf(e.target.value),c(t)(n.invite)},value:o.inviteOptions[n.invite.status]},o.inviteOptions.map(function(e,t){return m("option",{value:e,key:t,id:t},e.toUpperCase())})),"Status: ")])]),m(".accordian-item.full-width",[m(".accordian-item-title",[m(".frow",m(".col-xs-1-2",m("h4","EDIT EVENT")),m(".frow row-end col-xs-1-3",m("button",{onclick:function(e){return r.edit.show(!r.edit.show())}},"<")))]),r.edit.show()&&m(".accordian-item-body.column",[m("button",{onclick:function(e){return s(t)}},"delete")])])])])])}}};e.Event=u}),require.register("Pages/home.js",function(e,t,r){"use strict";Object.defineProperty(e,"__esModule",{value:!0}),e.Home=void 0;var n=t("Components"),o=t("Http"),a=t("Models"),i=t("Utils"),u=function(e,t){return e["".concat(t.start.format("HH"),":00")].push(t),e},s=function(e){return function(t){return t.reduce(u,(0,a.dayModel)(e,e.selectedDate()))}},c=function(e){return function(t){return t.filter(function(t){return(0,i.datesAreSame)(t.start)(e.selectedDate())("YYYY-MM-DD")})}},l=function(e){var t=(e.attrs.mdl,{error:null,status:"loading",invites:null,events:null}),r=function(e){var r=e.attrs.mdl;r.Home.modal(!1);var n=function(e){t.error=e,t.status="failed"},a=function(e){r.Invites.fetch(!1),t.invites=e,t.error=null,t.status="success"};(0,o.getInvitesTask)(o.HTTP)(r).fork(n,a)};return{oninit:r,onupdate:function(e){var t=e.attrs.mdl;return t.Invites.fetch()&&r({attrs:{mdl:t}})},view:function(e){var r=e.attrs.mdl;return m(".frow","loading"==t.status&&m("p","FETCHING EVENTS..."),"failed"==t.status&&m("p","FAILED TO FETCH EVENTS"),"success"==t.status&&[m(n.Calendar,{mdl:r,date:r.selectedDate(),invites:t.invites}),m(".frow-container frow",[m(".col-xs-2-3.".concat(r.Home.modal()?"bg-warn":"bg-info"),m("button.max-width",{onclick:function(e){return r.Home.modal(!r.Home.modal())}},r.Home.modal()?"Cancel":"Add Event")),!r.Home.modal()&&m(".col-xs-1-3.".concat(r.Day.listView()?"bg-warn":"bg-info"),m("button.max-width",{onclick:function(e){return r.Day.listView(!r.Day.listView())}},r.Day.listView()?"Hour View":"List View"))]),r.Home.modal()?m(n.Editor,{mdl:r}):m(n.Day,{mdl:r,day:s(r)(c(r)(t.invites)),invites:c(r)(t.invites)})])}}};e.Home=l}),require.register("Pages/index.js",function(e,t,r){"use strict";Object.defineProperty(e,"__esModule",{value:!0});var n=t("./home.js");Object.keys(n).forEach(function(t){"default"!==t&&"__esModule"!==t&&Object.defineProperty(e,t,{enumerable:!0,get:function(){return n[t]}})});var o=t("./event.js");Object.keys(o).forEach(function(t){"default"!==t&&"__esModule"!==t&&Object.defineProperty(e,t,{enumerable:!0,get:function(){return o[t]}})});var a=t("./Auth/login-user");Object.keys(a).forEach(function(t){"default"!==t&&"__esModule"!==t&&Object.defineProperty(e,t,{enumerable:!0,get:function(){return a[t]}})});var i=t("./Auth/register-user");Object.keys(i).forEach(function(t){"default"!==t&&"__esModule"!==t&&Object.defineProperty(e,t,{enumerable:!0,get:function(){return i[t]}})})}),require.register("Routes/authenticated-routes.js",function(e,t,r){"use strict";Object.defineProperty(e,"__esModule",{value:!0}),e["default"]=void 0;var n=t("Components"),o=t("Pages"),a=(t("Utils"),[{id:"profile",name:"Profile",route:"/profile/:name",position:["toolbar"],group:["authenticated"],children:[],options:[],onmatch:function(e,t,r,n,o){},component:function(e){return m(o.Home,{mdl:e})}},{id:"day-planner",name:"Day Planner",route:"/:username/:date",position:["toolbar"],group:["authenticated"],children:[],options:[],onmatch:function(e,t,r,n,o){var a=M.utc(t.date).clone();e.selectedDate(a)},component:function(e){return m(n.Layout,{mdl:e},m(o.Home,{mdl:e}))}},{id:"event",name:"Event",route:"/:username/:date/:hour/:min",position:["toolbar"],group:["authenticated"],children:[],options:[],onmatch:function(e,t,r,n,o){},component:function(e){return m(n.Layout,{mdl:e},m(o.Event,{mdl:e}))}},{id:"logout",name:"",route:"/logout",position:[],group:["authenticated","admin"],children:[],options:[],onmatch:function(e,t,r,n,o){localStorage.clear(),sessionStorage.clear(),e.state.isAuth(!1),e.user={},m.route.set(m.route.get()),console.log("loggout",e)},component:function(e){return m(o.Home,{mdl:e})}}]),i=a;e["default"]=i}),require.register("Routes/index.js",function(e,t,r){"use strict";function n(e){return e&&e.__esModule?e:{"default":e}}Object.defineProperty(e,"__esModule",{value:!0}),e["default"]=void 0;var o=n(t("./authenticated-routes.js")),a=n(t("./main-routes.js")),i=t("ramda"),u=(0,i.flatten)([a["default"],o["default"]]),s=u;e["default"]=s}),require.register("Routes/main-routes.js",function(e,t,r){"use strict";Object.defineProperty(e,"__esModule",{value:!0}),e["default"]=void 0;var n=t("Pages"),o=t("Components"),a=[{id:"shindig-it",name:m(".Logo"),route:"/splash",isNav:!0,group:["toolbar"],children:[],options:[],onmatch:function(e,t,r,n){},component:function(e){return m(n.Home,{mdl:e})}},{id:"login",name:"Account Login",route:"/login",isNav:!1,group:[],children:[],options:[],onmatch:function(e,t,r,n){},component:function(e){return m(o.AuthLayout,m(n.Login,{mdl:e}))}},{id:"register",name:"Register Account",route:"/register",isNav:!1,group:[],children:[],options:[],onmatch:function(e,t,r,n){},component:function(e){return m(o.AuthLayout,m(n.Register,{mdl:e}))}}],i=a;e["default"]=i}),require.register("Styles/animations.js",function(e,t,r){"use strict";Object.defineProperty(e,"__esModule",{value:!0}),e.slideInDown=e.slideOutRight=e.slideInLeft=e.slideInRight=e.fadeInUp=e.fadeIn=e.popIn=void 0;var n=[{transform:"scale(0)",opacity:1},{transform:"scale(1)",opacity:1},{transform:"scale(0.8)",opacity:1},{transform:"scale(1)",opacity:1}];e.popIn=n;var o=[{opacity:0},{opacity:1}];e.fadeIn=o;var a=[{opacity:0,transform:"translate3d(0, 40%, 0)"},{opacity:1,transform:"translate3d(0, 0, 0)"}];e.fadeInUp=a;var i=[{transform:"translate3d(-50%, 0, 0)"},{transform:"translate3d(0, 0, 0)",visibility:"visible"}];e.slideInRight=i;var u=[{transform:"translate3d(80%, 0, 0)",visibility:"visible"},{transform:"translate3d(0, 0, 0)"}];e.slideInLeft=u;var s=[{transform:"translate3d(0, 0, 0)"},{visibility:"hidden",transform:"translate3d(100%, 0, 0)"}];e.slideOutRight=s;var c=[{transform:"translate3d(0, -50%, 0)"},{transform:"translate3d(0, 0, 0)",visibility:"visible"}];e.slideInDown=c}),require.register("Styles/index.js",function(e,t,r){"use strict";function n(e){return u(e)||i(e)||a(e)||o()}function o(){throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method.")}function a(e,t){if(e){if("string"==typeof e)return s(e,t);var r=Object.prototype.toString.call(e).slice(8,-1);return"Object"===r&&e.constructor&&(r=e.constructor.name),"Map"===r||"Set"===r?Array.from(e):"Arguments"===r||/^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(r)?s(e,t):void 0}}function i(e){if("undefined"!=typeof Symbol&&Symbol.iterator in Object(e))return Array.from(e)}function u(e){if(Array.isArray(e))return s(e)}function s(e,t){(null==t||t>e.length)&&(t=e.length);for(var r=0,n=new Array(t);r<t;r++)n[r]=e[r];return n}function c(e){var t=function r(t){t.target===e&&e.removeEventListener("transitionend",r)};return new Promise(function(){return e.addEventListener("transitionend",t)})}Object.defineProperty(e,"__esModule",{value:!0});var l={AnimatePage:!0,Animate:!0,AnimateChildren:!0};e.AnimateChildren=e.Animate=e.AnimatePage=void 0;var d=t("Utils"),f=t("./animations.js");Object.keys(f).forEach(function(t){"default"!==t&&"__esModule"!==t&&(Object.prototype.hasOwnProperty.call(l,t)||Object.defineProperty(e,t,{enumerable:!0,get:function(){return f[t]}}))});var m={duration:700,easing:"ease-in-out",fill:"forwards"},v=function(e){return function(t){var r=t.dom;p(e)({dom:r})}};e.AnimatePage=v;var p=function(e){var t=arguments.length>1&&void 0!==arguments[1]?arguments[1]:d.NoOp;return function(r){var n=r.dom;return setTimeout(function(){return n.animate(e,m).finished.then(c(n))},t())}};e.Animate=p;var g=function(e,t){return function(r){var o=r.dom,a=n(o.children);a.map(function(r,n){r.style.opacity=0,setTimeout(function(){r.style.opacity=1,p(e)({dom:r})},t())})}};e.AnimateChildren=g}),require.register("Utils/index.js",function(e,t,r){"use strict";function n(e){return u(e)||i(e)||a(e)||o()}function o(){throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method.")}function a(e,t){if(e){if("string"==typeof e)return s(e,t);var r=Object.prototype.toString.call(e).slice(8,-1);return"Object"===r&&e.constructor&&(r=e.constructor.name),"Map"===r||"Set"===r?Array.from(e):"Arguments"===r||/^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(r)?s(e,t):void 0}}function i(e){if("undefined"!=typeof Symbol&&Symbol.iterator in Object(e))return Array.from(e)}function u(e){if(Array.isArray(e))return s(e)}function s(e,t){(null==t||t>e.length)&&(t=e.length);for(var r=0,n=new Array(t);r<t;r++)n[r]=e[r];return n}Object.defineProperty(e,"__esModule",{value:!0});var c={log:!0,debounce:!0,inviteOptions:!0,getInviteStatusColor:!0,rand:!0,randomPause:!0,Pause:!0,NoOp:!0,nameFromRoute:!0,jsonCopy:!0,isSideBarActive:!0,range:!0,isEqual:!0};e.isEqual=e.range=e.isSideBarActive=e.jsonCopy=e.nameFromRoute=e.NoOp=e.Pause=e.randomPause=e.rand=e.getInviteStatusColor=e.inviteOptions=e.debounce=e.log=void 0;var l=t("./local-storage.js");Object.keys(l).forEach(function(t){"default"!==t&&"__esModule"!==t&&(Object.prototype.hasOwnProperty.call(c,t)||Object.defineProperty(e,t,{enumerable:!0,get:function(){return l[t]}}))});var d=t("./validations");Object.keys(d).forEach(function(t){"default"!==t&&"__esModule"!==t&&(Object.prototype.hasOwnProperty.call(c,t)||Object.defineProperty(e,t,{enumerable:!0,get:function(){return d[t]}}))});var f=t("./time-fns.js");Object.keys(f).forEach(function(t){"default"!==t&&"__esModule"!==t&&(Object.prototype.hasOwnProperty.call(c,t)||Object.defineProperty(e,t,{enumerable:!0,get:function(){return f[t]}}))});var m=function(e){return function(t){return console.log(e,t),t}};e.log=m;var v=function(e){return function(t,r){console.log(e);var n;return function(){var o=this,a=arguments,i=function(){n=null,r||t.apply(o,a)},u=r&&!n;clearTimeout(n),n=setTimeout(i,e),u&&t.apply(o,a)}}};e.debounce=v;var p=["decline","accept","maybe"];e.inviteOptions=p;var g=function(e){return getComputedStyle(document.body).getPropertyValue("--".concat(p[e],"-invite"))};e.getInviteStatusColor=g;var y=function(e,t){return Math.floor(Math.random()*(t-e)+e)};e.rand=y;var h=function(){return 1e3*Math.random()};e.randomPause=h;var b=function(e){return 1e3*e};e.Pause=b;var w=function(){};e.NoOp=w;var M=function(e){return e.split("/")[1].toUpperCase()};e.nameFromRoute=M;var j=function(e){return JSON.parse(JSON.stringify(e))};e.jsonCopy=j;var S=function(e){return"desktop"!==e.settings.profile&&e.status.sidebar};e.isSideBarActive=S;var O=function(e){return n(Array(e).keys())};e.range=O;var k=function(e,t){return JSON.stringify(e)==JSON.stringify(t)};e.isEqual=k}),require.register("Utils/local-storage.js",function(e,t,r){"use strict";function n(e){return e&&e.__esModule?e:{"default":e}}Object.defineProperty(e,"__esModule",{value:!0}),e.locals=void 0;var o=n(t("data.task")),a=function(e){return new o["default"](function(t,r){return e.then(t,r)})},i={getTask:function(e){return a(new Promise(function(t,r){return r(localStorage.getItem(e)?JSON.parse(localStorage.getItem(e)):null)}))},setTask:function(e){return function(t){return a(new Promise(function(r){return r(localStorage.setItem(e,t))}))}}};e.locals=i}),require.register("Utils/time-fns.js",function(e,t,r){"use strict";Object.defineProperty(e,"__esModule",{value:!0}),e.firstInviteHour=e.shortDateString=e.toHourViewModel=e.getFullDate=e.fromFullDate=e.monthsOfTheYear=e.daysOfTheWeek=e.isToday=e.datesAreSame=e.getHoursInDay=e.getMin=e.getHour=e.pad0Left=e.pad00Min=e.padding=void 0;var n=t("./index"),o=t("ramda"),a=function(e){return 1==e.toString().length?u(e):e};e.padding=a;var i=function(e){return"".concat(e,":00")};e.pad00Min=i;var u=function(e){return"0".concat(e)};e.pad0Left=u;var s=function(e){return e.split(":")[0]};e.getHour=s;var c=function(e){return e.split(":")[1]};e.getMin=c;var l=function(e){return(0,n.range)("24hrs"==e?24:12).map(function(e){return 1==e.toString().length?u(e):e}).map(i)};e.getHoursInDay=l;var d=function(e){return function(t){return function(r){var n=M.utc(e).format(r),o=M.utc(t).format(r);return M.utc(n).isSame(M.utc(o))}}};e.datesAreSame=d;var f=function(e){var t=new Date,r=new Date(e.toString());return r.getDate()==t.getDate()&&r.getMonth()==t.getMonth()&&r.getFullYear()==t.getFullYear()};e.isToday=f;var m=["Monday","Teusday","Wednesday","Thursday","Friday","Saturday","Sunday"];e.daysOfTheWeek=m;var v=["January","Febuary","March","April","May","June","July","August","September","October","November","December"];e.monthsOfTheYear=v;var p=function(e){var t=new Date(e);return{day:a(t.getDate()),month:a(t.getMonth()+1),year:t.getFullYear(),hour:a(t.getHours()),min:a(t.getMinutes())}};e.fromFullDate=p;var g=function(e,t,r){var n=e.year,o=e.month,a=e.day;return console.log("getFullDate",new Date(n,o-1,a,t,r)),new Date(n,o-1,a,t,r)};e.getFullDate=g;var y=function(e){return function(t,r){return t[e][r]||(t[e][r]={}),t}};e.toHourViewModel=y;var h=function(e){var t=e.year,r=e.month,n=e.day;return"".concat(t,"-").concat(a(r),"-").concat(a(n))};e.shortDateString=h;var b=(0,o.compose)(o.head,(0,o.sort)(function(e,t){return e-t}),(0,o.map)(function(e){return e&&parseInt(e.format("HH"))}),(0,o.pluck)("start"));e.firstInviteHour=b}),require.register("Utils/validations.js",function(e,t,r){"use strict";function n(e){return e&&e.__esModule?e:{"default":e}}Object.defineProperty(e,"__esModule",{value:!0}),e.isNilOrEmptyOrAtom=e.allCaps=e.inDateRange=e.unique=e.maxLengthNullable=e.onlyNumeric=e.urlFormat=e.phoneFormat=e.onlyAlphaNumericSpaceSpecial=e.onlyAlphaNumericSpaceUnderscore=e.onlyAlphaNumericSpace=e.onlyAlphaNumericUnderscore=e.onlyAlphaNumeric=e.onlyAlpha=e.emailFormat=e.maxSize=e.maxLength=e.isNullOrEmpty=e.isNotNullOrEmpty=e.IsNotNil=e.isRequired=e.validate=e.getOrElse=void 0;var o=t("ramda"),a=t("data.validation"),i=n(t("data.maybe")),u=function(e){return function(t){return t.getOrElse(e)}};e.getOrElse=u;var s=(0,o.curry)(function(e,t,r,n){return e((0,o.view)(t,n))?(0,a.Success)(n):(0,a.Failure)([(0,o.set)(t,r,{})])});e.validate=s;var c=(0,o.compose)(o.not,o.isEmpty);e.isRequired=c;var l=(0,o.compose)(o.not,o.isNil);e.IsNotNil=l;var d=function(e){return!f(e)};e.isNotNullOrEmpty=d;var f=function(e){return(0,o.isNil)(e)||(0,o.isEmpty)(e)};e.isNullOrEmpty=f;var m=function(e){return(0,o.compose)((0,o.gte)(e),o.length)};e.maxLength=m;var v=(0,o.curry)(function(e,t){return(0,o.gte)(e,t)});e.maxSize=v;var p=(0,o.test)(/@/);e.emailFormat=p;var g=(0,o.test)(/^[a-zA-Z]*$/);e.onlyAlpha=g;var y=(0,o.test)(/^[a-zA-Z0-9]*$/);e.onlyAlphaNumeric=y;var h=(0,o.test)(/^[a-zA-Z0-9_]*$/);e.onlyAlphaNumericUnderscore=h;var b=(0,o.test)(/^[a-zA-Z0-9\s]*$/);e.onlyAlphaNumericSpace=b;var w=(0,o.test)(/^[a-zA-Z0-9_\s]*$/);e.onlyAlphaNumericSpaceUnderscore=w;var M=(0,o.test)(/^[a-zA-Z0-9_.~!*''();:@&=+$,/?#[%-\]+\s]*$/);e.onlyAlphaNumericSpaceSpecial=M;var j=(0,o.test)(/^[0-9]{3}-[0-9]{3}-[0-9]{4}$/);e.phoneFormat=j;var S=(0,o.test)(/^[a-zA-Z0-9_.~!*''();:@&=+$,/?#[%-\]+]*$/);e.urlFormat=S;var O=(0,o.test)(/^[0-9]*$/);e.onlyNumeric=O;var k=function(e){return(0,o.compose)(u(!1),(0,o.map)((0,o.gte)(e)),(0,o.map)(o.length),i["default"].fromNullable)};e.maxLengthNullable=k;var E=(0,o.curry)(function(e,t){var r=i["default"].fromNullable(e);return!(0,o.contains)((0,o.toUpper)(t.toString()),(0,o.map)(function(e){return(0,o.toUpper)(e.toString())},r.getOrElse([])))});e.unique=E;var P=(0,o.curry)(function(e,t,r){return null==r||""===r||new Date(e)<=new Date(r)&&new Date(r)<new Date(t)});e.inDateRange=P;var _=function(e){return e.toUpperCase()===e};e.allCaps=_;var T=function(e){return(0,o.isNil)(e)||(0,o.isEmpty)(e)||"{$type:atom}"===e};e.isNilOrEmptyOrAtom=T}),require.register("index.js",function(e,t,r){"use strict";function n(e){return e&&e.__esModule?e:{"default":e}}var o=n(t("./App.js")),a=n(t("Models")),i=t("@boazblake/fun-config");i.FunConfig.configure();var u=document.body,s=window.innerWidth;r.hot&&r.hot.accept(),"serviceWorker"in navigator&&window.addEventListener("load",function(){navigator.serviceWorker.register("./service-worker.js").then(function(e){console.log("⚙️ SW registered: ",e)})["catch"](function(e){console.log("🧟 SW registration failed: ",e)})});var c=function(e){return e<668?"phone":e<920?"tablet":"desktop"},l=function d(e){var t=window.innerWidth;if(e!==t){e=t;var r=a["default"].Settings.profile;a["default"].Settings.profile=c(t),r!=a["default"].Settings.profile&&m.redraw()}return requestAnimationFrame(d)};a["default"].Settings.profile=c(s),l(s),sessionStorage.getItem("shindigit-user")?(a["default"].User=JSON.parse(sessionStorage.getItem("shindigit-user")),a["default"].State.isAuth(!0)):m.route.set("/logout"),m.route(u,"/login",(0,o["default"])(a["default"]))}),require.register("initialize.js",function(e,t,r){"use strict";document.addEventListener("DOMContentLoaded",function(){t("./index.js")})}),require.alias("process/browser.js","process"),e=require("process"),require.register("___globals___",function(e,t,r){window.m=t("mithril"),window.Stream=t("mithril-stream"),window.M=t("moment")})}(),require("___globals___"),require("initialize");
+(function() {
+  'use strict';
+
+  var globals = typeof global === 'undefined' ? self : global;
+  if (typeof globals.require === 'function') return;
+
+  var modules = {};
+  var cache = {};
+  var aliases = {};
+  var has = {}.hasOwnProperty;
+
+  var expRe = /^\.\.?(\/|$)/;
+  var expand = function(root, name) {
+    var results = [], part;
+    var parts = (expRe.test(name) ? root + '/' + name : name).split('/');
+    for (var i = 0, length = parts.length; i < length; i++) {
+      part = parts[i];
+      if (part === '..') {
+        results.pop();
+      } else if (part !== '.' && part !== '') {
+        results.push(part);
+      }
+    }
+    return results.join('/');
+  };
+
+  var dirname = function(path) {
+    return path.split('/').slice(0, -1).join('/');
+  };
+
+  var localRequire = function(path) {
+    return function expanded(name) {
+      var absolute = expand(dirname(path), name);
+      return globals.require(absolute, path);
+    };
+  };
+
+  var initModule = function(name, definition) {
+    var hot = hmr && hmr.createHot(name);
+    var module = {id: name, exports: {}, hot: hot};
+    cache[name] = module;
+    definition(module.exports, localRequire(name), module);
+    return module.exports;
+  };
+
+  var expandAlias = function(name) {
+    var val = aliases[name];
+    return (val && name !== val) ? expandAlias(val) : name;
+  };
+
+  var _resolve = function(name, dep) {
+    return expandAlias(expand(dirname(name), dep));
+  };
+
+  var require = function(name, loaderPath) {
+    if (loaderPath == null) loaderPath = '/';
+    var path = expandAlias(name);
+
+    if (has.call(cache, path)) return cache[path].exports;
+    if (has.call(modules, path)) return initModule(path, modules[path]);
+
+    throw new Error("Cannot find module '" + name + "' from '" + loaderPath + "'");
+  };
+
+  require.alias = function(from, to) {
+    aliases[to] = from;
+  };
+
+  var extRe = /\.[^.\/]+$/;
+  var indexRe = /\/index(\.[^\/]+)?$/;
+  var addExtensions = function(bundle) {
+    if (extRe.test(bundle)) {
+      var alias = bundle.replace(extRe, '');
+      if (!has.call(aliases, alias) || aliases[alias].replace(extRe, '') === alias + '/index') {
+        aliases[alias] = bundle;
+      }
+    }
+
+    if (indexRe.test(bundle)) {
+      var iAlias = bundle.replace(indexRe, '');
+      if (!has.call(aliases, iAlias)) {
+        aliases[iAlias] = bundle;
+      }
+    }
+  };
+
+  require.register = require.define = function(bundle, fn) {
+    if (bundle && typeof bundle === 'object') {
+      for (var key in bundle) {
+        if (has.call(bundle, key)) {
+          require.register(key, bundle[key]);
+        }
+      }
+    } else {
+      modules[bundle] = fn;
+      delete cache[bundle];
+      addExtensions(bundle);
+    }
+  };
+
+  require.list = function() {
+    var list = [];
+    for (var item in modules) {
+      if (has.call(modules, item)) {
+        list.push(item);
+      }
+    }
+    return list;
+  };
+
+  var hmr = globals._hmr && new globals._hmr(_resolve, require, modules, cache);
+  require._cache = cache;
+  require.hmr = hmr && hmr.wrap;
+  require.brunch = true;
+  globals.require = require;
+})();
+
+(function() {
+var global = typeof window === 'undefined' ? this : window;
+var process;
+var __makeRelativeRequire = function(require, mappings, pref) {
+  var none = {};
+  var tryReq = function(name, pref) {
+    var val;
+    try {
+      val = require(pref + '/node_modules/' + name);
+      return val;
+    } catch (e) {
+      if (e.toString().indexOf('Cannot find module') === -1) {
+        throw e;
+      }
+
+      if (pref.indexOf('node_modules') !== -1) {
+        var s = pref.split('/');
+        var i = s.lastIndexOf('node_modules');
+        var newPref = s.slice(0, i).join('/');
+        return tryReq(name, newPref);
+      }
+    }
+    return none;
+  };
+  return function(name) {
+    if (name in mappings) name = mappings[name];
+    if (!name) return;
+    if (name[0] !== '.' && pref) {
+      var val = tryReq(name, pref);
+      if (val !== none) return val;
+    }
+    return require(name);
+  }
+};
+require.register(".secrets.js", function(exports, require, module) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.OpenCage = exports.BackEnd = void 0;
+
+//NEED TO MOVE THESE TO ENVIRONMENT/GITLAB IN PRODUCTION for manifest
+var getUserToken = function getUserToken() {
+  return sessionStorage.getItem("shindigit-user-token") ? sessionStorage.getItem("shindigit-user-token") : "";
+};
+
+var OpenCage = {
+  key: "c36ea23c619f436cba0eab3f939e6ed6",
+  baseUrl: "https://api.opencagedata.com/geocode/v1/json",
+  headers: function headers() {
+    return {// "access-control-allow-origin": "*"
+    };
+  }
+};
+exports.OpenCage = OpenCage;
+var BackEnd = {
+  API_KEY: "3E894DDB-58BB-4F18-9E1D-809BBF807C1C",
+  APP_ID: "854DB087-FA48-0CF1-FFEE-7660CF37E100",
+  baseUrl: "https://api.backendless.com",
+  headers: function headers() {
+    return {
+      "user-token": getUserToken()
+    };
+  }
+};
+exports.BackEnd = BackEnd;
+});
+
+;require.register("App.js", function(exports, require, module) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+
+var _index = _interopRequireDefault(require("./Routes/index"));
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var toRoutes = function toRoutes(mdl) {
+  return function (acc, route) {
+    acc[route.route] = {
+      onmatch: function onmatch(args, path, fullroute) {
+        if (route.group.includes("authenticated") && !mdl.State.isAuth()) {
+          m.route.set(m.route.get());
+        }
+
+        mdl.State.route = route;
+        mdl.State.anchor = path.split("#")[1];
+        route.onmatch(mdl, args, path, fullroute);
+      },
+      render: function render() {
+        return route.component(mdl);
+      }
+    };
+    return acc;
+  };
+};
+
+var App = function App(mdl) {
+  return _index.default.reduce(toRoutes(mdl), {});
+};
+
+var _default = App;
+exports.default = _default;
+});
+
+;require.register("Components/auth-layout.js", function(exports, require, module) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.AuthLayout = void 0;
+var Logo = m("img.frow", {
+  src: "images/logo.svg",
+  style: {
+    width: "300px",
+    margin: "0 auto"
+  }
+});
+var AuthLayout = {
+  view: function view(_ref) {
+    var children = _ref.children;
+    return m(".frow-container", [Logo, children]);
+  }
+};
+exports.AuthLayout = AuthLayout;
+});
+
+;require.register("Components/calendar/calendar-model.js", function(exports, require, module) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.calendarDayStyle = exports.calendarModel = exports.createCalendar = exports.createCalendarDayViewModel = exports.isNotCalenderDay = exports.isCalenderDay = void 0;
+
+var _dateFns = require("date-fns");
+
+var _Utils = require("Utils");
+
+var isCalenderDay = function isCalenderDay(invites, day) {
+  return {
+    day: day,
+    dir: 0,
+    invites: invites
+  };
+};
+
+exports.isCalenderDay = isCalenderDay;
+
+var isNotCalenderDay = function isNotCalenderDay(invites, day, date) {
+  return {
+    day: day,
+    dir: day.isBefore(date) ? -1 : day.isAfter(date) ? 1 : 0,
+    invites: invites
+  };
+};
+
+exports.isNotCalenderDay = isNotCalenderDay;
+
+var filterBy = function filterBy(day) {
+  return function (invites) {
+    return invites.filter(function (i) {
+      return (0, _Utils.datesAreSame)(i.start)(day)("YYYY-MM-DD");
+    });
+  };
+};
+
+var createCalendarDayViewModel = function createCalendarDayViewModel(invites, day, date, _ref) {
+  var isSameMonth = _ref.isSameMonth;
+  return isSameMonth ? isCalenderDay(filterBy(day)(invites), M.utc(day)) : isNotCalenderDay(filterBy(day)(invites), M.utc(day), date);
+};
+
+exports.createCalendarDayViewModel = createCalendarDayViewModel;
+
+var createCalendar = function createCalendar(invites, date) {
+  var start = (0, _dateFns.parseISO)(date.clone().startOf("month").toISOString());
+  var end = (0, _dateFns.parseISO)(date.clone().endOf("month").toISOString());
+  var matrix = (0, _dateFns.eachWeekOfInterval)({
+    start: start,
+    end: end
+  }, {
+    weekStartsOn: 1
+  });
+  return matrix.map(function (weekDay) {
+    return (0, _dateFns.eachDayOfInterval)({
+      start: (0, _dateFns.startOfISOWeek)(weekDay),
+      end: (0, _dateFns.endOfISOWeek)(weekDay)
+    }).map(function (day) {
+      return createCalendarDayViewModel(invites, day, date, {
+        isSameMonth: date.isSame(day, "month")
+      });
+    });
+  });
+};
+
+exports.createCalendar = createCalendar;
+
+var calendarModel = function calendarModel(_ref2) {
+  var mdl = _ref2.mdl,
+      invites = _ref2.invites,
+      date = _ref2.date;
+  var today = M.utc();
+
+  var _date = M.utc(date);
+
+  var dto = {
+    invites: invites,
+    startDate: _date,
+    selected: {
+      year: _date.year(),
+      month: _date.month() + 1,
+      day: _date.day()
+    },
+    today: {
+      year: today.year(),
+      month: today.month(),
+      day: today.day()
+    },
+    daysInMonth: _date.daysInMonth()
+  };
+  return dto;
+};
+
+exports.calendarModel = calendarModel;
+
+var calendarDayStyle = function calendarDayStyle(selectedDate, current, dir) {
+  var today = M.utc();
+
+  if (dir !== 0) {
+    return "cal-day notThisMonth";
+  }
+
+  if (today.isSame(current, "day") && today.isSame(current, "month") && today.isSame(current, "year") && selectedDate.isSame(current, "date")) {
+    return "selectedDay isToday";
+  }
+
+  if (today.isSame(current, "day") && today.isSame(current, "month") && today.isSame(current, "year")) {
+    return "cal-day isToday";
+  }
+
+  if (selectedDate.isSame(current, "date")) {
+    return "cal-day selectedDay";
+  } else return "cal-day";
+};
+
+exports.calendarDayStyle = calendarDayStyle;
+});
+
+;require.register("Components/calendar/calendar.js", function(exports, require, module) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.Calendar = void 0;
+
+var _calendarModel = require("./calendar-model");
+
+var _Components = require("Components");
+
+var _Utils = require("Utils");
+
+var Navbar = function Navbar() {
+  return {
+    view: function view(_ref) {
+      var _ref$attrs = _ref.attrs,
+          mdl = _ref$attrs.mdl,
+          date = _ref$attrs.date;
+      return m(".frow width-100 ", [m(".frow width-100 row-between", [m(m.route.Link, {
+        selector: "button",
+        href: "/".concat(mdl.User.name, "/").concat(date.clone().subtract(1, "year").format("YYYY-MM-DD"))
+      }, date.clone().subtract(1, "year").format("YYYY")), m(".centerMonthGroup", [m("h2.currentMonth", date.format("MMMM")), m("h3.text-center", date.format("YYYY"))]), m(m.route.Link, {
+        selector: "button",
+        href: "/".concat(mdl.User.name, "/").concat(date.clone().add(1, "year").format("YYYY-MM-DD"))
+      }, date.clone().add(1, "year").format("YYYY"))]), m(".frow width-100 row-between mt-10", [m(m.route.Link, {
+        selector: "button",
+        href: "/".concat(mdl.User.name, "/").concat(date.clone().subtract(1, "month").format("YYYY-MM-DD"))
+      }, m("h4", date.clone().subtract(1, "month").format("MMMM"))), m(m.route.Link, {
+        selector: "button",
+        href: "/".concat(mdl.User.name, "/").concat(date.clone().add(1, "month").format("YYYY-MM-DD"))
+      }, m("h4", date.clone().add(1, "month").format("MMMM")))])]);
+    }
+  };
+};
+
+var DaysOfWeek = function DaysOfWeek() {
+  return {
+    view: function view(_ref2) {
+      var mdl = _ref2.attrs.mdl;
+      return m(".frow width-100 row-between mt-10", _Utils.daysOfTheWeek.map(function (day) {
+        return m(".col-xs-1-7 text-center", m("span.width-auto.text-strong", day[0].toUpperCase()));
+      }));
+    }
+  };
+};
+
+var CalendarDay = function CalendarDay() {
+  return {
+    view: function view(_ref3) {
+      var _ref3$attrs = _ref3.attrs,
+          mdl = _ref3$attrs.mdl,
+          invites = _ref3$attrs.invites,
+          day = _ref3$attrs.day,
+          dir = _ref3$attrs.dir;
+      return m(".col-xs-1-7 text-center", m(m.route.Link, {
+        href: "/".concat(mdl.User.name, "/").concat(day.format("YYYY-MM-DD")),
+        class: "cal-day-link",
+        onclick: function onclick(e) {
+          return mdl.State.toAnchor((0, _Utils.firstInviteHour)(invites) || M.utc().format("HH"));
+        }
+      }, m(".".concat((0, _calendarModel.calendarDayStyle)(mdl.selectedDate(), day, dir)), [m("span.cal-date", day.format("D")), invites.any() && m(".cal-invites-item", invites.length)])));
+    }
+  };
+};
+
+var CalendarBody = function CalendarBody() {
+  return {
+    view: function view(_ref4) {
+      var _ref4$attrs = _ref4.attrs,
+          mdl = _ref4$attrs.mdl,
+          date = _ref4$attrs.date,
+          invites = _ref4$attrs.invites;
+    }
+  };
+};
+
+var Calendar = function Calendar() {
+  return {
+    view: function view(_ref5) {
+      var _ref5$attrs = _ref5.attrs,
+          mdl = _ref5$attrs.mdl,
+          date = _ref5$attrs.date,
+          invites = _ref5$attrs.invites;
+      var matrix = (0, _calendarModel.createCalendar)(invites, date);
+      return m(".calendar", m(".frow frow-container", [m(Navbar, {
+        mdl: mdl,
+        date: date
+      }), m(DaysOfWeek, {
+        mdl: mdl
+      }), m(".frow centered-column width-100 row-between mt-10 ", matrix.map(function (week) {
+        return m(".frow width-100", week.map(function (_ref6) {
+          var invites = _ref6.invites,
+              day = _ref6.day,
+              dir = _ref6.dir;
+          return m(CalendarDay, {
+            mdl: mdl,
+            invites: invites,
+            day: day,
+            dir: dir
+          });
+        }));
+      }))]));
+    }
+  };
+};
+
+exports.Calendar = Calendar;
+});
+
+;require.register("Components/component.js", function(exports, require, module) {
+"use strict";
+
+var Component = function Component() {
+  return {
+    view: function view() {
+      return m(".");
+    }
+  };
+};
+});
+
+;require.register("Components/day.js", function(exports, require, module) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.Day = exports.HourView = void 0;
+
+var _Utils = require("Utils");
+
+var createEventUrl = function createEventUrl(invite) {
+  return "".concat(invite.start.format("YYYY-MM-DD"), "/").concat(invite.start.format("HH"), "/").concat(invite.start.format("mm"));
+};
+
+var HourInvite = function HourInvite() {
+  return {
+    view: function view(_ref) {
+      var _ref$attrs = _ref.attrs,
+          mdl = _ref$attrs.mdl,
+          invite = _ref$attrs.invite,
+          col = _ref$attrs.col;
+      return m(".col-xs-1-".concat(col + 2), m(".invite-list-item ", {
+        onclick: function onclick(e) {
+          mdl.Events.currentEventId(invite.eventId);
+          mdl.Events.currentEventStartTime(invite.start);
+          localStorage.setItem("eventId", invite.eventId);
+          m.route.set("/".concat(mdl.User.name, "/").concat(createEventUrl(invite)));
+        },
+        style: {
+          "background-color": (0, _Utils.getInviteStatusColor)(invite.status),
+          top: "".concat(invite.start.format("mm"), "px"),
+          height: "".concat(invite.end.diff(invite.start, "minutes") * 2, "px")
+        }
+      }, invite.title));
+    }
+  };
+};
+
+var scrollToCurrentTimeOrInvite = function scrollToCurrentTimeOrInvite(mdl, invites) {
+  var first = (0, _Utils.firstInviteHour)(invites);
+  var hour = mdl.State.toAnchor() ? mdl.State.toAnchor() : first ? first : M().format("HH");
+  var el = document.getElementById("".concat(hour, ":00"));
+  el && el.scrollIntoView({
+    top: 0,
+    left: 0,
+    behavior: "smooth"
+  });
+};
+
+var HourView = function HourView() {
+  return {
+    view: function view(_ref2) {
+      var _ref2$attrs = _ref2.attrs,
+          mdl = _ref2$attrs.mdl,
+          hour = _ref2$attrs.hour,
+          events = _ref2$attrs.events;
+      return m(".frow ", m(".hour ", [m("p.hour-time", {
+        id: hour
+      }, hour), m(".invite-list frow ", events.map(function (invite, idx) {
+        return m(HourInvite, {
+          mdl: mdl,
+          invite: invite,
+          col: events.length,
+          key: idx
+        });
+      }))]));
+    }
+  };
+};
+
+exports.HourView = HourView;
+
+var ListView = function ListView() {
+  return {
+    view: function view(_ref3) {
+      var _ref3$attrs = _ref3.attrs,
+          mdl = _ref3$attrs.mdl,
+          invites = _ref3$attrs.invites;
+      return m("ul", invites.map(function (invite) {
+        console.log(invite);
+        return m("li.frow-container", {
+          class: _Utils.inviteOptions[invite.status],
+          onclick: function onclick(e) {
+            mdl.Events.currentEventId(invite.eventId);
+            mdl.Events.currentEventStartTime(invite.start);
+            localStorage.setItem("eventId", invite.eventId);
+            m.route.set("/".concat(mdl.User.name, "/").concat(createEventUrl(invite)));
+          }
+        }, [m("h3", invite.title), m(".frow row-start", [m("label.col-xs-1-3", "".concat(invite.start.format("HH:mm"), " - ").concat(invite.end.format("HH:mm"))), m("label.col-xs-1-4")])]);
+      }));
+    }
+  };
+};
+
+var Day = function Day(_ref4) {
+  var mdl = _ref4.attrs.mdl;
+  return {
+    oncreate: function oncreate(_ref5) {
+      var _ref5$attrs = _ref5.attrs,
+          mdl = _ref5$attrs.mdl,
+          invites = _ref5$attrs.invites;
+      return scrollToCurrentTimeOrInvite(mdl, invites);
+    },
+    onupdate: function onupdate(_ref6) {
+      var _ref6$attrs = _ref6.attrs,
+          mdl = _ref6$attrs.mdl,
+          invites = _ref6$attrs.invites;
+      return mdl.State.toAnchor() && scrollToCurrentTimeOrInvite(mdl, invites);
+    },
+    view: function view(_ref7) {
+      var _ref7$attrs = _ref7.attrs,
+          mdl = _ref7$attrs.mdl,
+          day = _ref7$attrs.day,
+          invites = _ref7$attrs.invites;
+      return m(".day", [m(".day-container", [mdl.Day.listView() ? m(ListView, {
+        mdl: mdl,
+        invites: invites
+      }) : (0, _Utils.getHoursInDay)(mdl.State.timeFormats[mdl.State.format()]).map(function (hour, idx) {
+        return m(HourView, {
+          mdl: mdl,
+          invites: day[hour],
+          hour: hour,
+          events: day[hour]
+        });
+      })])]);
+    }
+  };
+};
+
+exports.Day = Day;
+});
+
+;require.register("Components/editor/editor.js", function(exports, require, module) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.Editor = void 0;
+
+var _eventForm = require("./event-form");
+
+var _Http = require("Http");
+
+var _validations = require("./validations");
+
+var Editor = function Editor(_ref) {
+  var mdl = _ref.attrs.mdl;
+  var EventFormData = {
+    shortDate: mdl.selectedDate().format("YYYY-MM-DD"),
+    allDay: false,
+    inPerson: true,
+    location: "",
+    latlong: "",
+    startTime: "",
+    endTime: "",
+    title: "",
+    notes: ""
+  };
+  var EventFormState = {
+    status: "loading",
+    errors: null,
+    isSubmitted: false,
+    isValid: false,
+    queryResults: [],
+    querySelected: "",
+    locationWarning: Stream(null)
+  };
+
+  var resetState = function resetState(state) {
+    EventFormState = {
+      status: "loading",
+      errors: null,
+      isSubmitted: false,
+      isValid: false,
+      queryResults: [],
+      querySelected: "",
+      locationWarning: Stream(null)
+    };
+    console.log(EventFormState);
+  };
+
+  var validate = function validate(state, data) {
+    var onError = function onError(errors) {
+      state.errors = errors;
+      state.isValid = false; // console.log("v err", state, errors)
+    };
+
+    var onSuccess = function onSuccess(data) {
+      // console.log("v succ", data)
+      state.errors = null;
+      state.isValid = true;
+    };
+
+    (0, _validations.validateTask)(data).fork(onError, onSuccess);
+  };
+
+  var addNewEvent = function addNewEvent(_ref2) {
+    var mdl = _ref2.mdl,
+        data = _ref2.data,
+        state = _ref2.state;
+
+    var onError = function onError(errors) {
+      state.errors = errors;
+      state.status = "failed";
+    };
+
+    var onSuccess = function onSuccess() {
+      mdl.Invites.fetch(true);
+      mdl.State.modal(false);
+    };
+
+    state.isSubmitted = true;
+    (0, _validations.validateTask)(data).chain((0, _Http.submitEventTask)(_Http.HTTP)(mdl)).fork(onError, onSuccess);
+  };
+
+  return {
+    view: function view(_ref3) {
+      var mdl = _ref3.attrs.mdl;
+      return m(_eventForm.EventForm, {
+        mdl: mdl,
+        data: EventFormData,
+        state: EventFormState,
+        validate: validate,
+        resetState: resetState,
+        submit: addNewEvent
+      });
+    }
+  };
+};
+
+exports.Editor = Editor;
+});
+
+;require.register("Components/editor/event-form.js", function(exports, require, module) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.EventForm = void 0;
+
+var _Http = require("Http");
+
+var locateQuery = function locateQuery(mdl) {
+  return function (state) {
+    return function (query) {
+      var onError = function onError(err) {
+        console.log("err q", err);
+        state.locationWarning("Exact address not found. You may continue with this address or try again");
+        state.status = "failure";
+      };
+
+      var onSuccess = function onSuccess(data) {
+        state.queryResults = data;
+        state.status = "success";
+        state.locationWarning(null);
+        console.log("succ d", state);
+      };
+
+      (0, _Http.locateQueryTask)(_Http.HTTP)(mdl)(query).fork(onError, onSuccess);
+    };
+  };
+};
+
+var EventForm = function EventForm() {
+  var setAllDay = function setAllDay(data) {
+    data.allDay = !data.allDay;
+
+    if (data.allDay) {
+      data.startTime = "00:00";
+      data.endTime = "23:59";
+    } else {
+      data.startTime = "";
+      data.endTime = "";
+    }
+  };
+
+  return {
+    view: function view(_ref) {
+      var _ref$attrs = _ref.attrs,
+          data = _ref$attrs.data,
+          state = _ref$attrs.state,
+          resetState = _ref$attrs.resetState,
+          mdl = _ref$attrs.mdl,
+          validate = _ref$attrs.validate,
+          submit = _ref$attrs.submit;
+      return m("form.event-form", m(".frow column-centered", [m(".full-width", m("label.frow row row-evenly gutters", [m("input.col-xs-2-3", {
+        onchange: function onchange(e) {
+          return m.route.set("/".concat(mdl.User.name, "/").concat(e.target.value));
+        },
+        type: "date",
+        value: mdl.selectedDate().format("YYYY-MM-DD")
+      }), m("label.col-xs-1-3", "All Day", m("input", {
+        type: "checkbox",
+        checked: data.allDay,
+        onclick: function onclick(e) {
+          return setAllDay(data);
+        }
+      }))])), m(".full-width", [m(".frow row row-evenly gutters", [m("label.col-xs-1-2", [m("input.", {
+        oninput: function oninput(e) {
+          return data.startTime = e.target.value;
+        },
+        value: data.startTime,
+        type: "time",
+        disabled: data.allDay,
+        onblur: function onblur(e) {
+          return state.isSubmitted && validate(state, data);
+        }
+      }), m(".frow row-start", ["Start Time", m("span.required-field", "*")]), state.errors && m("code.error-field", state.errors.startTime)]), m("label.col-xs-1-2", [m("input", {
+        oninput: function oninput(e) {
+          return data.endTime = e.target.value;
+        },
+        value: data.endTime,
+        type: "time",
+        disabled: data.allDay,
+        onblur: function onblur(e) {
+          return state.isSubmitted && validate(state, data);
+        }
+      }), m(".frow row-start", ["End Time", m("span.required-field", "*")]), state.errors && m("code.error-field", state.errors.endTime)])])]), m(".full-width", m(".frow row row-evenly gutters", [m("label.col-xs-1-5", "In Person", m("input", {
+        type: "checkbox",
+        checked: data.inPerson,
+        onclick: function onclick(e) {
+          return data.inPerson = !data.inPerson;
+        }
+      })), data.inPerson ? m("label.col-xs-4-5", m("input", {
+        type: "address",
+        value: data.location,
+        oninput: function oninput(e) {
+          return data.location = e.target.value;
+        },
+        onchange: function onchange(e) {
+          return locateQuery(mdl)(state)(e.target.value);
+        },
+        onblur: function onblur(e) {
+          return state.isSubmitted && validate(state, data);
+        }
+      }), m(".frow row-start", ["Address", m("span.required-field", "*")])) : m("label.col-xs-4-5", m("input", {
+        type: "url",
+        value: data.url,
+        oninput: function oninput(e) {
+          return data.location = e.target.value;
+        },
+        onblur: function onblur(e) {
+          return state.isSubmitted && validate(state, data);
+        }
+      }), m(".frow row-start", ["URL link", m("span.required-field", "*")])), state.locationWarning() && m("p.location-info-text", state.locationWarning()), state.queryResults.any() && m("ul.event-form-query-container", state.queryResults.map(function (_ref2) {
+        var address = _ref2.address,
+            latlong = _ref2.latlong;
+        return m("li", m("code.form-event-query-result", {
+          onclick: function onclick(e) {
+            data.location = address;
+            data.latlong = latlong;
+            resetState(state);
+          }
+        }, address));
+      })), state.errors && m("code.error-field", state.errors.location)])), m("label", m("input", {
+        type: "text",
+        value: data.text,
+        oninput: function oninput(e) {
+          return data.title = e.target.value;
+        },
+        onblur: function onblur(e) {
+          return state.isSubmitted && validate(state, data);
+        }
+      }), m(".frow row-start", ["Title", m("span.required-field", "*")]), state.errors && m("code.error-field", state.errors.title)), m("label", m("input", {
+        type: "text",
+        value: data.notes,
+        oninput: function oninput(e) {
+          return data.notes = e.target.value;
+        },
+        onblur: function onblur(e) {
+          return state.isSubmitted && validate(state, data);
+        }
+      }), "Notes"), m("button.full-width", {
+        onclick: function onclick(e) {
+          e.preventDefault();
+          submit({
+            mdl: mdl,
+            data: data,
+            state: state
+          });
+        }
+      }, "Submit")]));
+    }
+  };
+};
+
+exports.EventForm = EventForm;
+});
+
+;require.register("Components/editor/validations.js", function(exports, require, module) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.validateTask = void 0;
+
+var _ramda = require("ramda");
+
+var _data = require("data.validation");
+
+var _Utils = require("Utils");
+
+var Validate = (0, _data.Success)((0, _ramda.curryN)(5, _ramda.identity));
+var dateLense = (0, _ramda.lensProp)("shortDate");
+var startTimeLense = (0, _ramda.lensProp)("startTime");
+var endTimeLense = (0, _ramda.lensProp)("endTime");
+var locationLense = (0, _ramda.lensProp)("location");
+var latLongLense = (0, _ramda.lensProp)("latlong");
+var titleLense = (0, _ramda.lensProp)("title");
+
+var FIELD_REQUIRED_MSG = function FIELD_REQUIRED_MSG(field) {
+  return "".concat(field, " is required");
+};
+
+var INVALID_END_DATE_MSG = "End time must be after Start time";
+
+var isChronological = function isChronological(startTime) {
+  return function (endTime) {
+    return startTime && endTime && M().hours((0, _Utils.getHour)(startTime)).minutes((0, _Utils.getMin)(startTime)).isBefore(M().hours((0, _Utils.getHour)(endTime)).minutes((0, _Utils.getMin)(endTime)));
+  };
+};
+
+var validateDate = function validateDate(data) {
+  return (0, _data.Success)(data).apLeft((0, _Utils.validate)(_Utils.isRequired, dateLense, FIELD_REQUIRED_MSG("Date"), data));
+};
+
+var validateStartTime = function validateStartTime(data) {
+  return (0, _data.Success)(data).apLeft((0, _Utils.validate)(_Utils.isRequired, startTimeLense, FIELD_REQUIRED_MSG("Start Time"), data));
+};
+
+var validateEndTime = function validateEndTime(data) {
+  return (0, _data.Success)(data).apLeft((0, _Utils.validate)(_Utils.isRequired, endTimeLense, FIELD_REQUIRED_MSG("End Time"), data)).apLeft((0, _Utils.validate)(isChronological(data.startTime), endTimeLense, INVALID_END_DATE_MSG, data));
+};
+
+var validateAddress = function validateAddress(data) {
+  return (0, _data.Success)(data).apLeft((0, _Utils.validate)(_Utils.isRequired, locationLense, FIELD_REQUIRED_MSG("Location"), data));
+};
+
+var validateTitle = function validateTitle(data) {
+  return (0, _data.Success)(data).apLeft((0, _Utils.validate)(_Utils.isRequired, titleLense, FIELD_REQUIRED_MSG("Title"), data));
+};
+
+var validateTask = function validateTask(data) {
+  return Validate.ap(validateDate(data)).ap(validateStartTime(data)).ap(validateEndTime(data)).ap(validateAddress(data)).ap(validateTitle(data)).failureMap(_ramda.mergeAll).toTask();
+};
+
+exports.validateTask = validateTask;
+});
+
+;require.register("Components/event-toolbar.js", function(exports, require, module) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.EventToolbar = void 0;
+
+var _Utils = require("Utils");
+
+var EventToolbar = function EventToolbar() {
+  return {
+    view: function view(_ref) {
+      var mdl = _ref.attrs.mdl;
+      return m("button", {
+        onclick: function onclick(e) {
+          mdl.State.toAnchor(mdl.Events.currentEventStartTime().format("HH"));
+          m.route.set("/".concat(mdl.User.name, "/").concat(mdl.selectedDate().format("YYYY-MM-DD")));
+        }
+      }, "Back");
+    }
+  };
+};
+
+exports.EventToolbar = EventToolbar;
+});
+
+;require.register("Components/home-toolbar.js", function(exports, require, module) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.HomeToolbar = void 0;
+
+var HomeToolbar = function HomeToolbar() {
+  return {
+    view: function view(_ref) {
+      var mdl = _ref.attrs.mdl;
+      return m(".toolbar", [m("input.cal-toolbar-input", {
+        onchange: function onchange(e) {
+          return m.route.set("/".concat(mdl.User.name, "/").concat(mdl.selectedDate().format("YYYY-MM-DD")));
+        },
+        type: "date",
+        value: mdl.selectedDate().format("YYYY-MM-DD")
+      }), m(m.route.Link, {
+        selector: "button",
+        class: "cal-toolbar-input",
+        href: "/".concat(mdl.User.name, "/").concat(M.utc().format("YYYY-MM-DD"))
+      }, "Today"), m(m.route.Link, {
+        selector: "button",
+        class: "cal-toolbar-input",
+        // onclick: (e) => logout,
+        href: "/logout"
+      }, "Logout")]);
+    }
+  };
+};
+
+exports.HomeToolbar = HomeToolbar;
+});
+
+;require.register("Components/index.js", function(exports, require, module) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _homeToolbar = require("./home-toolbar.js");
+
+Object.keys(_homeToolbar).forEach(function (key) {
+  if (key === "default" || key === "__esModule") return;
+  Object.defineProperty(exports, key, {
+    enumerable: true,
+    get: function get() {
+      return _homeToolbar[key];
+    }
+  });
+});
+
+var _eventToolbar = require("./event-toolbar.js");
+
+Object.keys(_eventToolbar).forEach(function (key) {
+  if (key === "default" || key === "__esModule") return;
+  Object.defineProperty(exports, key, {
+    enumerable: true,
+    get: function get() {
+      return _eventToolbar[key];
+    }
+  });
+});
+
+var _calendar = require("./calendar/calendar.js");
+
+Object.keys(_calendar).forEach(function (key) {
+  if (key === "default" || key === "__esModule") return;
+  Object.defineProperty(exports, key, {
+    enumerable: true,
+    get: function get() {
+      return _calendar[key];
+    }
+  });
+});
+
+var _day = require("./day.js");
+
+Object.keys(_day).forEach(function (key) {
+  if (key === "default" || key === "__esModule") return;
+  Object.defineProperty(exports, key, {
+    enumerable: true,
+    get: function get() {
+      return _day[key];
+    }
+  });
+});
+
+var _modal = require("./modal.js");
+
+Object.keys(_modal).forEach(function (key) {
+  if (key === "default" || key === "__esModule") return;
+  Object.defineProperty(exports, key, {
+    enumerable: true,
+    get: function get() {
+      return _modal[key];
+    }
+  });
+});
+
+var _editor = require("./editor/editor.js");
+
+Object.keys(_editor).forEach(function (key) {
+  if (key === "default" || key === "__esModule") return;
+  Object.defineProperty(exports, key, {
+    enumerable: true,
+    get: function get() {
+      return _editor[key];
+    }
+  });
+});
+
+var _navLink = require("./nav-link.js");
+
+Object.keys(_navLink).forEach(function (key) {
+  if (key === "default" || key === "__esModule") return;
+  Object.defineProperty(exports, key, {
+    enumerable: true,
+    get: function get() {
+      return _navLink[key];
+    }
+  });
+});
+
+var _eventForm = require("./editor/event-form.js");
+
+Object.keys(_eventForm).forEach(function (key) {
+  if (key === "default" || key === "__esModule") return;
+  Object.defineProperty(exports, key, {
+    enumerable: true,
+    get: function get() {
+      return _eventForm[key];
+    }
+  });
+});
+
+var _layout = require("./layout.js");
+
+Object.keys(_layout).forEach(function (key) {
+  if (key === "default" || key === "__esModule") return;
+  Object.defineProperty(exports, key, {
+    enumerable: true,
+    get: function get() {
+      return _layout[key];
+    }
+  });
+});
+
+var _authLayout = require("./auth-layout.js");
+
+Object.keys(_authLayout).forEach(function (key) {
+  if (key === "default" || key === "__esModule") return;
+  Object.defineProperty(exports, key, {
+    enumerable: true,
+    get: function get() {
+      return _authLayout[key];
+    }
+  });
+});
+});
+
+;require.register("Components/layout.js", function(exports, require, module) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.Layout = void 0;
+
+var _Components = require("Components");
+
+var Header = function Header() {
+  var getRoute = function getRoute(mdl) {
+    // console.log("route", mdl)
+    return mdl.State.route.id;
+  };
+
+  return {
+    view: function view(_ref) {
+      var mdl = _ref.attrs.mdl;
+      return [getRoute(mdl) == "day-planner" && m(_Components.HomeToolbar, {
+        mdl: mdl
+      }), getRoute(mdl) == "event" && m(_Components.EventToolbar, {
+        mdl: mdl
+      })];
+    }
+  };
+};
+
+var Layout = function Layout() {
+  return {
+    view: function view(_ref2) {
+      var children = _ref2.children,
+          mdl = _ref2.attrs.mdl;
+      return m(".lt-grid-container", [m(".lt-header", m(Header, {
+        mdl: mdl
+      })), m(".lt-body", children), m(".lt-footer", "FOOTER")]);
+    }
+  };
+};
+
+exports.Layout = Layout;
+});
+
+;require.register("Components/modal.js", function(exports, require, module) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.Modal = void 0;
+
+var Modal = function Modal() {
+  return {
+    view: function view(_ref) {
+      var children = _ref.children;
+      return m(".modal", m(".modal-container", children.map(function (child) {
+        return m(".modal.full-width", [m(".modal-header", child.header), m(".modal-body", child.body), m(".modal-footer", child.footer)]);
+      })));
+    }
+  };
+};
+
+exports.Modal = Modal;
+});
+
+;require.register("Components/nav-link.js", function(exports, require, module) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.NavLink = void 0;
+
+function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
+
+function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(Object(source), true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
+
+function _objectWithoutProperties(source, excluded) { if (source == null) return {}; var target = _objectWithoutPropertiesLoose(source, excluded); var key, i; if (Object.getOwnPropertySymbols) { var sourceSymbolKeys = Object.getOwnPropertySymbols(source); for (i = 0; i < sourceSymbolKeys.length; i++) { key = sourceSymbolKeys[i]; if (excluded.indexOf(key) >= 0) continue; if (!Object.prototype.propertyIsEnumerable.call(source, key)) continue; target[key] = source[key]; } } return target; }
+
+function _objectWithoutPropertiesLoose(source, excluded) { if (source == null) return {}; var target = {}; var sourceKeys = Object.keys(source); var key, i; for (i = 0; i < sourceKeys.length; i++) { key = sourceKeys[i]; if (excluded.indexOf(key) >= 0) continue; target[key] = source[key]; } return target; }
+
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
+var handlers = function handlers(types, fn) {
+  return types.reduce(function (acc, type) {
+    return Object.assign(acc, _defineProperty({}, type, fn));
+  }, {});
+};
+
+var NavLink = function NavLink() {
+  return {
+    view: function view(_ref) {
+      var _ref$attrs = _ref.attrs,
+          mdl = _ref$attrs.mdl,
+          href = _ref$attrs.href,
+          link = _ref$attrs.link,
+          classList = _ref$attrs.classList,
+          rest = _objectWithoutProperties(_ref$attrs, ["mdl", "href", "link", "classList"]);
+
+      return m(m.route.Link, _objectSpread(_objectSpread({}, handlers(["onclick", "onmouseover", "onmouseout"], function (e) {
+        return console.log(e.type);
+      })), {}, {
+        href: href,
+        class: "nav-link ".concat(classList, " ").concat(mdl.state.navSelected() == link && "shadow")
+      }, rest), link);
+    }
+  };
+};
+
+exports.NavLink = NavLink;
+});
+
+;require.register("Http/auth-tasks.js", function(exports, require, module) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.registerTask = exports.loginTask = void 0;
+
+var setUserToken = function setUserToken(mdl) {
+  return function (user) {
+    sessionStorage.setItem("shindigit-user", JSON.stringify(user));
+    sessionStorage.setItem("shindigit-user-token", user["user-token"]);
+    mdl.State.isAuth(true);
+    mdl.User = user;
+    return user;
+  };
+};
+
+var loginTask = function loginTask(http) {
+  return function (mdl) {
+    return function (_ref) {
+      var email = _ref.email,
+          password = _ref.password;
+      return http.backEnd.postTask(mdl)("users/login")({
+        login: email,
+        password: password
+      }).map(setUserToken(mdl));
+    };
+  };
+};
+
+exports.loginTask = loginTask;
+
+var registerTask = function registerTask(http) {
+  return function (mdl) {
+    return function (_ref2) {
+      var name = _ref2.name,
+          email = _ref2.email,
+          password = _ref2.password,
+          isAdmin = _ref2.isAdmin;
+      return http.backEnd.postTask(mdl)("users/register")({
+        name: name,
+        email: email,
+        password: password,
+        isAdmin: isAdmin
+      });
+    };
+  };
+};
+
+exports.registerTask = registerTask;
+});
+
+;require.register("Http/events-tasks.js", function(exports, require, module) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.submitEventTask = exports.deleteEventTask = exports.loadEventAndInviteTask = exports.getEventTask = void 0;
+
+var _data = _interopRequireDefault(require("data.task"));
+
+var _invitesTasks = require("./invites-tasks");
+
+var _ramda = require("ramda");
+
+var _Utils = require("Utils");
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var toEventviewModel = function toEventviewModel(_ref) {
+  var start = _ref.start,
+      end = _ref.end,
+      title = _ref.title,
+      notes = _ref.notes,
+      allDay = _ref.allDay,
+      location = _ref.location,
+      inPerson = _ref.inPerson,
+      latlong = _ref.latlong;
+  return {
+    date: M.utc(start).format("DD-MM-YYYY"),
+    title: title.toUpperCase(),
+    start: start,
+    end: end,
+    startTime: M.utc(start).format("HH:mm"),
+    endTime: M.utc(end).format("HH:mm"),
+    notes: notes,
+    allDay: allDay,
+    location: location,
+    inPerson: inPerson,
+    latlong: latlong
+  };
+};
+
+var getEventTask = function getEventTask(http) {
+  return function (mdl) {
+    return http.backEnd.getTask(mdl)("data/Events/".concat(mdl.Events.currentEventId())).map(toEventviewModel);
+  };
+};
+
+exports.getEventTask = getEventTask;
+
+var loadEventAndInviteTask = function loadEventAndInviteTask(http) {
+  return function (mdl) {
+    return _data.default.of(function (event) {
+      return function (invite) {
+        return {
+          event: event,
+          invite: invite
+        };
+      };
+    }).ap(getEventTask(http)(mdl)).ap((0, _invitesTasks.getInvitesTask)(http)(mdl).map((0, _ramda.compose)(_ramda.head, (0, _ramda.filter)((0, _ramda.propEq)("eventId", mdl.Events.currentEventId())))));
+  };
+};
+
+exports.loadEventAndInviteTask = loadEventAndInviteTask;
+
+var deleteEventTask = function deleteEventTask(http) {
+  return function (mdl) {
+    return function (id) {
+      return http.backEnd.deleteTask(mdl)("data/Events/".concat(id)).chain(function () {
+        return http.backEnd.deleteTask(mdl)("data/bulk/Invites?where=eventId%3D'".concat(id, "'"));
+      });
+    };
+  };
+};
+
+exports.deleteEventTask = deleteEventTask;
+
+var submitEventTask = function submitEventTask(http) {
+  return function (mdl) {
+    return function (_ref2) {
+      var allDay = _ref2.allDay,
+          startTime = _ref2.startTime,
+          endTime = _ref2.endTime,
+          title = _ref2.title,
+          notes = _ref2.notes,
+          inPerson = _ref2.inPerson,
+          location = _ref2.location,
+          latlong = _ref2.latlong;
+      var end = M.utc(mdl.selectedDate()).hour((0, _Utils.getHour)(endTime)).minute((0, _Utils.getMin)(endTime));
+      var start = M.utc(mdl.selectedDate()).hour((0, _Utils.getHour)(startTime)).minute((0, _Utils.getMin)(startTime));
+      return http.backEnd.postTask(mdl)("data/Events")({
+        end: end,
+        start: start,
+        notes: notes,
+        title: title,
+        allDay: allDay,
+        inPerson: inPerson,
+        location: location,
+        latlong: latlong,
+        createdBy: mdl.User.objectId
+      }).chain(function (_ref3) {
+        var objectId = _ref3.objectId,
+            ownerId = _ref3.ownerId,
+            end = _ref3.end,
+            start = _ref3.start,
+            title = _ref3.title;
+        var eventId = objectId;
+        return http.backEnd.postTask(mdl)("data/Invites")({
+          eventId: eventId,
+          userId: ownerId,
+          status: 1,
+          end: end,
+          start: start,
+          title: title,
+          allDay: allDay,
+          inPerson: inPerson,
+          location: location,
+          latlong: latlong
+        }).chain(function (_ref4) {
+          var objectId = _ref4.objectId;
+          var inviteId = objectId;
+          return _data.default.of(function (user) {
+            return function (event) {
+              return {
+                user: user,
+                event: event
+              };
+            };
+          }).ap(http.backEnd.postTask(mdl)("data/Users/".concat(mdl.User.objectId, "/invites%3AInvites%3An"))([inviteId])).ap(http.backEnd.postTask(mdl)("data/Events/".concat(eventId, "/invites%3AInvites%3An"))([inviteId]));
+        });
+      });
+    };
+  };
+};
+
+exports.submitEventTask = submitEventTask;
+});
+
+;require.register("Http/http.js", function(exports, require, module) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.HTTP = exports.parseHttpSuccess = exports.parseHttpError = void 0;
+
+var _data = _interopRequireDefault(require("data.task"));
+
+var _secrets = require("../.secrets.js");
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
+
+function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(Object(source), true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
+
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
+var onProgress = function onProgress(mdl) {
+  return function (e) {
+    if (e.lengthComputable) {
+      mdl.State.loadingProgress.max = e.total;
+      mdl.State.loadingProgress.value = e.loaded;
+      m.redraw();
+    }
+  };
+};
+
+function onLoad() {
+  return false;
+}
+
+var onLoadStart = function onLoadStart(mdl) {
+  return function (e) {
+    mdl.State.isLoading(true);
+    return false;
+  };
+};
+
+var onLoadEnd = function onLoadEnd(mdl) {
+  return function (e) {
+    mdl.State.isLoading(false);
+    mdl.State.loadingProgress.max = 0;
+    mdl.State.loadingProgress.value = 0;
+    return false;
+  };
+};
+
+var xhrProgress = function xhrProgress(mdl) {
+  return {
+    config: function config(xhr) {
+      xhr.onprogress = onProgress(mdl);
+      xhr.onload = onLoad;
+      xhr.onloadstart = onLoadStart(mdl);
+      xhr.onloadend = onLoadEnd(mdl);
+    }
+  };
+};
+
+var parseHttpError = function parseHttpError(mdl) {
+  return function (rej) {
+    return function (e) {
+      mdl.State.isLoading(false);
+      console.error(e);
+      e.response && e.response.code == 3064 && m.route.set("/logout");
+      return rej(e.response);
+    };
+  };
+};
+
+exports.parseHttpError = parseHttpError;
+
+var parseHttpSuccess = function parseHttpSuccess(mdl) {
+  return function (res) {
+    return function (data) {
+      mdl.State.isLoading(false);
+      return res(data);
+    };
+  };
+};
+
+exports.parseHttpSuccess = parseHttpSuccess;
+
+var HttpTask = function HttpTask(_headers) {
+  return function (method) {
+    return function (mdl) {
+      return function (url) {
+        return function (body) {
+          mdl.State.isLoading(true);
+          return new _data.default(function (rej, res) {
+            return m.request(_objectSpread({
+              method: method,
+              url: url,
+              headers: _objectSpread({
+                "content-type": "application/json"
+              }, _headers),
+              body: body,
+              withCredentials: false
+            }, xhrProgress(mdl))).then(parseHttpSuccess(mdl)(res), parseHttpError(mdl)(rej));
+          });
+        };
+      };
+    };
+  };
+};
+
+var backEndUrl = "".concat(_secrets.BackEnd.baseUrl, "/").concat(_secrets.BackEnd.APP_ID, "/").concat(_secrets.BackEnd.API_KEY, "/");
+var OpenCageUrl = "".concat(_secrets.OpenCage.baseUrl, "?key=").concat(_secrets.OpenCage.key, "&q=");
+var openCage = {
+  getLocationTask: function getLocationTask(mdl) {
+    return function (query) {
+      return HttpTask(_secrets.OpenCage.headers())("GET")(mdl)(OpenCageUrl + query + "&pretty=1")(null);
+    };
+  }
+};
+var backEnd = {
+  getTask: function getTask(mdl) {
+    return function (url) {
+      return HttpTask(_secrets.BackEnd.headers())("GET")(mdl)(backEndUrl + url)(null);
+    };
+  },
+  postTask: function postTask(mdl) {
+    return function (url) {
+      return function (dto) {
+        return HttpTask(_secrets.BackEnd.headers())("POST")(mdl)(backEndUrl + url)(dto);
+      };
+    };
+  },
+  putTask: function putTask(mdl) {
+    return function (url) {
+      return function (dto) {
+        return HttpTask(_secrets.BackEnd.headers())("PUT")(mdl)(backEndUrl + url)(dto);
+      };
+    };
+  },
+  deleteTask: function deleteTask(mdl) {
+    return function (url) {
+      return HttpTask(_secrets.BackEnd.headers())("DELETE")(mdl)(backEndUrl + url)(null);
+    };
+  }
+};
+var HTTP = {
+  openCage: openCage,
+  backEnd: backEnd,
+  HttpTask: HttpTask
+};
+exports.HTTP = HTTP;
+});
+
+;require.register("Http/index.js", function(exports, require, module) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _http = require("./http.js");
+
+Object.keys(_http).forEach(function (key) {
+  if (key === "default" || key === "__esModule") return;
+  Object.defineProperty(exports, key, {
+    enumerable: true,
+    get: function get() {
+      return _http[key];
+    }
+  });
+});
+
+var _invitesTasks = require("./invites-tasks.js");
+
+Object.keys(_invitesTasks).forEach(function (key) {
+  if (key === "default" || key === "__esModule") return;
+  Object.defineProperty(exports, key, {
+    enumerable: true,
+    get: function get() {
+      return _invitesTasks[key];
+    }
+  });
+});
+
+var _eventsTasks = require("./events-tasks.js");
+
+Object.keys(_eventsTasks).forEach(function (key) {
+  if (key === "default" || key === "__esModule") return;
+  Object.defineProperty(exports, key, {
+    enumerable: true,
+    get: function get() {
+      return _eventsTasks[key];
+    }
+  });
+});
+
+var _authTasks = require("./auth-tasks.js");
+
+Object.keys(_authTasks).forEach(function (key) {
+  if (key === "default" || key === "__esModule") return;
+  Object.defineProperty(exports, key, {
+    enumerable: true,
+    get: function get() {
+      return _authTasks[key];
+    }
+  });
+});
+
+var _openCage = require("./open-cage.js");
+
+Object.keys(_openCage).forEach(function (key) {
+  if (key === "default" || key === "__esModule") return;
+  Object.defineProperty(exports, key, {
+    enumerable: true,
+    get: function get() {
+      return _openCage[key];
+    }
+  });
+});
+});
+
+;require.register("Http/invites-tasks.js", function(exports, require, module) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.getInvitesTask = exports.updateInviteTask = exports.toInviteViewModel = void 0;
+
+var _ramda = require("ramda");
+
+var toInviteViewModel = function toInviteViewModel(_ref) {
+  var start = _ref.start,
+      end = _ref.end,
+      title = _ref.title,
+      objectId = _ref.objectId,
+      eventId = _ref.eventId,
+      status = _ref.status,
+      userId = _ref.userId;
+  return {
+    start: M.utc(start),
+    end: M.utc(end),
+    objectId: objectId,
+    eventId: eventId,
+    title: title,
+    status: status,
+    userId: userId
+  };
+};
+
+exports.toInviteViewModel = toInviteViewModel;
+
+var toInviteDto = function toInviteDto(_ref2) {
+  var start = _ref2.start,
+      end = _ref2.end,
+      title = _ref2.title,
+      eventId = _ref2.eventId,
+      status = _ref2.status,
+      userId = _ref2.userId;
+  return {
+    start: start,
+    end: end,
+    eventId: eventId,
+    title: title,
+    status: status,
+    userId: userId
+  };
+};
+
+var updateInviteTask = function updateInviteTask(http) {
+  return function (mdl) {
+    return function (invite) {
+      return http.backEnd.putTask(mdl)("data/Invites/".concat(invite.objectId))(toInviteDto(invite)).map(toInviteViewModel);
+    };
+  };
+};
+
+exports.updateInviteTask = updateInviteTask;
+
+var getInvitesTask = function getInvitesTask(http) {
+  return function (mdl) {
+    return http.backEnd.getTask(mdl)("data/Invites?pageSize=100&where=userId%3D'".concat(mdl.User.objectId, "'")).map((0, _ramda.map)(toInviteViewModel));
+  };
+};
+
+exports.getInvitesTask = getInvitesTask;
+});
+
+;require.register("Http/open-cage.js", function(exports, require, module) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.locateQueryTask = void 0;
+
+var _ramda = require("ramda");
+
+function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _unsupportedIterableToArray(arr, i) || _nonIterableRest(); }
+
+function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
+
+function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
+
+function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
+
+function _iterableToArrayLimit(arr, i) { if (typeof Symbol === "undefined" || !(Symbol.iterator in Object(arr))) return; var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"] != null) _i["return"](); } finally { if (_d) throw _e; } } return _arr; }
+
+function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
+
+var toOpenCageFormat = function toOpenCageFormat(q) {
+  return q.replace(/\s/g, "+").replace(/,/g, "%2C");
+};
+
+var toLocationViewModel = function toLocationViewModel(_ref) {
+  var _ref2 = _slicedToArray(_ref, 2),
+      address = _ref2[0],
+      ll = _ref2[1];
+
+  return {
+    address: address,
+    latlong: JSON.stringify(ll)
+  };
+};
+
+var locateQueryTask = function locateQueryTask(http) {
+  return function (mdl) {
+    return function (query) {
+      return http.openCage.getLocationTask(mdl)(toOpenCageFormat(query)).map((0, _ramda.prop)("results")).map((0, _ramda.map)((0, _ramda.paths)([["formatted"], ["geometry"]]))).map((0, _ramda.map)(toLocationViewModel));
+    };
+  };
+};
+
+exports.locateQueryTask = locateQueryTask;
+});
+
+;require.register("Models.js", function(exports, require, module) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = exports.inviteModel = exports.dayModel = void 0;
+
+var _Utils = require("Utils");
+
+var _calendarModel = require("Components/calendar/calendar-model");
+
+var State = {
+  isAuth: Stream(false),
+  modal: Stream(false),
+  isLoading: Stream(false),
+  loadingProgress: {
+    max: 0,
+    value: 0
+  },
+  isLoggedIn: function isLoggedIn() {
+    return sessionStorage.getItem("token");
+  },
+  timeFormats: ["12hrs", "24hrs"],
+  format: Stream(1),
+  toAnchor: Stream(false),
+  slug: ""
+};
+
+var dayModel = function dayModel(mdl) {
+  return (0, _Utils.getHoursInDay)(mdl.State.timeFormats[mdl.State.format()]).reduce(function (day, hour) {
+    day[hour] = [];
+    return day;
+  }, {});
+};
+
+exports.dayModel = dayModel;
+
+var inviteModel = function inviteModel() {
+  return {
+    eventId: "",
+    status: "",
+    userId: ""
+  };
+};
+
+exports.inviteModel = inviteModel;
+var Events = {
+  currentEventId: Stream(null),
+  currentEventStartTime: Stream(null)
+};
+var Invites = {
+  fetch: Stream(false)
+};
+var Day = {
+  data: dayModel({
+    State: State
+  }),
+  update: Stream(false),
+  listView: Stream(false)
+};
+var Home = {
+  modal: Stream(false)
+};
+var Settings = {
+  profile: "",
+  inspector: ""
+};
+var Calendar = {
+  data: (0, _calendarModel.calendarModel)({
+    mdl: Model,
+    invites: [],
+    date: M.utc()
+  })
+};
+var User = {};
+var Model = {
+  // currentShortDate: Stream(""), //REMOVE
+  // currentLongDate: Stream(""), //REMOVE
+  selectedDate: Stream(""),
+  //KEEP
+  todayDate: Stream(M.utc()),
+  // selectedDate: { year: "", month: "", day: "" }, //REMOVE
+  Calendar: Calendar,
+  Day: Day,
+  Events: Events,
+  Invites: Invites,
+  State: State,
+  Settings: Settings,
+  User: User,
+  Home: Home
+};
+var _default = Model;
+exports.default = _default;
+});
+
+;require.register("Pages/Auth/Validations.js", function(exports, require, module) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.validateLoginTask = exports.validateUserRegistrationTask = void 0;
+
+var _ramda = require("ramda");
+
+var _data = require("data.validation");
+
+var _Utils = require("Utils");
+
+var ValidateRegistration = (0, _data.Success)((0, _ramda.curryN)(3, _ramda.identity));
+var ValidateLogin = (0, _data.Success)((0, _ramda.curryN)(2, _ramda.identity));
+var nameLense = (0, _ramda.lensProp)("name");
+var passwordLense = (0, _ramda.lensProp)("password");
+var passwordConfirmLense = (0, _ramda.lensProp)("confirmPassword");
+var emailLense = (0, _ramda.lensProp)("email");
+var emailConfirmLense = (0, _ramda.lensProp)("confirmEmail");
+var NAME_REQUIRED_MSG = "A Name is required";
+var PASSWORD_REQUIRED_MSG = "A Password is required";
+var EMAIL_REQUIRED_MSG = "An Email is required";
+var EMAILS_MUST_MATCH = "Emails do not match";
+var INVALID_EMAIL_FORMAT = "Email must be a valid format";
+var PASSWORDS_MUST_MATCH = "Passwords do not match";
+
+var inputsMatch = function inputsMatch(input1) {
+  return function (input2) {
+    return input2 === input1;
+  };
+};
+
+var validateName = function validateName(data) {
+  return (0, _data.Success)(data).apLeft((0, _Utils.validate)(_Utils.isRequired, nameLense, NAME_REQUIRED_MSG, data));
+};
+
+var validateEmails = function validateEmails(data) {
+  return (0, _data.Success)(data).apLeft((0, _Utils.validate)(_Utils.isRequired, emailLense, EMAIL_REQUIRED_MSG, data)).apLeft((0, _Utils.validate)(_Utils.isRequired, emailConfirmLense, EMAIL_REQUIRED_MSG, data)).apLeft((0, _Utils.validate)(inputsMatch(data.confirmEmail), emailLense, EMAILS_MUST_MATCH, data)).apLeft((0, _Utils.validate)(inputsMatch(data.email), emailConfirmLense, EMAILS_MUST_MATCH, data)).apLeft((0, _Utils.validate)(_Utils.emailFormat, emailConfirmLense, INVALID_EMAIL_FORMAT, data)).apLeft((0, _Utils.validate)(_Utils.emailFormat, emailLense, INVALID_EMAIL_FORMAT, data));
+};
+
+var validateEmail = function validateEmail(data) {
+  return (0, _data.Success)(data).apLeft((0, _Utils.validate)(_Utils.isRequired, emailLense, EMAIL_REQUIRED_MSG, data)).apLeft((0, _Utils.validate)(_Utils.emailFormat, emailLense, INVALID_EMAIL_FORMAT, data));
+};
+
+var validatePasswords = function validatePasswords(data) {
+  return (0, _data.Success)(data).apLeft((0, _Utils.validate)(_Utils.isRequired, passwordLense, PASSWORD_REQUIRED_MSG, data)).apLeft((0, _Utils.validate)(_Utils.isRequired, passwordConfirmLense, PASSWORD_REQUIRED_MSG, data)).apLeft((0, _Utils.validate)(inputsMatch(data.password), passwordConfirmLense, PASSWORDS_MUST_MATCH, data)).apLeft((0, _Utils.validate)(inputsMatch(data.confirmPassword), passwordLense, PASSWORDS_MUST_MATCH, data));
+};
+
+var validatePassword = function validatePassword(data) {
+  return (0, _data.Success)(data).apLeft((0, _Utils.validate)(_Utils.isRequired, passwordLense, PASSWORD_REQUIRED_MSG, data));
+};
+
+var validateUserRegistrationTask = function validateUserRegistrationTask(data) {
+  return ValidateRegistration.ap(validateName(data)).ap(validateEmails(data)).ap(validatePasswords(data)).failureMap(_ramda.mergeAll).toTask();
+};
+
+exports.validateUserRegistrationTask = validateUserRegistrationTask;
+
+var validateLoginTask = function validateLoginTask(data) {
+  return ValidateLogin.ap(validateEmail(data)).ap(validatePassword(data)).failureMap(_ramda.mergeAll).toTask();
+};
+
+exports.validateLoginTask = validateLoginTask;
+});
+
+;require.register("Pages/Auth/login-user.js", function(exports, require, module) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = exports.Login = void 0;
+
+var _Components = require("Components");
+
+var _Utils = require("Utils");
+
+var _Validations = require("./Validations.js");
+
+var _Http = require("Http");
+
+var validateForm = function validateForm(mdl) {
+  return function (data) {
+    var onError = function onError(errs) {
+      if (errs) {
+        state.errors = errs;
+        state.errorMsg(errs.message);
+        state.showErrorMsg(true);
+        console.log("failed - state", state);
+      } else {
+        state.errorMsg("Issue with logging in. Have you registered?");
+        state.showErrorMsg(true);
+        console.log("failed - other?", state);
+      }
+    };
+
+    var onSuccess = function onSuccess(mdl) {
+      return function (account) {
+        state.errors = {};
+        mdl.User.account = account;
+        m.route.set("/".concat(mdl.User.name, "/").concat(mdl.todayDate().format("YYYY-MM-DD")));
+      };
+    };
+
+    state.isSubmitted = true;
+    (0, _Validations.validateLoginTask)(data.userModel).chain((0, _Http.loginTask)(_Http.HTTP)(mdl)).fork(onError, onSuccess(mdl));
+  };
+};
+
+var userModel = {
+  name: "",
+  email: "",
+  password: "",
+  confirmEmail: "",
+  confirmPassword: "",
+  isAdmin: false
+};
+var dataModel = {
+  userModel: userModel
+};
+var state = {
+  isSubmitted: false,
+  errors: {},
+  httpError: undefined,
+  data: (0, _Utils.jsonCopy)(dataModel),
+  showErrorMsg: Stream(false),
+  errorMsg: Stream("")
+};
+
+var resetState = function resetState() {
+  state.data = (0, _Utils.jsonCopy)(dataModel);
+  state.errors = {};
+  state.httpError = undefined;
+  state.isSubmitted = false;
+  state.showErrorMsg(false);
+  state.errorMsg("");
+};
+
+var Login = function Login() {
+  return {
+    onremove: function onremove() {
+      return resetState();
+    },
+    view: function view(_ref) {
+      var mdl = _ref.attrs.mdl;
+      return m(".frow centered-column mt-100", [state.showErrorMsg() && m("code.warning", state.errorMsg()), m("form.frow column-centered", {
+        role: "form",
+        id: "Login-form",
+        onsubmit: function onsubmit(e) {
+          return e.preventDefault();
+        }
+      }, [m("input.auth-input", {
+        class: state.isSubmitted ? state.errors.email ? "has-error" : "has-success" : "",
+        id: "reg-email",
+        type: "email",
+        placeholder: "Email",
+        onkeyup: function onkeyup(e) {
+          // state.isSubmitted && validateForm(mdl)(state.data)
+          state.data.userModel.email = e.target.value;
+        },
+        value: state.data.userModel.email
+      }), state.errors.email && m("p.auth-input-hint", state.errors.email), m("input.auth-input", {
+        class: state.isSubmitted ? state.errors.password ? "has-error" : "has-success" : "",
+        id: "reg-pass",
+        type: "password",
+        placeholder: "Password",
+        onkeyup: function onkeyup(e) {
+          // state.isSubmitted && validateForm(mdl)(state.data)
+          state.data.userModel.password = e.target.value;
+        },
+        value: state.data.userModel.password
+      }), state.errors.password && m("p.auth-input-hint", state.errors.password)]), state.httpError && m(".toast toast-error", state.httpError)], m("a.button.auth-btn.full-width frow", {
+        // type: "submit",
+        form: "login-form",
+        onclick: function onclick() {
+          return validateForm(mdl)(state.data);
+        },
+        class: mdl.State.isLoading() && "loading"
+      }, m("p.text-centered", "Login")), m(m.route.Link, {
+        href: "/register",
+        class: "full-width"
+      }, "Need to  register ?"));
+    }
+  };
+};
+
+exports.Login = Login;
+var _default = Login;
+exports.default = _default;
+});
+
+;require.register("Pages/Auth/register-user.js", function(exports, require, module) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = exports.Register = exports.validateForm = void 0;
+
+var _Utils = require("Utils");
+
+var _Validations = require("./Validations");
+
+var _Http = require("Http");
+
+var userModel = {
+  name: "",
+  email: "",
+  password: "",
+  confirmEmail: "",
+  confirmPassword: ""
+};
+var dataModel = {
+  userModel: userModel
+};
+var state = {
+  isSubmitted: false,
+  errors: {},
+  httpError: undefined,
+  data: (0, _Utils.jsonCopy)(dataModel),
+  showErrorMsg: Stream(false),
+  errorMsg: Stream("")
+};
+
+var resetState = function resetState() {
+  state.data = (0, _Utils.jsonCopy)(dataModel);
+  state.errors = {};
+  state.httpError = undefined;
+  state.isSubmitted = false;
+  state.showErrorMsg(false);
+  state.errorMsg("");
+};
+
+var validateForm = function validateForm(mdl) {
+  return function (data) {
+    var onError = function onError(errs) {
+      if (errs) {
+        state.errors = errs;
+        state.errorMsg(errs.message);
+        state.showErrorMsg(true);
+        console.log("failed - state", state);
+      } else {
+        state.errorMsg("There seems to be a problem please contact web support");
+        state.showErrorMsg(true);
+        console.log("failed - state", state);
+      }
+    };
+
+    var onSuccess = function onSuccess(mdl) {
+      return function (data) {
+        state.errors = {};
+        sessionStorage.setItem("shindigit-user-token", mdl.User["user-token"]);
+        sessionStorage.setItem("shindigit-user", JSON.stringify(mdl.User));
+        m.route.set("/".concat(mdl.User.name, "/").concat(M.utc().format("YYYY-MM-DD")));
+      };
+    };
+
+    state.isSubmitted = true;
+    (0, _Validations.validateUserRegistrationTask)(data.userModel).chain((0, _Http.registerTask)(_Http.HTTP)(mdl)).chain(function (_) {
+      return (0, _Http.loginTask)(_Http.HTTP)(mdl)({
+        email: data.userModel.email,
+        password: data.userModel.password
+      });
+    }).fork(onError, onSuccess(mdl));
+  };
+};
+
+exports.validateForm = validateForm;
+
+var RegisterUser = function RegisterUser() {
+  return {
+    view: function view(_ref) {
+      var _ref$attrs = _ref.attrs,
+          data = _ref$attrs.data,
+          errors = _ref$attrs.errors,
+          isSubmitted = _ref$attrs.isSubmitted;
+      return [m("input.auth-input", {
+        class: isSubmitted ? errors.name ? "has-error" : "has-success" : "",
+        id: "reg-name",
+        type: "text",
+        placeholder: "Full Name",
+        onkeyup: function onkeyup(e) {
+          return data.name = e.target.value;
+        },
+        value: data.name
+      }), errors.name && m("p.auth-input-hint", errors.name), m("input.auth-input", {
+        class: isSubmitted ? errors.email ? "has-error" : "has-success" : "",
+        id: "reg-email",
+        type: "email",
+        placeholder: "Email",
+        onkeyup: function onkeyup(e) {
+          return data.email = e.target.value;
+        },
+        value: data.email
+      }), errors.email && m("p.auth-input-hint", errors.email), m("input.auth-input", {
+        id: "confirmEmail",
+        class: isSubmitted ? errors.confirmEmail ? "has-error" : "has-success" : "",
+        type: "email",
+        placeholder: "Confirm Email",
+        onkeyup: function onkeyup(e) {
+          return data.confirmEmail = e.target.value;
+        },
+        value: data.confirmEmail
+      }), errors.confirmEmail && m("p.auth-input-hint", errors.confirmEmail), m("input.auth-input", {
+        class: isSubmitted ? errors.password ? "has-error" : "has-success" : "",
+        id: "reg-pass",
+        type: "password",
+        placeholder: "Password",
+        onkeyup: function onkeyup(e) {
+          return data.password = e.target.value;
+        },
+        value: data.password
+      }), errors.password && m("p.auth-input-hint", errors.password), m("input.auth-input", {
+        class: isSubmitted ? errors.confirmPassword ? "has-error" : "has-success" : "",
+        id: "pass-confirm",
+        type: "password",
+        placeholder: "Confirm Password",
+        onkeyup: function onkeyup(e) {
+          return data.confirmPassword = e.target.value;
+        },
+        value: data.confirmPassword
+      }), errors.confirmPassword && m("p.auth-input-hint", errors.confirmPassword)];
+    }
+  };
+};
+
+var Register = function Register() {
+  return {
+    onremove: function onremove() {
+      return resetState();
+    },
+    view: function view(_ref2) {
+      var mdl = _ref2.attrs.mdl;
+      return [m(".frow centered-column mt-100", [state.showErrorMsg() && m("code.warning", state.errorMsg()), m("form.full-width", {
+        role: "form",
+        id: "Register-form",
+        onsubmit: function onsubmit(e) {
+          return e.preventDefault();
+        }
+      }, [m(RegisterUser, {
+        data: state.data.userModel,
+        errors: state.errors,
+        isSubmitted: state.isSubmitted
+      }), m("a.button.auth-btn.full-width", {
+        form: "register-form",
+        onclick: function onclick() {
+          return validateForm(mdl)(state.data);
+        },
+        class: mdl.State.isLoading() && "loading"
+      }, m("p", "Register")), m(m.route.Link, {
+        href: "/login",
+        class: "full-width"
+      }, "Need to  login ?")])]), state.httpError && m(".toast toast-error", state.httpError)];
+    }
+  };
+};
+
+exports.Register = Register;
+var _default = Register;
+exports.default = _default;
+});
+
+;require.register("Pages/event.js", function(exports, require, module) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.Event = void 0;
+
+var _Utils = require("Utils");
+
+var _mapboxGl = _interopRequireDefault(require("mapbox-gl/dist/mapbox-gl.js"));
+
+var _Http = require("Http");
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var Event = function Event(_ref) {
+  var mdl = _ref.attrs.mdl;
+  var state = {
+    error: {},
+    status: "loading",
+    info: {
+      show: Stream(false)
+    },
+    rsvp: {
+      show: Stream(false)
+    },
+    edit: {
+      show: Stream(false)
+    }
+  };
+  var data = {
+    event: {},
+    invite: {}
+  };
+
+  var load = function load(_ref2) {
+    var mdl = _ref2.attrs.mdl;
+
+    var onError = function onError(err) {
+      state.error = (0, _Utils.jsonCopy)(err);
+      console.log("state.e", state.error);
+      state.status = "failed";
+    };
+
+    var onSuccess = function onSuccess(_ref3) {
+      var event = _ref3.event,
+          invite = _ref3.invite;
+      data.event = event;
+      data.invite = invite;
+      state.error = {};
+      console.log("loaded event", data, state.info.show());
+      state.status = "success";
+    };
+
+    (0, _Http.loadEventAndInviteTask)(_Http.HTTP)(mdl).fork(onError, onSuccess);
+  };
+
+  var deleteEvent = function deleteEvent(mdl) {
+    var onError = function onError(err) {
+      state.error = (0, _Utils.jsonCopy)(err);
+      console.log("state.e", state.error);
+      state.status = "failed";
+    };
+
+    var onSuccess = function onSuccess() {
+      state.error = {};
+      state.status = "success";
+      m.route.set("/".concat(mdl.User.name, "/").concat(mdl.selectedDate().format("YYYY-MM-DD")));
+    };
+
+    (0, _Http.deleteEventTask)(_Http.HTTP)(mdl)(mdl.Events.currentEventId()).fork(onError, onSuccess);
+  };
+
+  var updateInvite = function updateInvite(mdl) {
+    return function (data) {
+      var onError = function onError(err) {
+        state.error = (0, _Utils.jsonCopy)(err);
+        console.log("state.e", state.error);
+        state.status = "failed";
+      };
+
+      var onSuccess = function onSuccess() {
+        state.error = {};
+        state.status = "success";
+      };
+
+      (0, _Http.updateInviteTask)(_Http.HTTP)(mdl)(data).fork(onError, onSuccess);
+    };
+  };
+
+  var setupMap = function setupMap(_ref4) {
+    var dom = _ref4.dom;
+    _mapboxGl.default.accessToken = "pk.eyJ1IjoiYm9hemJsYWtlIiwiYSI6ImNqdWJ4OGk4YzBpYXU0ZG5wNDI1OGM0eTIifQ.5UV0HkEGPiKUzFdbgdr5ww";
+    var coords = JSON.parse(data.event.latlong);
+
+    var createMarker = function createMarker() {
+      return new _mapboxGl.default.Marker().setLngLat(coords).addTo(map);
+    };
+
+    var map = new _mapboxGl.default.Map({
+      container: dom,
+      center: coords,
+      zoom: 15,
+      style: "mapbox://styles/mapbox/streets-v11"
+    });
+    createMarker();
+  };
+
+  return {
+    oninit: load,
+    view: function view() {
+      return m(".event-page", [state.status == "loading" && m(".", "Fetching Event..."), state.status == "failed" && m(".code", state.error.message), state.status == "success" && m(".event-container", [m("h1", data.event.title), m("h3", "".concat(data.event.date, ": ").concat(data.event.startTime, " - ").concat(data.event.endTime)), m(".accordian", [m(".accordian-item.full-width", [m(".accordian-item-title", [m(".frow", m(".col-xs-1-2", m("h4", "INFO")), m(".frow row-end col-xs-1-3", m("button", {
+        onclick: function onclick(e) {
+          return state["info"].show(!state["info"].show());
+        }
+      }, "<")))]), state.info.show() && m(".accordian-item-body.column", [m("label", "notes", m("p", data.event.notes)), m(".map", {
+        style: {
+          width: "500px",
+          height: "500px"
+        },
+        oncreate: setupMap
+      })])]), m(".accordian-item.full-width", [m(".accordian-item-title", [m(".frow", m(".col-xs-1-2", m("h4", "RSVP")), m(".frow row-end col-xs-1-3", m("button", {
+        onclick: function onclick(e) {
+          return state["rsvp"].show(!state["rsvp"].show());
+        }
+      }, "<")))]), state.rsvp.show() && m(".accordian-item-body.column", [m("label", m("select", {
+        oninput: function oninput(e) {
+          data.invite.status = _Utils.inviteOptions.indexOf(e.target.value);
+          updateInvite(mdl)(data.invite);
+        },
+        value: _Utils.inviteOptions[data.invite.status]
+      }, _Utils.inviteOptions.map(function (opt, idx) {
+        return m("option", {
+          value: opt,
+          key: idx,
+          id: idx
+        }, opt.toUpperCase());
+      })), "Status: ")])]), m(".accordian-item.full-width", [m(".accordian-item-title", [m(".frow", m(".col-xs-1-2", m("h4", "EDIT EVENT")), m(".frow row-end col-xs-1-3", m("button", {
+        onclick: function onclick(e) {
+          return state["edit"].show(!state["edit"].show());
+        }
+      }, "<")))]), state.edit.show() && m(".accordian-item-body.column", [m("button", {
+        onclick: function onclick(e) {
+          return deleteEvent(mdl);
+        }
+      }, "delete")])])])])]);
+    }
+  };
+};
+
+exports.Event = Event;
+});
+
+;require.register("Pages/home.js", function(exports, require, module) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.Home = void 0;
+
+var _Components = require("Components");
+
+var _Http = require("Http");
+
+var _Models = require("Models");
+
+var _Utils = require("Utils");
+
+var toDayViewModel = function toDayViewModel(dayViewModel, invite) {
+  dayViewModel["".concat(invite.start.format("HH"), ":00")].push(invite);
+  return dayViewModel;
+};
+
+var createDayVM = function createDayVM(mdl) {
+  return function (invites) {
+    return invites.reduce(toDayViewModel, (0, _Models.dayModel)(mdl, mdl.selectedDate()));
+  };
+};
+
+var getSelectedDayInvites = function getSelectedDayInvites(mdl) {
+  return function (invites) {
+    return invites.filter(function (i) {
+      return (0, _Utils.datesAreSame)(i.start)(mdl.selectedDate())("YYYY-MM-DD");
+    });
+  };
+};
+
+var Home = function Home(_ref) {
+  var mdl = _ref.attrs.mdl;
+  var state = {
+    error: null,
+    status: "loading",
+    invites: null,
+    events: null
+  };
+
+  var load = function load(_ref2) {
+    var mdl = _ref2.attrs.mdl;
+    mdl.Home.modal(false);
+
+    var onError = function onError(err) {
+      state.error = err;
+      state.status = "failed";
+    };
+
+    var onSuccess = function onSuccess(invites) {
+      mdl.Invites.fetch(false);
+      state.invites = invites;
+      state.error = null;
+      state.status = "success";
+    };
+
+    (0, _Http.getInvitesTask)(_Http.HTTP)(mdl).fork(onError, onSuccess);
+  };
+
+  return {
+    oninit: load,
+    onupdate: function onupdate(_ref3) {
+      var mdl = _ref3.attrs.mdl;
+      return mdl.Invites.fetch() && load({
+        attrs: {
+          mdl: mdl
+        }
+      });
+    },
+    view: function view(_ref4) {
+      var mdl = _ref4.attrs.mdl;
+      return m(".frow", state.status == "loading" && m("p", "FETCHING EVENTS..."), state.status == "failed" && m("p", "FAILED TO FETCH EVENTS"), state.status == "success" && [m(_Components.Calendar, {
+        mdl: mdl,
+        date: mdl.selectedDate(),
+        invites: state.invites
+      }), m(".frow-container frow", [m(".col-xs-2-3.".concat(mdl.Home.modal() ? "bg-warn" : "bg-info"), m("button.max-width", {
+        onclick: function onclick(e) {
+          return mdl.Home.modal(!mdl.Home.modal());
+        }
+      }, mdl.Home.modal() ? "Cancel" : "Add Event")), !mdl.Home.modal() && m(".col-xs-1-3.".concat(mdl.Day.listView() ? "bg-warn" : "bg-info"), m("button.max-width", {
+        onclick: function onclick(e) {
+          return mdl.Day.listView(!mdl.Day.listView());
+        }
+      }, mdl.Day.listView() ? "Hour View" : "List View"))]), mdl.Home.modal() ? m(_Components.Editor, {
+        mdl: mdl
+      }) : m(_Components.Day, {
+        mdl: mdl,
+        day: createDayVM(mdl)(getSelectedDayInvites(mdl)(state.invites)),
+        invites: getSelectedDayInvites(mdl)(state.invites)
+      })]);
+    }
+  };
+};
+
+exports.Home = Home;
+});
+
+;require.register("Pages/index.js", function(exports, require, module) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _home = require("./home.js");
+
+Object.keys(_home).forEach(function (key) {
+  if (key === "default" || key === "__esModule") return;
+  Object.defineProperty(exports, key, {
+    enumerable: true,
+    get: function get() {
+      return _home[key];
+    }
+  });
+});
+
+var _event = require("./event.js");
+
+Object.keys(_event).forEach(function (key) {
+  if (key === "default" || key === "__esModule") return;
+  Object.defineProperty(exports, key, {
+    enumerable: true,
+    get: function get() {
+      return _event[key];
+    }
+  });
+});
+
+var _loginUser = require("./Auth/login-user");
+
+Object.keys(_loginUser).forEach(function (key) {
+  if (key === "default" || key === "__esModule") return;
+  Object.defineProperty(exports, key, {
+    enumerable: true,
+    get: function get() {
+      return _loginUser[key];
+    }
+  });
+});
+
+var _registerUser = require("./Auth/register-user");
+
+Object.keys(_registerUser).forEach(function (key) {
+  if (key === "default" || key === "__esModule") return;
+  Object.defineProperty(exports, key, {
+    enumerable: true,
+    get: function get() {
+      return _registerUser[key];
+    }
+  });
+});
+});
+
+;require.register("Routes/authenticated-routes.js", function(exports, require, module) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+
+var _Components = require("Components");
+
+var _Pages = require("Pages");
+
+var _Utils = require("Utils");
+
+var AuthenticatedRoutes = [{
+  id: "profile",
+  name: "Profile",
+  // icon: Icons.logo,
+  route: "/profile/:name",
+  position: ["toolbar"],
+  group: ["authenticated"],
+  children: [],
+  options: [],
+  onmatch: function onmatch(mdl, args, path, fullroute, isAnchor) {},
+  component: function component(mdl) {
+    return m(_Pages.Home, {
+      mdl: mdl
+    });
+  }
+}, {
+  id: "day-planner",
+  name: "Day Planner",
+  // icon: Icons.logo,
+  route: "/:username/:date",
+  position: ["toolbar"],
+  group: ["authenticated"],
+  children: [],
+  options: [],
+  onmatch: function onmatch(mdl, args, path, fullroute, isAnchor) {
+    var date = M.utc(args.date).clone();
+    mdl.selectedDate(date);
+  },
+  component: function component(mdl) {
+    return m(_Components.Layout, {
+      mdl: mdl
+    }, m(_Pages.Home, {
+      mdl: mdl
+    }));
+  }
+}, {
+  id: "event",
+  name: "Event",
+  // icon: Icons.logo,
+  route: "/:username/:date/:hour/:min",
+  position: ["toolbar"],
+  group: ["authenticated"],
+  children: [],
+  options: [],
+  onmatch: function onmatch(mdl, args, path, fullroute, isAnchor) {// if (
+    //   m.route.param().username == mdl.User.name &&
+    //   !mdl.Events.currentEventId()
+    // ) {
+    //   mdl.Events.currentEventId(localStorage.getItem("eventId"))
+    // }
+  },
+  component: function component(mdl) {
+    return m(_Components.Layout, {
+      mdl: mdl
+    }, m(_Pages.Event, {
+      mdl: mdl
+    }));
+  }
+}, {
+  id: "logout",
+  name: "",
+  // icon: Icons.users,
+  route: "/logout",
+  position: [],
+  group: ["authenticated", "admin"],
+  children: [],
+  options: [],
+  onmatch: function onmatch(mdl, args, path, fullroute, isAnchor) {
+    localStorage.clear();
+    sessionStorage.clear();
+    mdl.state.isAuth(false);
+    mdl.user = {};
+    m.route.set(m.route.get());
+    console.log("loggout", mdl);
+  },
+  component: function component(mdl) {
+    return m(_Pages.Home, {
+      mdl: mdl
+    });
+  }
+}];
+var _default = AuthenticatedRoutes;
+exports.default = _default;
+});
+
+;require.register("Routes/index.js", function(exports, require, module) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+
+var _authenticatedRoutes = _interopRequireDefault(require("./authenticated-routes.js"));
+
+var _mainRoutes = _interopRequireDefault(require("./main-routes.js"));
+
+var _ramda = require("ramda");
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var Routes = (0, _ramda.flatten)([_mainRoutes.default, _authenticatedRoutes.default]);
+var _default = Routes;
+exports.default = _default;
+});
+
+;require.register("Routes/main-routes.js", function(exports, require, module) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+
+var _Pages = require("Pages");
+
+var _Components = require("Components");
+
+var Routes = [{
+  id: "shindig-it",
+  name: m(".Logo"),
+  // icon: Icons.home,
+  route: "/splash",
+  isNav: true,
+  group: ["toolbar"],
+  children: [],
+  options: [],
+  onmatch: function onmatch(mdl, args, path, fullroute) {},
+  component: function component(mdl) {
+    return m(_Pages.Home, {
+      mdl: mdl
+    });
+  }
+}, {
+  id: "login",
+  name: "Account Login",
+  // icon: Icons.search,
+  route: "/login",
+  isNav: false,
+  group: [],
+  children: [],
+  options: [],
+  onmatch: function onmatch(mdl, args, path, fullroute) {},
+  component: function component(mdl) {
+    return m(_Components.AuthLayout, m(_Pages.Login, {
+      mdl: mdl
+    }));
+  }
+}, {
+  id: "register",
+  name: "Register Account",
+  // icon: Icons.search,
+  route: "/register",
+  isNav: false,
+  group: [],
+  children: [],
+  options: [],
+  onmatch: function onmatch(mdl, args, path, fullroute) {},
+  component: function component(mdl) {
+    return m(_Components.AuthLayout, m(_Pages.Register, {
+      mdl: mdl
+    }));
+  }
+}];
+var _default = Routes;
+exports.default = _default;
+});
+
+;require.register("Styles/animations.js", function(exports, require, module) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.slideInDown = exports.slideOutRight = exports.slideInLeft = exports.slideInRight = exports.fadeInUp = exports.fadeIn = exports.popIn = void 0;
+var popIn = [{
+  transform: "scale(0)",
+  opacity: 1
+}, {
+  transform: "scale(1)",
+  opacity: 1
+}, {
+  transform: "scale(0.8)",
+  opacity: 1
+}, {
+  transform: "scale(1)",
+  opacity: 1
+}];
+exports.popIn = popIn;
+var fadeIn = [{
+  opacity: 0
+}, {
+  opacity: 1
+}];
+exports.fadeIn = fadeIn;
+var fadeInUp = [{
+  opacity: 0,
+  transform: "translate3d(0, 40%, 0)"
+}, {
+  opacity: 1,
+  transform: "translate3d(0, 0, 0)"
+}];
+exports.fadeInUp = fadeInUp;
+var slideInRight = [{
+  transform: "translate3d(-50%, 0, 0)"
+}, {
+  transform: "translate3d(0, 0, 0)",
+  visibility: "visible"
+}];
+exports.slideInRight = slideInRight;
+var slideInLeft = [{
+  transform: "translate3d(80%, 0, 0)",
+  visibility: "visible"
+}, {
+  transform: "translate3d(0, 0, 0)"
+}];
+exports.slideInLeft = slideInLeft;
+var slideOutRight = [{
+  transform: "translate3d(0, 0, 0)"
+}, {
+  visibility: "hidden",
+  transform: "translate3d(100%, 0, 0)"
+}];
+exports.slideOutRight = slideOutRight;
+var slideInDown = [{
+  transform: "translate3d(0, -50%, 0)"
+}, {
+  transform: "translate3d(0, 0, 0)",
+  visibility: "visible"
+}];
+exports.slideInDown = slideInDown;
+});
+
+;require.register("Styles/index.js", function(exports, require, module) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+var _exportNames = {
+  AnimatePage: true,
+  Animate: true,
+  AnimateChildren: true
+};
+exports.AnimateChildren = exports.Animate = exports.AnimatePage = void 0;
+
+var _Utils = require("Utils");
+
+var _animations = require("./animations.js");
+
+Object.keys(_animations).forEach(function (key) {
+  if (key === "default" || key === "__esModule") return;
+  if (Object.prototype.hasOwnProperty.call(_exportNames, key)) return;
+  Object.defineProperty(exports, key, {
+    enumerable: true,
+    get: function get() {
+      return _animations[key];
+    }
+  });
+});
+
+function _toConsumableArray(arr) { return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _unsupportedIterableToArray(arr) || _nonIterableSpread(); }
+
+function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
+
+function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
+
+function _iterableToArray(iter) { if (typeof Symbol !== "undefined" && Symbol.iterator in Object(iter)) return Array.from(iter); }
+
+function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) return _arrayLikeToArray(arr); }
+
+function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
+
+var duration = {
+  duration: 700,
+  easing: "ease-in-out",
+  fill: "forwards"
+};
+
+function transitionEndPromise(element) {
+  var transitionEnded = function transitionEnded(e) {
+    // console.log("transitionEnded", element, e)
+    if (e.target !== element) return;
+    element.removeEventListener("transitionend", transitionEnded);
+  };
+
+  return new Promise(function () {
+    return element.addEventListener("transitionend", transitionEnded);
+  });
+}
+
+var AnimatePage = function AnimatePage(animation) {
+  return function (_ref) {
+    var dom = _ref.dom;
+    // let origStyles = jsonCopy(dom.style)
+    // dom.style.position = "absolute"
+    // dom.style.top = -19
+    // dom.style.width = "100%"
+    Animate(animation)({
+      dom: dom
+    }); // Animate(animation)({ dom })
+  };
+};
+
+exports.AnimatePage = AnimatePage;
+
+var Animate = function Animate(animation) {
+  var pause = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : _Utils.NoOp;
+  return function (_ref2) {
+    var dom = _ref2.dom;
+    return setTimeout(function () {
+      return dom.animate(animation, duration).finished.then(transitionEndPromise(dom));
+    }, pause());
+  };
+};
+
+exports.Animate = Animate;
+
+var AnimateChildren = function AnimateChildren(animation, pause) {
+  return function (_ref3) {
+    var dom = _ref3.dom;
+
+    var children = _toConsumableArray(dom.children);
+
+    children.map(function (child, idx) {
+      child.style.opacity = 0;
+      setTimeout(function () {
+        child.style.opacity = 1;
+        Animate(animation)({
+          dom: child
+        });
+      }, pause());
+    });
+  };
+};
+
+exports.AnimateChildren = AnimateChildren;
+});
+
+;require.register("Utils/index.js", function(exports, require, module) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+var _exportNames = {
+  log: true,
+  debounce: true,
+  inviteOptions: true,
+  getInviteStatusColor: true,
+  rand: true,
+  randomPause: true,
+  Pause: true,
+  NoOp: true,
+  nameFromRoute: true,
+  jsonCopy: true,
+  isSideBarActive: true,
+  range: true,
+  isEqual: true
+};
+exports.isEqual = exports.range = exports.isSideBarActive = exports.jsonCopy = exports.nameFromRoute = exports.NoOp = exports.Pause = exports.randomPause = exports.rand = exports.getInviteStatusColor = exports.inviteOptions = exports.debounce = exports.log = void 0;
+
+var _localStorage = require("./local-storage.js");
+
+Object.keys(_localStorage).forEach(function (key) {
+  if (key === "default" || key === "__esModule") return;
+  if (Object.prototype.hasOwnProperty.call(_exportNames, key)) return;
+  Object.defineProperty(exports, key, {
+    enumerable: true,
+    get: function get() {
+      return _localStorage[key];
+    }
+  });
+});
+
+var _validations = require("./validations");
+
+Object.keys(_validations).forEach(function (key) {
+  if (key === "default" || key === "__esModule") return;
+  if (Object.prototype.hasOwnProperty.call(_exportNames, key)) return;
+  Object.defineProperty(exports, key, {
+    enumerable: true,
+    get: function get() {
+      return _validations[key];
+    }
+  });
+});
+
+var _timeFns = require("./time-fns.js");
+
+Object.keys(_timeFns).forEach(function (key) {
+  if (key === "default" || key === "__esModule") return;
+  if (Object.prototype.hasOwnProperty.call(_exportNames, key)) return;
+  Object.defineProperty(exports, key, {
+    enumerable: true,
+    get: function get() {
+      return _timeFns[key];
+    }
+  });
+});
+
+function _toConsumableArray(arr) { return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _unsupportedIterableToArray(arr) || _nonIterableSpread(); }
+
+function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
+
+function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
+
+function _iterableToArray(iter) { if (typeof Symbol !== "undefined" && Symbol.iterator in Object(iter)) return Array.from(iter); }
+
+function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) return _arrayLikeToArray(arr); }
+
+function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
+
+var log = function log(m) {
+  return function (v) {
+    console.log(m, v);
+    return v;
+  };
+};
+
+exports.log = log;
+
+var debounce = function debounce(wait) {
+  return function (func, immediate) {
+    console.log(wait);
+    var timeout;
+    return function () {
+      var context = this,
+          args = arguments;
+
+      var later = function later() {
+        timeout = null;
+        if (!immediate) func.apply(context, args);
+      };
+
+      var callNow = immediate && !timeout;
+      clearTimeout(timeout);
+      timeout = setTimeout(later, wait);
+      if (callNow) func.apply(context, args);
+    };
+  };
+};
+
+exports.debounce = debounce;
+var inviteOptions = ["decline", "accept", "maybe"];
+exports.inviteOptions = inviteOptions;
+
+var getInviteStatusColor = function getInviteStatusColor(status) {
+  return getComputedStyle(document.body).getPropertyValue("--".concat(inviteOptions[status], "-invite"));
+};
+
+exports.getInviteStatusColor = getInviteStatusColor;
+
+var secureImg = function secureImg(url) {
+  return url.match(/(https)./) ? url : url.replace("http", "https");
+};
+
+var rand = function rand(min, max) {
+  return Math.floor(Math.random() * (max - min) + min);
+};
+
+exports.rand = rand;
+
+var randomPause = function randomPause() {
+  return Math.random() * 1000;
+};
+
+exports.randomPause = randomPause;
+
+var Pause = function Pause(n) {
+  return n * 1000;
+};
+
+exports.Pause = Pause;
+
+var NoOp = function NoOp() {};
+
+exports.NoOp = NoOp;
+
+var nameFromRoute = function nameFromRoute(route) {
+  return route.split("/")[1].toUpperCase();
+};
+
+exports.nameFromRoute = nameFromRoute;
+
+var jsonCopy = function jsonCopy(data) {
+  return JSON.parse(JSON.stringify(data));
+};
+
+exports.jsonCopy = jsonCopy;
+
+var isSideBarActive = function isSideBarActive(mdl) {
+  return mdl.settings.profile !== "desktop" && mdl.status.sidebar;
+};
+
+exports.isSideBarActive = isSideBarActive;
+
+var range = function range(size) {
+  return _toConsumableArray(Array(size).keys());
+};
+
+exports.range = range;
+
+var isEqual = function isEqual(a, b) {
+  return JSON.stringify(a) == JSON.stringify(b);
+};
+
+exports.isEqual = isEqual;
+});
+
+;require.register("Utils/local-storage.js", function(exports, require, module) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.locals = void 0;
+
+var _data = _interopRequireDefault(require("data.task"));
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var newTaskFromPromise = function newTaskFromPromise(p) {
+  return new _data.default(function (res, rej) {
+    return p.then(res, rej);
+  });
+};
+
+var locals = {
+  getTask: function getTask(key) {
+    return newTaskFromPromise(new Promise(function (_, res) {
+      return localStorage.getItem(key) ? res(JSON.parse(localStorage.getItem(key))) : res(null);
+    } // hack just for now
+    ));
+  },
+  setTask: function setTask(key) {
+    return function (value) {
+      return newTaskFromPromise(new Promise(function (res) {
+        return res(localStorage.setItem(key, value));
+      }));
+    };
+  }
+};
+exports.locals = locals;
+});
+
+;require.register("Utils/time-fns.js", function(exports, require, module) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.firstInviteHour = exports.shortDateString = exports.toHourViewModel = exports.getFullDate = exports.fromFullDate = exports.monthsOfTheYear = exports.daysOfTheWeek = exports.isToday = exports.datesAreSame = exports.getHoursInDay = exports.getMin = exports.getHour = exports.pad0Left = exports.pad00Min = exports.padding = void 0;
+
+var _index = require("./index");
+
+var _ramda = require("ramda");
+
+var padding = function padding(d) {
+  return d.toString().length == 1 ? pad0Left(d) : d;
+};
+
+exports.padding = padding;
+
+var pad00Min = function pad00Min(num) {
+  return "".concat(num, ":00");
+};
+
+exports.pad00Min = pad00Min;
+
+var pad0Left = function pad0Left(num) {
+  return "0".concat(num);
+};
+
+exports.pad0Left = pad0Left;
+
+var getHour = function getHour(time) {
+  return time.split(":")[0];
+};
+
+exports.getHour = getHour;
+
+var getMin = function getMin(time) {
+  return time.split(":")[1];
+};
+
+exports.getMin = getMin;
+
+var getHoursInDay = function getHoursInDay(format) {
+  return (0, _index.range)(format == "24hrs" ? 24 : 12).map(function (n) {
+    return n.toString().length == 1 ? pad0Left(n) : n;
+  }).map(pad00Min);
+};
+
+exports.getHoursInDay = getHoursInDay;
+
+var datesAreSame = function datesAreSame(first) {
+  return function (second) {
+    return function (format) {
+      var f = M.utc(first).format(format);
+      var s = M.utc(second).format(format);
+      return M.utc(f).isSame(M.utc(s));
+    };
+  };
+};
+
+exports.datesAreSame = datesAreSame;
+
+var isToday = function isToday(someDate) {
+  var today = new Date();
+  var date = new Date(someDate.toString());
+  return date.getDate() == today.getDate() && date.getMonth() == today.getMonth() && date.getFullYear() == today.getFullYear();
+};
+
+exports.isToday = isToday;
+var daysOfTheWeek = ["Monday", "Teusday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"];
+exports.daysOfTheWeek = daysOfTheWeek;
+var monthsOfTheYear = ["January", "Febuary", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+exports.monthsOfTheYear = monthsOfTheYear;
+
+var fromFullDate = function fromFullDate(date) {
+  var d = new Date(date);
+  return {
+    day: padding(d.getDate()),
+    month: padding(d.getMonth() + 1),
+    year: d.getFullYear(),
+    hour: padding(d.getHours()),
+    min: padding(d.getMinutes())
+  };
+};
+
+exports.fromFullDate = fromFullDate;
+
+var getFullDate = function getFullDate(_ref, startHour, startMin) {
+  var year = _ref.year,
+      month = _ref.month,
+      day = _ref.day;
+  console.log("getFullDate", new Date(year, month - 1, day, startHour, startMin));
+  return new Date(year, month - 1, day, startHour, startMin);
+};
+
+exports.getFullDate = getFullDate;
+
+var toHourViewModel = function toHourViewModel(date) {
+  return function (mdl, hour) {
+    if (!mdl[date][hour]) {
+      mdl[date][hour] = {};
+    }
+
+    return mdl;
+  };
+};
+
+exports.toHourViewModel = toHourViewModel;
+
+var shortDateString = function shortDateString(_ref2) {
+  var year = _ref2.year,
+      month = _ref2.month,
+      day = _ref2.day;
+  return "".concat(year, "-").concat(padding(month), "-").concat(padding(day));
+};
+
+exports.shortDateString = shortDateString;
+var firstInviteHour = (0, _ramda.compose)(_ramda.head, (0, _ramda.sort)(function (a, b) {
+  return a - b;
+}), (0, _ramda.map)(function (mStart) {
+  return mStart && parseInt(mStart.format("HH"));
+}), (0, _ramda.pluck)("start"));
+exports.firstInviteHour = firstInviteHour;
+});
+
+;require.register("Utils/validations.js", function(exports, require, module) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.isNilOrEmptyOrAtom = exports.allCaps = exports.inDateRange = exports.unique = exports.maxLengthNullable = exports.onlyNumeric = exports.urlFormat = exports.phoneFormat = exports.onlyAlphaNumericSpaceSpecial = exports.onlyAlphaNumericSpaceUnderscore = exports.onlyAlphaNumericSpace = exports.onlyAlphaNumericUnderscore = exports.onlyAlphaNumeric = exports.onlyAlpha = exports.emailFormat = exports.maxSize = exports.maxLength = exports.isNullOrEmpty = exports.isNotNullOrEmpty = exports.IsNotNil = exports.isRequired = exports.validate = exports.getOrElse = void 0;
+
+var _ramda = require("ramda");
+
+var _data = require("data.validation");
+
+var _data2 = _interopRequireDefault(require("data.maybe"));
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var getOrElse = function getOrElse(val) {
+  return function (x) {
+    return x.getOrElse(val);
+  };
+};
+
+exports.getOrElse = getOrElse;
+var validate = (0, _ramda.curry)(function (rule, lens, msg, data) {
+  return rule((0, _ramda.view)(lens, data)) ? (0, _data.Success)(data) : (0, _data.Failure)([(0, _ramda.set)(lens, msg, {})]);
+});
+exports.validate = validate;
+var isRequired = (0, _ramda.compose)(_ramda.not, _ramda.isEmpty);
+exports.isRequired = isRequired;
+var IsNotNil = (0, _ramda.compose)(_ramda.not, _ramda.isNil);
+exports.IsNotNil = IsNotNil;
+
+var isNotNullOrEmpty = function isNotNullOrEmpty(data) {
+  return !isNullOrEmpty(data);
+};
+
+exports.isNotNullOrEmpty = isNotNullOrEmpty;
+
+var isNullOrEmpty = function isNullOrEmpty(data) {
+  return (0, _ramda.isNil)(data) || (0, _ramda.isEmpty)(data);
+};
+
+exports.isNullOrEmpty = isNullOrEmpty;
+
+var maxLength = function maxLength(max) {
+  return (0, _ramda.compose)((0, _ramda.gte)(max), _ramda.length);
+};
+
+exports.maxLength = maxLength;
+var maxSize = (0, _ramda.curry)(function (max, value) {
+  return (0, _ramda.gte)(max, value);
+});
+exports.maxSize = maxSize;
+var emailFormat = (0, _ramda.test)(/@/);
+exports.emailFormat = emailFormat;
+var onlyAlpha = (0, _ramda.test)(/^[a-zA-Z]*$/);
+exports.onlyAlpha = onlyAlpha;
+var onlyAlphaNumeric = (0, _ramda.test)(/^[a-zA-Z0-9]*$/);
+exports.onlyAlphaNumeric = onlyAlphaNumeric;
+var onlyAlphaNumericUnderscore = (0, _ramda.test)(/^[a-zA-Z0-9_]*$/);
+exports.onlyAlphaNumericUnderscore = onlyAlphaNumericUnderscore;
+var onlyAlphaNumericSpace = (0, _ramda.test)(/^[a-zA-Z0-9\s]*$/);
+exports.onlyAlphaNumericSpace = onlyAlphaNumericSpace;
+var onlyAlphaNumericSpaceUnderscore = (0, _ramda.test)(/^[a-zA-Z0-9_\s]*$/);
+exports.onlyAlphaNumericSpaceUnderscore = onlyAlphaNumericSpaceUnderscore;
+var onlyAlphaNumericSpaceSpecial = (0, _ramda.test)(/^[a-zA-Z0-9_.~!*''();:@&=+$,/?#[%-\]+\s]*$/);
+exports.onlyAlphaNumericSpaceSpecial = onlyAlphaNumericSpaceSpecial;
+var phoneFormat = (0, _ramda.test)(/^[0-9]{3}-[0-9]{3}-[0-9]{4}$/);
+exports.phoneFormat = phoneFormat;
+var urlFormat = (0, _ramda.test)(/^[a-zA-Z0-9_.~!*''();:@&=+$,/?#[%-\]+]*$/);
+exports.urlFormat = urlFormat;
+var onlyNumeric = (0, _ramda.test)(/^[0-9]*$/);
+exports.onlyNumeric = onlyNumeric;
+
+var maxLengthNullable = function maxLengthNullable(max) {
+  return (0, _ramda.compose)(getOrElse(false), (0, _ramda.map)((0, _ramda.gte)(max)), (0, _ramda.map)(_ramda.length), _data2.default.fromNullable);
+};
+
+exports.maxLengthNullable = maxLengthNullable;
+var unique = (0, _ramda.curry)(function (keys, value) {
+  var lookup = _data2.default.fromNullable(keys);
+
+  return !(0, _ramda.contains)((0, _ramda.toUpper)(value.toString()), (0, _ramda.map)(function (y) {
+    return (0, _ramda.toUpper)(y.toString());
+  }, lookup.getOrElse([])));
+});
+exports.unique = unique;
+var inDateRange = (0, _ramda.curry)(function (start, end, value) {
+  if (value == null || value === "") {
+    return true;
+  }
+
+  return new Date(start) <= new Date(value) && new Date(value) < new Date(end);
+});
+exports.inDateRange = inDateRange;
+
+var allCaps = function allCaps(str) {
+  return str.toUpperCase() === str;
+};
+
+exports.allCaps = allCaps;
+
+var isNilOrEmptyOrAtom = function isNilOrEmptyOrAtom(item) {
+  return (0, _ramda.isNil)(item) || (0, _ramda.isEmpty)(item) || item === "{$type:atom}";
+};
+
+exports.isNilOrEmptyOrAtom = isNilOrEmptyOrAtom;
+});
+
+;require.register("index.js", function(exports, require, module) {
+"use strict";
+
+var _App = _interopRequireDefault(require("./App.js"));
+
+var _Models = _interopRequireDefault(require("Models"));
+
+var _funConfig = require("@boazblake/fun-config");
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+_funConfig.FunConfig.configure();
+
+var root = document.body;
+var winW = window.innerWidth;
+
+if (module.hot) {
+  module.hot.accept();
+}
+
+console.log(process);
+
+if ('development' == "development") {
+  console.log("Looks like we are in development mode!");
+} else {
+  if ("serviceWorker" in navigator) {
+    window.addEventListener("load", function () {
+      navigator.serviceWorker.register("./service-worker.js").then(function (registration) {
+        console.log("⚙️ SW registered: ", registration);
+      }).catch(function (registrationError) {
+        console.log("🧟 SW registration failed: ", registrationError);
+      });
+    });
+  }
+} // set display profiles
+
+
+var getProfile = function getProfile(w) {
+  if (w < 668) return "phone";
+  if (w < 920) return "tablet";
+  return "desktop";
+};
+
+var checkWidth = function checkWidth(winW) {
+  var w = window.innerWidth;
+
+  if (winW !== w) {
+    winW = w;
+    var lastProfile = _Models.default.Settings.profile;
+    _Models.default.Settings.profile = getProfile(w);
+    if (lastProfile != _Models.default.Settings.profile) m.redraw();
+  }
+
+  return requestAnimationFrame(checkWidth);
+};
+
+_Models.default.Settings.profile = getProfile(winW);
+checkWidth(winW);
+
+if (sessionStorage.getItem("shindigit-user")) {
+  _Models.default.User = JSON.parse(sessionStorage.getItem("shindigit-user"));
+
+  _Models.default.State.isAuth(true);
+} else {
+  m.route.set("/logout");
+}
+
+m.route(root, "/login", (0, _App.default)(_Models.default));
+});
+
+;require.register("initialize.js", function(exports, require, module) {
+"use strict";
+
+document.addEventListener("DOMContentLoaded", function () {
+  require("./index.js");
+});
+});
+
+;require.alias("process/browser.js", "process");process = require('process');require.register("___globals___", function(exports, require, module) {
+  
+
+// Auto-loaded modules from config.npm.globals.
+window.m = require("mithril");
+window.Stream = require("mithril-stream");
+window.M = require("moment");
+
+
+});})();require('___globals___');
+
+require('initialize');
+//# sourceMappingURL=app.js.map

@@ -10,6 +10,8 @@ if (module.hot) {
   module.hot.accept()
 }
 
+console.log(process)
+
 if (process.env.NODE_ENV == "development") {
   console.log("Looks like we are in development mode!")
 } else {

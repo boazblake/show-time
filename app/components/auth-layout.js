@@ -1,6 +1,6 @@
 const Logo = m("img.frow", {
   src: "images/logo.svg",
-  style: { width: "80%", margin: "0 auto" },
+  style: { width: "300px", margin: "0 auto" },
 })
 
 export const AuthLayout = {

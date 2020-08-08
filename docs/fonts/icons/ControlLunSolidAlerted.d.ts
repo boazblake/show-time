@@ -1,0 +1,4 @@
+import m from 'mithril';
+import { SVGAttributes } from '../svg';
+declare const ControlLunSolidAlerted: m.Component<SVGAttributes>;
+export default ControlLunSolidAlerted;

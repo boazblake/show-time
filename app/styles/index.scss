@@ -1,5 +1,4 @@
 @import url("https://fonts.googleapis.com/css?family=Montserrat&display=swap");
-@import "./frow/frow.sass";
 :root {
   --blue: #042532;
   --indigo: #6610f2;
@@ -63,38 +62,38 @@ a {
 
 
 ul {
-  list-style: none; /* Remove default bullets */
+  list-style: none;
 }
 
 ul li.decline::before {
-  content: "\2022";  /* Add content: \2022 is the CSS Code/unicode for a bullet */
-  color: var(--decline-invite); /* Change the color */
-  font-weight: bold; /* If you want it to be bold */
-  display: inline-block; /* Needed to add space between the bullet and the text */
-  width: 1em; /* Also needed for space (tweak if needed) */
-  margin-left: -1em; /* Also needed for space (tweak if needed) */
+  content: "\2022";
+  color: var(--decline-invite);
+  font-weight: bold;
+  display: inline-block;
+  width: 1em;
+  margin-left: -1em;
   font-size: 40px;
 }
 
 
 ul li.accept::before {
-  content: "\2022";  /* Add content: \2022 is the CSS Code/unicode for a bullet */
-  color: var(--accept-invite); /* Change the color */
-  font-weight: bold; /* If you want it to be bold */
-  display: inline-block; /* Needed to add space between the bullet and the text */
-  width: 1em; /* Also needed for space (tweak if needed) */
-  margin-left: -1em; /* Also needed for space (tweak if needed) */
+  content: "\2022";
+  color: var(--accept-invite);
+  font-weight: bold;
+  display: inline-block;
+  width: 1em;
+  margin-left: -1em;
   font-size: 40px;
 }
 
 
 ul li.maybe::before {
-  content: "\2022";  /* Add content: \2022 is the CSS Code/unicode for a bullet */
-  color: var(--maybe-invite); /* Change the color */
-  font-weight: bold; /* If you want it to be bold */
-  display: inline-block; /* Needed to add space between the bullet and the text */
-  width: 1em; /* Also needed for space (tweak if needed) */
-  margin-left: -1em; /* Also needed for space (tweak if needed) */
+  content: "\2022";
+  color: var(--maybe-invite);
+  font-weight: bold;
+  display: inline-block;
+  width: 1em;
+  margin-left: -1em;
   font-size: 40px;
 }
 
