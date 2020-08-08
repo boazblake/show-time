@@ -35,6 +35,6 @@ export const updateInviteTask = (http) => (mdl) => (invite) =>
 export const getInvitesTask = (http) => (mdl) =>
   http.backEnd
     .getTask(mdl)(
-      `data/Invites?pageSize=100&where=userId%3D'${mdl.User.objectId}'`
+      `data/Invites?pageSize=100&where=userId%3D'${mdl.User.objectId}'&sortBy=start%20asc`
     )
     .map(map(toInviteViewModel))

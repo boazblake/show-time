@@ -1,7 +1,8 @@
 export const Sidebar = () => {
   return {
-    view: ({ attrs: { mdl } }) =>
-      m(".sidebar", [
+    view: ({ attrs: { mdl } }) => {
+      console.log("sidebar", mdl.selectedDate())
+      return m(".sidebar", [
         m("ul", [
           m(
             "li",
@@ -47,6 +48,7 @@ export const Sidebar = () => {
             )
           ),
         ]),
-      ]),
+      ])
+    },
   }
 }

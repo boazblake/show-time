@@ -82,27 +82,29 @@ const ListView = () => {
           // console.log(invite)
           return m(
             "li.frow-container",
-            {
-              class: inviteOptions[invite.status],
-              onclick: (e) => {
-                mdl.Events.currentEventId(invite.eventId)
-                mdl.Events.currentEventStartTime(invite.start)
-                localStorage.setItem("eventId", invite.eventId)
-                m.route.set(`/${mdl.User.name}/${createEventUrl(invite)}`)
+            m(
+              `.invite-list-${inviteOptions[invite.status]}`,
+              {
+                onclick: (e) => {
+                  mdl.Events.currentEventId(invite.eventId)
+                  mdl.Events.currentEventStartTime(invite.start)
+                  localStorage.setItem("eventId", invite.eventId)
+                  m.route.set(`/${mdl.User.name}/${createEventUrl(invite)}`)
+                },
               },
-            },
-            [
-              m("h3", invite.title),
-              m(".frow row-start", [
-                m(
-                  "label.col-xs-1-3",
-                  `${invite.start.format(
-                    displayTimeFormat(mdl)
-                  )} - ${invite.end.format(displayTimeFormat(mdl))}`
-                ),
-                m("label.col-xs-1-4"),
-              ]),
-            ]
+              [
+                m("h3", invite.title),
+                m(".frow row-start", [
+                  m(
+                    "label.col-xs-1-3",
+                    `${invite.start.format(
+                      displayTimeFormat(mdl)
+                    )} - ${invite.end.format(displayTimeFormat(mdl))}`
+                  ),
+                  m("label.col-xs-1-4"),
+                ]),
+              ]
+            )
           )
         })
       ),
@@ -125,6 +127,10 @@ export const Day = ({ attrs: { mdl } }) => {
                   mdl,
                   invites: day[hour],
                   hour,
+                  // hour: M()       NEedd to fix this...
+                  //   .hour(hour)
+                  //   .minutes("00")
+                  //   .format(displayTimeFormat(mdl)),
                   events: day[hour],
                 })
               }),

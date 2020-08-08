@@ -1,3 +1,4 @@
+@import url("https://fonts.googleapis.com/css?family=Montserrat&display=swap");
 :root {
   --blue: #042532;
   --indigo: #6610f2;
@@ -64,31 +65,27 @@ ul {
   list-style: none;
 }
 
-%invite-list::before {
-  content: "\2022";
-  font-weight: bold;
-  display: inline-block;
-  font-size: 40px;
-  position: relative;
-  top:30px;
-  left: -30px;
+%invite-list {
+  line-height: 2rem;
+  padding-left: 30px;
+  margin-bottom: 30px;
 }
 
-ul li.decline::before {
+.invite-list-decline {
   @extend %invite-list;
-  color: var(--decline-invite);
+  border-left: 2px solid var(--decline-invite);
 }
 
 
-ul li.accept::before {
+.invite-list-accept {
   @extend %invite-list;
-  color: var(--accept-invite);
+  border-left: 2px solid var(--accept-invite);
 }
 
 
-ul li.maybe::before {
+.invite-list-maybe {
   @extend %invite-list;
-  color: var(--maybe-invite);
+  border-left: 2px solid var(--maybe-invite);
 }
 
 .centerMonthGroup {
@@ -189,6 +186,7 @@ ul li.maybe::before {
   height: 310px;
 }
 
+.profile-page,
 .event-page {
   width: 100vw;
   padding: 20px;
