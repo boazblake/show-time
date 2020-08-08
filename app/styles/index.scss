@@ -32,6 +32,34 @@
   --breakpoint-xl: 1200px;
 }
 
+*,
+*:before,
+*:after {
+  box-sizing: border-box;
+}
+
+body,
+html {
+  scroll-behavior: smooth;
+  margin: 0;
+  overflow: hidden;
+  position: fixed;
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  max-height: 100vh;
+}
+
+html > * {
+  box-sizing: border-box;
+  font-family: 'Montserrat';
+}
+
+
+a {
+  text-decoration: none;
+}
 
 ul {
   list-style: none; /* Remove default bullets */
@@ -68,36 +96,6 @@ ul li.maybe::before {
   margin-left: -1em; /* Also needed for space (tweak if needed) */
   font-size: 40px;
 }
-
-*,
-*:before,
-*:after {
-  box-sizing: border-box;
-}
-
-body,
-html {
-  scroll-behavior: smooth;
-  margin: 0;
-  overflow: hidden;
-  position: fixed;
-  -webkit-text-size-adjust: 100%;
-}
-
-body {
-  max-height: 100vh;
-}
-
-html > * {
-  box-sizing: border-box;
-  font-family: 'Montserrat';
-}
-
-
-a {
-  text-decoration: none;
-}
-
 
 .centerMonthGroup {
   position: relative;
