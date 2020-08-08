@@ -1,5 +1,5 @@
 import { Home, Login, Register } from "Pages"
-
+import { AuthLayout } from "Components"
 const Routes = [
   {
     id: "shindig-it",
@@ -23,7 +23,7 @@ const Routes = [
     children: [],
     options: [],
     onmatch: (mdl, args, path, fullroute) => {},
-    component: (mdl) => m(Login, { mdl }),
+    component: (mdl) => m(AuthLayout, m(Login, { mdl })),
   },
   {
     id: "register",
@@ -35,7 +35,7 @@ const Routes = [
     children: [],
     options: [],
     onmatch: (mdl, args, path, fullroute) => {},
-    component: (mdl) => m(Register, { mdl }),
+    component: (mdl) => m(AuthLayout, m(Register, { mdl })),
   },
 ]
 
