@@ -74,18 +74,18 @@ export const Login = () => {
     onremove: () => resetState(),
     view: ({ attrs: { mdl } }) =>
       m(
-        ".frow centered-column mt-100",
+        ".login-pag.full-width",
         [
           state.showErrorMsg() && m("code.warning", state.errorMsg()),
           m(
-            "form.frow column-centered",
+            "form.frow-container",
             {
               role: "form",
               id: "Login-form",
               onsubmit: (e) => e.preventDefault(),
             },
             [
-              m("input.auth-input", {
+              m("input", {
                 class: state.isSubmitted
                   ? state.errors.email
                     ? "has-error"
@@ -100,9 +100,9 @@ export const Login = () => {
                 },
                 value: state.data.userModel.email,
               }),
-              state.errors.email && m("p.auth-input-hint", state.errors.email),
+              state.errors.email && m("span.error-field", state.errors.email),
 
-              m("input.auth-input", {
+              m("input", {
                 class: state.isSubmitted
                   ? state.errors.password
                     ? "has-error"
@@ -118,18 +118,22 @@ export const Login = () => {
                 value: state.data.userModel.password,
               }),
               state.errors.password &&
-                m("p.auth-input-hint", state.errors.password),
+                m("span.error-field", state.errors.password),
             ]
           ),
-          state.httpError && m(".toast toast-error", state.httpError),
+          state.httpError && m(".error-field", state.httpError),
         ],
         m(
-          "a.button.auth-btn.full-width frow",
+          m.route.Link,
           {
             // type: "submit",
+            selector: "button",
             form: `login-form`,
-            onclick: () => validateForm(mdl)(state.data),
-            class: mdl.State.isLoading() && "loading",
+            onclick: (e) => {
+              e.preventDefault()
+              validateForm(mdl)(state.data)
+            },
+            class: mdl.State.isLoading() ? "loading" : "max-width mt-20",
           },
           m("p.text-centered", "Login")
         ),
@@ -137,7 +141,7 @@ export const Login = () => {
           m.route.Link,
           {
             href: "/register",
-            class: "full-width",
+            class: "max-width",
           },
           "Need to  register ?"
         )

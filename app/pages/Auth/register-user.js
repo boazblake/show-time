@@ -77,7 +77,7 @@ export const validateForm = (mdl) => (data) => {
 const RegisterUser = () => {
   return {
     view: ({ attrs: { data, errors, isSubmitted } }) => [
-      m("input.auth-input", {
+      m("input", {
         class: isSubmitted ? (errors.name ? "has-error" : "has-success") : "",
         id: "reg-name",
         type: "text",
@@ -85,9 +85,9 @@ const RegisterUser = () => {
         onkeyup: (e) => (data.name = e.target.value),
         value: data.name,
       }),
-      errors.name && m("p.auth-input-hint", errors.name),
+      errors.name && m("span.error-field", errors.name),
 
-      m("input.auth-input", {
+      m("input", {
         class: isSubmitted ? (errors.email ? "has-error" : "has-success") : "",
         id: "reg-email",
         type: "email",
@@ -95,9 +95,9 @@ const RegisterUser = () => {
         onkeyup: (e) => (data.email = e.target.value),
         value: data.email,
       }),
-      errors.email && m("p.auth-input-hint", errors.email),
+      errors.email && m("span.error-field", errors.email),
 
-      m("input.auth-input", {
+      m("input", {
         id: "confirmEmail",
         class: isSubmitted
           ? errors.confirmEmail
@@ -109,9 +109,9 @@ const RegisterUser = () => {
         onkeyup: (e) => (data.confirmEmail = e.target.value),
         value: data.confirmEmail,
       }),
-      errors.confirmEmail && m("p.auth-input-hint", errors.confirmEmail),
+      errors.confirmEmail && m("span.error-field", errors.confirmEmail),
 
-      m("input.auth-input", {
+      m("input", {
         class: isSubmitted
           ? errors.password
             ? "has-error"
@@ -123,9 +123,9 @@ const RegisterUser = () => {
         onkeyup: (e) => (data.password = e.target.value),
         value: data.password,
       }),
-      errors.password && m("p.auth-input-hint", errors.password),
+      errors.password && m("span.error-field", errors.password),
 
-      m("input.auth-input", {
+      m("input", {
         class: isSubmitted
           ? errors.confirmPassword
             ? "has-error"
@@ -137,7 +137,7 @@ const RegisterUser = () => {
         onkeyup: (e) => (data.confirmPassword = e.target.value),
         value: data.confirmPassword,
       }),
-      errors.confirmPassword && m("p.auth-input-hint", errors.confirmPassword),
+      errors.confirmPassword && m("span.error-field", errors.confirmPassword),
     ],
   }
 }
@@ -146,10 +146,11 @@ export const Register = () => {
   return {
     onremove: () => resetState(),
     view: ({ attrs: { mdl } }) => [
-      m(".frow centered-column mt-100", [
+      m(
+        ".register-page.full-width",
         state.showErrorMsg() && m("code.warning", state.errorMsg()),
         m(
-          "form.full-width",
+          "form.frow-container",
           {
             role: "form",
             id: "Register-form",
@@ -161,26 +162,30 @@ export const Register = () => {
               errors: state.errors,
               isSubmitted: state.isSubmitted,
             }),
-            m(
-              "a.button.auth-btn.full-width",
-              {
-                form: `register-form`,
-                onclick: () => validateForm(mdl)(state.data),
-                class: mdl.State.isLoading() && "loading",
-              },
-              m("p", "Register")
-            ),
-            m(
-              m.route.Link,
-              {
-                href: "/login",
-                class: "full-width",
-              },
-              "Need to  login ?"
-            ),
           ]
         ),
-      ]),
+        m(
+          m.route.Link,
+          {
+            selector: "button",
+            form: `register-form`,
+            onclick: (e) => {
+              e.preventDefault()
+              validateForm(mdl)(state.data)
+            },
+            class: mdl.State.isLoading() ? "loading" : "max-width mt-20",
+          },
+          m("p", "Register")
+        ),
+        m(
+          m.route.Link,
+          {
+            href: "/login",
+            class: "max-width",
+          },
+          "Need to  login ?"
+        )
+      ),
 
       state.httpError && m(".toast toast-error", state.httpError),
     ],
