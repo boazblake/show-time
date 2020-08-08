@@ -31,25 +31,39 @@ export const Hour = () => {
   }
 }
 
+const ListView = () => {
+  return {
+    view: ({ attrs: { mdl, invites } }) =>
+      m(
+        "ul.frow-container",
+        invites.map((invite) =>
+          m("li.shadow-light", [invite.title, invite.startTime])
+        )
+      ),
+  }
+}
+
 export const Day = ({ attrs: { mdl } }) => {
   return {
     oncreate: ({ attrs: { mdl, invites } }) =>
       scrollToCurrentTimeOrInvite(mdl, invites),
     onupdate: ({ attrs: { mdl, invites } }) =>
       mdl.State.toAnchor() && scrollToCurrentTimeOrInvite(mdl, invites),
-    view: ({ attrs: { mdl, day } }) => {
+    view: ({ attrs: { mdl, day, invites } }) => {
       return m(".day", [
         m(".day-container", [
-          getHoursInDay(mdl.State.timeFormats[mdl.State.format()]).map(
-            (hour, idx) => {
-              return m(Hour, {
-                mdl,
-                invites: day[hour],
-                hour,
-                events: day[hour],
-              })
-            }
-          ),
+          mdl.Day.listView()
+            ? m(ListView, { mdl, invites })
+            : getHoursInDay(mdl.State.timeFormats[mdl.State.format()]).map(
+                (hour, idx) => {
+                  return m(Hour, {
+                    mdl,
+                    invites: day[hour],
+                    hour,
+                    events: day[hour],
+                  })
+                }
+              ),
         ]),
       ])
     },

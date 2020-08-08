@@ -23,7 +23,7 @@ export const Home = ({ attrs: { mdl } }) => {
   }
 
   const load = ({ attrs: { mdl } }) => {
-    mdl.State.modal(false)
+    mdl.Home.modal(false)
     const onError = (err) => {
       state.error = err
       state.status = "failed"
@@ -55,24 +55,38 @@ export const Home = ({ attrs: { mdl } }) => {
             invites: state.invites,
           }),
 
-          m(
-            `.${mdl.State.modal() ? "bg-warn" : "bg-info"}`,
+          m(`.frow-container frow`, [
             m(
-              "button.full-width",
-              {
-                onclick: (e) => mdl.State.modal(!mdl.State.modal()),
-              },
-              mdl.State.modal() ? "Cancel" : "Add Event"
-            )
-          ),
-          mdl.State.modal() && m(Editor, { mdl }),
-
-          !mdl.State.modal() &&
-            m(Day, {
-              mdl,
-              day: createDayVM(mdl)(getSelectedDayInvites(mdl)(state.invites)),
-              invites: getSelectedDayInvites(mdl)(state.invites),
-            }),
+              `.col-xs-2-3.${mdl.Home.modal() ? "bg-warn" : "bg-info"}`,
+              m(
+                `button.max-width`,
+                {
+                  onclick: (e) => mdl.Home.modal(!mdl.Home.modal()),
+                },
+                mdl.Home.modal() ? "Cancel" : "Add Event"
+              )
+            ),
+            !mdl.Home.modal() &&
+              m(
+                `.col-xs-1-3.${mdl.Day.listView() ? "bg-warn" : "bg-info"}`,
+                m(
+                  `button.max-width`,
+                  {
+                    onclick: (e) => mdl.Day.listView(!mdl.Day.listView()),
+                  },
+                  mdl.Day.listView() ? "Hour View" : "List View"
+                )
+              ),
+          ]),
+          mdl.Home.modal()
+            ? m(Editor, { mdl })
+            : m(Day, {
+                mdl,
+                day: createDayVM(mdl)(
+                  getSelectedDayInvites(mdl)(state.invites)
+                ),
+                invites: getSelectedDayInvites(mdl)(state.invites),
+              }),
         ]
       )
     },

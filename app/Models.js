@@ -38,6 +38,11 @@ const Invites = {
 const Day = {
   data: dayModel({ State }),
   update: Stream(false),
+  listView: Stream(false),
+}
+
+const Home = {
+  modal: Stream(false),
 }
 
 const Settings = { profile: "", inspector: "" }
@@ -60,6 +65,7 @@ const Model = {
   State,
   Settings,
   User,
+  Home,
 }
 
 export default Model
