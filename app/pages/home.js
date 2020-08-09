@@ -46,9 +46,8 @@ export const Home = ({ attrs: { mdl } }) => {
     view: ({ attrs: { mdl } }) => {
       return m(
         ".frow  ",
-        state.status == "loading" && m(`.frow.max-width`, "FETCHING EVENTS..."),
-        state.status == "failed" &&
-          m(`.frow.max-width`, "FAILED TO FETCH EVENTS"),
+        state.status == "loading" && m("p.full-width", "FETCHING EVENTS..."),
+        state.status == "failed" && m("p.full-width", "FAILED TO FETCH EVENTS"),
         state.status == "success" && [
           m(Calendar, {
             mdl,

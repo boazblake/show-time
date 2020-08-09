@@ -5,7 +5,8 @@ export const EventToolbar = () => {
         "button.col-xs-1-1",
         {
           onclick: (e) => {
-            mdl.State.toAnchor(mdl.Events.currentEventStartTime().format("HH"))
+            localStorage.removeItem("shindigit-eventId")
+            mdl.State.toAnchor(mdl.Events.currentEventStart().format("HH"))
             m.route.set(
               `/${mdl.User.name}/${mdl.selectedDate().format("YYYY-MM-DD")}`
             )

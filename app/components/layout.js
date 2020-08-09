@@ -1,10 +1,8 @@
 import { HomeToolbar, EventToolbar, Sidebar } from "Components"
 
 const Header = () => {
-  const getRoute = (mdl) => {
-    // console.log("route", mdl)
-    return mdl.State.route.id
-  }
+  const getRoute = (mdl) => mdl.State.route.id
+
   return {
     view: ({ attrs: { mdl } }) =>
       m(".col-xs-4-5.frow row row-start", [

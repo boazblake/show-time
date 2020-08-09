@@ -53,6 +53,11 @@ if (sessionStorage.getItem("shindigit-user")) {
   Model.User = JSON.parse(sessionStorage.getItem("shindigit-user"))
   Model.State.isAuth(true)
   Model.User.profile && Model.State.is24Hrs(Model.User.profile.is24Hrs)
+
+  if (localStorage.getItem("shindigit-eventId")) {
+    Model.Events.currentEventId(localStorage.getItem("shindigit-eventId"))
+    Model.Events.currentEventStart(localStorage.getItem("shindigit-eventStart"))
+  }
 } else {
   m.route.set("/logout")
 }

@@ -5,8 +5,10 @@ import {
   loadEventAndInviteTask,
   deleteEventTask,
   updateInviteTask,
+  addItemTask,
 } from "Http"
-import { AngleLine } from "@mithril-icons/clarity/cjs"
+import { AccordianItem } from "Components"
+import { AddLine } from "@mithril-icons/clarity/cjs"
 
 export const Event = ({ attrs: { mdl } }) => {
   const state = {
@@ -15,11 +17,13 @@ export const Event = ({ attrs: { mdl } }) => {
     info: { show: Stream(false) },
     rsvp: { show: Stream(false) },
     edit: { show: Stream(false) },
+    items: { name: "", quantity: 0, show: Stream(false) },
   }
 
   const data = {
     event: {},
     invite: {},
+    items: [],
   }
 
   const load = ({ attrs: { mdl } }) => {
@@ -29,9 +33,10 @@ export const Event = ({ attrs: { mdl } }) => {
       state.status = "failed"
     }
 
-    const onSuccess = ({ event, invite }) => {
+    const onSuccess = ({ event, invite, items = [] }) => {
       data.event = event
       data.invite = invite
+      data.items = items
       state.error = {}
       // console.log("loaded event", data, state.info.show())
       state.status = "success"
@@ -76,6 +81,22 @@ export const Event = ({ attrs: { mdl } }) => {
     updateInviteTask(HTTP)(mdl)(data).fork(onError, onSuccess)
   }
 
+  const addItem = (mdl) => ({ name, quantity }) => {
+    const onError = (err) => {
+      state.error = jsonCopy(err)
+      console.log("state.e", state.error)
+      state.status = "failed"
+    }
+
+    const onSuccess = (item) => {
+      console.log("item", item)
+      state.error = {}
+      state.status = "success"
+    }
+
+    addItemTask(HTTP)(mdl)({ name, quantity }).fork(onError, onSuccess)
+  }
+
   const setupMap = ({ dom }) => {
     mapboxgl.accessToken =
       "pk.eyJ1IjoiYm9hemJsYWtlIiwiYSI6ImNqdWJ4OGk4YzBpYXU0ZG5wNDI1OGM0eTIifQ.5UV0HkEGPiKUzFdbgdr5ww"
@@ -109,115 +130,83 @@ export const Event = ({ attrs: { mdl } }) => {
             ),
 
             m(".accordian", [
-              m(".accordian-item.full-width", [
-                m(".accordian-item-title", [
+              m(
+                AccordianItem,
+                { mdl, state, data, part: "info", title: "Info" },
+                [
+                  m("label", data.event.notes),
+
+                  m(".map", {
+                    style: { width: "250px", height: "250px" },
+                    oncreate: setupMap,
+                  }),
+                ]
+              ),
+
+              m(
+                AccordianItem,
+                { mdl, state, data, part: "rsvp", title: "RSVP" },
+                [
                   m(
-                    ".frow",
-                    m(".col-xs-1-2", m("h4", "INFO")),
+                    "label",
                     m(
-                      ".frow row-end col-xs-1-3",
-                      m(
-                        `.accordian-item-btn-${
-                          state.info.show() ? "open" : "close"
-                        }`,
-                        {
-                          onclick: (e) =>
-                            state["info"].show(!state["info"].show()),
-                        },
-                        m(AngleLine)
-                      )
-                    )
-                  ),
-                ]),
-
-                state.info.show() &&
-                  m(".accordian-item-body.column", [
-                    m("label", data.event.notes),
-
-                    m(".map", {
-                      style: { width: "250px", height: "250px" },
-                      oncreate: setupMap,
-                    }),
-                  ]),
-              ]),
-
-              m(".accordian-item.full-width", [
-                m(".accordian-item-title", [
-                  m(
-                    ".frow",
-                    m(".col-xs-1-2", m("h4", "RSVP")),
-                    m(
-                      ".frow row-end col-xs-1-3",
-                      m(
-                        `.accordian-item-btn-${
-                          state.rsvp.show() ? "open" : "close"
-                        }`,
-                        {
-                          onclick: (e) =>
-                            state["rsvp"].show(!state["rsvp"].show()),
-                        },
-                        m(AngleLine)
-                      )
-                    )
-                  ),
-                ]),
-                state.rsvp.show() &&
-                  m(".accordian-item-body.column", [
-                    m(
-                      "label",
-                      m(
-                        "select",
-                        {
-                          oninput: (e) => {
-                            data.invite.status = inviteOptions.indexOf(
-                              e.target.value
-                            )
-                            updateInvite(mdl)(data.invite)
-                          },
-                          value: inviteOptions[data.invite.status],
-                        },
-                        inviteOptions.map((opt, idx) =>
-                          m(
-                            "option",
-                            {
-                              value: opt,
-                              key: idx,
-                              id: idx,
-                            },
-                            opt.toUpperCase()
+                      "select",
+                      {
+                        oninput: (e) => {
+                          data.invite.status = inviteOptions.indexOf(
+                            e.target.value
                           )
+                          updateInvite(mdl)(data.invite)
+                        },
+                        value: inviteOptions[data.invite.status],
+                      },
+                      inviteOptions.map((opt, idx) =>
+                        m(
+                          "option",
+                          {
+                            value: opt,
+                            key: idx,
+                            id: idx,
+                          },
+                          opt.toUpperCase()
                         )
-                      ),
-                      "Status: "
+                      )
+                    ),
+                    "Status: "
+                  ),
+                ]
+              ),
+
+              m(
+                AccordianItem,
+                { mdl, state, data, part: "items", title: "Items" },
+                [
+                  m(".frow row", [
+                    m("input.col-xs-1-2", {
+                      placeholder: "name",
+                      type: "text",
+                    }),
+                    m("input.col-xs-1-4", {
+                      placeholder: "quantity",
+                      type: "number",
+                      pattern: "mobile",
+                    }),
+                    m(
+                      "button.col-xs-1-5",
+                      { onclick: (e) => addItem(mdl)(state) },
+                      m(AddLine)
                     ),
                   ]),
-              ]),
 
-              m(".accordian-item.full-width", [
-                m(".accordian-item-title", [
-                  m(
-                    ".frow",
-                    m(".col-xs-1-2", m("h4", "EDIT EVENT")),
-                    m(
-                      ".frow row-end col-xs-1-3",
-                      m(
-                        `.accordian-item-btn-${
-                          state.edit.show() ? "open" : "close"
-                        }`,
-                        {
-                          onclick: (e) =>
-                            state["edit"].show(!state["edit"].show()),
-                        },
-                        m(AngleLine)
-                      )
-                    )
-                  ),
-                ]),
-                state.edit.show() &&
-                  m(".accordian-item-body.column", [
-                    m("button", { onclick: (e) => deleteEvent(mdl) }, "delete"),
-                  ]),
-              ]),
+                  data.items.map((i) => i.name),
+                ]
+              ),
+
+              m(
+                AccordianItem,
+                { mdl, state, data, part: "edit", title: "Edit" },
+                [m("button", { onclick: (e) => deleteEvent(mdl) }, "delete")]
+              ),
             ]),
           ]),
       ])

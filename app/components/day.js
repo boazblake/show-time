@@ -11,6 +11,14 @@ const createEventUrl = (invite) =>
     "h"
   )}/${invite.start.format("mm")}`
 
+const navToInvite = (mdl) => (invite) => {
+  mdl.Events.currentEventId(invite.eventId)
+  mdl.Events.currentEventStart(invite.start)
+  localStorage.setItem("shindigit-eventId", invite.eventId)
+  localStorage.setItem("shindigit-eventStart", invite.start)
+  m.route.set(`/${mdl.User.name}/${createEventUrl(invite)}`)
+}
+
 const HourInvite = () => {
   return {
     view: ({ attrs: { mdl, invite, col } }) => {
@@ -19,12 +27,7 @@ const HourInvite = () => {
         m(
           ".invite-list-item ",
           {
-            onclick: (e) => {
-              mdl.Events.currentEventId(invite.eventId)
-              mdl.Events.currentEventStartTime(invite.start)
-              localStorage.setItem("eventId", invite.eventId)
-              m.route.set(`/${mdl.User.name}/${createEventUrl(invite)}`)
-            },
+            onclick: (e) => navToInvite(mdl)(invite),
             style: {
               "background-color": getInviteStatusColor(invite.status),
               top: `${invite.start.format("mm")}px`,
@@ -85,12 +88,7 @@ const ListView = () => {
             m(
               `.invite-list-${inviteOptions[invite.status]}`,
               {
-                onclick: (e) => {
-                  mdl.Events.currentEventId(invite.eventId)
-                  mdl.Events.currentEventStartTime(invite.start)
-                  localStorage.setItem("eventId", invite.eventId)
-                  m.route.set(`/${mdl.User.name}/${createEventUrl(invite)}`)
-                },
+                onclick: (e) => navToInvite(mdl)(invite),
               },
               [
                 m("h3", invite.title),
