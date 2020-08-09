@@ -45,9 +45,10 @@ export const Home = ({ attrs: { mdl } }) => {
       mdl.Invites.fetch() && load({ attrs: { mdl } }),
     view: ({ attrs: { mdl } }) => {
       return m(
-        ".frow",
-        state.status == "loading" && m("p", "FETCHING EVENTS..."),
-        state.status == "failed" && m("p", "FAILED TO FETCH EVENTS"),
+        ".frow  ",
+        state.status == "loading" && m(`.frow.max-width`, "FETCHING EVENTS..."),
+        state.status == "failed" &&
+          m(`.frow.max-width`, "FAILED TO FETCH EVENTS"),
         state.status == "success" && [
           m(Calendar, {
             mdl,
@@ -55,7 +56,7 @@ export const Home = ({ attrs: { mdl } }) => {
             invites: state.invites,
           }),
 
-          m(`.frow-container frow`, [
+          m(`.frow.max-width`, [
             m(
               `.${
                 mdl.Home.modal() ? "bg-warn.col-xs-1-1." : "bg-info.col-xs-2-3"

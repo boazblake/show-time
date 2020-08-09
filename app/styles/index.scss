@@ -177,6 +177,17 @@ ul {
   }
 }
 
+.accordian {
+  .accordian-item {
+    line-height: 3rem;
+    .accordian-item-btn-close {
+      transform: rotate(270deg);
+    }
+    .accordian-item-btn-open {
+      transform: rotate(180deg);
+    }
+  }
+}
 
 .event-form {
   width: 100vw;
@@ -250,11 +261,22 @@ ul {
   line-height: 2rem;
 }
 
-.sidebar {
+.sidebar-page {
   width: 100vw;
   height: 100vh;
   background-color: var(--dark);
-  color: var(--white);
+
+  ul.sidebar {
+
+    li.sidebar-link {
+      line-height: 6rem;
+      > a {
+        color: var(--white);
+        font-size: 3rem;
+        width: 100%;
+      }
+    }
+  }
 }
 
 @media screen and (min-width: 600px) and (max-width: 899px) {

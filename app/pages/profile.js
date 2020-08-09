@@ -24,7 +24,7 @@ export const Profile = () => {
 
   return {
     view: ({ attrs: { mdl } }) => {
-      console.log(mdl)
+      // console.log(mdl)
       return m(".profile-page", [
         m("h1", "Profile Page"),
         m(

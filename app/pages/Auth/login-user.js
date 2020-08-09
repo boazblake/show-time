@@ -133,7 +133,7 @@ export const Login = () => {
               e.preventDefault()
               validateForm(mdl)(state.data)
             },
-            class: mdl.State.isLoading() ? "loading" : "max-width mt-20",
+            class: "max-width mt-20",
           },
           m("p.text-centered", "Login")
         ),

@@ -58,7 +58,7 @@ exports.plugins = {
   copycat: {
     fonts: [
       // "app/assets/fonts",
-      "node_modules/@mithril-icons/clarity/cjs",
+      "node_modules/@mithril-icons/clarity",
     ],
     images: ["app/assets/images"],
     verbose: true, //shows each file that is copied to the destination directory

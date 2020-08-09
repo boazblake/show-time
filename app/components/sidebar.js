@@ -1,16 +1,13 @@
 export const Sidebar = () => {
   return {
     view: ({ attrs: { mdl } }) => {
-      console.log("sidebar", mdl.selectedDate())
-      return m(".sidebar", [
-        m("ul", [
+      return m(".sidebar-page", [
+        m("ul.sidebar", [
           m(
-            "li",
+            "li.sidebar-link",
             m(
               m.route.Link,
               {
-                selector: "button",
-                class: "col-xs-1-3",
                 // onclick: (e) => logout,
                 href: `/${mdl.User.name}/${M(mdl.selectedDate()).format(
                   "YYYY-MM-DD"
@@ -21,12 +18,10 @@ export const Sidebar = () => {
           ),
 
           m(
-            "li",
+            "li.sidebar-link",
             m(
               m.route.Link,
               {
-                selector: "button",
-                class: "col-xs-1-3",
                 // onclick: (e) => logout,
                 href: `/profile/${mdl.User.name}`,
               },
@@ -35,12 +30,10 @@ export const Sidebar = () => {
           ),
 
           m(
-            "li",
+            "li.sidebar-link",
             m(
               m.route.Link,
               {
-                selector: "button",
-                class: "col-xs-1-3",
                 // onclick: (e) => logout,
                 href: `/logout`,
               },

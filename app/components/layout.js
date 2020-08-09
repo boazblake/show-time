@@ -31,10 +31,7 @@ export const Layout = () => {
   return {
     view: ({ children, attrs: { mdl } }) =>
       m(".lt-grid-container", [
-        m(".lt-header.frow row row-start", [
-          m(Header, { mdl }),
-          m(Hamburger, { mdl }),
-        ]),
+        m(".lt-header.frow row", [m(Header, { mdl }), m(Hamburger, { mdl })]),
         mdl.Sidebar.isShowing() ? m(Sidebar, { mdl }) : m(".lt-body", children),
         m(".lt-footer", "FOOTER"),
       ]),

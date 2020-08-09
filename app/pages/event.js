@@ -6,6 +6,7 @@ import {
   deleteEventTask,
   updateInviteTask,
 } from "Http"
+import { AngleLine } from "@mithril-icons/clarity/cjs"
 
 export const Event = ({ attrs: { mdl } }) => {
   const state = {
@@ -32,7 +33,7 @@ export const Event = ({ attrs: { mdl } }) => {
       data.event = event
       data.invite = invite
       state.error = {}
-      console.log("loaded event", data, state.info.show())
+      // console.log("loaded event", data, state.info.show())
       state.status = "success"
     }
 
@@ -100,11 +101,11 @@ export const Event = ({ attrs: { mdl } }) => {
         state.status == "loading" && m(".", "Fetching Event..."),
         state.status == "failed" && m(".code", state.error.message),
         state.status == "success" &&
-          m(".event-container", [
-            m("h1", data.event.title),
+          m(".centered-column", [
+            m("h1.", data.event.title),
             m(
               "h3",
-              `${data.event.date}: ${data.event.startTime} - ${data.event.endTime}`
+              `${data.event.date} | ${data.event.startTime} - ${data.event.endTime}`
             ),
 
             m(".accordian", [
@@ -116,12 +117,14 @@ export const Event = ({ attrs: { mdl } }) => {
                     m(
                       ".frow row-end col-xs-1-3",
                       m(
-                        "button",
+                        `.accordian-item-btn-${
+                          state.info.show() ? "open" : "close"
+                        }`,
                         {
                           onclick: (e) =>
                             state["info"].show(!state["info"].show()),
                         },
-                        "<"
+                        m(AngleLine)
                       )
                     )
                   ),
@@ -129,10 +132,10 @@ export const Event = ({ attrs: { mdl } }) => {
 
                 state.info.show() &&
                   m(".accordian-item-body.column", [
-                    m("label", "notes", m("p", data.event.notes)),
+                    m("label", data.event.notes),
 
                     m(".map", {
-                      style: { width: "500px", height: "500px" },
+                      style: { width: "250px", height: "250px" },
                       oncreate: setupMap,
                     }),
                   ]),
@@ -146,12 +149,14 @@ export const Event = ({ attrs: { mdl } }) => {
                     m(
                       ".frow row-end col-xs-1-3",
                       m(
-                        "button",
+                        `.accordian-item-btn-${
+                          state.rsvp.show() ? "open" : "close"
+                        }`,
                         {
                           onclick: (e) =>
                             state["rsvp"].show(!state["rsvp"].show()),
                         },
-                        "<"
+                        m(AngleLine)
                       )
                     )
                   ),
@@ -196,12 +201,14 @@ export const Event = ({ attrs: { mdl } }) => {
                     m(
                       ".frow row-end col-xs-1-3",
                       m(
-                        "button",
+                        `.accordian-item-btn-${
+                          state.edit.show() ? "open" : "close"
+                        }`,
                         {
                           onclick: (e) =>
                             state["edit"].show(!state["edit"].show()),
                         },
-                        "<"
+                        m(AngleLine)
                       )
                     )
                   ),

@@ -96,12 +96,11 @@ const ListView = () => {
                 m("h3", invite.title),
                 m(".frow row-start", [
                   m(
-                    "label.col-xs-1-3",
+                    "label.col-xs-1-1",
                     `${invite.start.format(
                       displayTimeFormat(mdl)
                     )} - ${invite.end.format(displayTimeFormat(mdl))}`
                   ),
-                  m("label.col-xs-1-4"),
                 ]),
               ]
             )
