@@ -1,5 +1,5 @@
 import { jsonCopy } from "Utils"
-import { propEq } from "ramda"
+import { propEq, compose, not, head } from "ramda"
 import mapboxgl from "mapbox-gl/dist/mapbox-gl.js"
 import {
   HTTP,
@@ -31,7 +31,7 @@ export const Event = ({ attrs: { mdl } }) => {
 
   const data = {
     event: {},
-    invites: [],
+    guests: [],
     items: [],
   }
 
@@ -42,17 +42,13 @@ export const Event = ({ attrs: { mdl } }) => {
       state.status = "failed"
     }
 
-    const onSuccess = ({ event, invites, items = [] }) => {
+    const onSuccess = ({ event, guests, items = [] }) => {
       data.event = event
-      data.invites = invites
+      data.guests = guests
       data.items = items
       state.error = {}
       state.status = "success"
-      console.log(
-        mdl.User.objectId,
-        data.invites
-        // data.invites.filter(propEq("userId", mdl.User.objectId))
-      )
+      console.log(mdl.User.objectId, data.guests)
     }
 
     loadEventTask(HTTP)(mdl).fork(onError, onSuccess)
@@ -87,11 +83,12 @@ export const Event = ({ attrs: { mdl } }) => {
     }
 
     const onSuccess = (invite) => {
-      data.invite = invite
-      console.log(data)
+      // data.invite = invite
+      console.log("success", invite)
       state.error = {}
       state.status = "success"
     }
+    console.log("need to fix", invite)
 
     updateInviteTask(HTTP)(mdl)(invite).fork(onError, onSuccess)
   }
@@ -122,10 +119,10 @@ export const Event = ({ attrs: { mdl } }) => {
       state.status = "failed"
     }
 
-    const onSuccess = ({ event, invites, items }) => {
+    const onSuccess = ({ event, guests, items }) => {
       data.items = items
       data.event = event
-      data.invites = invites
+      data.guests = guests
       state.error = {}
       console.log("deleted s", state)
       state.status = "success"
@@ -143,10 +140,10 @@ export const Event = ({ attrs: { mdl } }) => {
       state.status = "failed"
     }
 
-    const onSuccess = ({ event, invites, items }) => {
+    const onSuccess = ({ event, guests, items }) => {
       data.items = items
       data.event = event
-      data.invites = invites
+      data.guests = guests
       state.error = {}
       state.items.name = ""
       state.items.quantity = ""
@@ -169,10 +166,10 @@ export const Event = ({ attrs: { mdl } }) => {
       state.rsvp.status("failed")
     }
 
-    const onSuccess = ({ event, invites, items }) => {
+    const onSuccess = ({ event, guests, items }) => {
       data.items = items
       data.event = event
-      data.invites = invites
+      data.guests = guests
       state.error = {}
       state.rsvp.email = ""
       console.log("invite add success", data)
@@ -258,25 +255,30 @@ export const Event = ({ attrs: { mdl } }) => {
                       ".col-xs-1-2",
                       m(AttendanceResponse, {
                         mdl,
-                        invite: "",
+                        guest: head(
+                          data.guests.filter(
+                            propEq("userId", mdl.User.objectId)
+                          )
+                        ),
                         updateInvite,
                       })
                     ),
                   ]),
-                  // JSON.stringify(data),
-                  // data.invites.map((invite) =>
-                  //   m(".frow row-start", [
-                  //     m(".col-xs-1-2", mdl.User.name),
-                  //     m(
-                  //       ".col-xs-1-2",
-                  //       m(AttendanceResponse, {
-                  //         mdl,
-                  //         invite: data.invite,
-                  //         updateInvite,
-                  //       })
-                  //     ),
-                  //   ])
-                  // ),
+                  data.guests
+                    .filter(compose(not, propEq("userId", mdl.User.objectId)))
+                    .map((guest) =>
+                      m(".frow row-start", [
+                        m(".col-xs-1-2", guest.name),
+                        m(
+                          ".col-xs-1-2",
+                          m(AttendanceResponse, {
+                            mdl,
+                            guest,
+                            updateInvite,
+                          })
+                        ),
+                      ])
+                    ),
                 ])
               ),
 

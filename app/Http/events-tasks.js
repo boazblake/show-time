@@ -57,10 +57,10 @@ export const getEventTask = (http) => (mdl) =>
     .map(toEventviewModel(mdl))
 
 export const loadEventTask = (http) => (mdl) =>
-  Task.of((event) => (items) => (invites) => {
+  Task.of((event) => (items) => (guests) => {
     return {
       event,
-      invites,
+      guests,
       items,
     }
   })

@@ -18,15 +18,17 @@ const getResponse = ({ status }) => {
 }
 export const AttendanceResponse = () => {
   return {
-    view: ({ attrs: { mdl, invite, updateInvite } }) => {
-      console.log(invite)
+    view: ({ attrs: { mdl, guest, updateInvite } }) => {
+      console.log("AttendanceResponse", guest)
       return m(
         ".frow",
-        getResponse(invite).map((response, idx) =>
+        getResponse(guest).map((response, idx) =>
           m(response, {
             onclick: (e) => {
-              invite.status = idx
-              updateInvite(mdl)(invite)
+              if (guest.userId == mdl.User.objectId) {
+                guest.status = idx
+                updateInvite(mdl)(guest)
+              }
             },
           })
         )

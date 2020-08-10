@@ -288,14 +288,16 @@ var AttendanceResponse = function AttendanceResponse() {
     view: function view(_ref2) {
       var _ref2$attrs = _ref2.attrs,
           mdl = _ref2$attrs.mdl,
-          invite = _ref2$attrs.invite,
+          guest = _ref2$attrs.guest,
           updateInvite = _ref2$attrs.updateInvite;
-      console.log(invite);
-      return m(".frow", getResponse(invite).map(function (response, idx) {
+      console.log("AttendanceResponse", guest);
+      return m(".frow", getResponse(guest).map(function (response, idx) {
         return m(response, {
           onclick: function onclick(e) {
-            invite.status = idx;
-            updateInvite(mdl)(invite);
+            if (guest.userId == mdl.User.objectId) {
+              guest.status = idx;
+              updateInvite(mdl)(guest);
+            }
           }
         });
       }));
@@ -2659,10 +2661,10 @@ var loadEventTask = function loadEventTask(http) {
   return function (mdl) {
     return _data.default.of(function (event) {
       return function (items) {
-        return function (invites) {
+        return function (guests) {
           return {
             event: event,
-            invites: invites,
+            guests: guests,
             items: items
           };
         };
@@ -3869,7 +3871,7 @@ var Event = function Event(_ref) {
   };
   var data = {
     event: {},
-    invites: [],
+    guests: [],
     items: []
   };
 
@@ -3884,16 +3886,15 @@ var Event = function Event(_ref) {
 
     var onSuccess = function onSuccess(_ref3) {
       var event = _ref3.event,
-          invites = _ref3.invites,
+          guests = _ref3.guests,
           _ref3$items = _ref3.items,
           items = _ref3$items === void 0 ? [] : _ref3$items;
       data.event = event;
-      data.invites = invites;
+      data.guests = guests;
       data.items = items;
       state.error = {};
       state.status = "success";
-      console.log(mdl.User.objectId, data.invites // data.invites.filter(propEq("userId", mdl.User.objectId))
-      );
+      console.log(mdl.User.objectId, data.guests);
     };
 
     (0, _Http.loadEventTask)(_Http.HTTP)(mdl).fork(onError, onSuccess);
@@ -3924,12 +3925,13 @@ var Event = function Event(_ref) {
       };
 
       var onSuccess = function onSuccess(invite) {
-        data.invite = invite;
-        console.log(data);
+        // data.invite = invite
+        console.log("success", invite);
         state.error = {};
         state.status = "success";
       };
 
+      console.log("need to fix", invite);
       (0, _Http.updateInviteTask)(_Http.HTTP)(mdl)(invite).fork(onError, onSuccess);
     };
   };
@@ -3965,11 +3967,11 @@ var Event = function Event(_ref) {
 
       var onSuccess = function onSuccess(_ref4) {
         var event = _ref4.event,
-            invites = _ref4.invites,
+            guests = _ref4.guests,
             items = _ref4.items;
         data.items = items;
         data.event = event;
-        data.invites = invites;
+        data.guests = guests;
         state.error = {};
         console.log("deleted s", state);
         state.status = "success";
@@ -3990,11 +3992,11 @@ var Event = function Event(_ref) {
 
     var onSuccess = function onSuccess(_ref5) {
       var event = _ref5.event,
-          invites = _ref5.invites,
+          guests = _ref5.guests,
           items = _ref5.items;
       data.items = items;
       data.event = event;
-      data.invites = invites;
+      data.guests = guests;
       state.error = {};
       state.items.name = "";
       state.items.quantity = "";
@@ -4019,11 +4021,11 @@ var Event = function Event(_ref) {
 
     var onSuccess = function onSuccess(_ref6) {
       var event = _ref6.event,
-          invites = _ref6.invites,
+          guests = _ref6.guests,
           items = _ref6.items;
       data.items = items;
       data.event = event;
-      data.invites = invites;
+      data.guests = guests;
       state.error = {};
       state.rsvp.email = "";
       console.log("invite add success", data);
@@ -4088,23 +4090,15 @@ var Event = function Event(_ref) {
         }
       }, m(_cjs.AddLine)), state.rsvp.error() && m("code.error-field", state.rsvp.error())]), m(".frow row-start", [m(".col-xs-1-2", mdl.User.name), m(".col-xs-1-2", m(_Components.AttendanceResponse, {
         mdl: mdl,
-        invite: "",
+        guest: (0, _ramda.head)(data.guests.filter((0, _ramda.propEq)("userId", mdl.User.objectId))),
         updateInvite: updateInvite
-      }))]) // JSON.stringify(data),
-      // data.invites.map((invite) =>
-      //   m(".frow row-start", [
-      //     m(".col-xs-1-2", mdl.User.name),
-      //     m(
-      //       ".col-xs-1-2",
-      //       m(AttendanceResponse, {
-      //         mdl,
-      //         invite: data.invite,
-      //         updateInvite,
-      //       })
-      //     ),
-      //   ])
-      // ),
-      ])), m(_Components.AccordianItem, {
+      }))]), data.guests.filter((0, _ramda.compose)(_ramda.not, (0, _ramda.propEq)("userId", mdl.User.objectId))).map(function (guest) {
+        return m(".frow row-start", [m(".col-xs-1-2", guest.name), m(".col-xs-1-2", m(_Components.AttendanceResponse, {
+          mdl: mdl,
+          guest: guest,
+          updateInvite: updateInvite
+        }))]);
+      })])), m(_Components.AccordianItem, {
         mdl: mdl,
         state: state,
         data: data,
