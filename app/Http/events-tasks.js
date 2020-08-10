@@ -1,9 +1,15 @@
 import Task from "data.task"
-import { getInvitesTask } from "./invites-tasks"
-import { compose, filter, head, propEq } from "ramda"
-import { getHour, getMin, displayTimeFormat } from "Utils"
+import {
+  getInvitesTaskByEventId,
+  createInviteTask,
+  getUserProfileTask,
+  getItemsTask,
+} from "Http"
+import { compose, traverse, prop, filter, head, pluck } from "ramda"
+import { log, getHour, getMin, displayTimeFormat } from "Utils"
 
 const toEventviewModel = (mdl) => ({
+  objectId,
   start,
   end,
   title,
@@ -14,6 +20,7 @@ const toEventviewModel = (mdl) => ({
   latlong,
 }) => {
   return {
+    eventId: objectId,
     date: M.utc(start).format("DD-MM-YYYY"),
     title: title.toUpperCase(),
     start,
@@ -28,24 +35,38 @@ const toEventviewModel = (mdl) => ({
   }
 }
 
+const toGuestModel = (invite) => ({ name, email }) => ({
+  ...invite,
+  name,
+  email,
+})
+
+const getProfilesTask = (http) => (mdl) => (invite) =>
+  getUserProfileTask(http)(mdl)(invite.userId)
+    .map(head)
+    .map(toGuestModel(invite))
+
+const getEventGuestsTask = (http) => (mdl) =>
+  getInvitesTaskByEventId(http)(mdl)(mdl.Events.currentEventId()).chain(
+    traverse(Task.of, getProfilesTask(http)(mdl))
+  )
+
 export const getEventTask = (http) => (mdl) =>
   http.backEnd
     .getTask(mdl)(`data/Events/${mdl.Events.currentEventId()}`)
     .map(toEventviewModel(mdl))
 
-export const loadEventAndInviteTask = (http) => (mdl) =>
-  Task.of((event) => (invite) => {
+export const loadEventTask = (http) => (mdl) =>
+  Task.of((event) => (items) => (invites) => {
     return {
       event,
-      invite,
+      invites,
+      items,
     }
   })
     .ap(getEventTask(http)(mdl))
-    .ap(
-      getInvitesTask(http)(mdl).map(
-        compose(head, filter(propEq("eventId", mdl.Events.currentEventId())))
-      )
-    )
+    .ap(getItemsTask(http)(mdl))
+    .ap(getEventGuestsTask(http)(mdl))
 
 export const deleteEventTask = (http) => (mdl) => (id) =>
   http.backEnd
@@ -85,35 +106,35 @@ export const submitEventTask = (http) => (mdl) => ({
     })
     .chain(({ objectId, ownerId, end, start, title }) => {
       let eventId = objectId
-      return http.backEnd
-        .postTask(mdl)("data/Invites")({
-          eventId,
-          userId: ownerId,
-          status: 1,
-          end,
-          start,
-          title,
-          allDay,
-          inPerson,
-          location,
-          latlong,
-        })
-        .chain(({ objectId }) => {
-          let inviteId = objectId
-          return Task.of((user) => (event) => ({
-            user,
-            event,
-          }))
-            .ap(
-              http.backEnd.postTask(mdl)(
-                `data/Users/${mdl.User.objectId}/invites%3AInvites%3An`
-              )([inviteId])
-            )
-            .ap(
-              http.backEnd.postTask(mdl)(
-                `data/Events/${eventId}/invites%3AInvites%3An`
-              )([inviteId])
-            )
-        })
+      let userId = ownerId
+      let status = 1
+      return createInviteTask(http)(mdl)({
+        eventId,
+        userId,
+        status,
+        end,
+        start,
+        title,
+        allDay,
+        inPerson,
+        location,
+        latlong,
+      }).chain(({ objectId }) => {
+        let inviteId = objectId
+        return Task.of((user) => (event) => ({
+          user,
+          event,
+        }))
+          .ap(
+            http.backEnd.postTask(mdl)(
+              `data/Users/${mdl.User.objectId}/invites%3AInvites%3An`
+            )([inviteId])
+          )
+          .ap(
+            http.backEnd.postTask(mdl)(
+              `data/Events/${eventId}/invites%3AInvites%3An`
+            )([inviteId])
+          )
+      })
     })
 }

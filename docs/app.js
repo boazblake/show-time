@@ -257,6 +257,55 @@ var AccordianItem = function AccordianItem() {
 exports.AccordianItem = AccordianItem;
 });
 
+;require.register("Components/attendance-response.js", function(exports, require, module) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.AttendanceResponse = void 0;
+
+var _Utils = require("Utils");
+
+var _cjs = require("@mithril-icons/clarity/cjs");
+
+var responses = function responses() {
+  return [_cjs.SadFaceLine, _cjs.HappyFaceLine, _cjs.NeutralFaceLine];
+};
+
+var selectedResponses = [_cjs.SadFaceSolid, _cjs.HappyFaceSolid, _cjs.NeutralFaceSolid];
+
+var getResponse = function getResponse(_ref) {
+  var status = _ref.status;
+  var rs = responses();
+  rs.removeAt(status);
+  rs.insertAt(status, selectedResponses[status]);
+  return rs;
+};
+
+var AttendanceResponse = function AttendanceResponse() {
+  return {
+    view: function view(_ref2) {
+      var _ref2$attrs = _ref2.attrs,
+          mdl = _ref2$attrs.mdl,
+          invite = _ref2$attrs.invite,
+          updateInvite = _ref2$attrs.updateInvite;
+      console.log(invite);
+      return m(".frow", getResponse(invite).map(function (response, idx) {
+        return m(response, {
+          onclick: function onclick(e) {
+            invite.status = idx;
+            updateInvite(mdl)(invite);
+          }
+        });
+      }));
+    }
+  };
+};
+
+exports.AttendanceResponse = AttendanceResponse;
+});
+
 ;require.register("Components/auth-layout.js", function(exports, require, module) {
 "use strict";
 
@@ -998,8 +1047,8 @@ var EventToolbar = function EventToolbar() {
       return [m("button.col-xs-1-1", {
         onclick: function onclick(e) {
           localStorage.removeItem("shindigit-eventId");
-          mdl.State.toAnchor(mdl.Events.currentEventStart().format("HH"));
-          m.route.set("/".concat(mdl.User.name, "/").concat(mdl.selectedDate().format("YYYY-MM-DD")));
+          mdl.State.toAnchor(M(mdl.Events.currentEventStart()).format("HH"));
+          m.route.set("/".concat(mdl.User.name, "/").concat(M(mdl.Events.currentEventStart()).format("YYYY-MM-DD")));
         }
       }, "Back")];
     }
@@ -1189,6 +1238,18 @@ Object.keys(_accordianItem).forEach(function (key) {
     }
   });
 });
+
+var _attendanceResponse = require("./attendance-response.js");
+
+Object.keys(_attendanceResponse).forEach(function (key) {
+  if (key === "default" || key === "__esModule") return;
+  Object.defineProperty(exports, key, {
+    enumerable: true,
+    get: function get() {
+      return _attendanceResponse[key];
+    }
+  });
+});
 });
 
 ;require.register("Components/layout.js", function(exports, require, module) {
@@ -1348,95 +1409,1165 @@ var Sidebar = function Sidebar() {
 exports.Sidebar = Sidebar;
 });
 
-;require.register("Http/auth-tasks.js", function(exports, require, module) {
+;require.register("Fp/all.js", function(exports, require, module) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.updateUserProfile = exports.getUserProfileTask = exports.linkProfileTask = exports.createProfileTask = exports.registerTask = exports.loginTask = exports.setUserToken = void 0;
+exports.All = void 0;
 
-var setUserToken = function setUserToken(mdl) {
-  return function (user) {
-    sessionStorage.setItem("shindigit-user", JSON.stringify(user));
-    sessionStorage.setItem("shindigit-user-token", user["user-token"]);
-    mdl.State.isAuth(true);
-    mdl.User = user;
-    return user;
+var All = function All(x) {
+  return {
+    val: x,
+    concat: function concat(_ref) {
+      var val = _ref.val;
+      return All(x && val);
+    }
   };
 };
 
-exports.setUserToken = setUserToken;
+exports.All = All;
+All.empty = All(true);
+});
 
-var loginTask = function loginTask(http) {
-  return function (mdl) {
-    return function (_ref) {
-      var email = _ref.email,
-          password = _ref.password;
-      return http.backEnd.postTask(mdl)("users/login")({
-        login: email,
-        password: password
-      }).map(setUserToken(mdl));
-    };
+;require.register("Fp/any.js", function(exports, require, module) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.Any = void 0;
+
+var Any = function Any(x) {
+  return {
+    val: x,
+    concat: function concat(_ref) {
+      var val = _ref.val;
+      return Any(x || val);
+    }
   };
 };
 
-exports.loginTask = loginTask;
+exports.Any = Any;
+Any.empty = Any(false);
+});
 
-var registerTask = function registerTask(http) {
-  return function (mdl) {
-    return function (_ref2) {
-      var name = _ref2.name,
-          email = _ref2.email,
-          password = _ref2.password,
-          isAdmin = _ref2.isAdmin;
-      return http.backEnd.postTask(mdl)("users/register")({
-        name: name,
-        email: email,
-        password: password,
-        isAdmin: isAdmin
+;require.register("Fp/array.js", function(exports, require, module) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.ArrayFP = void 0;
+
+var _util = require("./util");
+
+var _flatten = function _flatten(xs) {
+  return xs.reduce(function (a, b) {
+    return a.concat(b);
+  }, []);
+};
+
+var configure = function configure(_) {
+  var _fmap = function _fmap(f) {
+    var xs = this;
+    return xs.map(function (x) {
+      return f(x);
+    }); //avoid index
+  };
+
+  Object.defineProperty(Array.prototype, "fmap", (0, _util.value)(_fmap));
+
+  var _empty = function _empty(_) {
+    return [];
+  };
+
+  Object.defineProperty(Array.prototype, "empty", (0, _util.value)(_empty));
+
+  var _chain = function _chain(f) {
+    return _flatten(this.fmap(f));
+  };
+
+  Object.defineProperty(Array.prototype, "chain", (0, _util.value)(_chain));
+
+  var _of = function _of(x) {
+    return [x];
+  };
+
+  Object.defineProperty(Array.prototype, "of", (0, _util.value)(_of));
+
+  var _ap = function _ap(a2) {
+    return _flatten(this.map(function (f) {
+      return a2.map(function (a) {
+        return f(a);
       });
+    }));
+  };
+
+  Object.defineProperty(Array.prototype, "ap", (0, _util.value)(_ap));
+
+  var _traverse = function _traverse(f, point) {
+    var cons_f = function cons_f(ys, x) {
+      return f(x).map(function (x) {
+        return function (y) {
+          return y.concat(x);
+        };
+      }).ap(ys);
     };
+
+    return this.reduce(cons_f, point([]));
+  };
+
+  Object.defineProperty(Array.prototype, "traverse", (0, _util.value)(_traverse));
+
+  var _any = function _any() {
+    return this.length > 0;
+  };
+
+  Object.defineProperty(Array.prototype, "any", (0, _util.value)(_any));
+
+  var _insertAt = function _insertAt(idx, x) {
+    return this.splice(idx, 0, x);
+  };
+
+  Object.defineProperty(Array.prototype, "insertAt", (0, _util.value)(_insertAt));
+
+  var _removeAt = function _removeAt(idx) {
+    return this.splice(idx, 1);
+  };
+
+  Object.defineProperty(Array.prototype, "removeAt", (0, _util.value)(_removeAt));
+
+  var _last = function _last() {
+    return this[this.length - 1];
+  };
+
+  Object.defineProperty(Array.prototype, "last", (0, _util.value)(_last));
+
+  var _in = function _in(comparer) {
+    for (var i = 0; i < this.length; i++) {
+      if (comparer(this[i])) return true;
+    }
+
+    return false;
+  };
+
+  Object.defineProperty(Array.prototype, "in", (0, _util.value)(_in));
+
+  var _pushIfNotExist = function _pushIfNotExist(element, comparer) {
+    if (!this.in(comparer)) {
+      this.push(element);
+    }
+  };
+
+  Object.defineProperty(Array.prototype, "pushIfNotExist", (0, _util.value)(_pushIfNotExist));
+
+  var _foldM = function _foldM(point, f) {
+    var _this = this;
+
+    var go = function go(a) {
+      return !_this.any() ? point(a) : f(a, _this.shift()).chain(go);
+    };
+
+    return go;
+  };
+
+  Object.defineProperty(Array.prototype, "foldM", (0, _util.value)(_foldM));
+};
+
+var ArrayFP = {
+  configure: configure
+};
+exports.ArrayFP = ArrayFP;
+});
+
+;require.register("Fp/coyoneda.js", function(exports, require, module) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.Coyoneda = void 0;
+
+var _daggy = require("daggy");
+
+var _ramda = require("ramda");
+
+var Coyoneda = (0, _daggy.tagged)('x', 'f');
+exports.Coyoneda = Coyoneda;
+
+Coyoneda.prototype.map = function (f) {
+  return Coyoneda(this.x, (0, _ramda.compose)(f, this.f));
+};
+
+Coyoneda.prototype.lower = function () {
+  return this.x.map(this.f);
+};
+
+Coyoneda.lift = function (x) {
+  return Coyoneda(x, _ramda.identity);
+};
+});
+
+;require.register("Fp/index.js", function(exports, require, module) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+var _exportNames = {
+  Fp: true,
+  Coyoneda: true
+};
+Object.defineProperty(exports, "Coyoneda", {
+  enumerable: true,
+  get: function get() {
+    return _coyoneda.Coyoneda;
+  }
+});
+exports.Fp = void 0;
+
+var _all = require("./all");
+
+Object.keys(_all).forEach(function (key) {
+  if (key === "default" || key === "__esModule") return;
+  if (Object.prototype.hasOwnProperty.call(_exportNames, key)) return;
+  Object.defineProperty(exports, key, {
+    enumerable: true,
+    get: function get() {
+      return _all[key];
+    }
+  });
+});
+
+var _any = require("./any");
+
+Object.keys(_any).forEach(function (key) {
+  if (key === "default" || key === "__esModule") return;
+  if (Object.prototype.hasOwnProperty.call(_exportNames, key)) return;
+  Object.defineProperty(exports, key, {
+    enumerable: true,
+    get: function get() {
+      return _any[key];
+    }
+  });
+});
+
+var _tuple = require("./tuple");
+
+Object.keys(_tuple).forEach(function (key) {
+  if (key === "default" || key === "__esModule") return;
+  if (Object.prototype.hasOwnProperty.call(_exportNames, key)) return;
+  Object.defineProperty(exports, key, {
+    enumerable: true,
+    get: function get() {
+      return _tuple[key];
+    }
+  });
+});
+
+var _coyoneda = require("./coyoneda");
+
+var _pointfree = require("./pointfree");
+
+Object.keys(_pointfree).forEach(function (key) {
+  if (key === "default" || key === "__esModule") return;
+  if (Object.prototype.hasOwnProperty.call(_exportNames, key)) return;
+  Object.defineProperty(exports, key, {
+    enumerable: true,
+    get: function get() {
+      return _pointfree[key];
+    }
+  });
+});
+
+var _sum = require("./sum");
+
+Object.keys(_sum).forEach(function (key) {
+  if (key === "default" || key === "__esModule") return;
+  if (Object.prototype.hasOwnProperty.call(_exportNames, key)) return;
+  Object.defineProperty(exports, key, {
+    enumerable: true,
+    get: function get() {
+      return _sum[key];
+    }
+  });
+});
+
+var _list = require("./list");
+
+Object.keys(_list).forEach(function (key) {
+  if (key === "default" || key === "__esModule") return;
+  if (Object.prototype.hasOwnProperty.call(_exportNames, key)) return;
+  Object.defineProperty(exports, key, {
+    enumerable: true,
+    get: function get() {
+      return _list[key];
+    }
+  });
+});
+
+var _intersection = require("./intersection");
+
+Object.keys(_intersection).forEach(function (key) {
+  if (key === "default" || key === "__esModule") return;
+  if (Object.prototype.hasOwnProperty.call(_exportNames, key)) return;
+  Object.defineProperty(exports, key, {
+    enumerable: true,
+    get: function get() {
+      return _intersection[key];
+    }
+  });
+});
+
+var _array = require("./array");
+
+var _task = require("./task");
+
+var _maybe = require("./maybe");
+
+var _validation = require("./validation");
+
+var configure = function configure() {
+  _array.ArrayFP.configure();
+
+  _task.Task.configure();
+
+  _maybe.Maybe.configure();
+
+  _validation.Validation.configure();
+};
+
+var Fp = {
+  configure: configure
+};
+exports.Fp = Fp;
+});
+
+;require.register("Fp/intersection.js", function(exports, require, module) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.Intersection = void 0;
+
+// Intersection Semigroup.
+//
+// The intersection (based on value equality) of two lists
+// Intersection :: (Eq m) <= m -> Intersection m
+var Intersection = function Intersection(xs) {
+  return {
+    xs: xs,
+    concat: function concat(_ref) {
+      var ys = _ref.xs;
+      return Intersection(xs.filter(function (x) {
+        return ys.some(function (y) {
+          return y.equals(x);
+        });
+      }));
+    },
+    inspect: "Intersection(".concat(xs, ")")
   };
 };
 
-exports.registerTask = registerTask;
+exports.Intersection = Intersection;
+});
 
-var createProfileTask = function createProfileTask(http) {
-  return function (mdl) {
-    return http.backEnd.postTask(mdl)("data/Profiles")({
-      userId: mdl.User.objectId
+;require.register("Fp/list.js", function(exports, require, module) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.List = void 0;
+
+var _data = require("data.maybe");
+
+var _ramda = require("ramda");
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+var Nil = function Nil() {
+  _classCallCheck(this, Nil);
+
+  this.head = undefined;
+  this.tail = undefined;
+  this.isNil = true;
+  this.isCons = false;
+};
+
+var Cons = function Cons(x, xs) {
+  _classCallCheck(this, Cons);
+
+  this.head = x;
+  this.tail = xs;
+  this.isNil = false;
+  this.isCons = true;
+}; //curry :: (a -> b -> c) -> a -> b -> c
+
+
+var curry = function curry(f) {
+  return function (x) {
+    return function (y) {
+      return f(x, y);
+    };
+  };
+}; //uncurry :: (a -> b -> c) -> (a, b) -> c
+
+
+var uncurry = function uncurry(f) {
+  return function (x, y) {
+    return f(x)(y);
+  };
+}; //o :: ((b -> c), (a -> b)) -> a -> c
+
+
+var o = function o(f, g) {
+  return function (x) {
+    return f(g(x));
+  };
+}; //id :: a -> a
+
+
+var id = function id(x) {
+  return x;
+}; //flip :: (a -> b -> c) -> (b, a) -> c
+
+
+var flip = function flip(f) {
+  return function (x, y) {
+    return f(y, x);
+  };
+}; //cons :: (a, List a) -> List a
+
+
+var cons = function cons(x, xs) {
+  return new Cons(x, xs);
+}; //snoc :: (List a, a) -> List a
+
+
+var snoc = function snoc(xs, x) {
+  return new Cons(x, xs);
+}; //ccons :: a -> List a -> List a
+
+
+var ccons = curry(cons); //csnoc :: List a -> a -> List a
+//const csnoc = curry(snoc)
+//nil :: () => List a
+
+var nil = function nil() {
+  return new Nil();
+}; //head :: List a -> a | undefined
+
+
+var head = function head(_ref) {
+  var head = _ref.head;
+  return head;
+}; //tail :: List a -> List a | undefined
+
+
+var tail = function tail(_ref2) {
+  var tail = _ref2.tail;
+  return tail;
+}; //concat :: List a -> List a -> List a
+
+
+var concat = function concat(xs) {
+  return function (ys) {
+    return foldr(cons)(ys)(xs);
+  };
+}; //foldl :: ((a, b) -> a) -> a -> List b -> a
+
+
+var foldl = function foldl(f) {
+  var go = function go(b) {
+    return function (_ref3) {
+      var isNil = _ref3.isNil,
+          head = _ref3.head,
+          tail = _ref3.tail;
+      return isNil ? b : go(f(b, head))(tail);
+    };
+  };
+
+  return go;
+}; //foldr :: ((a, b) -> a) -> a -> List b -> a
+
+
+var foldr = function foldr(f) {
+  return function (b) {
+    var rev = function rev(acc) {
+      return function (_ref4) {
+        var isNil = _ref4.isNil,
+            head = _ref4.head,
+            tail = _ref4.tail;
+        return isNil ? acc : rev(cons(head, acc))(tail);
+      };
+    };
+
+    return o(foldl(flip(f))(b), rev(nil()));
+  };
+}; //foldMap :: Monoid m => (a -> m) -> List a -> m
+
+
+var foldMap = function foldMap(f) {
+  return foldl(function (acc, x) {
+    return (acc || f(x).empty()).concat(f(x));
+  })(null);
+}; //foldM :: Monad m => (a -> m a) -> (a -> b -> m a) -> a -> List b -> m a
+
+
+var foldM = function foldM(point) {
+  return function (f) {
+    var go = function go(a) {
+      return function (_ref5) {
+        var isNil = _ref5.isNil,
+            head = _ref5.head,
+            tail = _ref5.tail;
+        return isNil ? point(a) : f(a, head).chain(function (x) {
+          return go(x)(tail);
+        });
+      };
+    };
+
+    return go;
+  };
+}; //map :: (a -> b) -> List a -> List b
+
+
+var map = function map(f) {
+  return function (_ref6) {
+    var isNil = _ref6.isNil,
+        head = _ref6.head,
+        tail = _ref6.tail;
+    return isNil ? nil() : cons(f(head), map(f)(tail));
+  };
+}; //ap :: List (a -> b) -> List a -> List b
+
+
+var ap = function ap(_ref7) {
+  var isNil = _ref7.isNil,
+      f = _ref7.head,
+      fs = _ref7.tail;
+  return function (xs) {
+    return isNil ? nil() : concat(map(f)(xs))(ap(fs)(xs));
+  };
+}; //pure :: a -> List a
+
+
+var pure = function pure(a) {
+  return cons(a, nil());
+}; //chain :: (a -> List b) -> List a -> List b
+
+
+var chain = function chain(_ref8) {
+  var isNil = _ref8.isNil,
+      head = _ref8.head,
+      tail = _ref8.tail;
+  return function (f) {
+    return isNil ? nil() : concat(f(head))(chain(tail)(f));
+  };
+}; //join :: List (List a -> List a)
+
+
+var join = foldr(uncurry(concat))(nil()); //traverse :: Applicative f => (a -> f a) -> (a -> f b) -> List a -> f (List b)
+
+var traverse = function traverse(point, f) {
+  var con_f = function con_f(x, ys) {
+    return f(x).map(ccons).ap(ys);
+  };
+
+  return foldr(con_f)(point(nil()));
+}; //sequenceA :: Applicative f => (a -> f a) -> List (f a) -> f (List a)
+
+
+var sequenceA = function sequenceA(point) {
+  return traverse(point, id);
+}; //length :: List a -> Int
+
+
+var length = function length(xs) {
+  var go = function go(b) {
+    return function (_ref9) {
+      var isCons = _ref9.isCons,
+          tail = _ref9.tail;
+      return isCons ? go(b + 1)(tail) : b;
+    };
+  };
+
+  return go(0)(xs);
+}; //findIndex :: (a -> Boolean) -> List a -> Maybe Int
+
+
+var findIndex = function findIndex(f) {
+  return function (xs) {
+    var go = function go(n) {
+      return function (_ref10) {
+        var isNil = _ref10.isNil,
+            head = _ref10.head,
+            tail = _ref10.tail;
+        return isNil ? (0, _data.Nothing)() : f(head) ? (0, _data.Just)(n) : go(n + 1)(tail);
+      };
+    };
+
+    return go(0)(xs);
+  };
+}; //index :: Int -> List a -> Maybe a
+
+
+var index = function index(i) {
+  return function (xs) {
+    var go = function go(n) {
+      return function (_ref11) {
+        var isNil = _ref11.isNil,
+            head = _ref11.head,
+            tail = _ref11.tail;
+        return isNil ? (0, _data.Nothing)() : n === i ? (0, _data.Just)(head) : go(n + 1)(tail);
+      };
+    };
+
+    return go(0)(xs);
+  };
+}; //reverse :: List a -> List a
+
+
+var reverse = function reverse(xs) {
+  var go = function go(acc) {
+    return function (_ref12) {
+      var isNil = _ref12.isNil,
+          head = _ref12.head,
+          tail = _ref12.tail;
+      return isNil ? acc : go(cons(head, acc))(tail);
+    };
+  };
+
+  return go(nil())(xs);
+}; //contains :: Eq a => List a -> a -> Boolean
+
+
+var contains = function contains(xs) {
+  return function (x) {
+    return findIndex((0, _ramda.equals)(x))(xs).isJust;
+  };
+}; //unique :: Eq a => List a -> List a
+
+
+var unique = o(reverse, foldl(function (acc, x) {
+  return contains(acc)(x) ? acc : cons(x, acc);
+})(nil())); //toArray :: List a -> [a]
+
+var toArray = foldl(function (acc, x) {
+  return acc.concat([x]);
+})([]); //toList :: [a] -> List a
+
+var toList = function toList(xs) {
+  return xs.reduceRight(function (acc, x) {
+    return cons(x, acc);
+  }, nil());
+}; //List :: a -> ... -> List a
+
+
+var list = function list() {
+  for (var _len = arguments.length, args = new Array(_len), _key = 0; _key < _len; _key++) {
+    args[_key] = arguments[_key];
+  }
+
+  return toList(args);
+};
+
+var List = {
+  list: list,
+  cons: cons,
+  snoc: snoc,
+  nil: nil,
+  head: head,
+  tail: tail,
+  foldl: foldl,
+  foldr: foldr,
+  foldMap: foldMap,
+  foldM: foldM,
+  concat: concat,
+  map: map,
+  ap: ap,
+  pure: pure,
+  join: join,
+  chain: chain,
+  traverse: traverse,
+  sequenceA: sequenceA,
+  findIndex: findIndex,
+  index: index,
+  length: length,
+  reverse: reverse,
+  contains: contains,
+  unique: unique,
+  toArray: toArray,
+  toList: toList
+};
+exports.List = List;
+});
+
+;require.register("Fp/maybe.js", function(exports, require, module) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.Maybe = void 0;
+
+var _data = _interopRequireDefault(require("data.maybe"));
+
+var _data2 = _interopRequireDefault(require("data.task"));
+
+var _util = require("./util");
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var configure = function configure(_) {
+  var _toTask = function _toTask(nothing) {
+    var cata = {
+      Nothing: function Nothing(_) {
+        return _data2.default.of(nothing);
+      },
+      Just: function Just(x) {
+        return _data2.default.of(x);
+      }
+    };
+    return this.cata(cata);
+  };
+
+  Object.defineProperty(_data.default.prototype, 'toTask', (0, _util.value)(_toTask));
+};
+
+var Maybe = {
+  configure: configure
+};
+exports.Maybe = Maybe;
+});
+
+;require.register("Fp/pointfree.js", function(exports, require, module) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.parse = exports.taskToPromise = exports.promiseToTask = exports.eitherToTask = exports.toList = exports.fold = exports.foldMap = exports.traverse = exports.of = exports.sequenceA = exports.mconcat = exports.mjoin = exports.ParseError = void 0;
+
+var _ramda = require("ramda");
+
+var _data = _interopRequireDefault(require("data.either"));
+
+var _data2 = _interopRequireDefault(require("data.task"));
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); if (superClass) _setPrototypeOf(subClass, superClass); }
+
+function _createSuper(Derived) { var hasNativeReflectConstruct = _isNativeReflectConstruct(); return function _createSuperInternal() { var Super = _getPrototypeOf(Derived), result; if (hasNativeReflectConstruct) { var NewTarget = _getPrototypeOf(this).constructor; result = Reflect.construct(Super, arguments, NewTarget); } else { result = Super.apply(this, arguments); } return _possibleConstructorReturn(this, result); }; }
+
+function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
+
+function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
+
+function _wrapNativeSuper(Class) { var _cache = typeof Map === "function" ? new Map() : undefined; _wrapNativeSuper = function _wrapNativeSuper(Class) { if (Class === null || !_isNativeFunction(Class)) return Class; if (typeof Class !== "function") { throw new TypeError("Super expression must either be null or a function"); } if (typeof _cache !== "undefined") { if (_cache.has(Class)) return _cache.get(Class); _cache.set(Class, Wrapper); } function Wrapper() { return _construct(Class, arguments, _getPrototypeOf(this).constructor); } Wrapper.prototype = Object.create(Class.prototype, { constructor: { value: Wrapper, enumerable: false, writable: true, configurable: true } }); return _setPrototypeOf(Wrapper, Class); }; return _wrapNativeSuper(Class); }
+
+function _construct(Parent, args, Class) { if (_isNativeReflectConstruct()) { _construct = Reflect.construct; } else { _construct = function _construct(Parent, args, Class) { var a = [null]; a.push.apply(a, args); var Constructor = Function.bind.apply(Parent, a); var instance = new Constructor(); if (Class) _setPrototypeOf(instance, Class.prototype); return instance; }; } return _construct.apply(null, arguments); }
+
+function _isNativeReflectConstruct() { if (typeof Reflect === "undefined" || !Reflect.construct) return false; if (Reflect.construct.sham) return false; if (typeof Proxy === "function") return true; try { Date.prototype.toString.call(Reflect.construct(Date, [], function () {})); return true; } catch (e) { return false; } }
+
+function _isNativeFunction(fn) { return Function.toString.call(fn).indexOf("[native code]") !== -1; }
+
+function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
+
+function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
+
+var ParseError = /*#__PURE__*/function (_Error) {
+  _inherits(ParseError, _Error);
+
+  var _super = _createSuper(ParseError);
+
+  function ParseError() {
+    _classCallCheck(this, ParseError);
+
+    return _super.apply(this, arguments);
+  }
+
+  return ParseError;
+}( /*#__PURE__*/_wrapNativeSuper(Error));
+
+exports.ParseError = ParseError;
+
+var id = function id(x) {
+  return x;
+};
+
+var _groupsOf = (0, _ramda.curry)(function (n, xs) {
+  return !xs.length ? [] : [xs.slice(0, n)].concat(_groupsOf(n, xs.slice(n, length)));
+});
+
+var mjoin = function mjoin(mmv) {
+  if (mmv.mjoin) return mmv.mjoin();
+  return (0, _ramda.chain)(id, mmv);
+};
+
+exports.mjoin = mjoin;
+var mconcat = (0, _ramda.curry)(function (xs, empty) {
+  return xs.length ? xs.reduce(_ramda.concat) : empty();
+});
+exports.mconcat = mconcat;
+var sequenceA = (0, _ramda.curry)(function (point, fctr) {
+  return fctr.traverse(id, point);
+});
+exports.sequenceA = sequenceA;
+
+var of = function of(x) {
+  return x.of;
+};
+
+exports.of = of;
+var traverse = (0, _ramda.curry)(function (f, point, fctr) {
+  return (0, _ramda.compose)(sequenceA(point), (0, _ramda.map)(f))(fctr);
+});
+exports.traverse = traverse;
+var foldMap = (0, _ramda.curry)(function (f, fldable) {
+  return fldable.reduce(function (acc, x) {
+    var r = f(x);
+    acc = acc || r.empty();
+    return acc.concat(r);
+  }, null);
+});
+exports.foldMap = foldMap;
+var fold = (0, _ramda.curry)(function (f, g, x) {
+  return x.fold(f, g);
+});
+exports.fold = fold;
+
+var toList = function toList(x) {
+  return x.reduce(function (acc, y) {
+    return [y].concat(acc);
+  }, []);
+};
+
+exports.toList = toList;
+
+var eitherToTask = function eitherToTask(x) {
+  return x.cata({
+    Left: function Left(e) {
+      return _data2.default.rejected(new ParseError(e));
+    },
+    Right: function Right(x) {
+      return _data2.default.of(x);
+    }
+  });
+};
+
+exports.eitherToTask = eitherToTask;
+
+var promiseToTask = function promiseToTask(p) {
+  return new _data2.default(function (rej, res) {
+    return p.then(res, rej);
+  });
+};
+
+exports.promiseToTask = promiseToTask;
+
+var taskToPromise = function taskToPromise(t) {
+  return new Promise(function (res, rej) {
+    return t.fork(rej, res);
+  });
+};
+
+exports.taskToPromise = taskToPromise;
+
+var parse = _data.default.try((0, _ramda.compose)(JSON.parse, (0, _ramda.prop)('response')));
+
+exports.parse = parse;
+});
+
+;require.register("Fp/sum.js", function(exports, require, module) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.Sum = void 0;
+
+var Sum = function Sum(x) {
+  return {
+    x: x,
+    concat: function concat(_ref) {
+      var y = _ref.x;
+      return x + y;
+    },
+    inspect: "Sum(".concat(x, ")")
+  };
+};
+
+exports.Sum = Sum;
+});
+
+;require.register("Fp/task.js", function(exports, require, module) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.Task = void 0;
+
+var _data = _interopRequireDefault(require("data.task"));
+
+var _util = require("./util");
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var configure = function configure() {
+  var _mjoin = function _mjoin() {
+    var _this = this;
+
+    return new _data.default(function (rej, res) {
+      return _this.fork(rej, function (s) {
+        return s.fork(rej, res);
+      });
     });
   };
+
+  Object.defineProperty(_data.default.prototype, 'mjoin', (0, _util.value)(_mjoin));
 };
 
-exports.createProfileTask = createProfileTask;
+var Task = {
+  configure: configure
+};
+exports.Task = Task;
+});
 
-var linkProfileTask = function linkProfileTask(http) {
-  return function (mdl) {
-    return http.backEnd.postTask(mdl)("data/Users/".concat(mdl.User.objectId, "/profile%3AProfiles%3A1"))([mdl.User.profile.objectId]);
+;require.register("Fp/tuple.js", function(exports, require, module) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.uncurry5 = exports.uncurry4 = exports.uncurry3 = exports.uncurry2 = exports.curry5 = exports.curry4 = exports.curry3 = exports.curry2 = exports.tuple5 = exports.tuple4 = exports.tuple3 = exports.tuple2 = exports.Tuple5 = exports.Tuple4 = exports.Tuple3 = exports.Tuple2 = exports.Tuple = void 0;
+
+var _daggy = require("daggy");
+
+var Tuple = (0, _daggy.tagged)('_1', '_2');
+exports.Tuple = Tuple;
+var Tuple2 = Tuple;
+exports.Tuple2 = Tuple2;
+var Tuple3 = (0, _daggy.tagged)('_1', '_2', '_3');
+exports.Tuple3 = Tuple3;
+var Tuple4 = (0, _daggy.tagged)('_1', '_2', '_3', '_4');
+exports.Tuple4 = Tuple4;
+var Tuple5 = (0, _daggy.tagged)('_1', '_2', '_3', '_4', '_5'); // Methods
+
+exports.Tuple5 = Tuple5;
+
+Tuple2.prototype.concat = function (b) {
+  return Tuple2(this._1.concat(b._1), this._2.concat(b._2));
+};
+
+Tuple3.prototype.concat = function (b) {
+  return Tuple3(this._1.concat(b._1), this._2.concat(b._2), this._3.concat(b._3));
+};
+
+Tuple4.prototype.concat = function (b) {
+  return Tuple4(this._1.concat(b._1), this._2.concat(b._2), this._3.concat(b._3), this._4.concat(b._4));
+};
+
+Tuple5.prototype.concat = function (b) {
+  return Tuple5(this._1.concat(b._1), this._2.concat(b._2), this._3.concat(b._3), this._4.concat(b._4), this._5.concat(b._5));
+}; // Methods
+
+
+Tuple.prototype.dimap = function (f, g) {
+  return Tuple(f(this._1), g(this._2));
+};
+
+Tuple.prototype.map = function (f) {
+  return Tuple(this._1, f(this._2));
+};
+
+Tuple.prototype.curry = function (f) {
+  return f(this);
+};
+
+Tuple.prototype.uncurry = function (f) {
+  return f(this._1, this._2);
+};
+
+Tuple.prototype.extend = function (f) {
+  return Tuple(this._1, f(this));
+};
+
+Tuple.prototype.extract = function () {
+  return this._2;
+};
+
+Tuple.prototype.foldl = function (f, z) {
+  return f(this._2, z);
+};
+
+Tuple.prototype.foldr = function (f, z) {
+  return f(z, this._2);
+};
+
+Tuple.prototype.foldMap = function (f, _) {
+  return f(this._2);
+};
+
+var tuple2 = Tuple;
+exports.tuple2 = tuple2;
+
+var tuple3 = function tuple3(a, b, c) {
+  return Tuple(tuple2(a, b), c);
+};
+
+exports.tuple3 = tuple3;
+
+var tuple4 = function tuple4(a, b, c, d) {
+  return Tuple(tuple3(a, b, c), d);
+};
+
+exports.tuple4 = tuple4;
+
+var tuple5 = function tuple5(a, b, c, d, e) {
+  return Tuple(tuple4(a, b, c, d), e);
+};
+
+exports.tuple5 = tuple5;
+
+var curry2 = function curry2(f, a, b) {
+  return f(tuple2(a, b));
+};
+
+exports.curry2 = curry2;
+
+var curry3 = function curry3(f, a, b, c) {
+  return f(tuple3(a, b, c));
+};
+
+exports.curry3 = curry3;
+
+var curry4 = function curry4(f, a, b, c, d) {
+  return f(tuple4(a, b, c, d));
+};
+
+exports.curry4 = curry4;
+
+var curry5 = function curry5(f, a, b, c, d, e) {
+  return f(tuple5(a, b, c, d, e));
+};
+
+exports.curry5 = curry5;
+
+var uncurry2 = function uncurry2(f, t) {
+  return f(t._1, t._2);
+};
+
+exports.uncurry2 = uncurry2;
+
+var uncurry3 = function uncurry3(f, t) {
+  return f(t._1._1, t._1._2, t._2);
+};
+
+exports.uncurry3 = uncurry3;
+
+var uncurry4 = function uncurry4(f, t) {
+  return f(t._1._1._1, t._1._1._2, t._1._2, t._2);
+};
+
+exports.uncurry4 = uncurry4;
+
+var uncurry5 = function uncurry5(f, t) {
+  return f(t._1._1._1._1, t._1._1._1._2, t._1._1._2, t._1._2, t._2);
+};
+
+exports.uncurry5 = uncurry5;
+});
+
+;require.register("Fp/util.js", function(exports, require, module) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.value = void 0;
+
+var value = function value(f) {
+  var x = {
+    value: f,
+    writable: true,
+    configurable: true,
+    enumerable: false
+  };
+  return x;
+};
+
+exports.value = value;
+});
+
+;require.register("Fp/validation.js", function(exports, require, module) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.Validation = void 0;
+
+var _data = _interopRequireDefault(require("data.validation"));
+
+var _data2 = _interopRequireDefault(require("data.task"));
+
+var _util = require("./util");
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var constant = function constant(x) {
+  return function () {
+    return x;
   };
 };
 
-exports.linkProfileTask = linkProfileTask;
-
-var getUserProfileTask = function getUserProfileTask(http) {
-  return function (mdl) {
-    return http.backEnd.getTask(mdl)("data/Profiles?where=userId%3D'".concat(mdl.User.objectId, "'"));
-  };
+var id = function id(x) {
+  return x;
 };
 
-exports.getUserProfileTask = getUserProfileTask;
+var configure = function configure() {
+  var apLeft = function apLeft(b) {
+    return this.map(constant).ap(b);
+  };
 
-var updateUserProfile = function updateUserProfile(http) {
-  return function (mdl) {
-    return function (profile) {
-      return http.backEnd.putTask(mdl)("data/Profiles/".concat(mdl.User.profile.objectId))(profile);
+  Object.defineProperty(_data.default.prototype, 'apLeft', (0, _util.value)(apLeft));
+
+  var apRight = function apRight(b) {
+    return this.map(constant(id)).ap(b);
+  };
+
+  Object.defineProperty(_data.default.prototype, 'apRight', (0, _util.value)(apRight));
+
+  var _toTask = function _toTask() {
+    var f = {
+      Failure: function Failure(x) {
+        return _data2.default.rejected(x);
+      },
+      Success: function Success(x) {
+        return _data2.default.of(x);
+      }
     };
+    return this.cata(f);
   };
+
+  Object.defineProperty(_data.default.prototype, 'toTask', (0, _util.value)(_toTask));
 };
 
-exports.updateUserProfile = updateUserProfile;
+var Validation = {
+  configure: configure
+};
+exports.Validation = Validation;
 });
 
 ;require.register("Http/events-tasks.js", function(exports, require, module) {
@@ -1445,11 +2576,11 @@ exports.updateUserProfile = updateUserProfile;
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.submitEventTask = exports.deleteEventTask = exports.loadEventAndInviteTask = exports.getEventTask = void 0;
+exports.submitEventTask = exports.deleteEventTask = exports.loadEventTask = exports.getEventTask = void 0;
 
 var _data = _interopRequireDefault(require("data.task"));
 
-var _invitesTasks = require("./invites-tasks");
+var _Http = require("Http");
 
 var _ramda = require("ramda");
 
@@ -1457,9 +2588,16 @@ var _Utils = require("Utils");
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
+function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
+
+function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(Object(source), true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
+
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
 var toEventviewModel = function toEventviewModel(mdl) {
   return function (_ref) {
-    var start = _ref.start,
+    var objectId = _ref.objectId,
+        start = _ref.start,
         end = _ref.end,
         title = _ref.title,
         notes = _ref.notes,
@@ -1468,6 +2606,7 @@ var toEventviewModel = function toEventviewModel(mdl) {
         inPerson = _ref.inPerson,
         latlong = _ref.latlong;
     return {
+      eventId: objectId,
       date: M.utc(start).format("DD-MM-YYYY"),
       title: title.toUpperCase(),
       start: start,
@@ -1483,6 +2622,31 @@ var toEventviewModel = function toEventviewModel(mdl) {
   };
 };
 
+var toGuestModel = function toGuestModel(invite) {
+  return function (_ref2) {
+    var name = _ref2.name,
+        email = _ref2.email;
+    return _objectSpread(_objectSpread({}, invite), {}, {
+      name: name,
+      email: email
+    });
+  };
+};
+
+var getProfilesTask = function getProfilesTask(http) {
+  return function (mdl) {
+    return function (invite) {
+      return (0, _Http.getUserProfileTask)(http)(mdl)(invite.userId).map(_ramda.head).map(toGuestModel(invite));
+    };
+  };
+};
+
+var getEventGuestsTask = function getEventGuestsTask(http) {
+  return function (mdl) {
+    return (0, _Http.getInvitesTaskByEventId)(http)(mdl)(mdl.Events.currentEventId()).chain((0, _ramda.traverse)(_data.default.of, getProfilesTask(http)(mdl)));
+  };
+};
+
 var getEventTask = function getEventTask(http) {
   return function (mdl) {
     return http.backEnd.getTask(mdl)("data/Events/".concat(mdl.Events.currentEventId())).map(toEventviewModel(mdl));
@@ -1491,20 +2655,23 @@ var getEventTask = function getEventTask(http) {
 
 exports.getEventTask = getEventTask;
 
-var loadEventAndInviteTask = function loadEventAndInviteTask(http) {
+var loadEventTask = function loadEventTask(http) {
   return function (mdl) {
     return _data.default.of(function (event) {
-      return function (invite) {
-        return {
-          event: event,
-          invite: invite
+      return function (items) {
+        return function (invites) {
+          return {
+            event: event,
+            invites: invites,
+            items: items
+          };
         };
       };
-    }).ap(getEventTask(http)(mdl)).ap((0, _invitesTasks.getInvitesTask)(http)(mdl).map((0, _ramda.compose)(_ramda.head, (0, _ramda.filter)((0, _ramda.propEq)("eventId", mdl.Events.currentEventId())))));
+    }).ap(getEventTask(http)(mdl)).ap((0, _Http.getItemsTask)(http)(mdl)).ap(getEventGuestsTask(http)(mdl));
   };
 };
 
-exports.loadEventAndInviteTask = loadEventAndInviteTask;
+exports.loadEventTask = loadEventTask;
 
 var deleteEventTask = function deleteEventTask(http) {
   return function (mdl) {
@@ -1520,15 +2687,15 @@ exports.deleteEventTask = deleteEventTask;
 
 var submitEventTask = function submitEventTask(http) {
   return function (mdl) {
-    return function (_ref2) {
-      var allDay = _ref2.allDay,
-          startTime = _ref2.startTime,
-          endTime = _ref2.endTime,
-          title = _ref2.title,
-          notes = _ref2.notes,
-          inPerson = _ref2.inPerson,
-          location = _ref2.location,
-          latlong = _ref2.latlong;
+    return function (_ref3) {
+      var allDay = _ref3.allDay,
+          startTime = _ref3.startTime,
+          endTime = _ref3.endTime,
+          title = _ref3.title,
+          notes = _ref3.notes,
+          inPerson = _ref3.inPerson,
+          location = _ref3.location,
+          latlong = _ref3.latlong;
       var end = M.utc(mdl.selectedDate()).hour((0, _Utils.getHour)(endTime)).minute((0, _Utils.getMin)(endTime));
       var start = M.utc(mdl.selectedDate()).hour((0, _Utils.getHour)(startTime)).minute((0, _Utils.getMin)(startTime));
       return http.backEnd.postTask(mdl)("data/Events")({
@@ -1541,17 +2708,19 @@ var submitEventTask = function submitEventTask(http) {
         location: location,
         latlong: latlong,
         createdBy: mdl.User.objectId
-      }).chain(function (_ref3) {
-        var objectId = _ref3.objectId,
-            ownerId = _ref3.ownerId,
-            end = _ref3.end,
-            start = _ref3.start,
-            title = _ref3.title;
+      }).chain(function (_ref4) {
+        var objectId = _ref4.objectId,
+            ownerId = _ref4.ownerId,
+            end = _ref4.end,
+            start = _ref4.start,
+            title = _ref4.title;
         var eventId = objectId;
-        return http.backEnd.postTask(mdl)("data/Invites")({
+        var userId = ownerId;
+        var status = 1;
+        return (0, _Http.createInviteTask)(http)(mdl)({
           eventId: eventId,
-          userId: ownerId,
-          status: 1,
+          userId: userId,
+          status: status,
           end: end,
           start: start,
           title: title,
@@ -1559,8 +2728,8 @@ var submitEventTask = function submitEventTask(http) {
           inPerson: inPerson,
           location: location,
           latlong: latlong
-        }).chain(function (_ref4) {
-          var objectId = _ref4.objectId;
+        }).chain(function (_ref5) {
+          var objectId = _ref5.objectId;
           var inviteId = objectId;
           return _data.default.of(function (user) {
             return function (event) {
@@ -1785,14 +2954,14 @@ Object.keys(_itemsTasks).forEach(function (key) {
   });
 });
 
-var _authTasks = require("./auth-tasks.js");
+var _userTasks = require("./user-tasks.js");
 
-Object.keys(_authTasks).forEach(function (key) {
+Object.keys(_userTasks).forEach(function (key) {
   if (key === "default" || key === "__esModule") return;
   Object.defineProperty(exports, key, {
     enumerable: true,
     get: function get() {
-      return _authTasks[key];
+      return _userTasks[key];
     }
   });
 });
@@ -1816,9 +2985,17 @@ Object.keys(_openCage).forEach(function (key) {
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.getInvitesTask = exports.updateInviteTask = exports.toInviteViewModel = void 0;
+exports.createInviteTask = exports.sendInviteTask = exports.getInvitesTaskByEventId = exports.getInvitesTask = exports.updateInviteTask = exports.toInviteViewModel = void 0;
 
 var _ramda = require("ramda");
+
+var _Http = require("Http");
+
+var _data = _interopRequireDefault(require("data.task"));
+
+var _Utils = require("Utils");
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 var toInviteViewModel = function toInviteViewModel(_ref) {
   var start = _ref.start,
@@ -1875,6 +3052,78 @@ var getInvitesTask = function getInvitesTask(http) {
 };
 
 exports.getInvitesTask = getInvitesTask;
+
+var getInvitesTaskByEventId = function getInvitesTaskByEventId(http) {
+  return function (mdl) {
+    return function (id) {
+      return http.backEnd.getTask(mdl)("data/Invites?pageSize=100&where=eventId%3D'".concat(id, "'&sortBy=start%20asc")).map((0, _ramda.map)(toInviteViewModel));
+    };
+  };
+};
+
+exports.getInvitesTaskByEventId = getInvitesTaskByEventId;
+
+var sendInviteTask = function sendInviteTask(http) {
+  return function (mdl) {
+    return function (guestEmail, _ref3) {
+      var eventId = _ref3.eventId,
+          start = _ref3.start,
+          end = _ref3.end,
+          title = _ref3.title,
+          allDay = _ref3.allDay,
+          inPerson = _ref3.inPerson,
+          location = _ref3.location,
+          latlong = _ref3.latlong;
+      return (0, _Http.findUserByEmailTask)(http)(mdl)(guestEmail).chain(function (users) {
+        return users.any() ? createInviteTask(http)(mdl)({
+          eventId: eventId,
+          userId: users[0].objectId,
+          status: 2,
+          end: end,
+          start: start,
+          title: title,
+          allDay: allDay,
+          inPerson: inPerson,
+          location: location,
+          latlong: latlong
+        }) : _data.default.rejected("No User with that email");
+      });
+    };
+  };
+};
+
+exports.sendInviteTask = sendInviteTask;
+
+var createInviteTask = function createInviteTask(http) {
+  return function (mdl) {
+    return function (_ref4) {
+      var eventId = _ref4.eventId,
+          userId = _ref4.userId,
+          status = _ref4.status,
+          end = _ref4.end,
+          start = _ref4.start,
+          title = _ref4.title,
+          allDay = _ref4.allDay,
+          inPerson = _ref4.inPerson,
+          location = _ref4.location,
+          latlong = _ref4.latlong;
+      return http.backEnd.postTask(mdl)("data/Invites")({
+        eventId: eventId,
+        userId: userId,
+        status: status,
+        end: end,
+        start: start,
+        title: title,
+        allDay: allDay,
+        inPerson: inPerson,
+        location: location,
+        latlong: latlong
+      });
+    };
+  };
+};
+
+exports.createInviteTask = createInviteTask;
 });
 
 ;require.register("Http/items-tasks.js", function(exports, require, module) {
@@ -1883,7 +3132,7 @@ exports.getInvitesTask = getInvitesTask;
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.addItemTask = void 0;
+exports.updateItemTask = exports.deleteItemTask = exports.getItemsTask = exports.addItemTask = void 0;
 
 var _data = _interopRequireDefault(require("data.task"));
 
@@ -1895,8 +3144,9 @@ var addItemTask = function addItemTask(http) {
       var name = _ref.name,
           quantity = _ref.quantity;
       return http.backEnd.postTask(mdl)("data/Items")({
+        eventId: mdl.Events.currentEventId(),
         name: name,
-        quantity: quantity
+        quantity: parseInt(quantity)
       }).chain(function (_ref2) {
         var objectId = _ref2.objectId;
         var itemId = objectId;
@@ -1907,13 +3157,41 @@ var addItemTask = function addItemTask(http) {
               event: event
             };
           };
-        }).ap(http.backEnd.postTask(mdl)("data/Users/".concat(mdl.User.objectId, "/items%3AItems%3An"))([itemId])).ap(http.backEnd.postTask(mdl)("data/Events/".concat(itemId, "/items%3AItems%3An"))([itemId]));
+        }).ap(http.backEnd.postTask(mdl)("data/Users/".concat(mdl.User.objectId, "/items%3AItems%3An"))([itemId])).ap(http.backEnd.postTask(mdl)("data/Events/".concat(mdl.Events.currentEventId(), "/items%3AItems%3An"))([itemId]));
       });
     };
   };
 };
 
 exports.addItemTask = addItemTask;
+
+var getItemsTask = function getItemsTask(http) {
+  return function (mdl) {
+    return http.backEnd.getTask(mdl)("data/Items?pageSize=100&where=eventId%3D'".concat(mdl.Events.currentEventId(), "'&sortBy=name%20asc"));
+  };
+};
+
+exports.getItemsTask = getItemsTask;
+
+var deleteItemTask = function deleteItemTask(http) {
+  return function (mdl) {
+    return function (id) {
+      return http.backEnd.deleteTask(mdl)("data/Items/".concat(id));
+    };
+  };
+};
+
+exports.deleteItemTask = deleteItemTask;
+
+var updateItemTask = function updateItemTask(http) {
+  return function (mdl) {
+    return function (item) {
+      return http.backEnd.putTask(mdl)("data/Items/".concat(item.objectId))(item);
+    };
+  };
+};
+
+exports.updateItemTask = updateItemTask;
 });
 
 ;require.register("Http/open-cage.js", function(exports, require, module) {
@@ -1962,6 +3240,111 @@ var locateQueryTask = function locateQueryTask(http) {
 };
 
 exports.locateQueryTask = locateQueryTask;
+});
+
+;require.register("Http/user-tasks.js", function(exports, require, module) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.findUserByEmailTask = exports.updateUserProfile = exports.getUserProfileTask = exports.linkProfileTask = exports.createProfileTask = exports.registerTask = exports.loginTask = exports.setUserToken = void 0;
+
+var setUserToken = function setUserToken(mdl) {
+  return function (user) {
+    sessionStorage.setItem("shindigit-user", JSON.stringify(user));
+    sessionStorage.setItem("shindigit-user-token", user["user-token"]);
+    mdl.State.isAuth(true);
+    mdl.User = user;
+    return user;
+  };
+};
+
+exports.setUserToken = setUserToken;
+
+var loginTask = function loginTask(http) {
+  return function (mdl) {
+    return function (_ref) {
+      var email = _ref.email,
+          password = _ref.password;
+      return http.backEnd.postTask(mdl)("users/login")({
+        login: email,
+        password: password
+      }).map(setUserToken(mdl));
+    };
+  };
+};
+
+exports.loginTask = loginTask;
+
+var registerTask = function registerTask(http) {
+  return function (mdl) {
+    return function (_ref2) {
+      var name = _ref2.name,
+          email = _ref2.email,
+          password = _ref2.password,
+          isAdmin = _ref2.isAdmin;
+      return http.backEnd.postTask(mdl)("users/register")({
+        name: name,
+        email: email,
+        password: password,
+        isAdmin: isAdmin
+      });
+    };
+  };
+};
+
+exports.registerTask = registerTask;
+
+var createProfileTask = function createProfileTask(http) {
+  return function (mdl) {
+    return http.backEnd.postTask(mdl)("data/Profiles")({
+      userId: mdl.User.objectId,
+      name: mdl.User.name,
+      email: mdl.User.email
+    });
+  };
+};
+
+exports.createProfileTask = createProfileTask;
+
+var linkProfileTask = function linkProfileTask(http) {
+  return function (mdl) {
+    return http.backEnd.postTask(mdl)("data/Users/".concat(mdl.User.objectId, "/profile%3AProfiles%3A1"))([mdl.User.profile.objectId]);
+  };
+};
+
+exports.linkProfileTask = linkProfileTask;
+
+var getUserProfileTask = function getUserProfileTask(http) {
+  return function (mdl) {
+    return function (id) {
+      return http.backEnd.getTask(mdl)("data/Profiles?where=userId%3D'".concat(id, "'"));
+    };
+  };
+};
+
+exports.getUserProfileTask = getUserProfileTask;
+
+var updateUserProfile = function updateUserProfile(http) {
+  return function (mdl) {
+    return function (profile) {
+      return http.backEnd.putTask(mdl)("data/Profiles/".concat(mdl.User.profile.objectId))(profile);
+    };
+  };
+};
+
+exports.updateUserProfile = updateUserProfile;
+
+var findUserByEmailTask = function findUserByEmailTask(http) {
+  return function (mdl) {
+    return function (email) {
+      return http.backEnd.getTask(mdl)("data/Users?where=email%3D'".concat(email, "'"));
+    };
+  };
+};
+
+exports.findUserByEmailTask = findUserByEmailTask;
 });
 
 ;require.register("Models.js", function(exports, require, module) {
@@ -2044,12 +3427,8 @@ var Sidebar = {
   isShowing: Stream(false)
 };
 var Model = {
-  // currentShortDate: Stream(""), //REMOVE
-  // currentLongDate: Stream(""), //REMOVE
   selectedDate: Stream(""),
-  //KEEP
   todayDate: Stream(M.utc()),
-  // selectedDate: { year: "", month: "", day: "" }, //REMOVE
   Calendar: Calendar,
   Day: Day,
   Events: Events,
@@ -2173,7 +3552,7 @@ var validateForm = function validateForm(mdl) {
     state.isSubmitted = true;
     (0, _Validations.validateLoginTask)(data.userModel).chain((0, _Http.loginTask)(_Http.HTTP)(mdl)).chain(function (user) {
       mdl.User = user;
-      return (0, _Http.getUserProfileTask)(_Http.HTTP)(mdl);
+      return (0, _Http.getUserProfileTask)(_Http.HTTP)(mdl)(mdl.User.objectId);
     }).map((0, _ramda.map)(function (profile) {
       mdl.User.profile = profile;
       (0, _Http.setUserToken)(mdl)(mdl.User);
@@ -2453,6 +3832,8 @@ exports.Event = void 0;
 
 var _Utils = require("Utils");
 
+var _ramda = require("ramda");
+
 var _mapboxGl = _interopRequireDefault(require("mapbox-gl/dist/mapbox-gl.js"));
 
 var _Http = require("Http");
@@ -2472,20 +3853,23 @@ var Event = function Event(_ref) {
       show: Stream(false)
     },
     rsvp: {
-      show: Stream(false)
+      name: "",
+      show: Stream(false),
+      status: Stream("success"),
+      error: Stream(null)
     },
     edit: {
       show: Stream(false)
     },
     items: {
       name: "",
-      quantity: 0,
+      quantity: "",
       show: Stream(false)
     }
   };
   var data = {
     event: {},
-    invite: {},
+    invites: [],
     items: []
   };
 
@@ -2500,18 +3884,19 @@ var Event = function Event(_ref) {
 
     var onSuccess = function onSuccess(_ref3) {
       var event = _ref3.event,
-          invite = _ref3.invite,
+          invites = _ref3.invites,
           _ref3$items = _ref3.items,
           items = _ref3$items === void 0 ? [] : _ref3$items;
       data.event = event;
-      data.invite = invite;
+      data.invites = invites;
       data.items = items;
-      state.error = {}; // console.log("loaded event", data, state.info.show())
-
+      state.error = {};
       state.status = "success";
+      console.log(mdl.User.objectId, data.invites // data.invites.filter(propEq("userId", mdl.User.objectId))
+      );
     };
 
-    (0, _Http.loadEventAndInviteTask)(_Http.HTTP)(mdl).fork(onError, onSuccess);
+    (0, _Http.loadEventTask)(_Http.HTTP)(mdl).fork(onError, onSuccess);
   };
 
   var deleteEvent = function deleteEvent(mdl) {
@@ -2531,27 +3916,26 @@ var Event = function Event(_ref) {
   };
 
   var updateInvite = function updateInvite(mdl) {
-    return function (data) {
+    return function (invite) {
       var onError = function onError(err) {
         state.error = (0, _Utils.jsonCopy)(err);
         console.log("state.e", state.error);
         state.status = "failed";
       };
 
-      var onSuccess = function onSuccess() {
+      var onSuccess = function onSuccess(invite) {
+        data.invite = invite;
+        console.log(data);
         state.error = {};
         state.status = "success";
       };
 
-      (0, _Http.updateInviteTask)(_Http.HTTP)(mdl)(data).fork(onError, onSuccess);
+      (0, _Http.updateInviteTask)(_Http.HTTP)(mdl)(invite).fork(onError, onSuccess);
     };
   };
 
-  var addItem = function addItem(mdl) {
-    return function (_ref4) {
-      var name = _ref4.name,
-          quantity = _ref4.quantity;
-
+  var updateItem = function updateItem(mdl) {
+    return function (item, idx) {
       var onError = function onError(err) {
         state.error = (0, _Utils.jsonCopy)(err);
         console.log("state.e", state.error);
@@ -2559,20 +3943,101 @@ var Event = function Event(_ref) {
       };
 
       var onSuccess = function onSuccess(item) {
-        console.log("item", item);
+        data.items.removeAt(idx);
+        data.items.insertAt(idx, item);
         state.error = {};
+        state.items.name = "";
+        state.items.quantity = "";
         state.status = "success";
       };
 
-      (0, _Http.addItemTask)(_Http.HTTP)(mdl)({
-        name: name,
-        quantity: quantity
+      (0, _Http.updateItemTask)(_Http.HTTP)(mdl)(item).fork(onError, onSuccess);
+    };
+  };
+
+  var deleteItem = function deleteItem(mdl) {
+    return function (itemId) {
+      var onError = function onError(err) {
+        state.error = (0, _Utils.jsonCopy)(err);
+        console.log("state.e", state.error);
+        state.status = "failed";
+      };
+
+      var onSuccess = function onSuccess(_ref4) {
+        var event = _ref4.event,
+            invites = _ref4.invites,
+            items = _ref4.items;
+        data.items = items;
+        data.event = event;
+        data.invites = invites;
+        state.error = {};
+        console.log("deleted s", state);
+        state.status = "success";
+      };
+
+      (0, _Http.deleteItemTask)(_Http.HTTP)(mdl)(itemId).chain(function (_) {
+        return (0, _Http.loadEventTask)(_Http.HTTP)(mdl);
       }).fork(onError, onSuccess);
     };
   };
 
-  var setupMap = function setupMap(_ref5) {
-    var dom = _ref5.dom;
+  var addItem = function addItem(mdl) {
+    var onError = function onError(err) {
+      state.error = (0, _Utils.jsonCopy)(err);
+      console.log("state.e", state.error);
+      state.status = "failed";
+    };
+
+    var onSuccess = function onSuccess(_ref5) {
+      var event = _ref5.event,
+          invites = _ref5.invites,
+          items = _ref5.items;
+      data.items = items;
+      data.event = event;
+      data.invites = invites;
+      state.error = {};
+      state.items.name = "";
+      state.items.quantity = "";
+      console.log("add success", state);
+      state.status = "success";
+    };
+
+    (0, _Http.addItemTask)(_Http.HTTP)(mdl)({
+      name: state.items.name,
+      quantity: state.items.quantity
+    }).chain(function (_) {
+      return (0, _Http.loadEventTask)(_Http.HTTP)(mdl);
+    }).fork(onError, onSuccess);
+  };
+
+  var sendInvite = function sendInvite(mdl) {
+    var onError = function onError(err) {
+      // console.log("error", state, err)
+      state.rsvp.error(err);
+      state.rsvp.status("failed");
+    };
+
+    var onSuccess = function onSuccess(_ref6) {
+      var event = _ref6.event,
+          invites = _ref6.invites,
+          items = _ref6.items;
+      data.items = items;
+      data.event = event;
+      data.invites = invites;
+      state.error = {};
+      state.rsvp.email = "";
+      console.log("invite add success", data);
+      state.status = "success";
+    };
+
+    state.rsvp.error(null);
+    (0, _Http.sendInviteTask)(_Http.HTTP)(mdl)(state.rsvp.email, data.event).chain(function (_) {
+      return (0, _Http.loadEventTask)(_Http.HTTP)(mdl);
+    }).fork(onError, onSuccess);
+  };
+
+  var setupMap = function setupMap(_ref7) {
+    var dom = _ref7.dom;
     _mapboxGl.default.accessToken = "pk.eyJ1IjoiYm9hemJsYWtlIiwiYSI6ImNqdWJ4OGk4YzBpYXU0ZG5wNDI1OGM0eTIifQ.5UV0HkEGPiKUzFdbgdr5ww";
     var coords = JSON.parse(data.event.latlong);
 
@@ -2610,19 +4075,36 @@ var Event = function Event(_ref) {
         data: data,
         part: "rsvp",
         title: "RSVP"
-      }, [m("label", m("select", {
+      }, m(".rsvp-container", [m(".frow row", [m("input.col-xs-4-5", {
+        placeholder: "email",
+        value: state.rsvp.email,
         oninput: function oninput(e) {
-          data.invite.status = _Utils.inviteOptions.indexOf(e.target.value);
-          updateInvite(mdl)(data.invite);
+          return state.rsvp.email = e.target.value;
         },
-        value: _Utils.inviteOptions[data.invite.status]
-      }, _Utils.inviteOptions.map(function (opt, idx) {
-        return m("option", {
-          value: opt,
-          key: idx,
-          id: idx
-        }, opt.toUpperCase());
-      })), "Status: ")]), m(_Components.AccordianItem, {
+        type: "email"
+      }), m("button.col-xs-1-5", {
+        onclick: function onclick(e) {
+          return sendInvite(mdl);
+        }
+      }, m(_cjs.AddLine)), state.rsvp.error() && m("code.error-field", state.rsvp.error())]), m(".frow row-start", [m(".col-xs-1-2", mdl.User.name), m(".col-xs-1-2", m(_Components.AttendanceResponse, {
+        mdl: mdl,
+        invite: "",
+        updateInvite: updateInvite
+      }))]) // JSON.stringify(data),
+      // data.invites.map((invite) =>
+      //   m(".frow row-start", [
+      //     m(".col-xs-1-2", mdl.User.name),
+      //     m(
+      //       ".col-xs-1-2",
+      //       m(AttendanceResponse, {
+      //         mdl,
+      //         invite: data.invite,
+      //         updateInvite,
+      //       })
+      //     ),
+      //   ])
+      // ),
+      ])), m(_Components.AccordianItem, {
         mdl: mdl,
         state: state,
         data: data,
@@ -2630,18 +4112,41 @@ var Event = function Event(_ref) {
         title: "Items"
       }, [m(".frow row", [m("input.col-xs-1-2", {
         placeholder: "name",
+        value: state.items.name,
+        oninput: function oninput(e) {
+          return state.items.name = e.target.value;
+        },
         type: "text"
       }), m("input.col-xs-1-4", {
         placeholder: "quantity",
+        value: state.items.quantity,
+        oninput: function oninput(e) {
+          return state.items.quantity = e.target.value;
+        },
         type: "number",
         pattern: "mobile"
       }), m("button.col-xs-1-5", {
         onclick: function onclick(e) {
-          return addItem(mdl)(state);
+          return addItem(mdl);
         }
-      }, m(_cjs.AddLine))]), data.items.map(function (i) {
-        return i.name;
-      })]), m(_Components.AccordianItem, {
+      }, m(_cjs.AddLine))]), m(".event-items", data.items.map(function (i, idx) {
+        return m(".event-items-item frow ", [m(".col-xs-1-2 ", m("label", m("h4", i.name), i.userId || m("i", "click to select"))), m(".col-xs-1-2 frow items-center", [m(".col-xs-1-3", i.quantity), m(".col-xs-1-3 ", [m(_cjs.AngleLine, {
+          onclick: function onclick(e) {
+            i.quantity++;
+            updateItem(mdl)(i, idx);
+          }
+        }), m(_cjs.AngleLine, {
+          onclick: function onclick(e) {
+            i.quantity--;
+            updateItem(mdl)(i, idx);
+          },
+          class: "decrement"
+        })]), m(".col-xs-1-3", m(_cjs.RemoveLine, {
+          onclick: function onclick(e) {
+            return deleteItem(mdl)(i.objectId);
+          }
+        }))])]);
+      }))]), m(_Components.AccordianItem, {
         mdl: mdl,
         state: state,
         data: data,
@@ -2779,7 +4284,7 @@ Object.keys(_home).forEach(function (key) {
   });
 });
 
-var _event = require("./event.js");
+var _event = require("./event");
 
 Object.keys(_event).forEach(function (key) {
   if (key === "default" || key === "__esModule") return;
@@ -2791,7 +4296,7 @@ Object.keys(_event).forEach(function (key) {
   });
 });
 
-var _profile = require("./profile.js");
+var _profile = require("./profile");
 
 Object.keys(_profile).forEach(function (key) {
   if (key === "default" || key === "__esModule") return;
@@ -3690,11 +5195,11 @@ var _App = _interopRequireDefault(require("./App.js"));
 
 var _Models = _interopRequireDefault(require("Models"));
 
-var _funConfig = require("@boazblake/fun-config");
+var _Fp = require("Fp");
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-_funConfig.FunConfig.configure();
+_Fp.Fp.configure();
 
 var root = document.body;
 var winW = window.innerWidth;

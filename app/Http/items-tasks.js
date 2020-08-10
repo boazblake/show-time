@@ -3,8 +3,9 @@ import Task from "data.task"
 export const addItemTask = (http) => (mdl) => ({ name, quantity }) => {
   return http.backEnd
     .postTask(mdl)("data/Items")({
+      eventId: mdl.Events.currentEventId(),
       name,
-      quantity,
+      quantity: parseInt(quantity),
     })
     .chain(({ objectId }) => {
       let itemId = objectId
@@ -19,8 +20,19 @@ export const addItemTask = (http) => (mdl) => ({ name, quantity }) => {
         )
         .ap(
           http.backEnd.postTask(mdl)(
-            `data/Events/${itemId}/items%3AItems%3An`
+            `data/Events/${mdl.Events.currentEventId()}/items%3AItems%3An`
           )([itemId])
         )
     })
 }
+
+export const getItemsTask = (http) => (mdl) =>
+  http.backEnd.getTask(mdl)(
+    `data/Items?pageSize=100&where=eventId%3D'${mdl.Events.currentEventId()}'&sortBy=name%20asc`
+  )
+
+export const deleteItemTask = (http) => (mdl) => (id) =>
+  http.backEnd.deleteTask(mdl)(`data/Items/${id}`)
+
+export const updateItemTask = (http) => (mdl) => (item) =>
+  http.backEnd.putTask(mdl)(`data/Items/${item.objectId}`)(item)

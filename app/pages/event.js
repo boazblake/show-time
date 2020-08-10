@@ -1,28 +1,37 @@
-import { jsonCopy, inviteOptions } from "Utils"
+import { jsonCopy } from "Utils"
+import { propEq } from "ramda"
 import mapboxgl from "mapbox-gl/dist/mapbox-gl.js"
 import {
   HTTP,
-  loadEventAndInviteTask,
+  loadEventTask,
   deleteEventTask,
   updateInviteTask,
   addItemTask,
+  deleteItemTask,
+  updateItemTask,
+  sendInviteTask,
 } from "Http"
-import { AccordianItem } from "Components"
-import { AddLine } from "@mithril-icons/clarity/cjs"
+import { AccordianItem, AttendanceResponse } from "Components"
+import { AddLine, AngleLine, RemoveLine } from "@mithril-icons/clarity/cjs"
 
 export const Event = ({ attrs: { mdl } }) => {
   const state = {
     error: {},
     status: "loading",
     info: { show: Stream(false) },
-    rsvp: { show: Stream(false) },
+    rsvp: {
+      name: "",
+      show: Stream(false),
+      status: Stream("success"),
+      error: Stream(null),
+    },
     edit: { show: Stream(false) },
-    items: { name: "", quantity: 0, show: Stream(false) },
+    items: { name: "", quantity: "", show: Stream(false) },
   }
 
   const data = {
     event: {},
-    invite: {},
+    invites: [],
     items: [],
   }
 
@@ -33,16 +42,20 @@ export const Event = ({ attrs: { mdl } }) => {
       state.status = "failed"
     }
 
-    const onSuccess = ({ event, invite, items = [] }) => {
+    const onSuccess = ({ event, invites, items = [] }) => {
       data.event = event
-      data.invite = invite
+      data.invites = invites
       data.items = items
       state.error = {}
-      // console.log("loaded event", data, state.info.show())
       state.status = "success"
+      console.log(
+        mdl.User.objectId,
+        data.invites
+        // data.invites.filter(propEq("userId", mdl.User.objectId))
+      )
     }
 
-    loadEventAndInviteTask(HTTP)(mdl).fork(onError, onSuccess)
+    loadEventTask(HTTP)(mdl).fork(onError, onSuccess)
   }
 
   const deleteEvent = (mdl) => {
@@ -66,22 +79,24 @@ export const Event = ({ attrs: { mdl } }) => {
     )
   }
 
-  const updateInvite = (mdl) => (data) => {
+  const updateInvite = (mdl) => (invite) => {
     const onError = (err) => {
       state.error = jsonCopy(err)
       console.log("state.e", state.error)
       state.status = "failed"
     }
 
-    const onSuccess = () => {
+    const onSuccess = (invite) => {
+      data.invite = invite
+      console.log(data)
       state.error = {}
       state.status = "success"
     }
 
-    updateInviteTask(HTTP)(mdl)(data).fork(onError, onSuccess)
+    updateInviteTask(HTTP)(mdl)(invite).fork(onError, onSuccess)
   }
 
-  const addItem = (mdl) => ({ name, quantity }) => {
+  const updateItem = (mdl) => (item, idx) => {
     const onError = (err) => {
       state.error = jsonCopy(err)
       console.log("state.e", state.error)
@@ -89,12 +104,84 @@ export const Event = ({ attrs: { mdl } }) => {
     }
 
     const onSuccess = (item) => {
-      console.log("item", item)
+      data.items.removeAt(idx)
+      data.items.insertAt(idx, item)
       state.error = {}
+      state.items.name = ""
+      state.items.quantity = ""
       state.status = "success"
     }
 
-    addItemTask(HTTP)(mdl)({ name, quantity }).fork(onError, onSuccess)
+    updateItemTask(HTTP)(mdl)(item).fork(onError, onSuccess)
+  }
+
+  const deleteItem = (mdl) => (itemId) => {
+    const onError = (err) => {
+      state.error = jsonCopy(err)
+      console.log("state.e", state.error)
+      state.status = "failed"
+    }
+
+    const onSuccess = ({ event, invites, items }) => {
+      data.items = items
+      data.event = event
+      data.invites = invites
+      state.error = {}
+      console.log("deleted s", state)
+      state.status = "success"
+    }
+
+    deleteItemTask(HTTP)(mdl)(itemId)
+      .chain((_) => loadEventTask(HTTP)(mdl))
+      .fork(onError, onSuccess)
+  }
+
+  const addItem = (mdl) => {
+    const onError = (err) => {
+      state.error = jsonCopy(err)
+      console.log("state.e", state.error)
+      state.status = "failed"
+    }
+
+    const onSuccess = ({ event, invites, items }) => {
+      data.items = items
+      data.event = event
+      data.invites = invites
+      state.error = {}
+      state.items.name = ""
+      state.items.quantity = ""
+      console.log("add success", state)
+      state.status = "success"
+    }
+
+    addItemTask(HTTP)(mdl)({
+      name: state.items.name,
+      quantity: state.items.quantity,
+    })
+      .chain((_) => loadEventTask(HTTP)(mdl))
+      .fork(onError, onSuccess)
+  }
+
+  const sendInvite = (mdl) => {
+    const onError = (err) => {
+      // console.log("error", state, err)
+      state.rsvp.error(err)
+      state.rsvp.status("failed")
+    }
+
+    const onSuccess = ({ event, invites, items }) => {
+      data.items = items
+      data.event = event
+      data.invites = invites
+      state.error = {}
+      state.rsvp.email = ""
+      console.log("invite add success", data)
+      state.status = "success"
+    }
+    state.rsvp.error(null)
+    sendInviteTask(HTTP)(mdl)(state.rsvp.email, data.event)
+      .chain((_) => loadEventTask(HTTP)(mdl))
+      .fork(onError, onSuccess)
   }
 
   const setupMap = ({ dom }) => {
@@ -146,35 +233,51 @@ export const Event = ({ attrs: { mdl } }) => {
               m(
                 AccordianItem,
                 { mdl, state, data, part: "rsvp", title: "RSVP" },
-                [
-                  m(
-                    "label",
+                m(".rsvp-container", [
+                  m(".frow row", [
+                    m("input.col-xs-4-5", {
+                      placeholder: "email",
+                      value: state.rsvp.email,
+                      oninput: (e) => (state.rsvp.email = e.target.value),
+                      type: "email",
+                    }),
+
                     m(
-                      "select",
-                      {
-                        oninput: (e) => {
-                          data.invite.status = inviteOptions.indexOf(
-                            e.target.value
-                          )
-                          updateInvite(mdl)(data.invite)
-                        },
-                        value: inviteOptions[data.invite.status],
-                      },
-                      inviteOptions.map((opt, idx) =>
-                        m(
-                          "option",
-                          {
-                            value: opt,
-                            key: idx,
-                            id: idx,
-                          },
-                          opt.toUpperCase()
-                        )
-                      )
+                      "button.col-xs-1-5",
+                      { onclick: (e) => sendInvite(mdl) },
+                      m(AddLine)
                     ),
-                    "Status: "
-                  ),
-                ]
+
+                    state.rsvp.error() &&
+                      m("code.error-field", state.rsvp.error()),
+                  ]),
+
+                  m(".frow row-start", [
+                    m(".col-xs-1-2", mdl.User.name),
+                    m(
+                      ".col-xs-1-2",
+                      m(AttendanceResponse, {
+                        mdl,
+                        invite: "",
+                        updateInvite,
+                      })
+                    ),
+                  ]),
+                  // JSON.stringify(data),
+                  // data.invites.map((invite) =>
+                  //   m(".frow row-start", [
+                  //     m(".col-xs-1-2", mdl.User.name),
+                  //     m(
+                  //       ".col-xs-1-2",
+                  //       m(AttendanceResponse, {
+                  //         mdl,
+                  //         invite: data.invite,
+                  //         updateInvite,
+                  //       })
+                  //     ),
+                  //   ])
+                  // ),
+                ])
               ),
 
               m(
@@ -184,21 +287,63 @@ export const Event = ({ attrs: { mdl } }) => {
                   m(".frow row", [
                     m("input.col-xs-1-2", {
                       placeholder: "name",
+                      value: state.items.name,
+                      oninput: (e) => (state.items.name = e.target.value),
                       type: "text",
                     }),
                     m("input.col-xs-1-4", {
                       placeholder: "quantity",
+                      value: state.items.quantity,
+                      oninput: (e) => (state.items.quantity = e.target.value),
                       type: "number",
                       pattern: "mobile",
                     }),
                     m(
                       "button.col-xs-1-5",
-                      { onclick: (e) => addItem(mdl)(state) },
+                      { onclick: (e) => addItem(mdl) },
                       m(AddLine)
                     ),
                   ]),
 
-                  data.items.map((i) => i.name),
+                  m(
+                    ".event-items",
+                    data.items.map((i, idx) =>
+                      m(".event-items-item frow ", [
+                        m(
+                          ".col-xs-1-2 ",
+                          m(
+                            "label",
+                            m("h4", i.name),
+                            i.userId || m("i", "click to select")
+                          )
+                        ),
+                        m(".col-xs-1-2 frow items-center", [
+                          m(".col-xs-1-3", i.quantity),
+                          m(".col-xs-1-3 ", [
+                            m(AngleLine, {
+                              onclick: (e) => {
+                                i.quantity++
+                                updateItem(mdl)(i, idx)
+                              },
+                            }),
+                            m(AngleLine, {
+                              onclick: (e) => {
+                                i.quantity--
+                                updateItem(mdl)(i, idx)
+                              },
+                              class: "decrement",
+                            }),
+                          ]),
+                          m(
+                            ".col-xs-1-3",
+                            m(RemoveLine, {
+                              onclick: (e) => deleteItem(mdl)(i.objectId),
+                            })
+                          ),
+                        ]),
+                      ])
+                    )
+                  ),
                 ]
               ),
 

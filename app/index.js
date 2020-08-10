@@ -1,7 +1,7 @@
 import App from "./App.js"
 import Model from "Models"
-import { FunConfig } from "@boazblake/fun-config"
-FunConfig.configure()
+import { Fp } from "Fp"
+Fp.configure()
 
 const root = document.body
 let winW = window.innerWidth

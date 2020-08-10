@@ -6,9 +6,11 @@ export const EventToolbar = () => {
         {
           onclick: (e) => {
             localStorage.removeItem("shindigit-eventId")
-            mdl.State.toAnchor(mdl.Events.currentEventStart().format("HH"))
+            mdl.State.toAnchor(M(mdl.Events.currentEventStart()).format("HH"))
             m.route.set(
-              `/${mdl.User.name}/${mdl.selectedDate().format("YYYY-MM-DD")}`
+              `/${mdl.User.name}/${M(mdl.Events.currentEventStart()).format(
+                "YYYY-MM-DD"
+              )}`
             )
           },
         },

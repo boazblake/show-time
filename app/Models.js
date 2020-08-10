@@ -54,11 +54,8 @@ const Sidebar = {
 }
 
 const Model = {
-  // currentShortDate: Stream(""), //REMOVE
-  // currentLongDate: Stream(""), //REMOVE
-  selectedDate: Stream(""), //KEEP
+  selectedDate: Stream(""),
   todayDate: Stream(M.utc()),
-  // selectedDate: { year: "", month: "", day: "" }, //REMOVE
   Calendar,
   Day,
   Events,

@@ -29,7 +29,7 @@ const validateForm = (mdl) => (data) => {
     .chain(loginTask(HTTP)(mdl))
     .chain((user) => {
       mdl.User = user
-      return getUserProfileTask(HTTP)(mdl)
+      return getUserProfileTask(HTTP)(mdl)(mdl.User.objectId)
     })
     .map(
       map((profile) => {
