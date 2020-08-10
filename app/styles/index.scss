@@ -197,7 +197,15 @@ ul {
   }
 }
 
+.pill {
+  border: 1ps solid var(--blue);
+  border-radius: 2%;
+}
 
+.smaller {
+  display: inline-block;
+  transform: scale(0.5);
+}
 
 .decrement {
   transform: rotate(180deg);

@@ -23,6 +23,7 @@ export const AttendanceResponse = () => {
         ".frow",
         getResponse(guest).map((response, idx) =>
           m(response, {
+            class: guest.userId == mdl.User.objectId ? "clickable" : "",
             onclick: (e) => {
               if (guest.userId == mdl.User.objectId) {
                 guest.status = idx

@@ -240,16 +240,20 @@ var AccordianItem = function AccordianItem() {
     view: function view(_ref) {
       var children = _ref.children,
           _ref$attrs = _ref.attrs,
-          mdl = _ref$attrs.mdl,
           state = _ref$attrs.state,
-          data = _ref$attrs.data,
           part = _ref$attrs.part,
-          title = _ref$attrs.title;
-      return m(".accordian-item.full-width", [m(".accordian-item-title", [m(".frow", m(".col-xs-1-2", m("h4", title)), m(".frow row-end col-xs-1-3", m(".accordian-item-btn", {
+          title = _ref$attrs.title,
+          _ref$attrs$pills = _ref$attrs.pills,
+          pills = _ref$attrs$pills === void 0 ? [] : _ref$attrs$pills;
+      return m(".accordian-item.full-width", [m(".accordian-item-title", [m(".frow", m(".col-xs-1-3", m("h4", title)), m(".col-xs-1-3", pills), m(".frow row-end col-xs-1-3", m(".accordian-item-btn", {
         onclick: function onclick(e) {
           return state[part].show(!state[part].show());
         }
-      }, state[part].show() ? m(_cjs.TimesLine) : m(_cjs.AddLine))))]), state[part].show() && m(".accordian-item-body", [children])]);
+      }, state[part].show() ? m(_cjs.TimesLine, {
+        class: "clickable"
+      }) : m(_cjs.AddLine, {
+        class: "clickable"
+      }))))]), state[part].show() && m(".accordian-item-body", [children])]);
     }
   };
 };
@@ -292,6 +296,7 @@ var AttendanceResponse = function AttendanceResponse() {
           updateInvite = _ref2$attrs.updateInvite;
       return m(".frow", getResponse(guest).map(function (response, idx) {
         return m(response, {
+          class: guest.userId == mdl.User.objectId ? "clickable" : "",
           onclick: function onclick(e) {
             if (guest.userId == mdl.User.objectId) {
               guest.status = idx;
@@ -4107,7 +4112,8 @@ var Event = function Event(_ref) {
         state: state,
         data: data,
         part: "guests",
-        title: "guests"
+        title: "Guests",
+        pills: [m(".pill", data.guests.length)]
       }, m(".guests-container", [m(".frow row", [m("input.col-xs-4-5", {
         placeholder: "email",
         value: state.guests.email,
@@ -4115,11 +4121,11 @@ var Event = function Event(_ref) {
           return state.guests.email = e.target.value;
         },
         type: "email"
-      }), m("button.col-xs-1-5", {
+      }), m("button.btn.col-xs-1-5.button-none", {
         onclick: function onclick(e) {
           return sendInvite(mdl);
         }
-      }, m(_cjs.AddLine)), state.guests.error() && m("code.error-field", state.guests.error())]), m(".frow row-start", [m(".col-xs-1-2", mdl.User.name), m(".col-xs-1-2", m(_Components.AttendanceResponse, {
+      }, "Invite"), state.guests.error() && m("code.error-field", state.guests.error())]), m(".frow row-start", [m(".col-xs-1-2", mdl.User.name), m(".col-xs-1-2", m(_Components.AttendanceResponse, {
         mdl: mdl,
         guest: (0, _ramda.head)(data.guests.filter((0, _ramda.propEq)("userId", mdl.User.objectId))),
         updateInvite: updateInvite
@@ -4134,7 +4140,8 @@ var Event = function Event(_ref) {
         state: state,
         data: data,
         part: "items",
-        title: "Items"
+        title: "Items",
+        pills: [m(".pill", data.items.length)]
       }, [m(".frow row", [m("input.col-xs-1-2", {
         placeholder: "name",
         value: state.items.name,
@@ -4156,32 +4163,40 @@ var Event = function Event(_ref) {
         },
         type: "number",
         pattern: "mobile"
-      }), m("button.col-xs-1-5", {
+      }), m("button.btn.col-xs-1-5.button-none", {
         onclick: function onclick(e) {
           return addItem(mdl);
         }
-      }, m(_cjs.AddLine)), state.items.error() && m("code.error-field", state.items.error().name), state.items.error() && m("code.error-field", state.items.error().quantity)]), m(".event-items", data.items.map(function (item) {
-        return m(".event-items-item frow ", [m(".col-xs-1-2 ", m("label", m("h4", item.name), item.userId ? getUserFromId(item.userId).name : m("i", {
+      }, "Add"), state.items.error() && m("code.error-field", state.items.error().name), state.items.error() && m("code.error-field", state.items.error().quantity)]), m(".event-items", data.items.map(function (item) {
+        return m(".event-items-item frow ", [m(".col-xs-2-3 ", m("h4", item.name), m("label", item.userId ? [m("span.clickable.frow row-start", m(_cjs.MinusCircleLine, {
+          onclick: function onclick(e) {
+            item.userId = null;
+            updateItem(mdl)(item);
+          },
+          class: "smaller"
+        }), getUserFromId(item.userId).name)] : m("i.clickable", {
           onclick: function onclick(e) {
             item.userId = mdl.User.objectId;
             updateItem(mdl)(item);
           }
-        }, "click to select item"))), m(".col-xs-1-2 frow items-center", [m(".col-xs-1-3", item.quantity), m(".col-xs-1-3 ", [m(_cjs.AngleLine, {
+        }, "click to select item"))), m(".col-xs-1-3 frow items-center", [m(".col-xs-2-3 frow column-center", [m("span.clickable", m(_cjs.AngleLine, {
+          class: "smaller",
           onclick: function onclick(e) {
             item.quantity++;
             updateItem(mdl)(item);
           }
-        }), m(_cjs.AngleLine, {
+        })), item.quantity, m("span.clickable.smaller", m(_cjs.AngleLine, {
+          class: "decrement",
           onclick: function onclick(e) {
             item.quantity--;
             updateItem(mdl)(item);
-          },
-          class: "decrement"
-        })]), mdl.User.objectId == item.userId && m(".col-xs-1-3", m(_cjs.RemoveLine, {
+          }
+        }))]), m(".col-xs-1-3 frow column-centered", mdl.User.objectId == item.userId && m("span.clickable", m(_cjs.RemoveLine, {
+          class: "smaller",
           onclick: function onclick(e) {
             return deleteItem(mdl)(item.objectId);
           }
-        }))])]);
+        })))])]);
       }))]), m(_Components.AccordianItem, {
         mdl: mdl,
         state: state,

@@ -12,7 +12,12 @@ import {
   sendInviteTask,
 } from "Http"
 import { AccordianItem, AttendanceResponse } from "Components"
-import { AddLine, AngleLine, RemoveLine } from "@mithril-icons/clarity/cjs"
+import {
+  AddLine,
+  AngleLine,
+  RemoveLine,
+  MinusCircleLine,
+} from "@mithril-icons/clarity/cjs"
 import Task from "data.task"
 import { validateItemTask } from "./validations"
 
@@ -269,7 +274,14 @@ export const Event = ({ attrs: { mdl } }) => {
 
               m(
                 AccordianItem,
-                { mdl, state, data, part: "guests", title: "guests" },
+                {
+                  mdl,
+                  state,
+                  data,
+                  part: "guests",
+                  title: "Guests",
+                  pills: [m(".pill", data.guests.length)],
+                },
                 m(".guests-container", [
                   m(".frow row", [
                     m("input.col-xs-4-5", {
@@ -280,9 +292,9 @@ export const Event = ({ attrs: { mdl } }) => {
                     }),
 
                     m(
-                      "button.col-xs-1-5",
+                      "button.btn.col-xs-1-5.button-none",
                       { onclick: (e) => sendInvite(mdl) },
-                      m(AddLine)
+                      "Invite"
                     ),
 
                     state.guests.error() &&
@@ -324,7 +336,14 @@ export const Event = ({ attrs: { mdl } }) => {
 
               m(
                 AccordianItem,
-                { mdl, state, data, part: "items", title: "Items" },
+                {
+                  mdl,
+                  state,
+                  data,
+                  part: "items",
+                  title: "Items",
+                  pills: [m(".pill", data.items.length)],
+                },
                 [
                   m(".frow row", [
                     m("input.col-xs-1-2", {
@@ -343,9 +362,9 @@ export const Event = ({ attrs: { mdl } }) => {
                       pattern: "mobile",
                     }),
                     m(
-                      "button.col-xs-1-5",
+                      "button.btn.col-xs-1-5.button-none",
                       { onclick: (e) => addItem(mdl) },
-                      m(AddLine)
+                      "Add"
                     ),
                     state.items.error() &&
                       m("code.error-field", state.items.error().name),
@@ -358,14 +377,26 @@ export const Event = ({ attrs: { mdl } }) => {
                     data.items.map((item) =>
                       m(".event-items-item frow ", [
                         m(
-                          ".col-xs-1-2 ",
+                          ".col-xs-2-3 ",
+                          m("h4", item.name),
                           m(
                             "label",
-                            m("h4", item.name),
                             item.userId
-                              ? getUserFromId(item.userId).name
+                              ? [
+                                  m(
+                                    "span.clickable.frow row-start",
+                                    m(MinusCircleLine, {
+                                      onclick: (e) => {
+                                        item.userId = null
+                                        updateItem(mdl)(item)
+                                      },
+                                      class: "smaller",
+                                    }),
+                                    getUserFromId(item.userId).name
+                                  ),
+                                ]
                               : m(
-                                  "i",
+                                  "i.clickable",
                                   {
                                     onclick: (e) => {
                                       item.userId = mdl.User.objectId
@@ -376,30 +407,42 @@ export const Event = ({ attrs: { mdl } }) => {
                                 )
                           )
                         ),
-                        m(".col-xs-1-2 frow items-center", [
-                          m(".col-xs-1-3", item.quantity),
-                          m(".col-xs-1-3 ", [
-                            m(AngleLine, {
-                              onclick: (e) => {
-                                item.quantity++
-                                updateItem(mdl)(item)
-                              },
-                            }),
-                            m(AngleLine, {
-                              onclick: (e) => {
-                                item.quantity--
-                                updateItem(mdl)(item)
-                              },
-                              class: "decrement",
-                            }),
-                          ]),
-                          mdl.User.objectId == item.userId &&
+                        m(".col-xs-1-3 frow items-center", [
+                          m(".col-xs-2-3 frow column-center", [
                             m(
-                              ".col-xs-1-3",
-                              m(RemoveLine, {
-                                onclick: (e) => deleteItem(mdl)(item.objectId),
+                              "span.clickable",
+                              m(AngleLine, {
+                                class: "smaller",
+                                onclick: (e) => {
+                                  item.quantity++
+                                  updateItem(mdl)(item)
+                                },
                               })
                             ),
+                            item.quantity,
+                            m(
+                              "span.clickable.smaller",
+                              m(AngleLine, {
+                                class: "decrement",
+                                onclick: (e) => {
+                                  item.quantity--
+                                  updateItem(mdl)(item)
+                                },
+                              })
+                            ),
+                          ]),
+                          m(
+                            ".col-xs-1-3 frow column-centered",
+                            mdl.User.objectId == item.userId &&
+                              m(
+                                "span.clickable",
+                                m(RemoveLine, {
+                                  class: "smaller",
+                                  onclick: (e) =>
+                                    deleteItem(mdl)(item.objectId),
+                                })
+                              )
+                          ),
                         ]),
                       ])
                     )
