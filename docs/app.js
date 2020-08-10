@@ -245,11 +245,11 @@ var AccordianItem = function AccordianItem() {
           data = _ref$attrs.data,
           part = _ref$attrs.part,
           title = _ref$attrs.title;
-      return m(".accordian-item.full-width", [m(".accordian-item-title", [m(".frow", m(".col-xs-1-2", m("h4", title)), m(".frow row-end col-xs-1-3", m(".accordian-item-btn-".concat(state[part].show() ? "open" : "close"), {
+      return m(".accordian-item.full-width", [m(".accordian-item-title", [m(".frow", m(".col-xs-1-2", m("h4", title)), m(".frow row-end col-xs-1-3", m(".accordian-item-btn", {
         onclick: function onclick(e) {
           return state[part].show(!state[part].show());
         }
-      }, m(_cjs.AngleLine))))]), state[part].show() && m(".accordian-item-body.column", [children])]);
+      }, state[part].show() ? m(_cjs.TimesLine) : m(_cjs.AddLine))))]), state[part].show() && m(".accordian-item-body", [children])]);
     }
   };
 };
@@ -3490,18 +3490,12 @@ var EMAILS_MUST_MATCH = "Emails do not match";
 var INVALID_EMAIL_FORMAT = "Email must be a valid format";
 var PASSWORDS_MUST_MATCH = "Passwords do not match";
 
-var inputsMatch = function inputsMatch(input1) {
-  return function (input2) {
-    return input2 === input1;
-  };
-};
-
 var validateName = function validateName(data) {
   return (0, _data.Success)(data).apLeft((0, _Utils.validate)(_Utils.isRequired, nameLense, NAME_REQUIRED_MSG, data));
 };
 
 var validateEmails = function validateEmails(data) {
-  return (0, _data.Success)(data).apLeft((0, _Utils.validate)(_Utils.isRequired, emailLense, EMAIL_REQUIRED_MSG, data)).apLeft((0, _Utils.validate)(_Utils.isRequired, emailConfirmLense, EMAIL_REQUIRED_MSG, data)).apLeft((0, _Utils.validate)(inputsMatch(data.confirmEmail), emailLense, EMAILS_MUST_MATCH, data)).apLeft((0, _Utils.validate)(inputsMatch(data.email), emailConfirmLense, EMAILS_MUST_MATCH, data)).apLeft((0, _Utils.validate)(_Utils.emailFormat, emailConfirmLense, INVALID_EMAIL_FORMAT, data)).apLeft((0, _Utils.validate)(_Utils.emailFormat, emailLense, INVALID_EMAIL_FORMAT, data));
+  return (0, _data.Success)(data).apLeft((0, _Utils.validate)(_Utils.isRequired, emailLense, EMAIL_REQUIRED_MSG, data)).apLeft((0, _Utils.validate)(_Utils.isRequired, emailConfirmLense, EMAIL_REQUIRED_MSG, data)).apLeft((0, _Utils.validate)((0, _Utils.isEqual)(data.confirmEmail), emailLense, EMAILS_MUST_MATCH, data)).apLeft((0, _Utils.validate)((0, _Utils.isEqual)(data.email), emailConfirmLense, EMAILS_MUST_MATCH, data)).apLeft((0, _Utils.validate)(_Utils.emailFormat, emailConfirmLense, INVALID_EMAIL_FORMAT, data)).apLeft((0, _Utils.validate)(_Utils.emailFormat, emailLense, INVALID_EMAIL_FORMAT, data));
 };
 
 var validateEmail = function validateEmail(data) {
@@ -3509,7 +3503,7 @@ var validateEmail = function validateEmail(data) {
 };
 
 var validatePasswords = function validatePasswords(data) {
-  return (0, _data.Success)(data).apLeft((0, _Utils.validate)(_Utils.isRequired, passwordLense, PASSWORD_REQUIRED_MSG, data)).apLeft((0, _Utils.validate)(_Utils.isRequired, passwordConfirmLense, PASSWORD_REQUIRED_MSG, data)).apLeft((0, _Utils.validate)(inputsMatch(data.password), passwordConfirmLense, PASSWORDS_MUST_MATCH, data)).apLeft((0, _Utils.validate)(inputsMatch(data.confirmPassword), passwordLense, PASSWORDS_MUST_MATCH, data));
+  return (0, _data.Success)(data).apLeft((0, _Utils.validate)(_Utils.isRequired, passwordLense, PASSWORD_REQUIRED_MSG, data)).apLeft((0, _Utils.validate)(_Utils.isRequired, passwordConfirmLense, PASSWORD_REQUIRED_MSG, data)).apLeft((0, _Utils.validate)((0, _Utils.isEqual)(data.password), passwordConfirmLense, PASSWORDS_MUST_MATCH, data)).apLeft((0, _Utils.validate)((0, _Utils.isEqual)(data.confirmPassword), passwordLense, PASSWORDS_MUST_MATCH, data));
 };
 
 var validatePassword = function validatePassword(data) {
@@ -3841,7 +3835,7 @@ var _default = Register;
 exports.default = _default;
 });
 
-;require.register("Pages/event.js", function(exports, require, module) {
+;require.register("Pages/Event/event-page.js", function(exports, require, module) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -3863,6 +3857,8 @@ var _cjs = require("@mithril-icons/clarity/cjs");
 
 var _data = _interopRequireDefault(require("data.task"));
 
+var _validations = require("./validations");
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 var Event = function Event(_ref) {
@@ -3873,25 +3869,48 @@ var Event = function Event(_ref) {
     info: {
       show: Stream(false)
     },
+    edit: {
+      show: Stream(false)
+    },
     guests: {
       name: "",
       show: Stream(false),
       status: Stream("success"),
+      isSubmitted: Stream(false),
       error: Stream(null)
-    },
-    edit: {
-      show: Stream(false)
     },
     items: {
       name: "",
       quantity: "",
-      show: Stream(false)
+      show: Stream(false),
+      error: Stream(null),
+      status: Stream("success"),
+      isSubmitted: Stream(false)
     }
   };
   var data = {
     event: {},
     guests: [],
     items: []
+  };
+
+  var validate = function validate(field) {
+    return function (input) {
+      var onSuccess = function onSuccess(input) {
+        state[field].status("success");
+        state[field].error(null);
+      };
+
+      var onError = function onError(error) {
+        state[field].status("failed");
+        state[field].error(error);
+      };
+
+      var validateTask = {
+        items: _validations.validateItemTask
+      };
+      state[field].isSubmitted() && validateTask[field](input)(data).fork(onError, onSuccess);
+    };
   };
 
   var getUserFromId = function getUserFromId(id) {
@@ -3963,8 +3982,8 @@ var Event = function Event(_ref) {
   var updateItem = function updateItem(mdl) {
     return function (item) {
       var onError = function onError(error) {
-        state.error = (0, _Utils.jsonCopy)(error);
-        state.status = "failed";
+        state.items.error((0, _Utils.jsonCopy)(error));
+        state.items.status("failed");
         console.log("update item failed", error);
       };
 
@@ -3974,6 +3993,7 @@ var Event = function Event(_ref) {
         updateEvent(eventData);
       };
 
+      state.items.isSubmitted(true);
       (0, _Http.updateItemTask)(_Http.HTTP)(mdl)(item).chain(function (_) {
         return (0, _Http.loadEventTask)(_Http.HTTP)(mdl);
       }).fork(onError, onSuccess);
@@ -3996,20 +4016,27 @@ var Event = function Event(_ref) {
 
   var addItem = function addItem(mdl) {
     var onError = function onError(error) {
-      state.error = (0, _Utils.jsonCopy)(error);
+      state.items.error((0, _Utils.jsonCopy)(error));
       console.log("add item failed", error);
-      state.status = "failed";
+      state.items.status("failed");
     };
 
     var onSuccess = function onSuccess(eventData) {
       state.items.name = "";
       state.items.quantity = "";
+      state.items.error(null);
+      state.items.isSubmitted(false);
       updateEvent(eventData);
     };
 
-    (0, _Http.addItemTask)(_Http.HTTP)(mdl)({
+    var item = {
       name: state.items.name,
       quantity: state.items.quantity
+    };
+    state.items.isSubmitted(true);
+    (0, _validations.validateItemTask)(item)(data).chain(function (x) {
+      console.log("data??", x);
+      return (0, _Http.addItemTask)(_Http.HTTP)(mdl)(x);
     }).chain(function (_) {
       return (0, _Http.loadEventTask)(_Http.HTTP)(mdl);
     }).fork(onError, onSuccess);
@@ -4024,6 +4051,7 @@ var Event = function Event(_ref) {
 
     var onSuccess = function onSuccess(eventData) {
       state.guests.email = "";
+      state.guests.error(null);
       console.log("invite add success", data);
       updateEvent(eventData);
     };
@@ -4113,6 +4141,9 @@ var Event = function Event(_ref) {
         oninput: function oninput(e) {
           return state.items.name = e.target.value;
         },
+        onblur: function onblur(e) {
+          return validate("items")(state.items);
+        },
         type: "text"
       }), m("input.col-xs-1-4", {
         placeholder: "quantity",
@@ -4120,13 +4151,16 @@ var Event = function Event(_ref) {
         oninput: function oninput(e) {
           return state.items.quantity = e.target.value;
         },
+        onblur: function onblur(e) {
+          return validate("items")(state.items);
+        },
         type: "number",
         pattern: "mobile"
       }), m("button.col-xs-1-5", {
         onclick: function onclick(e) {
           return addItem(mdl);
         }
-      }, m(_cjs.AddLine))]), m(".event-items", data.items.map(function (item) {
+      }, m(_cjs.AddLine)), state.items.error() && m("code.error-field", state.items.error().name), state.items.error() && m("code.error-field", state.items.error().quantity)]), m(".event-items", data.items.map(function (item) {
         return m(".event-items-item frow ", [m(".col-xs-1-2 ", m("label", m("h4", item.name), item.userId ? getUserFromId(item.userId).name : m("i", {
           onclick: function onclick(e) {
             item.userId = mdl.User.objectId;
@@ -4164,6 +4198,56 @@ var Event = function Event(_ref) {
 };
 
 exports.Event = Event;
+});
+
+;require.register("Pages/Event/validations.js", function(exports, require, module) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.validateItemTask = void 0;
+
+var _ramda = require("ramda");
+
+var _data = require("data.validation");
+
+var _Utils = require("Utils");
+
+var ValidateItems = (0, _data.Success)((0, _ramda.curryN)(2, _ramda.identity));
+var ValidateGuests = (0, _data.Success)((0, _ramda.curryN)(2, _ramda.identity));
+var ValidateEvent = (0, _data.Success)((0, _ramda.curryN)(2, _ramda.identity));
+var quantityLens = (0, _ramda.lensProp)("quantity");
+var nameLense = (0, _ramda.lensProp)("name");
+var emailLense = (0, _ramda.lensProp)("email");
+var NAME_REQUIRED_MSG = "A Name is required";
+var NAME_UNIQ_MSG = "This item has been added already";
+var QUANTITY_REQUIRED_MSG = "A Quantity is required";
+var QUANTITY_MIN_MSG = "Quantity must be greater than 0";
+var EMAIL_REQUIRED_MSG = "An Email is required";
+var INVALID_EMAIL_FORMAT = "Email must be a valid format";
+
+var validateEmail = function validateEmail(data) {
+  return (0, _data.Success)(data).apLeft((0, _Utils.validate)(_Utils.isRequired, emailLense, EMAIL_REQUIRED_MSG, data)).apLeft((0, _Utils.validate)(_Utils.emailFormat, emailLense, INVALID_EMAIL_FORMAT, data));
+};
+
+var validateItemName = function validateItemName(data) {
+  return function (items) {
+    return (0, _data.Success)(data).apLeft((0, _Utils.validate)(_Utils.isRequired, nameLense, NAME_REQUIRED_MSG, data)).apLeft((0, _Utils.validate)((0, _Utils.isUniq)((0, _ramda.pluck)("name", items)), nameLense, NAME_UNIQ_MSG, data));
+  };
+};
+
+var validateItemQuantity = function validateItemQuantity(data) {
+  return (0, _data.Success)(data).apLeft((0, _Utils.validate)(_Utils.isRequired, quantityLens, QUANTITY_REQUIRED_MSG, data)).apLeft((0, _Utils.validate)((0, _ramda.max)(0), quantityLens, QUANTITY_MIN_MSG, data));
+};
+
+var validateItemTask = function validateItemTask(item) {
+  return function (data) {
+    return ValidateItems.ap(validateItemName(item)(data.items)).ap(validateItemQuantity(item)).failureMap(_ramda.mergeAll).toTask();
+  };
+};
+
+exports.validateItemTask = validateItemTask;
 });
 
 ;require.register("Pages/home.js", function(exports, require, module) {
@@ -4286,14 +4370,14 @@ Object.keys(_home).forEach(function (key) {
   });
 });
 
-var _event = require("./event");
+var _eventPage = require("./Event/event-page");
 
-Object.keys(_event).forEach(function (key) {
+Object.keys(_eventPage).forEach(function (key) {
   if (key === "default" || key === "__esModule") return;
   Object.defineProperty(exports, key, {
     enumerable: true,
     get: function get() {
-      return _event[key];
+      return _eventPage[key];
     }
   });
 });
@@ -5094,15 +5178,11 @@ exports.firstInviteHour = firstInviteHour;
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.isNilOrEmptyOrAtom = exports.allCaps = exports.inDateRange = exports.unique = exports.maxLengthNullable = exports.onlyNumeric = exports.urlFormat = exports.phoneFormat = exports.onlyAlphaNumericSpaceSpecial = exports.onlyAlphaNumericSpaceUnderscore = exports.onlyAlphaNumericSpace = exports.onlyAlphaNumericUnderscore = exports.onlyAlphaNumeric = exports.onlyAlpha = exports.emailFormat = exports.maxSize = exports.maxLength = exports.isNullOrEmpty = exports.isNotNullOrEmpty = exports.IsNotNil = exports.isRequired = exports.validate = exports.getOrElse = void 0;
+exports.isUniq = exports.isEqual = exports.isNilOrEmptyOrAtom = exports.allCaps = exports.onlyNumeric = exports.urlFormat = exports.phoneFormat = exports.onlyAlphaNumericSpaceSpecial = exports.onlyAlphaNumericSpaceUnderscore = exports.onlyAlphaNumericSpace = exports.onlyAlphaNumericUnderscore = exports.onlyAlphaNumeric = exports.onlyAlpha = exports.emailFormat = exports.maxSize = exports.maxLength = exports.isNullOrEmpty = exports.isNotNullOrEmpty = exports.IsNotNilOrZero = exports.IsNotNil = exports.isRequired = exports.validate = exports.getOrElse = void 0;
 
 var _ramda = require("ramda");
 
 var _data = require("data.validation");
-
-var _data2 = _interopRequireDefault(require("data.maybe"));
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 var getOrElse = function getOrElse(val) {
   return function (x) {
@@ -5119,6 +5199,12 @@ var isRequired = (0, _ramda.compose)(_ramda.not, _ramda.isEmpty);
 exports.isRequired = isRequired;
 var IsNotNil = (0, _ramda.compose)(_ramda.not, _ramda.isNil);
 exports.IsNotNil = IsNotNil;
+
+var IsNotNilOrZero = function IsNotNilOrZero(data) {
+  return IsNotNil(data) || data == 0;
+};
+
+exports.IsNotNilOrZero = IsNotNilOrZero;
 
 var isNotNullOrEmpty = function isNotNullOrEmpty(data) {
   return !isNullOrEmpty(data);
@@ -5162,28 +5248,6 @@ exports.urlFormat = urlFormat;
 var onlyNumeric = (0, _ramda.test)(/^[0-9]*$/);
 exports.onlyNumeric = onlyNumeric;
 
-var maxLengthNullable = function maxLengthNullable(max) {
-  return (0, _ramda.compose)(getOrElse(false), (0, _ramda.map)((0, _ramda.gte)(max)), (0, _ramda.map)(_ramda.length), _data2.default.fromNullable);
-};
-
-exports.maxLengthNullable = maxLengthNullable;
-var unique = (0, _ramda.curry)(function (keys, value) {
-  var lookup = _data2.default.fromNullable(keys);
-
-  return !(0, _ramda.contains)((0, _ramda.toUpper)(value.toString()), (0, _ramda.map)(function (y) {
-    return (0, _ramda.toUpper)(y.toString());
-  }, lookup.getOrElse([])));
-});
-exports.unique = unique;
-var inDateRange = (0, _ramda.curry)(function (start, end, value) {
-  if (value == null || value === "") {
-    return true;
-  }
-
-  return new Date(start) <= new Date(value) && new Date(value) < new Date(end);
-});
-exports.inDateRange = inDateRange;
-
 var allCaps = function allCaps(str) {
   return str.toUpperCase() === str;
 };
@@ -5195,6 +5259,22 @@ var isNilOrEmptyOrAtom = function isNilOrEmptyOrAtom(item) {
 };
 
 exports.isNilOrEmptyOrAtom = isNilOrEmptyOrAtom;
+
+var isEqual = function isEqual(input1) {
+  return function (input2) {
+    return input2 === input1;
+  };
+};
+
+exports.isEqual = isEqual;
+
+var isUniq = function isUniq(xs) {
+  return function (x) {
+    return (0, _ramda.not)(xs.includes(x));
+  };
+};
+
+exports.isUniq = isUniq;
 });
 
 ;require.register("index.js", function(exports, require, module) {

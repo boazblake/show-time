@@ -1,5 +1,5 @@
 export * from "./home.js"
-export * from "./event"
+export * from "./Event/event-page"
 export * from "./profile"
 export * from "./Auth/login-user"
 export * from "./Auth/register-user"

@@ -9,12 +9,8 @@ import {
   not,
   view,
   set,
-  contains,
-  map,
-  toUpper,
 } from "ramda"
 import { Success, Failure } from "data.validation"
-import Maybe from "data.maybe"
 
 export const getOrElse = (val) => (x) => x.getOrElse(val)
 
@@ -25,6 +21,7 @@ export const validate = curry((rule, lens, msg, data) =>
 export const isRequired = compose(not, isEmpty)
 
 export const IsNotNil = compose(not, isNil)
+export const IsNotNilOrZero = (data) => IsNotNil(data) || data == 0
 
 export const isNotNullOrEmpty = (data) => !isNullOrEmpty(data)
 
@@ -56,26 +53,11 @@ export const urlFormat = test(/^[a-zA-Z0-9_.~!*''();:@&=+$,/?#[%-\]+]*$/)
 
 export const onlyNumeric = test(/^[0-9]*$/)
 
-export const maxLengthNullable = (max) =>
-  compose(getOrElse(false), map(gte(max)), map(length), Maybe.fromNullable)
-
-export const unique = curry((keys, value) => {
-  let lookup = Maybe.fromNullable(keys)
-  return !contains(
-    toUpper(value.toString()),
-    map((y) => toUpper(y.toString()), lookup.getOrElse([]))
-  )
-})
-
-export const inDateRange = curry((start, end, value) => {
-  if (value == null || value === "") {
-    return true
-  }
-
-  return new Date(start) <= new Date(value) && new Date(value) < new Date(end)
-})
-
 export const allCaps = (str) => str.toUpperCase() === str
 
 export const isNilOrEmptyOrAtom = (item) =>
   isNil(item) || isEmpty(item) || item === "{$type:atom}"
+
+export const isEqual = (input1) => (input2) => input2 === input1
+
+export const isUniq = (xs) => (x) => not(xs.includes(x))

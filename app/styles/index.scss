@@ -180,11 +180,14 @@ ul {
 .accordian {
   .accordian-item {
     line-height: 3rem;
-    .accordian-item-btn-close {
-      transform: rotate(270deg);
-    }
-    .accordian-item-btn-open {
-      transform: rotate(180deg);
+    border: 1px solid var(--blue);
+    border-radius: 2%;
+    margin-top: 10px;
+    width: 100%;
+    padding: 5px;
+    .accordian-item-btn {
+      // transform: rotate(180deg);
+      transition-duration: 2s;
     }
 
     .accordian-item-body {

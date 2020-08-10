@@ -14,26 +14,54 @@ import {
 import { AccordianItem, AttendanceResponse } from "Components"
 import { AddLine, AngleLine, RemoveLine } from "@mithril-icons/clarity/cjs"
 import Task from "data.task"
+import { validateItemTask } from "./validations"
 
 export const Event = ({ attrs: { mdl } }) => {
   const state = {
     error: {},
     status: "loading",
     info: { show: Stream(false) },
+    edit: { show: Stream(false) },
     guests: {
       name: "",
       show: Stream(false),
       status: Stream("success"),
+      isSubmitted: Stream(false),
       error: Stream(null),
     },
-    edit: { show: Stream(false) },
-    items: { name: "", quantity: "", show: Stream(false) },
+    items: {
+      name: "",
+      quantity: "",
+      show: Stream(false),
+      error: Stream(null),
+      status: Stream("success"),
+      isSubmitted: Stream(false),
+    },
   }
 
   const data = {
     event: {},
     guests: [],
     items: [],
+  }
+
+  const validate = (field) => (input) => {
+    const onSuccess = (input) => {
+      state[field].status("success")
+      state[field].error(null)
+    }
+
+    const onError = (error) => {
+      state[field].status("failed")
+      state[field].error(error)
+    }
+
+    let validateTask = {
+      items: validateItemTask,
+    }
+
+    state[field].isSubmitted() &&
+      validateTask[field](input)(data).fork(onError, onSuccess)
   }
 
   const getUserFromId = (id) => head(data.guests.filter(propEq("userId", id)))
@@ -108,8 +136,8 @@ export const Event = ({ attrs: { mdl } }) => {
 
   const updateItem = (mdl) => (item) => {
     const onError = (error) => {
-      state.error = jsonCopy(error)
-      state.status = "failed"
+      state.items.error(jsonCopy(error))
+      state.items.status("failed")
       console.log("update item failed", error)
     }
 
@@ -119,6 +147,7 @@ export const Event = ({ attrs: { mdl } }) => {
       updateEvent(eventData)
     }
 
+    state.items.isSubmitted(true)
     updateItemTask(HTTP)(mdl)(item)
       .chain((_) => loadEventTask(HTTP)(mdl))
       .fork(onError, onSuccess)
@@ -138,21 +167,30 @@ export const Event = ({ attrs: { mdl } }) => {
 
   const addItem = (mdl) => {
     const onError = (error) => {
-      state.error = jsonCopy(error)
+      state.items.error(jsonCopy(error))
       console.log("add item failed", error)
-      state.status = "failed"
+      state.items.status("failed")
     }
 
     const onSuccess = (eventData) => {
       state.items.name = ""
       state.items.quantity = ""
+      state.items.error(null)
+      state.items.isSubmitted(false)
       updateEvent(eventData)
     }
 
-    addItemTask(HTTP)(mdl)({
+    let item = {
       name: state.items.name,
       quantity: state.items.quantity,
-    })
+    }
+
+    state.items.isSubmitted(true)
+    validateItemTask(item)(data)
+      .chain((x) => {
+        console.log("data??", x)
+        return addItemTask(HTTP)(mdl)(x)
+      })
       .chain((_) => loadEventTask(HTTP)(mdl))
       .fork(onError, onSuccess)
   }
@@ -166,6 +204,7 @@ export const Event = ({ attrs: { mdl } }) => {
 
     const onSuccess = (eventData) => {
       state.guests.email = ""
+      state.guests.error(null)
       console.log("invite add success", data)
       updateEvent(eventData)
     }
@@ -292,12 +331,14 @@ export const Event = ({ attrs: { mdl } }) => {
                       placeholder: "name",
                       value: state.items.name,
                       oninput: (e) => (state.items.name = e.target.value),
+                      onblur: (e) => validate("items")(state.items),
                       type: "text",
                     }),
                     m("input.col-xs-1-4", {
                       placeholder: "quantity",
                       value: state.items.quantity,
                       oninput: (e) => (state.items.quantity = e.target.value),
+                      onblur: (e) => validate("items")(state.items),
                       type: "number",
                       pattern: "mobile",
                     }),
@@ -306,6 +347,10 @@ export const Event = ({ attrs: { mdl } }) => {
                       { onclick: (e) => addItem(mdl) },
                       m(AddLine)
                     ),
+                    state.items.error() &&
+                      m("code.error-field", state.items.error().name),
+                    state.items.error() &&
+                      m("code.error-field", state.items.error().quantity),
                   ]),
 
                   m(
