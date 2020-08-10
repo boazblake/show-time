@@ -19,7 +19,7 @@ const getResponse = ({ status }) => {
 export const AttendanceResponse = () => {
   return {
     view: ({ attrs: { mdl, guest, updateInvite } }) => {
-      console.log("AttendanceResponse", guest)
+      // console.log("AttendanceResponse", guest)
       return m(
         ".frow",
         getResponse(guest).map((response, idx) =>

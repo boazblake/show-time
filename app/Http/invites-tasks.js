@@ -94,3 +94,6 @@ export const createInviteTask = (http) => (mdl) => ({
     location,
     latlong,
   })
+
+export const deleteInviteTask = (http) => (mdl) => (id) =>
+  http.backEnd.deleteTask(mdl)(`data/Invites/${id}`)

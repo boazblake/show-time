@@ -4,7 +4,7 @@ import mapboxgl from "mapbox-gl/dist/mapbox-gl.js"
 import {
   HTTP,
   loadEventTask,
-  deleteEventTask,
+  deleteInviteTask,
   updateInviteTask,
   addItemTask,
   deleteItemTask,
@@ -13,13 +13,14 @@ import {
 } from "Http"
 import { AccordianItem, AttendanceResponse } from "Components"
 import { AddLine, AngleLine, RemoveLine } from "@mithril-icons/clarity/cjs"
+import Task from "data.task"
 
 export const Event = ({ attrs: { mdl } }) => {
   const state = {
     error: {},
     status: "loading",
     info: { show: Stream(false) },
-    rsvp: {
+    guests: {
       name: "",
       show: Stream(false),
       status: Stream("success"),
@@ -35,120 +36,116 @@ export const Event = ({ attrs: { mdl } }) => {
     items: [],
   }
 
-  const load = ({ attrs: { mdl } }) => {
-    const onError = (err) => {
-      state.error = jsonCopy(err)
-      console.log("state.e", state.error)
-      state.status = "failed"
-    }
-
-    const onSuccess = ({ event, guests, items = [] }) => {
-      data.event = event
-      data.guests = guests
-      data.items = items
-      state.error = {}
-      state.status = "success"
-      console.log(mdl.User.objectId, data.guests)
-    }
-
-    loadEventTask(HTTP)(mdl).fork(onError, onSuccess)
+  const updateEvent = ({ event, guests, items }) => {
+    data.event = event
+    data.guests = guests
+    data.items = items
+    state.error = {}
+    state.status = "success"
+    console.log("updated event")
   }
 
-  const deleteEvent = (mdl) => {
-    const onError = (err) => {
-      state.error = jsonCopy(err)
-      console.log("state.e", state.error)
+  const load = ({ attrs: { mdl } }) => {
+    const onError = (error) => {
+      state.error = jsonCopy(error)
       state.status = "failed"
+      console.log("load error", state, data, error)
+    }
+
+    loadEventTask(HTTP)(mdl).fork(onError, updateEvent)
+  }
+
+  const deleteInvite = (mdl) => {
+    const onError = (error) => {
+      state.error = jsonCopy(error)
+      state.status = "failed"
+      console.log("delete event failed", error)
     }
 
     const onSuccess = () => {
       state.error = {}
       state.status = "success"
       m.route.set(
-        `/${mdl.User.name}/${mdl.selectedDate().format("YYYY-MM-DD")}`
+        `/${mdl.User.name}/${M(mdl.selectedDate()).format("YYYY-MM-DD")}`
       )
     }
 
-    deleteEventTask(HTTP)(mdl)(mdl.Events.currentEventId()).fork(
-      onError,
-      onSuccess
-    )
+    let invite =
+      data.guests.length > 1
+        ? data.guests.filter(propEq("userId", mdl.User.objectId))[0]
+        : data.guests[0]
+
+    console.log(invite, data.guests.length)
+
+    deleteInviteTask(HTTP)(mdl)(invite.objectId)
+      .chain((res) => {
+        return data.guests.any()
+          ? Task.of(res)
+          : deleteEventTask(HTTP)(mdl)(invite.eventId)
+      })
+      .fork(onError, onSuccess)
   }
 
-  const updateInvite = (mdl) => (invite) => {
-    const onError = (err) => {
-      state.error = jsonCopy(err)
-      console.log("state.e", state.error)
+  const updateInvite = (mdl) => (update) => {
+    const onError = (error) => {
+      state.error = jsonCopy(error)
       state.status = "failed"
+      console.log("invite update failed", state, update)
     }
 
-    const onSuccess = (invite) => {
-      // data.invite = invite
-      console.log("success", invite)
-      state.error = {}
-      state.status = "success"
-    }
-    console.log("need to fix", invite)
-
-    updateInviteTask(HTTP)(mdl)(invite).fork(onError, onSuccess)
-  }
-
-  const updateItem = (mdl) => (item, idx) => {
-    const onError = (err) => {
-      state.error = jsonCopy(err)
-      console.log("state.e", state.error)
-      state.status = "failed"
+    const onSuccess = (eventData) => {
+      updateEvent(eventData)
     }
 
-    const onSuccess = (item) => {
-      data.items.removeAt(idx)
-      data.items.insertAt(idx, item)
-      state.error = {}
-      state.items.name = ""
-      state.items.quantity = ""
-      state.status = "success"
-    }
-
-    updateItemTask(HTTP)(mdl)(item).fork(onError, onSuccess)
-  }
-
-  const deleteItem = (mdl) => (itemId) => {
-    const onError = (err) => {
-      state.error = jsonCopy(err)
-      console.log("state.e", state.error)
-      state.status = "failed"
-    }
-
-    const onSuccess = ({ event, guests, items }) => {
-      data.items = items
-      data.event = event
-      data.guests = guests
-      state.error = {}
-      console.log("deleted s", state)
-      state.status = "success"
-    }
-
-    deleteItemTask(HTTP)(mdl)(itemId)
+    updateInviteTask(HTTP)(mdl)(update)
       .chain((_) => loadEventTask(HTTP)(mdl))
       .fork(onError, onSuccess)
   }
 
+  const updateItem = (mdl) => (item, idx) => {
+    const onError = (error) => {
+      state.error = jsonCopy(error)
+      state.status = "failed"
+      console.log("update item failed", error)
+    }
+
+    const onSuccess = (eventData) => {
+      // data.items.removeAt(idx)
+      // data.items.insertAt(idx, item)
+      // state.error = {}
+      state.items.name = ""
+      state.items.quantity = ""
+      updateEvent(eventData)
+    }
+
+    updateItemTask(HTTP)(mdl)(item)
+      .chain((_) => loadEventTask(HTTP)(mdl))
+      .fork(onError, onSuccess)
+  }
+
+  const deleteItem = (mdl) => (itemId) => {
+    const onError = (error) => {
+      state.error = jsonCopy(error)
+      state.status = "failed"
+      console.log("delete item failed", error)
+    }
+
+    deleteItemTask(HTTP)(mdl)(itemId)
+      .chain((_) => loadEventTask(HTTP)(mdl))
+      .fork(onError, updateEvent)
+  }
+
   const addItem = (mdl) => {
-    const onError = (err) => {
-      state.error = jsonCopy(err)
-      console.log("state.e", state.error)
+    const onError = (error) => {
+      state.error = jsonCopy(error)
+      console.log("add item failed", error)
       state.status = "failed"
     }
 
-    const onSuccess = ({ event, guests, items }) => {
-      data.items = items
-      data.event = event
-      data.guests = guests
-      state.error = {}
+    const onSuccess = (eventData) => {
       state.items.name = ""
       state.items.quantity = ""
-      console.log("add success", state)
-      state.status = "success"
+      updateEvent(eventData)
     }
 
     addItemTask(HTTP)(mdl)({
@@ -160,23 +157,26 @@ export const Event = ({ attrs: { mdl } }) => {
   }
 
   const sendInvite = (mdl) => {
-    const onError = (err) => {
-      // console.log("error", state, err)
-      state.rsvp.error(err)
-      state.rsvp.status("failed")
+    const onError = (error) => {
+      // console.log("error", state, error)
+      state.guests.error(error)
+      state.guests.status("failed")
     }
 
-    const onSuccess = ({ event, guests, items }) => {
-      data.items = items
-      data.event = event
-      data.guests = guests
-      state.error = {}
-      state.rsvp.email = ""
+    const onSuccess = (eventData) => {
+      state.guests.email = ""
       console.log("invite add success", data)
-      state.status = "success"
+      updateEvent(eventData)
     }
-    state.rsvp.error(null)
-    sendInviteTask(HTTP)(mdl)(state.rsvp.email, data.event)
+
+    let hasBeenInvited = data.guests.filter(propEq("email", state.guests.email))
+    if (hasBeenInvited.any()) {
+      state.guests.error("Guest Has Already Been Invited")
+      return state.guests.status("failed")
+    }
+
+    state.guests.error(null)
+    sendInviteTask(HTTP)(mdl)(state.guests.email, data.event)
       .chain((_) => loadEventTask(HTTP)(mdl))
       .fork(onError, onSuccess)
   }
@@ -229,13 +229,13 @@ export const Event = ({ attrs: { mdl } }) => {
 
               m(
                 AccordianItem,
-                { mdl, state, data, part: "rsvp", title: "RSVP" },
-                m(".rsvp-container", [
+                { mdl, state, data, part: "guests", title: "guests" },
+                m(".guests-container", [
                   m(".frow row", [
                     m("input.col-xs-4-5", {
                       placeholder: "email",
-                      value: state.rsvp.email,
-                      oninput: (e) => (state.rsvp.email = e.target.value),
+                      value: state.guests.email,
+                      oninput: (e) => (state.guests.email = e.target.value),
                       type: "email",
                     }),
 
@@ -245,8 +245,8 @@ export const Event = ({ attrs: { mdl } }) => {
                       m(AddLine)
                     ),
 
-                    state.rsvp.error() &&
-                      m("code.error-field", state.rsvp.error()),
+                    state.guests.error() &&
+                      m("code.error-field", state.guests.error()),
                   ]),
 
                   m(".frow row-start", [
@@ -352,7 +352,7 @@ export const Event = ({ attrs: { mdl } }) => {
               m(
                 AccordianItem,
                 { mdl, state, data, part: "edit", title: "Edit" },
-                [m("button", { onclick: (e) => deleteEvent(mdl) }, "delete")]
+                [m("button", { onclick: (e) => deleteInvite(mdl) }, "delete")]
               ),
             ]),
           ]),
