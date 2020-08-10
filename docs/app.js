@@ -290,7 +290,6 @@ var AttendanceResponse = function AttendanceResponse() {
           mdl = _ref2$attrs.mdl,
           guest = _ref2$attrs.guest,
           updateInvite = _ref2$attrs.updateInvite;
-      // console.log("AttendanceResponse", guest)
       return m(".frow", getResponse(guest).map(function (response, idx) {
         return m(response, {
           onclick: function onclick(e) {
@@ -3895,6 +3894,10 @@ var Event = function Event(_ref) {
     items: []
   };
 
+  var getUserFromId = function getUserFromId(id) {
+    return (0, _ramda.head)(data.guests.filter((0, _ramda.propEq)("userId", id)));
+  };
+
   var updateEvent = function updateEvent(_ref2) {
     var event = _ref2.event,
         guests = _ref2.guests,
@@ -3958,7 +3961,7 @@ var Event = function Event(_ref) {
   };
 
   var updateItem = function updateItem(mdl) {
-    return function (item, idx) {
+    return function (item) {
       var onError = function onError(error) {
         state.error = (0, _Utils.jsonCopy)(error);
         state.status = "failed";
@@ -3966,9 +3969,6 @@ var Event = function Event(_ref) {
       };
 
       var onSuccess = function onSuccess(eventData) {
-        // data.items.removeAt(idx)
-        // data.items.insertAt(idx, item)
-        // state.error = {}
         state.items.name = "";
         state.items.quantity = "";
         updateEvent(eventData);
@@ -4126,21 +4126,26 @@ var Event = function Event(_ref) {
         onclick: function onclick(e) {
           return addItem(mdl);
         }
-      }, m(_cjs.AddLine))]), m(".event-items", data.items.map(function (i, idx) {
-        return m(".event-items-item frow ", [m(".col-xs-1-2 ", m("label", m("h4", i.name), i.userId || m("i", "click to select"))), m(".col-xs-1-2 frow items-center", [m(".col-xs-1-3", i.quantity), m(".col-xs-1-3 ", [m(_cjs.AngleLine, {
+      }, m(_cjs.AddLine))]), m(".event-items", data.items.map(function (item) {
+        return m(".event-items-item frow ", [m(".col-xs-1-2 ", m("label", m("h4", item.name), item.userId ? getUserFromId(item.userId).name : m("i", {
           onclick: function onclick(e) {
-            i.quantity++;
-            updateItem(mdl)(i, idx);
+            item.userId = mdl.User.objectId;
+            updateItem(mdl)(item);
+          }
+        }, "click to select item"))), m(".col-xs-1-2 frow items-center", [m(".col-xs-1-3", item.quantity), m(".col-xs-1-3 ", [m(_cjs.AngleLine, {
+          onclick: function onclick(e) {
+            item.quantity++;
+            updateItem(mdl)(item);
           }
         }), m(_cjs.AngleLine, {
           onclick: function onclick(e) {
-            i.quantity--;
-            updateItem(mdl)(i, idx);
+            item.quantity--;
+            updateItem(mdl)(item);
           },
           class: "decrement"
-        })]), m(".col-xs-1-3", m(_cjs.RemoveLine, {
+        })]), mdl.User.objectId == item.userId && m(".col-xs-1-3", m(_cjs.RemoveLine, {
           onclick: function onclick(e) {
-            return deleteItem(mdl)(i.objectId);
+            return deleteItem(mdl)(item.objectId);
           }
         }))])]);
       }))]), m(_Components.AccordianItem, {

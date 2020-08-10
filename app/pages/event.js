@@ -36,6 +36,8 @@ export const Event = ({ attrs: { mdl } }) => {
     items: [],
   }
 
+  const getUserFromId = (id) => head(data.guests.filter(propEq("userId", id)))
+
   const updateEvent = ({ event, guests, items }) => {
     data.event = event
     data.guests = guests
@@ -104,7 +106,7 @@ export const Event = ({ attrs: { mdl } }) => {
       .fork(onError, onSuccess)
   }
 
-  const updateItem = (mdl) => (item, idx) => {
+  const updateItem = (mdl) => (item) => {
     const onError = (error) => {
       state.error = jsonCopy(error)
       state.status = "failed"
@@ -112,9 +114,6 @@ export const Event = ({ attrs: { mdl } }) => {
     }
 
     const onSuccess = (eventData) => {
-      // data.items.removeAt(idx)
-      // data.items.insertAt(idx, item)
-      // state.error = {}
       state.items.name = ""
       state.items.quantity = ""
       updateEvent(eventData)
@@ -311,39 +310,51 @@ export const Event = ({ attrs: { mdl } }) => {
 
                   m(
                     ".event-items",
-                    data.items.map((i, idx) =>
+                    data.items.map((item) =>
                       m(".event-items-item frow ", [
                         m(
                           ".col-xs-1-2 ",
                           m(
                             "label",
-                            m("h4", i.name),
-                            i.userId || m("i", "click to select")
+                            m("h4", item.name),
+                            item.userId
+                              ? getUserFromId(item.userId).name
+                              : m(
+                                  "i",
+                                  {
+                                    onclick: (e) => {
+                                      item.userId = mdl.User.objectId
+                                      updateItem(mdl)(item)
+                                    },
+                                  },
+                                  "click to select item"
+                                )
                           )
                         ),
                         m(".col-xs-1-2 frow items-center", [
-                          m(".col-xs-1-3", i.quantity),
+                          m(".col-xs-1-3", item.quantity),
                           m(".col-xs-1-3 ", [
                             m(AngleLine, {
                               onclick: (e) => {
-                                i.quantity++
-                                updateItem(mdl)(i, idx)
+                                item.quantity++
+                                updateItem(mdl)(item)
                               },
                             }),
                             m(AngleLine, {
                               onclick: (e) => {
-                                i.quantity--
-                                updateItem(mdl)(i, idx)
+                                item.quantity--
+                                updateItem(mdl)(item)
                               },
                               class: "decrement",
                             }),
                           ]),
-                          m(
-                            ".col-xs-1-3",
-                            m(RemoveLine, {
-                              onclick: (e) => deleteItem(mdl)(i.objectId),
-                            })
-                          ),
+                          mdl.User.objectId == item.userId &&
+                            m(
+                              ".col-xs-1-3",
+                              m(RemoveLine, {
+                                onclick: (e) => deleteItem(mdl)(item.objectId),
+                              })
+                            ),
                         ]),
                       ])
                     )
