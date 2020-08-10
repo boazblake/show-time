@@ -1,3 +1,5 @@
+import { hyphenize } from "Utils"
+
 export const EventToolbar = () => {
   return {
     view: ({ attrs: { mdl } }) => [
@@ -8,9 +10,9 @@ export const EventToolbar = () => {
             localStorage.removeItem("shindigit-eventId")
             mdl.State.toAnchor(M(mdl.Events.currentEventStart()).format("HH"))
             m.route.set(
-              `/${mdl.User.name}/${M(mdl.Events.currentEventStart()).format(
-                "YYYY-MM-DD"
-              )}`
+              `/${hyphenize(mdl.User.name)}/${M(
+                mdl.Events.currentEventStart()
+              ).format("YYYY-MM-DD")}`
             )
           },
         },

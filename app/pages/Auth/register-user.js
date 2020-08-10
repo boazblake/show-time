@@ -1,4 +1,4 @@
-import { jsonCopy } from "Utils"
+import { jsonCopy, hyphenize } from "Utils"
 import { validateUserRegistrationTask } from "./Validations"
 import {
   HTTP,
@@ -54,7 +54,7 @@ export const validateForm = (mdl) => (data) => {
     state.errors = {}
     sessionStorage.setItem("shindigit-user-token", mdl.User["user-token"])
     sessionStorage.setItem("shindigit-user", JSON.stringify(mdl.User))
-    m.route.set(`/${mdl.User.name}/${M.utc().format("YYYY-MM-DD")}`)
+    m.route.set(`/${hyphenize(mdl.User.name)}/${M.utc().format("YYYY-MM-DD")}`)
   }
 
   state.isSubmitted = true

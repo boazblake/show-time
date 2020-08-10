@@ -1,5 +1,6 @@
 import { createCalendar, calendarDayStyle } from "./calendar-model"
-import { daysOfTheWeek, firstInviteHour } from "Utils"
+import { daysOfTheWeek, firstInviteHour, hyphenize } from "Utils"
+
 const Navbar = () => {
   return {
     view: ({ attrs: { mdl, date } }) => {
@@ -9,7 +10,7 @@ const Navbar = () => {
             m.route.Link,
             {
               selector: "button",
-              href: `/${mdl.User.name}/${date
+              href: `/${hyphenize(mdl.User.name)}/${date
                 .clone()
                 .subtract(1, "year")
                 .format("YYYY-MM-DD")}`,
@@ -26,7 +27,7 @@ const Navbar = () => {
             m.route.Link,
             {
               selector: "button",
-              href: `/${mdl.User.name}/${date
+              href: `/${hyphenize(mdl.User.name)}/${date
                 .clone()
                 .add(1, "year")
                 .format("YYYY-MM-DD")}`,
@@ -39,7 +40,7 @@ const Navbar = () => {
             m.route.Link,
             {
               selector: "button",
-              href: `/${mdl.User.name}/${date
+              href: `/${hyphenize(mdl.User.name)}/${date
                 .clone()
                 .subtract(1, "month")
                 .format("YYYY-MM-DD")}`,
@@ -50,7 +51,7 @@ const Navbar = () => {
             m.route.Link,
             {
               selector: "button",
-              href: `/${mdl.User.name}/${date
+              href: `/${hyphenize(mdl.User.name)}/${date
                 .clone()
                 .add(1, "month")
                 .format("YYYY-MM-DD")}`,
@@ -90,7 +91,7 @@ const CalendarDay = () => {
         m(
           m.route.Link,
           {
-            href: `/${mdl.User.name}/${day.format("YYYY-MM-DD")}`,
+            href: `/${hyphenize(mdl.User.name)}/${day.format("YYYY-MM-DD")}`,
             class: "cal-day-link",
             onclick: (e) =>
               mdl.State.toAnchor(

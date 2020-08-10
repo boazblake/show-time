@@ -1,4 +1,4 @@
-import { jsonCopy } from "Utils"
+import { jsonCopy, hyphenize } from "Utils"
 import { propEq, compose, not, head } from "ramda"
 import mapboxgl from "mapbox-gl/dist/mapbox-gl.js"
 import {
@@ -66,7 +66,9 @@ export const Event = ({ attrs: { mdl } }) => {
       state.error = {}
       state.status = "success"
       m.route.set(
-        `/${mdl.User.name}/${M(mdl.selectedDate()).format("YYYY-MM-DD")}`
+        `/${hyphenize(mdl.User.name)}/${M(mdl.selectedDate()).format(
+          "YYYY-MM-DD"
+        )}`
       )
     }
 

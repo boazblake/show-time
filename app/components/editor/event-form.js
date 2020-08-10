@@ -1,4 +1,5 @@
 import { HTTP, locateQueryTask } from "Http"
+import { hyphenize } from "Utils"
 
 const locateQuery = (mdl) => (state) => (query) => {
   const onError = (err) => {
@@ -42,7 +43,7 @@ export const EventForm = () => {
             m("label.frow row row-evenly ", [
               m("input.col-xs-2-3 ", {
                 onchange: (e) =>
-                  m.route.set(`/${mdl.User.name}/${e.target.value}`),
+                  m.route.set(`/${hyphenize(mdl.User.name)}/${e.target.value}`),
                 type: "date",
                 value: mdl.selectedDate().format("YYYY-MM-DD"),
               }),

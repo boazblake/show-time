@@ -1,4 +1,4 @@
-import { jsonCopy } from "Utils"
+import { jsonCopy, hyphenize } from "Utils"
 import { validateLoginTask } from "./Validations.js"
 import { HTTP, loginTask, getUserProfileTask, setUserToken } from "Http"
 import { map } from "ramda"
@@ -20,7 +20,9 @@ const validateForm = (mdl) => (data) => {
   const onSuccess = (mdl) => (account) => {
     state.errors = {}
     mdl.User.account = account
-    m.route.set(`/${mdl.User.name}/${mdl.todayDate().format("YYYY-MM-DD")}`)
+    m.route.set(
+      `/${hyphenize(mdl.User.name)}/${mdl.todayDate().format("YYYY-MM-DD")}`
+    )
   }
 
   state.isSubmitted = true

@@ -4,6 +4,7 @@ import {
   inviteOptions,
   getInviteStatusColor,
   displayTimeFormat,
+  hyphenize,
 } from "Utils"
 
 const createEventUrl = (invite) =>
@@ -16,7 +17,7 @@ const navToInvite = (mdl) => (invite) => {
   mdl.Events.currentEventStart(invite.start)
   localStorage.setItem("shindigit-eventId", invite.eventId)
   localStorage.setItem("shindigit-eventStart", invite.start)
-  m.route.set(`/${mdl.User.name}/${createEventUrl(invite)}`)
+  m.route.set(`/${hyphenize(mdl.User.name)}/${createEventUrl(invite)}`)
 }
 
 const HourInvite = () => {

@@ -31,6 +31,8 @@ export const getInviteStatusColor = (status) =>
     `--${inviteOptions[status]}-invite`
   )
 
+export const hyphenize = (strWithSpaces) => strWithSpaces.replace(/\s/g, "-")
+
 const secureImg = (url) =>
   url.match(/(https)./) ? url : url.replace("http", "https")
 

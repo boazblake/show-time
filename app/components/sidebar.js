@@ -1,3 +1,5 @@
+import { hyphenize } from "Utils"
+
 export const Sidebar = () => {
   return {
     view: ({ attrs: { mdl } }) => {
@@ -9,9 +11,9 @@ export const Sidebar = () => {
               m.route.Link,
               {
                 // onclick: (e) => logout,
-                href: `/${mdl.User.name}/${M(mdl.selectedDate()).format(
-                  "YYYY-MM-DD"
-                )}`,
+                href: `/${hyphenize(mdl.User.name)}/${M(
+                  mdl.selectedDate()
+                ).format("YYYY-MM-DD")}`,
               },
               "Home"
             )
@@ -23,7 +25,7 @@ export const Sidebar = () => {
               m.route.Link,
               {
                 // onclick: (e) => logout,
-                href: `/profile/${mdl.User.name}`,
+                href: `/profile/${hyphenize(mdl.User.name)}`,
               },
               "Profile"
             )

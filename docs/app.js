@@ -474,16 +474,16 @@ var Navbar = function Navbar() {
           date = _ref$attrs.date;
       return m(".frow width-100 ", [m(".frow width-100 row-between", [m(m.route.Link, {
         selector: "button",
-        href: "/".concat(mdl.User.name, "/").concat(date.clone().subtract(1, "year").format("YYYY-MM-DD"))
+        href: "/".concat((0, _Utils.hyphenize)(mdl.User.name), "/").concat(date.clone().subtract(1, "year").format("YYYY-MM-DD"))
       }, date.clone().subtract(1, "year").format("YYYY")), m(".centerMonthGroup", [m("h2.currentMonth", date.format("MMMM")), m("h3.text-center", date.format("YYYY"))]), m(m.route.Link, {
         selector: "button",
-        href: "/".concat(mdl.User.name, "/").concat(date.clone().add(1, "year").format("YYYY-MM-DD"))
+        href: "/".concat((0, _Utils.hyphenize)(mdl.User.name), "/").concat(date.clone().add(1, "year").format("YYYY-MM-DD"))
       }, date.clone().add(1, "year").format("YYYY"))]), m(".frow width-100 row-between mt-10", [m(m.route.Link, {
         selector: "button",
-        href: "/".concat(mdl.User.name, "/").concat(date.clone().subtract(1, "month").format("YYYY-MM-DD"))
+        href: "/".concat((0, _Utils.hyphenize)(mdl.User.name), "/").concat(date.clone().subtract(1, "month").format("YYYY-MM-DD"))
       }, m("h4", date.clone().subtract(1, "month").format("MMMM"))), m(m.route.Link, {
         selector: "button",
-        href: "/".concat(mdl.User.name, "/").concat(date.clone().add(1, "month").format("YYYY-MM-DD"))
+        href: "/".concat((0, _Utils.hyphenize)(mdl.User.name), "/").concat(date.clone().add(1, "month").format("YYYY-MM-DD"))
       }, m("h4", date.clone().add(1, "month").format("MMMM")))])]);
     }
   };
@@ -509,7 +509,7 @@ var CalendarDay = function CalendarDay() {
           day = _ref3$attrs.day,
           dir = _ref3$attrs.dir;
       return m(".col-xs-1-7 text-center", m(m.route.Link, {
-        href: "/".concat(mdl.User.name, "/").concat(day.format("YYYY-MM-DD")),
+        href: "/".concat((0, _Utils.hyphenize)(mdl.User.name), "/").concat(day.format("YYYY-MM-DD")),
         class: "cal-day-link",
         onclick: function onclick(e) {
           return mdl.State.toAnchor((0, _Utils.firstInviteHour)(invites) || M.utc().format("HH"));
@@ -595,7 +595,7 @@ var navToInvite = function navToInvite(mdl) {
     mdl.Events.currentEventStart(invite.start);
     localStorage.setItem("shindigit-eventId", invite.eventId);
     localStorage.setItem("shindigit-eventStart", invite.start);
-    m.route.set("/".concat(mdl.User.name, "/").concat(createEventUrl(invite)));
+    m.route.set("/".concat((0, _Utils.hyphenize)(mdl.User.name), "/").concat(createEventUrl(invite)));
   };
 };
 
@@ -826,6 +826,8 @@ exports.EventForm = void 0;
 
 var _Http = require("Http");
 
+var _Utils = require("Utils");
+
 var locateQuery = function locateQuery(mdl) {
   return function (state) {
     return function (query) {
@@ -871,7 +873,7 @@ var EventForm = function EventForm() {
           submit = _ref$attrs.submit;
       return m("form.event-form", m(".frow column-centered", [m(".full-width", m("label.frow row row-evenly ", [m("input.col-xs-2-3 ", {
         onchange: function onchange(e) {
-          return m.route.set("/".concat(mdl.User.name, "/").concat(e.target.value));
+          return m.route.set("/".concat((0, _Utils.hyphenize)(mdl.User.name), "/").concat(e.target.value));
         },
         type: "date",
         value: mdl.selectedDate().format("YYYY-MM-DD")
@@ -1042,6 +1044,8 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.EventToolbar = void 0;
 
+var _Utils = require("Utils");
+
 var EventToolbar = function EventToolbar() {
   return {
     view: function view(_ref) {
@@ -1050,7 +1054,7 @@ var EventToolbar = function EventToolbar() {
         onclick: function onclick(e) {
           localStorage.removeItem("shindigit-eventId");
           mdl.State.toAnchor(M(mdl.Events.currentEventStart()).format("HH"));
-          m.route.set("/".concat(mdl.User.name, "/").concat(M(mdl.Events.currentEventStart()).format("YYYY-MM-DD")));
+          m.route.set("/".concat((0, _Utils.hyphenize)(mdl.User.name), "/").concat(M(mdl.Events.currentEventStart()).format("YYYY-MM-DD")));
         }
       }, "Back")];
     }
@@ -1068,20 +1072,22 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.HomeToolbar = void 0;
 
+var _Utils = require("Utils");
+
 var HomeToolbar = function HomeToolbar() {
   return {
     view: function view(_ref) {
       var mdl = _ref.attrs.mdl;
       return [m("input.col-xs-1-2", {
         onchange: function onchange(e) {
-          return m.route.set("/".concat(mdl.User.name, "/").concat(mdl.selectedDate().format("YYYY-MM-DD")));
+          return m.route.set("/".concat((0, _Utils.hyphenize)(mdl.User.name), "/").concat(mdl.selectedDate().format("YYYY-MM-DD")));
         },
         type: "date",
         value: mdl.selectedDate().format("YYYY-MM-DD")
       }), m(m.route.Link, {
         class: "col-xs-1-2",
         selector: "button",
-        href: "/".concat(mdl.User.name, "/").concat(M.utc().format("YYYY-MM-DD"))
+        href: "/".concat((0, _Utils.hyphenize)(mdl.User.name), "/").concat(M.utc().format("YYYY-MM-DD"))
       }, "Today")];
     }
   };
@@ -1390,16 +1396,18 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.Sidebar = void 0;
 
+var _Utils = require("Utils");
+
 var Sidebar = function Sidebar() {
   return {
     view: function view(_ref) {
       var mdl = _ref.attrs.mdl;
       return m(".sidebar-page", [m("ul.sidebar", [m("li.sidebar-link", m(m.route.Link, {
         // onclick: (e) => logout,
-        href: "/".concat(mdl.User.name, "/").concat(M(mdl.selectedDate()).format("YYYY-MM-DD"))
+        href: "/".concat((0, _Utils.hyphenize)(mdl.User.name), "/").concat(M(mdl.selectedDate()).format("YYYY-MM-DD"))
       }, "Home")), m("li.sidebar-link", m(m.route.Link, {
         // onclick: (e) => logout,
-        href: "/profile/".concat(mdl.User.name)
+        href: "/profile/".concat((0, _Utils.hyphenize)(mdl.User.name))
       }, "Profile")), m("li.sidebar-link", m(m.route.Link, {
         // onclick: (e) => logout,
         href: "/logout"
@@ -3557,7 +3565,7 @@ var validateForm = function validateForm(mdl) {
       return function (account) {
         state.errors = {};
         mdl.User.account = account;
-        m.route.set("/".concat(mdl.User.name, "/").concat(mdl.todayDate().format("YYYY-MM-DD")));
+        m.route.set("/".concat((0, _Utils.hyphenize)(mdl.User.name), "/").concat(mdl.todayDate().format("YYYY-MM-DD")));
       };
     };
 
@@ -3718,7 +3726,7 @@ var validateForm = function validateForm(mdl) {
         state.errors = {};
         sessionStorage.setItem("shindigit-user-token", mdl.User["user-token"]);
         sessionStorage.setItem("shindigit-user", JSON.stringify(mdl.User));
-        m.route.set("/".concat(mdl.User.name, "/").concat(M.utc().format("YYYY-MM-DD")));
+        m.route.set("/".concat((0, _Utils.hyphenize)(mdl.User.name), "/").concat(M.utc().format("YYYY-MM-DD")));
       };
     };
 
@@ -3921,7 +3929,7 @@ var Event = function Event(_ref) {
     var onSuccess = function onSuccess() {
       state.error = {};
       state.status = "success";
-      m.route.set("/".concat(mdl.User.name, "/").concat(M(mdl.selectedDate()).format("YYYY-MM-DD")));
+      m.route.set("/".concat((0, _Utils.hyphenize)(mdl.User.name), "/").concat(M(mdl.selectedDate()).format("YYYY-MM-DD")));
     };
 
     var invite = data.guests.length > 1 ? data.guests.filter((0, _ramda.propEq)("userId", mdl.User.objectId))[0] : data.guests[0];
@@ -4739,6 +4747,7 @@ var _exportNames = {
   debounce: true,
   inviteOptions: true,
   getInviteStatusColor: true,
+  hyphenize: true,
   rand: true,
   randomPause: true,
   Pause: true,
@@ -4749,7 +4758,7 @@ var _exportNames = {
   range: true,
   isEqual: true
 };
-exports.isEqual = exports.range = exports.isSideBarActive = exports.jsonCopy = exports.nameFromRoute = exports.NoOp = exports.Pause = exports.randomPause = exports.rand = exports.getInviteStatusColor = exports.inviteOptions = exports.debounce = exports.log = void 0;
+exports.isEqual = exports.range = exports.isSideBarActive = exports.jsonCopy = exports.nameFromRoute = exports.NoOp = exports.Pause = exports.randomPause = exports.rand = exports.hyphenize = exports.getInviteStatusColor = exports.inviteOptions = exports.debounce = exports.log = void 0;
 
 var _localStorage = require("./local-storage.js");
 
@@ -4841,6 +4850,12 @@ var getInviteStatusColor = function getInviteStatusColor(status) {
 };
 
 exports.getInviteStatusColor = getInviteStatusColor;
+
+var hyphenize = function hyphenize(strWithSpaces) {
+  return strWithSpaces.replace(/\s/g, "-");
+};
+
+exports.hyphenize = hyphenize;
 
 var secureImg = function secureImg(url) {
   return url.match(/(https)./) ? url : url.replace("http", "https");
