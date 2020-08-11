@@ -1,5 +1,5 @@
 import { jsonCopy, hyphenize } from "Utils"
-import { propEq, compose, not, head } from "ramda"
+import { propEq, compose, not, head, pluck } from "ramda"
 import mapboxgl from "mapbox-gl/dist/mapbox-gl.js"
 import {
   HTTP,
@@ -72,7 +72,8 @@ export const Event = ({ attrs: { mdl } }) => {
       validateTask[field](input)(data).fork(onError, onSuccess)
   }
 
-  const getUserFromId = (id) => head(data.guests.filter(propEq("userId", id)))
+  const getUserFromId = (id) =>
+    pluck("name", data.guests.filter(propEq("userId", id)))
 
   const updateEvent = ({ event, guests, items }) => {
     data.event = event
@@ -80,7 +81,6 @@ export const Event = ({ attrs: { mdl } }) => {
     data.items = items
     state.error = {}
     state.status = "success"
-    console.log("updated event")
   }
 
   const load = ({ attrs: { mdl } }) => {
@@ -396,7 +396,7 @@ export const Event = ({ attrs: { mdl } }) => {
                                         },
                                         class: "smaller",
                                       }),
-                                    getUserFromId(item.userId).name
+                                    getUserFromId(item.userId)
                                   ),
                                 ]
                               : m(

@@ -4,7 +4,7 @@ export const AccordianItem = () => {
   return {
     view: ({ children, attrs: { state, part, title, pills = [] } }) =>
       m(".accordian-item.full-width", [
-        m(".accordian-item-title", [
+        m(`.accordian-item-title${state[part].show() ? "-open" : "-closed"}`, [
           m(
             ".frow",
             m(".col-xs-1-3", m("h4", title)),
@@ -17,7 +17,9 @@ export const AccordianItem = () => {
                   onclick: (e) => state[part].show(!state[part].show()),
                 },
                 state[part].show()
-                  ? m(TimesLine, { class: "clickable" })
+                  ? m(TimesLine, {
+                      class: "clickable",
+                    })
                   : m(AddLine, { class: "clickable" })
               )
             )

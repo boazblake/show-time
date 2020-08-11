@@ -4,7 +4,7 @@ export const EventToolbar = () => {
   return {
     view: ({ attrs: { mdl } }) => [
       m(
-        "button.col-xs-1-1",
+        "button.btn.col-xs-1-1",
         {
           onclick: (e) => {
             localStorage.removeItem("shindigit-eventId")

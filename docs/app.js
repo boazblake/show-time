@@ -245,7 +245,7 @@ var AccordianItem = function AccordianItem() {
           title = _ref$attrs.title,
           _ref$attrs$pills = _ref$attrs.pills,
           pills = _ref$attrs$pills === void 0 ? [] : _ref$attrs$pills;
-      return m(".accordian-item.full-width", [m(".accordian-item-title", [m(".frow", m(".col-xs-1-3", m("h4", title)), m(".col-xs-1-3", pills), m(".frow row-end col-xs-1-3", m(".accordian-item-btn", {
+      return m(".accordian-item.full-width", [m(".accordian-item-title".concat(state[part].show() ? "-open" : "-closed"), [m(".frow", m(".col-xs-1-3", m("h4", title)), m(".col-xs-1-3", pills), m(".frow row-end col-xs-1-3", m(".accordian-item-btn", {
         onclick: function onclick(e) {
           return state[part].show(!state[part].show());
         }
@@ -477,16 +477,16 @@ var Navbar = function Navbar() {
           mdl = _ref$attrs.mdl,
           date = _ref$attrs.date;
       return m(".frow width-100 ", [m(".frow width-100 row-between", [m(m.route.Link, {
-        selector: "button",
+        selector: "button.btn",
         href: "/".concat((0, _Utils.hyphenize)(mdl.User.name), "/").concat(date.clone().subtract(1, "year").format("YYYY-MM-DD"))
       }, date.clone().subtract(1, "year").format("YYYY")), m(".centerMonthGroup", [m("h2.currentMonth", date.format("MMMM")), m("h3.text-center", date.format("YYYY"))]), m(m.route.Link, {
-        selector: "button",
+        selector: "button.btn",
         href: "/".concat((0, _Utils.hyphenize)(mdl.User.name), "/").concat(date.clone().add(1, "year").format("YYYY-MM-DD"))
       }, date.clone().add(1, "year").format("YYYY"))]), m(".frow width-100 row-between mt-10", [m(m.route.Link, {
-        selector: "button",
+        selector: "button.btn",
         href: "/".concat((0, _Utils.hyphenize)(mdl.User.name), "/").concat(date.clone().subtract(1, "month").format("YYYY-MM-DD"))
       }, m("h4", date.clone().subtract(1, "month").format("MMMM"))), m(m.route.Link, {
-        selector: "button",
+        selector: "button.btn",
         href: "/".concat((0, _Utils.hyphenize)(mdl.User.name), "/").concat(date.clone().add(1, "month").format("YYYY-MM-DD"))
       }, m("h4", date.clone().add(1, "month").format("MMMM")))])]);
     }
@@ -1054,7 +1054,7 @@ var EventToolbar = function EventToolbar() {
   return {
     view: function view(_ref) {
       var mdl = _ref.attrs.mdl;
-      return [m("button.col-xs-1-1", {
+      return [m("button.btn.col-xs-1-1", {
         onclick: function onclick(e) {
           localStorage.removeItem("shindigit-eventId");
           mdl.State.toAnchor(M(mdl.Events.currentEventStart()).format("HH"));
@@ -1090,7 +1090,7 @@ var HomeToolbar = function HomeToolbar() {
         value: mdl.selectedDate().format("YYYY-MM-DD")
       }), m(m.route.Link, {
         class: "col-xs-1-2",
-        selector: "button",
+        selector: "button.btn",
         href: "/".concat((0, _Utils.hyphenize)(mdl.User.name), "/").concat(M().format("YYYY-MM-DD"))
       }, "Today")];
     }
@@ -1295,7 +1295,7 @@ var Hamburger = function Hamburger() {
   return {
     view: function view(_ref2) {
       var mdl = _ref2.attrs.mdl;
-      return m("button.col-xs-1-5", {
+      return m("button.btn.col-xs-1-5", {
         onclick: function onclick(e) {
           return mdl.Sidebar.isShowing(!mdl.Sidebar.isShowing());
         }
@@ -3925,7 +3925,7 @@ var Event = function Event(_ref) {
   };
 
   var getUserFromId = function getUserFromId(id) {
-    return (0, _ramda.head)(data.guests.filter((0, _ramda.propEq)("userId", id)));
+    return (0, _ramda.pluck)("name", data.guests.filter((0, _ramda.propEq)("userId", id)));
   };
 
   var updateEvent = function updateEvent(_ref2) {
@@ -3937,7 +3937,6 @@ var Event = function Event(_ref) {
     data.items = items;
     state.error = {};
     state.status = "success";
-    console.log("updated event");
   };
 
   var load = function load(_ref3) {
@@ -4180,7 +4179,7 @@ var Event = function Event(_ref) {
             updateItem(mdl)(item);
           },
           class: "smaller"
-        }), getUserFromId(item.userId).name)] : m("i.clickable", {
+        }), getUserFromId(item.userId))] : m("i.clickable", {
           onclick: function onclick(e) {
             item.userId = mdl.User.objectId;
             updateItem(mdl)(item);
@@ -4354,11 +4353,11 @@ var Home = function Home(_ref) {
         mdl: mdl,
         date: mdl.selectedDate(),
         invites: state.invites
-      }), m(".frow.max-width", [m(".".concat(mdl.Home.modal() ? "bg-warn.col-xs-1-1." : "bg-info.col-xs-2-3"), m("button.max-width", {
+      }), m(".frow.max-width", [m("".concat(mdl.Home.modal() ? ".col-xs-1-1" : ".col-xs-2-3"), m("button.btn.max-width.height-100", {
         onclick: function onclick(e) {
           return mdl.Home.modal(!mdl.Home.modal());
         }
-      }, mdl.Home.modal() ? "Cancel" : "Add Event")), !mdl.Home.modal() && m(".col-xs-1-3.".concat(mdl.Day.listView() ? "bg-warn" : "bg-info"), m("button.max-width", {
+      }, mdl.Home.modal() ? "Cancel" : "Add Event")), !mdl.Home.modal() && m("col-xs-1-3", m("button.btn.max-width.height-100", {
         onclick: function onclick(e) {
           return mdl.Day.listView(!mdl.Day.listView());
         }

@@ -21,12 +21,9 @@
   --danger: #dc3545;
   --light: #f8f9fa;
   --dark: #343a40;
-  --accept-invite: #28a745;
-  --decline-invite: #dc3545;
-  --maybe-invite: #c58a52;
-  --highlight-green: #40F99B;
-  --highlight-red: #E85D75;
-  --highlight-blue: #4281A4;
+  --accept-invite: #40F99B;
+  --decline-invite:#E85D75;
+  --maybe-invite: #4281A4;
   --breakpoint-xs: 0;
   --breakpoint-sm: 576px;
   --breakpoint-md: 768px;
@@ -72,6 +69,20 @@ ul {
   margin-bottom: 30px;
 }
 
+.accordian .accordian-item .accordian-item-title-open {
+  background-color: var(--blue);
+}
+.accordian .accordian-item .accordian-item-title-open > * {
+  color: var(--light);
+  fill: var(--light);
+}
+
+.btn {
+  border: 1px solid var(--blue) !important;
+  background-color: var(--light) !important;
+  color: var(--blue) !important;
+}
+
 .invite-list-decline {
   border-left: 2px solid var(--decline-invite);
 }
@@ -90,16 +101,16 @@ ul {
 }
 
 .currentMonth {
-  color: var(--orange);
+  color: var(--primary);
   font-size: 2.4rem;
 }
 
 .notThisMonth {
-  background-color: var(--yellow);
+  background-color: var(--teal);
 }
 
 .selectedDay {
-  border: 1px solid var(--red);
+  border: 1px solid var(--decline-invite);
 }
 
 .isToday {
@@ -121,11 +132,11 @@ ul {
 }
 
 .required-field {
-  color: var(--red);
+  color: var(--decline-invite);
 }
 
 .error-field {
-  color: var(--red);
+  color: var(--decline-invite);
 }
 
 .hour {
@@ -174,11 +185,10 @@ ul {
   width: 100%;
   padding: 5px;
 }
-.accordian .accordian-item .accordian-item-title {
+.accordian .accordian-item .accordian-item-title-open, .accordian .accordian-item .accordian-item-title-closed {
   width: 100%;
   padding: 0 1rem;
   margin: 0;
-  background-image: linear-gradient(white 60%, rgba(255, 255, 255, 0) 100%);
 }
 .accordian .accordian-item .accordian-item-body {
   overflow-y: auto;

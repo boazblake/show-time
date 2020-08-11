@@ -16,7 +16,7 @@ const Hamburger = () => {
   return {
     view: ({ attrs: { mdl } }) =>
       m(
-        "button.col-xs-1-5",
+        "button.btn.col-xs-1-5",
         {
           onclick: (e) => mdl.Sidebar.isShowing(!mdl.Sidebar.isShowing()),
         },

@@ -57,11 +57,9 @@ export const Home = ({ attrs: { mdl } }) => {
 
           m(`.frow.max-width`, [
             m(
-              `.${
-                mdl.Home.modal() ? "bg-warn.col-xs-1-1." : "bg-info.col-xs-2-3"
-              }`,
+              `${mdl.Home.modal() ? ".col-xs-1-1" : ".col-xs-2-3"}`,
               m(
-                `button.max-width`,
+                `button.btn.max-width.height-100`,
                 {
                   onclick: (e) => mdl.Home.modal(!mdl.Home.modal()),
                 },
@@ -70,9 +68,9 @@ export const Home = ({ attrs: { mdl } }) => {
             ),
             !mdl.Home.modal() &&
               m(
-                `.col-xs-1-3.${mdl.Day.listView() ? "bg-warn" : "bg-info"}`,
+                "col-xs-1-3",
                 m(
-                  `button.max-width`,
+                  "button.btn.max-width.height-100",
                   {
                     onclick: (e) => mdl.Day.listView(!mdl.Day.listView()),
                   },

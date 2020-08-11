@@ -17,7 +17,7 @@ export const HomeToolbar = () => {
         m.route.Link,
         {
           class: "col-xs-1-2",
-          selector: "button",
+          selector: "button.btn",
           href: `/${hyphenize(mdl.User.name)}/${M().format("YYYY-MM-DD")}`,
         },
         "Today"

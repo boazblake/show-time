@@ -9,7 +9,7 @@ const Navbar = () => {
           m(
             m.route.Link,
             {
-              selector: "button",
+              selector: "button.btn",
               href: `/${hyphenize(mdl.User.name)}/${date
                 .clone()
                 .subtract(1, "year")
@@ -26,7 +26,7 @@ const Navbar = () => {
           m(
             m.route.Link,
             {
-              selector: "button",
+              selector: "button.btn",
               href: `/${hyphenize(mdl.User.name)}/${date
                 .clone()
                 .add(1, "year")
@@ -39,7 +39,7 @@ const Navbar = () => {
           m(
             m.route.Link,
             {
-              selector: "button",
+              selector: "button.btn",
               href: `/${hyphenize(mdl.User.name)}/${date
                 .clone()
                 .subtract(1, "month")
@@ -50,7 +50,7 @@ const Navbar = () => {
           m(
             m.route.Link,
             {
-              selector: "button",
+              selector: "button.btn",
               href: `/${hyphenize(mdl.User.name)}/${date
                 .clone()
                 .add(1, "month")
