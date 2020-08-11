@@ -1,5 +1,5 @@
 import { Calendar, Day, Editor } from "Components"
-import { HTTP, getInvitesTask } from "Http"
+import { HTTP, getInvitesByUserIdTask } from "Http"
 import { dayModel } from "Models"
 import { datesAreSame } from "Utils"
 
@@ -36,7 +36,10 @@ export const Home = ({ attrs: { mdl } }) => {
       state.status = "success"
     }
 
-    getInvitesTask(HTTP)(mdl).fork(onError, onSuccess)
+    getInvitesByUserIdTask(HTTP)(mdl)(mdl.User.objectId).fork(
+      onError,
+      onSuccess
+    )
   }
 
   return {

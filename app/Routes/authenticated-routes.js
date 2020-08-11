@@ -1,20 +1,19 @@
 import { Layout } from "Components"
-import { Home, Event, Profile } from "Pages"
-import { scrollToAnchor } from "Utils"
+import { Home, Event } from "Pages"
 
 const AuthenticatedRoutes = [
-  {
-    id: "profile",
-    name: "Profile",
-    // icon: Icons.logo,
-    route: "/profile/:name",
-    position: ["toolbar"],
-    group: ["authenticated"],
-    children: [],
-    options: [],
-    onmatch: (mdl, args, path, fullroute, isAnchor) => {},
-    component: (mdl) => m(Layout, { mdl }, m(Profile, { mdl })),
-  },
+  // {
+  //   id: "profile",
+  //   name: "Profile",
+  //   // icon: Icons.logo,
+  //   route: "/profile/:name",
+  //   position: ["toolbar"],
+  //   group: ["authenticated"],
+  //   children: [],
+  //   options: [],
+  //   onmatch: (mdl, args, path, fullroute, isAnchor) => {},
+  //   component: (mdl) => m(Layout, { mdl }, m(Profile, { mdl })),
+  // },
   {
     id: "day-planner",
     name: "Day Planner",

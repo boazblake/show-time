@@ -1,7 +1,6 @@
 import { map } from "ramda"
 import { findUserByEmailTask } from "Http"
 import Task from "data.task"
-import { log } from "Utils"
 
 export const toInviteViewModel = ({
   start,
@@ -35,17 +34,17 @@ export const updateInviteTask = (http) => (mdl) => (invite) =>
     .putTask(mdl)(`data/Invites/${invite.objectId}`)(toInviteDto(invite))
     .map(toInviteViewModel)
 
-export const getInvitesTask = (http) => (mdl) =>
+export const getInvitesByUserIdTask = (http) => (mdl) => (userId) =>
   http.backEnd
     .getTask(mdl)(
-      `data/Invites?pageSize=100&where=userId%3D'${mdl.User.objectId}'&sortBy=start%20asc`
+      `data/Invites?pageSize=100&where=userId%3D'${userId}'&sortBy=start%20asc`
     )
     .map(map(toInviteViewModel))
 
-export const getInvitesTaskByEventId = (http) => (mdl) => (id) =>
+export const getInvitesTaskByEventId = (http) => (mdl) => (eventId) =>
   http.backEnd
     .getTask(mdl)(
-      `data/Invites?pageSize=100&where=eventId%3D'${id}'&sortBy=start%20asc`
+      `data/Invites?pageSize=100&where=eventId%3D'${eventId}'&sortBy=start%20asc`
     )
     .map(map(toInviteViewModel))
 

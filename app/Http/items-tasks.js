@@ -26,9 +26,14 @@ export const addItemTask = (http) => (mdl) => ({ name, quantity }) => {
     })
 }
 
-export const getItemsTask = (http) => (mdl) =>
+export const getItemsByEventIdTask = (http) => (mdl) => (eventId) =>
   http.backEnd.getTask(mdl)(
-    `data/Items?pageSize=100&where=eventId%3D'${mdl.Events.currentEventId()}'&sortBy=name%20asc`
+    `data/Items?pageSize=100&where=eventId%3D'${eventId}'&sortBy=name%20asc`
+  )
+
+export const getItemsByUserIdTask = (http) => (mdl) => (userId) =>
+  http.backEnd.getTask(mdl)(
+    `data/Items?pageSize=100&where=userId%3D'${userId}'&sortBy=name%20asc`
   )
 
 export const deleteItemTask = (http) => (mdl) => (id) =>

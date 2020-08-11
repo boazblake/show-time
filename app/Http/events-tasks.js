@@ -3,10 +3,10 @@ import {
   getInvitesTaskByEventId,
   createInviteTask,
   getUserProfileTask,
-  getItemsTask,
+  getItemsByEventIdTask,
 } from "Http"
-import { compose, traverse, prop, filter, head, pluck } from "ramda"
-import { log, getHour, getMin, displayTimeFormat } from "Utils"
+import { traverse, head } from "ramda"
+import { getHour, getMin, displayTimeFormat } from "Utils"
 
 const toEventviewModel = (mdl) => ({
   objectId,
@@ -46,17 +46,15 @@ const getProfilesTask = (http) => (mdl) => (invite) =>
     .map(head)
     .map(toGuestModel(invite))
 
-const getEventGuestsTask = (http) => (mdl) =>
-  getInvitesTaskByEventId(http)(mdl)(mdl.Events.currentEventId()).chain(
+const getEventGuestsByEventIdTask = (http) => (mdl) => (eventId) =>
+  getInvitesTaskByEventId(http)(mdl)(eventId).chain(
     traverse(Task.of, getProfilesTask(http)(mdl))
   )
 
-export const getEventTask = (http) => (mdl) =>
-  http.backEnd
-    .getTask(mdl)(`data/Events/${mdl.Events.currentEventId()}`)
-    .map(toEventviewModel(mdl))
+export const getEventByIdTask = (http) => (mdl) => (eventId) =>
+  http.backEnd.getTask(mdl)(`data/Events/${eventId}`).map(toEventviewModel(mdl))
 
-export const loadEventTask = (http) => (mdl) =>
+export const loadEventTask = (http) => (mdl) => (eventId) =>
   Task.of((event) => (items) => (guests) => {
     return {
       event,
@@ -64,9 +62,9 @@ export const loadEventTask = (http) => (mdl) =>
       items,
     }
   })
-    .ap(getEventTask(http)(mdl))
-    .ap(getItemsTask(http)(mdl))
-    .ap(getEventGuestsTask(http)(mdl))
+    .ap(getEventByIdTask(http)(mdl)(eventId))
+    .ap(getItemsByEventIdTask(http)(mdl)(eventId))
+    .ap(getEventGuestsByEventIdTask(http)(mdl)(eventId))
 
 export const deleteEventTask = (http) => (mdl) => (id) =>
   http.backEnd

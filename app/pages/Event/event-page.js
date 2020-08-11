@@ -28,7 +28,7 @@ export const Event = ({ attrs: { mdl } }) => {
   const state = {
     error: {},
     status: "loading",
-    info: { show: Stream(false) },
+    info: { show: Stream(false), map: { status: Stream(false) } },
     settings: { show: Stream(false) },
     guests: {
       name: "",
@@ -90,7 +90,10 @@ export const Event = ({ attrs: { mdl } }) => {
       console.log("load error", state, data, error)
     }
 
-    loadEventTask(HTTP)(mdl).fork(onError, updateEvent)
+    loadEventTask(HTTP)(mdl)(mdl.Events.currentEventId()).fork(
+      onError,
+      updateEvent
+    )
   }
 
   const deleteInvite = (mdl) => {
@@ -138,7 +141,7 @@ export const Event = ({ attrs: { mdl } }) => {
     }
 
     updateInviteTask(HTTP)(mdl)(update)
-      .chain((_) => loadEventTask(HTTP)(mdl))
+      .chain((_) => loadEventTask(HTTP)(mdl)(mdl.Events.currentEventId()))
       .fork(onError, onSuccess)
   }
 
@@ -157,7 +160,7 @@ export const Event = ({ attrs: { mdl } }) => {
 
     state.items.isSubmitted(true)
     updateItemTask(HTTP)(mdl)(item)
-      .chain((_) => loadEventTask(HTTP)(mdl))
+      .chain((_) => loadEventTask(HTTP)(mdl)(mdl.Events.currentEventId()))
       .fork(onError, onSuccess)
   }
 
@@ -169,7 +172,7 @@ export const Event = ({ attrs: { mdl } }) => {
     }
 
     deleteItemTask(HTTP)(mdl)(itemId)
-      .chain((_) => loadEventTask(HTTP)(mdl))
+      .chain((_) => loadEventTask(HTTP)(mdl)(mdl.Events.currentEventId()))
       .fork(onError, updateEvent)
   }
 
@@ -199,7 +202,7 @@ export const Event = ({ attrs: { mdl } }) => {
         console.log("data??", x)
         return addItemTask(HTTP)(mdl)(x)
       })
-      .chain((_) => loadEventTask(HTTP)(mdl))
+      .chain((_) => loadEventTask(HTTP)(mdl)(mdl.Events.currentEventId()))
       .fork(onError, onSuccess)
   }
 
@@ -225,26 +228,31 @@ export const Event = ({ attrs: { mdl } }) => {
 
     state.guests.error(null)
     sendInviteTask(HTTP)(mdl)(state.guests.email, data.event)
-      .chain((_) => loadEventTask(HTTP)(mdl))
+      .chain((_) => loadEventTask(HTTP)(mdl)(mdl.Events.currentEventId()))
       .fork(onError, onSuccess)
   }
 
   const setupMap = ({ dom }) => {
     mapboxgl.accessToken =
       "pk.eyJ1IjoiYm9hemJsYWtlIiwiYSI6ImNqdWJ4OGk4YzBpYXU0ZG5wNDI1OGM0eTIifQ.5UV0HkEGPiKUzFdbgdr5ww"
-    let coords = JSON.parse(data.event.latlong)
+    try {
+      let coords = JSON.parse(data.event.latlong)
 
-    const createMarker = () =>
-      new mapboxgl.Marker().setLngLat(coords).addTo(map)
+      const createMarker = () =>
+        new mapboxgl.Marker().setLngLat(coords).addTo(map)
 
-    let map = new mapboxgl.Map({
-      container: dom,
-      center: coords,
-      zoom: 15,
-      style: "mapbox://styles/mapbox/streets-v11?optimize=true",
-    })
-
-    createMarker()
+      let map = new mapboxgl.Map({
+        container: dom,
+        center: coords,
+        zoom: 15,
+        style: "mapbox://styles/mapbox/streets-v11?optimize=true",
+      })
+      state.info.map.status(true)
+      createMarker()
+    } catch (error) {
+      state.info.map.status(false)
+      return
+    }
   }
 
   return {
