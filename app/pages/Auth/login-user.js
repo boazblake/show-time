@@ -20,9 +20,8 @@ const validateForm = (mdl) => (data) => {
   const onSuccess = (mdl) => (account) => {
     state.errors = {}
     mdl.User.account = account
-    m.route.set(
-      `/${hyphenize(mdl.User.name)}/${mdl.todayDate().format("YYYY-MM-DD")}`
-    )
+
+    m.route.set(`/${hyphenize(mdl.User.name)}/${M().format("YYYY-MM-DD")}`)
   }
 
   state.isSubmitted = true

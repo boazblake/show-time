@@ -94,9 +94,7 @@ const CalendarDay = () => {
             href: `/${hyphenize(mdl.User.name)}/${day.format("YYYY-MM-DD")}`,
             class: "cal-day-link",
             onclick: (e) =>
-              mdl.State.toAnchor(
-                firstInviteHour(invites) || M.utc().format("HH")
-              ),
+              mdl.State.toAnchor(firstInviteHour(invites) || M().format("HH")),
           },
           m(`.${calendarDayStyle(mdl.selectedDate(), day, dir)}`, [
             m("span.cal-date", day.format("D")),

@@ -25,7 +25,8 @@ const AuthenticatedRoutes = [
     children: [],
     options: [],
     onmatch: (mdl, args, path, fullroute, isAnchor) => {
-      let date = M.utc(args.date).clone()
+      let date = M(args.date).clone()
+      console.log(args.date)
       mdl.selectedDate(date)
     },
     component: (mdl) => m(Layout, { mdl }, m(Home, { mdl })),

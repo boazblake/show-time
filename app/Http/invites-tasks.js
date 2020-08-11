@@ -12,8 +12,8 @@ export const toInviteViewModel = ({
   status,
   userId,
 }) => ({
-  start: M.utc(start),
-  end: M.utc(end),
+  start: M(start),
+  end: M(end),
   objectId,
   eventId,
   title,

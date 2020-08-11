@@ -29,8 +29,8 @@ export const createCalendarDayViewModel = (
   { isSameMonth }
 ) => {
   return isSameMonth
-    ? isCalenderDay(filterBy(day)(invites), M.utc(day))
-    : isNotCalenderDay(filterBy(day)(invites), M.utc(day), date)
+    ? isCalenderDay(filterBy(day)(invites), M(day))
+    : isNotCalenderDay(filterBy(day)(invites), M(day), date)
 }
 
 export const createCalendar = (invites, date) => {
@@ -58,8 +58,8 @@ export const createCalendar = (invites, date) => {
 }
 
 export const calendarModel = ({ mdl, invites, date }) => {
-  let today = M.utc()
-  let _date = M.utc(date)
+  let today = M()
+  let _date = M(date)
   let dto = {
     invites,
     startDate: _date,
@@ -79,7 +79,7 @@ export const calendarModel = ({ mdl, invites, date }) => {
 }
 
 export const calendarDayStyle = (selectedDate, current, dir) => {
-  let today = M.utc()
+  let today = M()
   if (dir !== 0) {
     return "cal-day notThisMonth"
   }

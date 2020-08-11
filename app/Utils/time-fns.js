@@ -22,10 +22,10 @@ export const getHoursInDay = (format) => {
 }
 
 export const datesAreSame = (first) => (second) => (format) => {
-  let f = M.utc(first).format(format)
-  let s = M.utc(second).format(format)
+  let f = M(first).format(format)
+  let s = M(second).format(format)
 
-  return M.utc(f).isSame(M.utc(s))
+  return M(f).isSame(M(s))
 }
 export const isToday = (someDate) => {
   const today = new Date()

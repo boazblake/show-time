@@ -21,12 +21,12 @@ const toEventviewModel = (mdl) => ({
 }) => {
   return {
     eventId: objectId,
-    date: M.utc(start).format("DD-MM-YYYY"),
+    date: M(start).format("DD-MM-YYYY"),
     title: title.toUpperCase(),
     start,
     end,
-    startTime: M.utc(start).format(displayTimeFormat(mdl)),
-    endTime: M.utc(end).format(displayTimeFormat(mdl)),
+    startTime: M(start).format(displayTimeFormat(mdl)),
+    endTime: M(end).format(displayTimeFormat(mdl)),
     notes,
     allDay,
     location,
@@ -85,10 +85,8 @@ export const submitEventTask = (http) => (mdl) => ({
   location,
   latlong,
 }) => {
-  let end = M.utc(mdl.selectedDate())
-    .hour(getHour(endTime))
-    .minute(getMin(endTime))
-  let start = M.utc(mdl.selectedDate())
+  let end = M(mdl.selectedDate()).hour(getHour(endTime)).minute(getMin(endTime))
+  let start = M(mdl.selectedDate())
     .hour(getHour(startTime))
     .minute(getMin(startTime))
 

@@ -45,7 +45,7 @@ const Home = {
 const Settings = { profile: "", inspector: "" }
 
 const Calendar = {
-  data: calendarModel({ mdl: Model, invites: [], date: M.utc() }),
+  data: calendarModel({ mdl: Model, invites: [], date: M() }),
 }
 const User = {}
 
@@ -55,7 +55,7 @@ const Sidebar = {
 
 const Model = {
   selectedDate: Stream(""),
-  todayDate: Stream(M.utc()),
+  todayDate: Stream(M()),
   Calendar,
   Day,
   Events,

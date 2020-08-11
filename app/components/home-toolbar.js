@@ -18,7 +18,7 @@ export const HomeToolbar = () => {
         {
           class: "col-xs-1-2",
           selector: "button",
-          href: `/${hyphenize(mdl.User.name)}/${M.utc().format("YYYY-MM-DD")}`,
+          href: `/${hyphenize(mdl.User.name)}/${M().format("YYYY-MM-DD")}`,
         },
         "Today"
       ),
