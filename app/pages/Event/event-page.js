@@ -21,6 +21,9 @@ import {
 import Task from "data.task"
 import { validateItemTask } from "./validations"
 
+const isUserOrUnclaimed = (mdl) => (item) =>
+  [mdl.User.objectId, null].includes(item.userId)
+
 export const Event = ({ attrs: { mdl } }) => {
   const state = {
     error: {},
@@ -385,13 +388,14 @@ export const Event = ({ attrs: { mdl } }) => {
                               ? [
                                   m(
                                     "span.clickable.frow row-start",
-                                    m(MinusCircleLine, {
-                                      onclick: (e) => {
-                                        item.userId = null
-                                        updateItem(mdl)(item)
-                                      },
-                                      class: "smaller",
-                                    }),
+                                    isUserOrUnclaimed(mdl)(item) &&
+                                      m(MinusCircleLine, {
+                                        onclick: (e) => {
+                                          item.userId = null
+                                          updateItem(mdl)(item)
+                                        },
+                                        class: "smaller",
+                                      }),
                                     getUserFromId(item.userId).name
                                   ),
                                 ]
@@ -409,31 +413,33 @@ export const Event = ({ attrs: { mdl } }) => {
                         ),
                         m(".col-xs-1-3 frow items-center", [
                           m(".col-xs-2-3 frow column-center", [
-                            m(
-                              "span.clickable",
-                              m(AngleLine, {
-                                class: "smaller",
-                                onclick: (e) => {
-                                  item.quantity++
-                                  updateItem(mdl)(item)
-                                },
-                              })
-                            ),
+                            isUserOrUnclaimed(mdl)(item) &&
+                              m(
+                                "span.clickable",
+                                m(AngleLine, {
+                                  class: "smaller",
+                                  onclick: (e) => {
+                                    item.quantity++
+                                    updateItem(mdl)(item)
+                                  },
+                                })
+                              ),
                             item.quantity,
-                            m(
-                              "span.clickable.smaller",
-                              m(AngleLine, {
-                                class: "decrement",
-                                onclick: (e) => {
-                                  item.quantity--
-                                  updateItem(mdl)(item)
-                                },
-                              })
-                            ),
+                            isUserOrUnclaimed(mdl)(item) &&
+                              m(
+                                "span.clickable.smaller",
+                                m(AngleLine, {
+                                  class: "decrement",
+                                  onclick: (e) => {
+                                    item.quantity--
+                                    updateItem(mdl)(item)
+                                  },
+                                })
+                              ),
                           ]),
-                          m(
-                            ".col-xs-1-3 frow column-centered",
-                            mdl.User.objectId == item.userId &&
+                          isUserOrUnclaimed(mdl)(item) &&
+                            m(
+                              ".col-xs-1-3 frow column-centered",
                               m(
                                 "span.clickable",
                                 m(RemoveLine, {
@@ -442,7 +448,7 @@ export const Event = ({ attrs: { mdl } }) => {
                                     deleteItem(mdl)(item.objectId),
                                 })
                               )
-                          ),
+                            ),
                         ]),
                       ])
                     )
