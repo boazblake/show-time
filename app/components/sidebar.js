@@ -1,6 +1,7 @@
 import { jsonCopy } from "Utils"
 import { HTTP, getItemsByUserIdTask } from "Http"
 import { Profile } from "Components"
+import { reduce } from "ramda"
 
 export const Sidebar = () => {
   const state = {
@@ -23,6 +24,23 @@ export const Sidebar = () => {
     },
   }
 
+  const toItemViewModel = reduce((acc, { name, quantity }) => {
+    const addNew = (n, q) => acc.push({ name: n, quantity: q })
+
+    acc.any()
+      ? acc.map((i) => {
+          console.log(
+            "i",
+            i.name.toLowerCase() == name.toLowerCase() ? "same" : name
+          )
+          i.name.toLowerCase() == name.toLowerCase()
+            ? (i.quantity += quantity)
+            : addNew(name.toLowerCase(), quantity)
+        })
+      : addNew(name, quantity)
+    return acc
+  }, [])
+
   const showState = (field) => {
     let keys = Object.keys(state)
     return keys.map((k) =>
@@ -40,7 +58,8 @@ export const Sidebar = () => {
     const onSuccess = (items) => {
       state.load.error(null)
       state.load.status("success")
-      state.Home.data.items = items
+      state.Home.data.items = toItemViewModel(items)
+      console.log(items, state.Home.data.items)
     }
 
     getItemsByUserIdTask(HTTP)(mdl)(mdl.User.objectId).fork(onError, onSuccess)

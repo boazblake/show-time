@@ -21,7 +21,7 @@ const toEventviewModel = (mdl) => ({
 }) => {
   return {
     eventId: objectId,
-    date: M(start).format("DD-MM-YYYY"),
+    date: M(start).format("MM-DD-YYYY"),
     title: title.toUpperCase(),
     start,
     end,
