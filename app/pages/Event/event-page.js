@@ -26,7 +26,7 @@ export const Event = ({ attrs: { mdl } }) => {
     error: {},
     status: "loading",
     info: { show: Stream(false) },
-    edit: { show: Stream(false) },
+    settings: { show: Stream(false) },
     guests: {
       name: "",
       show: Stream(false),
@@ -283,7 +283,7 @@ export const Event = ({ attrs: { mdl } }) => {
                   pills: [m(".pill", data.guests.length)],
                 },
                 m(".guests-container", [
-                  m(".frow row", [
+                  m(".frow row event-input-group", [
                     m("input.col-xs-4-5", {
                       placeholder: "email",
                       value: state.guests.email,
@@ -345,7 +345,7 @@ export const Event = ({ attrs: { mdl } }) => {
                   pills: [m(".pill", data.items.length)],
                 },
                 [
-                  m(".frow row", [
+                  m(".frow row event-input-group", [
                     m("input.col-xs-1-2", {
                       placeholder: "name",
                       value: state.items.name,
@@ -452,8 +452,15 @@ export const Event = ({ attrs: { mdl } }) => {
 
               m(
                 AccordianItem,
-                { mdl, state, data, part: "edit", title: "Edit" },
-                [m("button", { onclick: (e) => deleteInvite(mdl) }, "delete")]
+                { mdl, state, data, part: "settings", title: "Settings" },
+                m(".frow row-start", [
+                  m("button", { onclick: (e) => deleteInvite(mdl) }, "Delete"),
+                  m(
+                    "button",
+                    { onclick: (e) => console.log("edit event ...") },
+                    "Edit"
+                  ),
+                ])
               ),
             ]),
           ]),

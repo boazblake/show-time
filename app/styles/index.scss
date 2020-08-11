@@ -185,9 +185,18 @@ ul {
     margin-top: 10px;
     width: 100%;
     padding: 5px;
-    .accordian-item-btn {
-      // transform: rotate(180deg);
-      transition-duration: 2s;
+
+    .accordian-item-title {
+      width: 100%;
+      padding: 0 1rem;
+      margin: 0;
+      background-image: linear-gradient(
+    rgba(255, 255, 255, 1) 60%,
+    rgba(255, 255, 255, 0) 100%
+    );
+    }
+
+    .accordian-item-btn > * {
     }
 
     .accordian-item-body {
@@ -218,6 +227,16 @@ ul {
 
 .event-items-item {
   border-top: 1px solid var(--blue);
+}
+
+.event-input-group {
+  width: 100%;
+  padding:1rem 0;
+  margin: 0;
+  background-image: linear-gradient(
+rgba(255, 255, 255, 1) 60%,
+rgba(255, 255, 255, 0) 100%
+);
 }
 
 .event-form {
