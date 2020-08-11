@@ -877,7 +877,7 @@ var EventForm = function EventForm() {
           submit = _ref$attrs.submit;
       return m("form.event-form", m(".frow column-centered", [m(".full-width", m("label.frow row row-evenly ", [m("input.col-xs-2-3 ", {
         onchange: function onchange(e) {
-          return m.route.set("/".concat((0, _Utils.hyphenize)(mdl.User.name), "/").concat(e.target.value));
+          return m.route.set("/".concat((0, _Utils.hyphenize)(mdl.User.name), "/").concat(e.target.value.trim()));
         },
         type: "date",
         value: mdl.selectedDate().format("YYYY-MM-DD")
@@ -889,7 +889,7 @@ var EventForm = function EventForm() {
         }
       }))])), m(".full-width", [m(".frow row row-evenly gutters", [m("label.col-xs-1-2", [m("input.", {
         oninput: function oninput(e) {
-          return data.startTime = e.target.value;
+          return data.startTime = e.target.value.trim();
         },
         value: data.startTime,
         type: "time",
@@ -899,7 +899,7 @@ var EventForm = function EventForm() {
         }
       }), m(".frow row-start", ["Start Time", m("span.required-field", "*")]), state.errors && m("code.error-field", state.errors.startTime)]), m("label.col-xs-1-2", [m("input", {
         oninput: function oninput(e) {
-          return data.endTime = e.target.value;
+          return data.endTime = e.target.value.trim();
         },
         value: data.endTime,
         type: "time",
@@ -917,10 +917,10 @@ var EventForm = function EventForm() {
         type: "address",
         value: data.location,
         oninput: function oninput(e) {
-          return data.location = e.target.value;
+          return data.location = e.target.value.trim();
         },
         onchange: function onchange(e) {
-          return locateQuery(mdl)(state)(e.target.value);
+          return locateQuery(mdl)(state)(e.target.value.trim());
         },
         onblur: function onblur(e) {
           return state.isSubmitted && validate(state, data);
@@ -929,7 +929,7 @@ var EventForm = function EventForm() {
         type: "url",
         value: data.url,
         oninput: function oninput(e) {
-          return data.location = e.target.value;
+          return data.location = e.target.value.trim();
         },
         onblur: function onblur(e) {
           return state.isSubmitted && validate(state, data);
@@ -948,7 +948,7 @@ var EventForm = function EventForm() {
         type: "text",
         value: data.text,
         oninput: function oninput(e) {
-          return data.title = e.target.value;
+          return data.title = e.target.value.trim();
         },
         onblur: function onblur(e) {
           return state.isSubmitted && validate(state, data);
@@ -957,7 +957,7 @@ var EventForm = function EventForm() {
         type: "text",
         value: data.notes,
         oninput: function oninput(e) {
-          return data.notes = e.target.value;
+          return data.notes = e.target.value.trim();
         },
         onblur: function onblur(e) {
           return state.isSubmitted && validate(state, data);
@@ -1529,7 +1529,6 @@ var Sidebar = function Sidebar() {
       state.load.error(null);
       state.load.status("success");
       state.Home.data.items = toItemViewModel(items);
-      console.log(items, state.Home.data.items);
     };
 
     (0, _Http.getItemsByUserIdTask)(_Http.HTTP)(mdl)(mdl.User.objectId).fork(onError, onSuccess);
@@ -3661,7 +3660,7 @@ var validateName = function validateName(data) {
 };
 
 var validateEmails = function validateEmails(data) {
-  return (0, _data.Success)(data).apLeft((0, _Utils.validate)(_Utils.isRequired, emailLense, EMAIL_REQUIRED_MSG, data)).apLeft((0, _Utils.validate)(_Utils.isRequired, emailConfirmLense, EMAIL_REQUIRED_MSG, data)).apLeft((0, _Utils.validate)((0, _Utils.isEqual)(data.confirmEmail), emailLense, EMAILS_MUST_MATCH, data)).apLeft((0, _Utils.validate)((0, _Utils.isEqual)(data.email), emailConfirmLense, EMAILS_MUST_MATCH, data)).apLeft((0, _Utils.validate)(_Utils.emailFormat, emailConfirmLense, INVALID_EMAIL_FORMAT, data)).apLeft((0, _Utils.validate)(_Utils.emailFormat, emailLense, INVALID_EMAIL_FORMAT, data));
+  return (0, _data.Success)(data).apLeft((0, _Utils.validate)(_Utils.isRequired, emailLense, EMAIL_REQUIRED_MSG, data)).apLeft((0, _Utils.validate)(_Utils.isRequired, emailConfirmLense, EMAIL_REQUIRED_MSG, data)).apLeft((0, _Utils.validate)((0, _ramda.equals)((0, _ramda.prop)("email", data)), emailConfirmLense, EMAILS_MUST_MATCH, data)).apLeft((0, _Utils.validate)(_Utils.emailFormat, emailConfirmLense, INVALID_EMAIL_FORMAT, data)).apLeft((0, _Utils.validate)(_Utils.emailFormat, emailLense, INVALID_EMAIL_FORMAT, data)).apLeft((0, _Utils.validate)((0, _ramda.equals)((0, _ramda.prop)("confirmEmail", data)), emailLense, EMAILS_MUST_MATCH, data));
 };
 
 var validateEmail = function validateEmail(data) {
@@ -3669,7 +3668,7 @@ var validateEmail = function validateEmail(data) {
 };
 
 var validatePasswords = function validatePasswords(data) {
-  return (0, _data.Success)(data).apLeft((0, _Utils.validate)(_Utils.isRequired, passwordLense, PASSWORD_REQUIRED_MSG, data)).apLeft((0, _Utils.validate)(_Utils.isRequired, passwordConfirmLense, PASSWORD_REQUIRED_MSG, data)).apLeft((0, _Utils.validate)((0, _Utils.isEqual)(data.password), passwordConfirmLense, PASSWORDS_MUST_MATCH, data)).apLeft((0, _Utils.validate)((0, _Utils.isEqual)(data.confirmPassword), passwordLense, PASSWORDS_MUST_MATCH, data));
+  return (0, _data.Success)(data).apLeft((0, _Utils.validate)(_Utils.isRequired, passwordLense, PASSWORD_REQUIRED_MSG, data)).apLeft((0, _Utils.validate)(_Utils.isRequired, passwordConfirmLense, PASSWORD_REQUIRED_MSG, data)).apLeft((0, _Utils.validate)((0, _ramda.equals)(data.password), passwordConfirmLense, PASSWORDS_MUST_MATCH, data)).apLeft((0, _Utils.validate)((0, _ramda.equals)(data.confirmPassword), passwordLense, PASSWORDS_MUST_MATCH, data));
 };
 
 var validatePassword = function validatePassword(data) {
@@ -3705,7 +3704,7 @@ var _Http = require("Http");
 
 var _ramda = require("ramda");
 
-var validateForm = function validateForm(mdl) {
+var loginUser = function loginUser(mdl) {
   return function (data) {
     var onError = function onError(errs) {
       if (errs) {
@@ -3729,7 +3728,7 @@ var validateForm = function validateForm(mdl) {
     };
 
     state.isSubmitted = true;
-    (0, _Validations.validateLoginTask)(data.userModel).chain((0, _Http.loginTask)(_Http.HTTP)(mdl)).chain(function (user) {
+    (0, _Validations.validateLoginTask)(data).chain((0, _Http.loginTask)(_Http.HTTP)(mdl)).chain(function (user) {
       mdl.User = user;
       return (0, _Http.getUserProfileTask)(_Http.HTTP)(mdl)(mdl.User.objectId);
     }).map((0, _ramda.map)(function (profile) {
@@ -3739,33 +3738,37 @@ var validateForm = function validateForm(mdl) {
   };
 };
 
-var userModel = {
+var data = {
   name: "",
   email: "",
-  password: "",
-  confirmEmail: "",
-  confirmPassword: "",
-  isAdmin: false
-};
-var dataModel = {
-  userModel: userModel
+  password: ""
 };
 var state = {
   isSubmitted: false,
   errors: {},
   httpError: undefined,
-  data: (0, _Utils.jsonCopy)(dataModel),
   showErrorMsg: Stream(false),
   errorMsg: Stream("")
 };
 
 var resetState = function resetState() {
-  state.data = (0, _Utils.jsonCopy)(dataModel);
   state.errors = {};
   state.httpError = undefined;
   state.isSubmitted = false;
   state.showErrorMsg(false);
   state.errorMsg("");
+};
+
+var validate = function validate() {
+  var onSuccess = function onSuccess(_) {
+    state.errors = null;
+  };
+
+  var onError = function onError(error) {
+    state.errors = error;
+  };
+
+  state.isSubmitted && (0, _Validations.validateLoginTask)(data).fork(onError, onSuccess);
 };
 
 var Login = function Login() {
@@ -3786,28 +3789,32 @@ var Login = function Login() {
         id: "reg-email",
         type: "email",
         placeholder: "Email",
-        onkeyup: function onkeyup(e) {
-          // state.isSubmitted && validateForm(mdl)(state.data)
-          state.data.userModel.email = e.target.value;
+        onblur: function onblur(e) {
+          return validate();
         },
-        value: state.data.userModel.email
+        oninput: function oninput(e) {
+          return data.email = e.target.value.trim();
+        },
+        value: data.email
       }), state.errors.email && m("span.error-field", state.errors.email), m("input", {
         class: state.isSubmitted ? state.errors.password ? "has-error" : "has-success" : "",
         id: "reg-pass",
         type: "password",
         placeholder: "Password",
-        onkeyup: function onkeyup(e) {
-          // state.isSubmitted && validateForm(mdl)(state.data)
-          state.data.userModel.password = e.target.value;
+        onblur: function onblur(e) {
+          return validate();
         },
-        value: state.data.userModel.password
+        oninput: function oninput(e) {
+          return data.password = e.target.value.trim();
+        },
+        value: data.password
       }), state.errors.password && m("span.error-field", state.errors.password)]), state.httpError && m(".error-field", state.httpError)], m(m.route.Link, {
         // type: "submit",
         selector: "button",
         form: "login-form",
         onclick: function onclick(e) {
           e.preventDefault();
-          validateForm(mdl)(state.data);
+          loginUser(mdl)(data);
         },
         class: "max-width mt-20"
       }, m("p.text-centered", "Login")), m(m.route.Link, {
@@ -3829,7 +3836,7 @@ exports.default = _default;
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.default = exports.Register = exports.validateForm = void 0;
+exports.default = exports.Register = exports.registerUser = void 0;
 
 var _Utils = require("Utils");
 
@@ -3837,27 +3844,22 @@ var _Validations = require("./Validations");
 
 var _Http = require("Http");
 
-var userModel = {
+var data = {
   name: "",
   email: "",
   password: "",
   confirmEmail: "",
   confirmPassword: ""
 };
-var dataModel = {
-  userModel: userModel
-};
 var state = {
   isSubmitted: false,
   errors: {},
   httpError: undefined,
-  data: (0, _Utils.jsonCopy)(dataModel),
   showErrorMsg: Stream(false),
   errorMsg: Stream("")
 };
 
 var resetState = function resetState() {
-  state.data = (0, _Utils.jsonCopy)(dataModel);
   state.errors = {};
   state.httpError = undefined;
   state.isSubmitted = false;
@@ -3865,14 +3867,26 @@ var resetState = function resetState() {
   state.errorMsg("");
 };
 
-var validateForm = function validateForm(mdl) {
+var validate = function validate() {
+  var onSuccess = function onSuccess(_) {
+    state.errors = null;
+  };
+
+  var onError = function onError(error) {
+    state.errors = error;
+  };
+
+  state.isSubmitted && (0, _Validations.validateUserRegistrationTask)(data).fork(onError, onSuccess);
+};
+
+var registerUser = function registerUser(mdl) {
   return function (data) {
-    var onError = function onError(errs) {
-      if (errs) {
-        state.errors = errs;
-        state.errorMsg(errs.message);
+    var onError = function onError(errors) {
+      if (errors) {
+        state.errors = errors;
+        state.errorMsg(errors.message);
         state.showErrorMsg(true);
-        console.log("failed - state", state);
+        console.log("failed - state", state, errors);
       } else {
         state.errorMsg("There seems to be a problem please contact web support");
         state.showErrorMsg(true);
@@ -3882,7 +3896,7 @@ var validateForm = function validateForm(mdl) {
 
     var onSuccess = function onSuccess(mdl) {
       return function (data) {
-        state.errors = {};
+        state.errors = null;
         sessionStorage.setItem("shindigit-user-token", mdl.User["user-token"]);
         sessionStorage.setItem("shindigit-user", JSON.stringify(mdl.User));
         m.route.set("/".concat((0, _Utils.hyphenize)(mdl.User.name), "/").concat(M().format("YYYY-MM-DD")));
@@ -3890,10 +3904,10 @@ var validateForm = function validateForm(mdl) {
     };
 
     state.isSubmitted = true;
-    (0, _Validations.validateUserRegistrationTask)(data.userModel).chain((0, _Http.registerTask)(_Http.HTTP)(mdl)).chain(function (_) {
+    (0, _Validations.validateUserRegistrationTask)(data).chain((0, _Http.registerTask)(_Http.HTTP)(mdl)).chain(function (_) {
       return (0, _Http.loginTask)(_Http.HTTP)(mdl)({
-        email: data.userModel.email,
-        password: data.userModel.password
+        email: data.email,
+        password: data.password
       }).chain(function (_) {
         return (0, _Http.createProfileTask)(_Http.HTTP)(mdl);
       }).chain(function (profile) {
@@ -3904,7 +3918,7 @@ var validateForm = function validateForm(mdl) {
   };
 };
 
-exports.validateForm = validateForm;
+exports.registerUser = registerUser;
 
 var RegisterUser = function RegisterUser() {
   return {
@@ -3914,51 +3928,61 @@ var RegisterUser = function RegisterUser() {
           errors = _ref$attrs.errors,
           isSubmitted = _ref$attrs.isSubmitted;
       return [m("input", {
-        class: isSubmitted ? errors.name ? "has-error" : "has-success" : "",
         id: "reg-name",
         type: "text",
         placeholder: "Full Name",
-        onkeyup: function onkeyup(e) {
-          return data.name = e.target.value;
+        onblur: function onblur(e) {
+          return validate();
+        },
+        oninput: function oninput(e) {
+          return data.name = e.target.value.trim();
         },
         value: data.name
-      }), errors.name && m("span.error-field", errors.name), m("input", {
-        class: isSubmitted ? errors.email ? "has-error" : "has-success" : "",
+      }), state.errors && errors.name && m("span.error-field", errors.name), m("input", {
         id: "reg-email",
         type: "email",
         placeholder: "Email",
-        onkeyup: function onkeyup(e) {
-          return data.email = e.target.value;
+        onblur: function onblur(e) {
+          return validate();
+        },
+        oninput: function oninput(e) {
+          return data.email = e.target.value.trim();
         },
         value: data.email
-      }), errors.email && m("span.error-field", errors.email), m("input", {
+      }), state.errors && errors.email && m("span.error-field", errors.email), m("input", {
         id: "confirmEmail",
-        class: isSubmitted ? errors.confirmEmail ? "has-error" : "has-success" : "",
         type: "email",
         placeholder: "Confirm Email",
-        onkeyup: function onkeyup(e) {
-          return data.confirmEmail = e.target.value;
+        onblur: function onblur(e) {
+          return validate();
+        },
+        oninput: function oninput(e) {
+          return data.confirmEmail = e.target.value.trim();
         },
         value: data.confirmEmail
-      }), errors.confirmEmail && m("span.error-field", errors.confirmEmail), m("input", {
-        class: isSubmitted ? errors.password ? "has-error" : "has-success" : "",
+      }), state.errors && errors.confirmEmail && m("span.error-field", errors.confirmEmail), m("input", {
         id: "reg-pass",
         type: "password",
         placeholder: "Password",
-        onkeyup: function onkeyup(e) {
-          return data.password = e.target.value;
+        onblur: function onblur(e) {
+          return validate();
+        },
+        oninput: function oninput(e) {
+          return data.password = e.target.value.trim();
         },
         value: data.password
-      }), errors.password && m("span.error-field", errors.password), m("input", {
-        class: isSubmitted ? errors.confirmPassword ? "has-error" : "has-success" : "",
+      }), state.errors && errors.password && m("span.error-field", errors.password), m("input", {
         id: "pass-confirm",
         type: "password",
         placeholder: "Confirm Password",
-        onkeyup: function onkeyup(e) {
-          return data.confirmPassword = e.target.value;
+        onblur: function onblur(e) {
+          return validate();
+        },
+        oninput: function oninput(e) {
+          return data.confirmPassword = e.target.value.trim();
         },
         value: data.confirmPassword
-      }), errors.confirmPassword && m("span.error-field", errors.confirmPassword)];
+      }), state.errors && errors.confirmPassword && m("span.error-field", errors.confirmPassword)];
     }
   };
 };
@@ -3977,7 +4001,7 @@ var Register = function Register() {
           return e.preventDefault();
         }
       }, [m(RegisterUser, {
-        data: state.data.userModel,
+        data: data,
         errors: state.errors,
         isSubmitted: state.isSubmitted
       })]), m(m.route.Link, {
@@ -3985,7 +4009,7 @@ var Register = function Register() {
         form: "register-form",
         onclick: function onclick(e) {
           e.preventDefault();
-          validateForm(mdl)(state.data);
+          registerUser(mdl)(data);
         },
         class: "max-width mt-20"
       }, m("p", "Register")), m(m.route.Link, {
@@ -4294,7 +4318,7 @@ var Event = function Event(_ref) {
         placeholder: "email",
         value: state.guests.email,
         oninput: function oninput(e) {
-          return state.guests.email = e.target.value;
+          return state.guests.email = e.target.value.trim();
         },
         type: "email"
       }), m("button.btn.col-xs-1-5.button-none", {
@@ -4322,7 +4346,7 @@ var Event = function Event(_ref) {
         placeholder: "name",
         value: state.items.name,
         oninput: function oninput(e) {
-          return state.items.name = e.target.value;
+          return state.items.name = e.target.value.trim();
         },
         onblur: function onblur(e) {
           return validate("items")(state.items);
@@ -4332,7 +4356,7 @@ var Event = function Event(_ref) {
         placeholder: "quantity",
         value: state.items.quantity,
         oninput: function oninput(e) {
-          return state.items.quantity = e.target.value;
+          return state.items.quantity = e.target.value.trim();
         },
         onblur: function onblur(e) {
           return validate("items")(state.items);

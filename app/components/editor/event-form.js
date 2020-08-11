@@ -43,7 +43,9 @@ export const EventForm = () => {
             m("label.frow row row-evenly ", [
               m("input.col-xs-2-3 ", {
                 onchange: (e) =>
-                  m.route.set(`/${hyphenize(mdl.User.name)}/${e.target.value}`),
+                  m.route.set(
+                    `/${hyphenize(mdl.User.name)}/${e.target.value.trim()}`
+                  ),
                 type: "date",
                 value: mdl.selectedDate().format("YYYY-MM-DD"),
               }),
@@ -62,7 +64,7 @@ export const EventForm = () => {
             m(".frow row row-evenly gutters", [
               m("label.col-xs-1-2", [
                 m("input.", {
-                  oninput: (e) => (data.startTime = e.target.value),
+                  oninput: (e) => (data.startTime = e.target.value.trim()),
                   value: data.startTime,
                   type: "time",
                   disabled: data.allDay,
@@ -77,7 +79,7 @@ export const EventForm = () => {
               ]),
               m("label.col-xs-1-2", [
                 m("input", {
-                  oninput: (e) => (data.endTime = e.target.value),
+                  oninput: (e) => (data.endTime = e.target.value.trim()),
                   value: data.endTime,
                   type: "time",
                   disabled: data.allDay,
@@ -112,8 +114,9 @@ export const EventForm = () => {
                     m("input", {
                       type: "address",
                       value: data.location,
-                      oninput: (e) => (data.location = e.target.value),
-                      onchange: (e) => locateQuery(mdl)(state)(e.target.value),
+                      oninput: (e) => (data.location = e.target.value.trim()),
+                      onchange: (e) =>
+                        locateQuery(mdl)(state)(e.target.value.trim()),
                       onblur: (e) => state.isSubmitted && validate(state, data),
                     }),
                     m(".frow row-start", [
@@ -126,7 +129,7 @@ export const EventForm = () => {
                     m("input", {
                       type: "url",
                       value: data.url,
-                      oninput: (e) => (data.location = e.target.value),
+                      oninput: (e) => (data.location = e.target.value.trim()),
                       onblur: (e) => state.isSubmitted && validate(state, data),
                     }),
                     m(".frow row-start", [
@@ -165,7 +168,7 @@ export const EventForm = () => {
             m("input", {
               type: "text",
               value: data.text,
-              oninput: (e) => (data.title = e.target.value),
+              oninput: (e) => (data.title = e.target.value.trim()),
               onblur: (e) => state.isSubmitted && validate(state, data),
             }),
             m(".frow row-start", ["Title", m("span.required-field", "*")]),
@@ -177,7 +180,7 @@ export const EventForm = () => {
             m("input", {
               type: "text",
               value: data.notes,
-              oninput: (e) => (data.notes = e.target.value),
+              oninput: (e) => (data.notes = e.target.value.trim()),
               onblur: (e) => state.isSubmitted && validate(state, data),
             }),
             "Notes"

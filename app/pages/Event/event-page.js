@@ -298,7 +298,8 @@ export const Event = ({ attrs: { mdl } }) => {
                     m("input.col-xs-4-5", {
                       placeholder: "email",
                       value: state.guests.email,
-                      oninput: (e) => (state.guests.email = e.target.value),
+                      oninput: (e) =>
+                        (state.guests.email = e.target.value.trim()),
                       type: "email",
                     }),
 
@@ -360,14 +361,16 @@ export const Event = ({ attrs: { mdl } }) => {
                     m("input.col-xs-1-2", {
                       placeholder: "name",
                       value: state.items.name,
-                      oninput: (e) => (state.items.name = e.target.value),
+                      oninput: (e) =>
+                        (state.items.name = e.target.value.trim()),
                       onblur: (e) => validate("items")(state.items),
                       type: "text",
                     }),
                     m("input.col-xs-1-4", {
                       placeholder: "quantity",
                       value: state.items.quantity,
-                      oninput: (e) => (state.items.quantity = e.target.value),
+                      oninput: (e) =>
+                        (state.items.quantity = e.target.value.trim()),
                       onblur: (e) => validate("items")(state.items),
                       type: "number",
                       pattern: "mobile",

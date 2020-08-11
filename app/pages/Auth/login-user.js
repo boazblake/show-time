@@ -3,7 +3,7 @@ import { validateLoginTask } from "./Validations.js"
 import { HTTP, loginTask, getUserProfileTask, setUserToken } from "Http"
 import { map } from "ramda"
 
-const validateForm = (mdl) => (data) => {
+const loginUser = (mdl) => (data) => {
   const onError = (errs) => {
     if (errs) {
       state.errors = errs
@@ -20,13 +20,12 @@ const validateForm = (mdl) => (data) => {
   const onSuccess = (mdl) => (account) => {
     state.errors = {}
     mdl.User.account = account
-
     m.route.set(`/${hyphenize(mdl.User.name)}/${M().format("YYYY-MM-DD")}`)
   }
 
   state.isSubmitted = true
 
-  validateLoginTask(data.userModel)
+  validateLoginTask(data)
     .chain(loginTask(HTTP)(mdl))
     .chain((user) => {
       mdl.User = user
@@ -41,33 +40,38 @@ const validateForm = (mdl) => (data) => {
     .fork(onError, onSuccess(mdl))
 }
 
-const userModel = {
+const data = {
   name: "",
   email: "",
   password: "",
-  confirmEmail: "",
-  confirmPassword: "",
-  isAdmin: false,
 }
-
-const dataModel = { userModel }
 
 const state = {
   isSubmitted: false,
   errors: {},
   httpError: undefined,
-  data: jsonCopy(dataModel),
   showErrorMsg: Stream(false),
   errorMsg: Stream(""),
 }
 
 const resetState = () => {
-  state.data = jsonCopy(dataModel)
   state.errors = {}
   state.httpError = undefined
   state.isSubmitted = false
   state.showErrorMsg(false)
   state.errorMsg("")
+}
+
+const validate = () => {
+  const onSuccess = (_) => {
+    state.errors = null
+  }
+
+  const onError = (error) => {
+    state.errors = error
+  }
+
+  state.isSubmitted && validateLoginTask(data).fork(onError, onSuccess)
 }
 
 export const Login = () => {
@@ -95,11 +99,9 @@ export const Login = () => {
                 id: "reg-email",
                 type: "email",
                 placeholder: "Email",
-                onkeyup: (e) => {
-                  // state.isSubmitted && validateForm(mdl)(state.data)
-                  state.data.userModel.email = e.target.value
-                },
-                value: state.data.userModel.email,
+                onblur: (e) => validate(),
+                oninput: (e) => (data.email = e.target.value.trim()),
+                value: data.email,
               }),
               state.errors.email && m("span.error-field", state.errors.email),
 
@@ -112,11 +114,9 @@ export const Login = () => {
                 id: "reg-pass",
                 type: "password",
                 placeholder: "Password",
-                onkeyup: (e) => {
-                  // state.isSubmitted && validateForm(mdl)(state.data)
-                  state.data.userModel.password = e.target.value
-                },
-                value: state.data.userModel.password,
+                onblur: (e) => validate(),
+                oninput: (e) => (data.password = e.target.value.trim()),
+                value: data.password,
               }),
               state.errors.password &&
                 m("span.error-field", state.errors.password),
@@ -132,7 +132,7 @@ export const Login = () => {
             form: `login-form`,
             onclick: (e) => {
               e.preventDefault()
-              validateForm(mdl)(state.data)
+              loginUser(mdl)(data)
             },
             class: "max-width mt-20",
           },

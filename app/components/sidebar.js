@@ -59,7 +59,6 @@ export const Sidebar = () => {
       state.load.error(null)
       state.load.status("success")
       state.Home.data.items = toItemViewModel(items)
-      console.log(items, state.Home.data.items)
     }
 
     getItemsByUserIdTask(HTTP)(mdl)(mdl.User.objectId).fork(onError, onSuccess)

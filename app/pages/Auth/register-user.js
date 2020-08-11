@@ -1,4 +1,4 @@
-import { jsonCopy, hyphenize } from "Utils"
+import { hyphenize } from "Utils"
 import { validateUserRegistrationTask } from "./Validations"
 import {
   HTTP,
@@ -8,7 +8,7 @@ import {
   linkProfileTask,
 } from "Http"
 
-const userModel = {
+const data = {
   name: "",
   email: "",
   password: "",
@@ -16,19 +16,15 @@ const userModel = {
   confirmPassword: "",
 }
 
-const dataModel = { userModel }
-
 const state = {
   isSubmitted: false,
   errors: {},
   httpError: undefined,
-  data: jsonCopy(dataModel),
   showErrorMsg: Stream(false),
   errorMsg: Stream(""),
 }
 
 const resetState = () => {
-  state.data = jsonCopy(dataModel)
   state.errors = {}
   state.httpError = undefined
   state.isSubmitted = false
@@ -36,13 +32,26 @@ const resetState = () => {
   state.errorMsg("")
 }
 
-export const validateForm = (mdl) => (data) => {
-  const onError = (errs) => {
-    if (errs) {
-      state.errors = errs
-      state.errorMsg(errs.message)
+const validate = () => {
+  const onSuccess = (_) => {
+    state.errors = null
+  }
+
+  const onError = (error) => {
+    state.errors = error
+  }
+
+  state.isSubmitted &&
+    validateUserRegistrationTask(data).fork(onError, onSuccess)
+}
+
+export const registerUser = (mdl) => (data) => {
+  const onError = (errors) => {
+    if (errors) {
+      state.errors = errors
+      state.errorMsg(errors.message)
       state.showErrorMsg(true)
-      console.log("failed - state", state)
+      console.log("failed - state", state, errors)
     } else {
       state.errorMsg("There seems to be a problem please contact web support")
       state.showErrorMsg(true)
@@ -51,19 +60,18 @@ export const validateForm = (mdl) => (data) => {
   }
 
   const onSuccess = (mdl) => (data) => {
-    state.errors = {}
+    state.errors = null
     sessionStorage.setItem("shindigit-user-token", mdl.User["user-token"])
     sessionStorage.setItem("shindigit-user", JSON.stringify(mdl.User))
     m.route.set(`/${hyphenize(mdl.User.name)}/${M().format("YYYY-MM-DD")}`)
   }
-
   state.isSubmitted = true
-  validateUserRegistrationTask(data.userModel)
+  validateUserRegistrationTask(data)
     .chain(registerTask(HTTP)(mdl))
     .chain((_) =>
       loginTask(HTTP)(mdl)({
-        email: data.userModel.email,
-        password: data.userModel.password,
+        email: data.email,
+        password: data.password,
       })
         .chain((_) => createProfileTask(HTTP)(mdl))
         .chain((profile) => {
@@ -78,66 +86,58 @@ const RegisterUser = () => {
   return {
     view: ({ attrs: { data, errors, isSubmitted } }) => [
       m("input", {
-        class: isSubmitted ? (errors.name ? "has-error" : "has-success") : "",
         id: "reg-name",
         type: "text",
         placeholder: "Full Name",
-        onkeyup: (e) => (data.name = e.target.value),
+        onblur: (e) => validate(),
+        oninput: (e) => (data.name = e.target.value.trim()),
         value: data.name,
       }),
-      errors.name && m("span.error-field", errors.name),
+      state.errors && errors.name && m("span.error-field", errors.name),
 
       m("input", {
-        class: isSubmitted ? (errors.email ? "has-error" : "has-success") : "",
         id: "reg-email",
         type: "email",
         placeholder: "Email",
-        onkeyup: (e) => (data.email = e.target.value),
+        onblur: (e) => validate(),
+        oninput: (e) => (data.email = e.target.value.trim()),
         value: data.email,
       }),
-      errors.email && m("span.error-field", errors.email),
+      state.errors && errors.email && m("span.error-field", errors.email),
 
       m("input", {
         id: "confirmEmail",
-        class: isSubmitted
-          ? errors.confirmEmail
-            ? "has-error"
-            : "has-success"
-          : "",
         type: "email",
         placeholder: "Confirm Email",
-        onkeyup: (e) => (data.confirmEmail = e.target.value),
+        onblur: (e) => validate(),
+        oninput: (e) => (data.confirmEmail = e.target.value.trim()),
         value: data.confirmEmail,
       }),
-      errors.confirmEmail && m("span.error-field", errors.confirmEmail),
+      state.errors &&
+        errors.confirmEmail &&
+        m("span.error-field", errors.confirmEmail),
 
       m("input", {
-        class: isSubmitted
-          ? errors.password
-            ? "has-error"
-            : "has-success"
-          : "",
         id: "reg-pass",
         type: "password",
         placeholder: "Password",
-        onkeyup: (e) => (data.password = e.target.value),
+        onblur: (e) => validate(),
+        oninput: (e) => (data.password = e.target.value.trim()),
         value: data.password,
       }),
-      errors.password && m("span.error-field", errors.password),
+      state.errors && errors.password && m("span.error-field", errors.password),
 
       m("input", {
-        class: isSubmitted
-          ? errors.confirmPassword
-            ? "has-error"
-            : "has-success"
-          : "",
         id: "pass-confirm",
         type: "password",
         placeholder: "Confirm Password",
-        onkeyup: (e) => (data.confirmPassword = e.target.value),
+        onblur: (e) => validate(),
+        oninput: (e) => (data.confirmPassword = e.target.value.trim()),
         value: data.confirmPassword,
       }),
-      errors.confirmPassword && m("span.error-field", errors.confirmPassword),
+      state.errors &&
+        errors.confirmPassword &&
+        m("span.error-field", errors.confirmPassword),
     ],
   }
 }
@@ -158,7 +158,7 @@ export const Register = () => {
           },
           [
             m(RegisterUser, {
-              data: state.data.userModel,
+              data,
               errors: state.errors,
               isSubmitted: state.isSubmitted,
             }),
@@ -171,7 +171,7 @@ export const Register = () => {
             form: `register-form`,
             onclick: (e) => {
               e.preventDefault()
-              validateForm(mdl)(state.data)
+              registerUser(mdl)(data)
             },
             class: "max-width mt-20",
           },

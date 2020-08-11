@@ -1,6 +1,6 @@
-import { curryN, identity, lensProp, mergeAll } from "ramda"
+import { curryN, identity, lensProp, mergeAll, prop, equals } from "ramda"
 import { Success } from "data.validation"
-import { validate, isRequired, emailFormat, isEqual } from "Utils"
+import { validate, isRequired, emailFormat } from "Utils"
 
 const ValidateRegistration = Success(curryN(3, identity))
 const ValidateLogin = Success(curryN(2, identity))
@@ -26,15 +26,25 @@ const validateEmails = (data) =>
     .apLeft(validate(isRequired, emailLense, EMAIL_REQUIRED_MSG, data))
     .apLeft(validate(isRequired, emailConfirmLense, EMAIL_REQUIRED_MSG, data))
     .apLeft(
-      validate(isEqual(data.confirmEmail), emailLense, EMAILS_MUST_MATCH, data)
-    )
-    .apLeft(
-      validate(isEqual(data.email), emailConfirmLense, EMAILS_MUST_MATCH, data)
+      validate(
+        equals(prop("email", data)),
+        emailConfirmLense,
+        EMAILS_MUST_MATCH,
+        data
+      )
     )
     .apLeft(
       validate(emailFormat, emailConfirmLense, INVALID_EMAIL_FORMAT, data)
     )
     .apLeft(validate(emailFormat, emailLense, INVALID_EMAIL_FORMAT, data))
+    .apLeft(
+      validate(
+        equals(prop("confirmEmail", data)),
+        emailLense,
+        EMAILS_MUST_MATCH,
+        data
+      )
+    )
 
 const validateEmail = (data) =>
   Success(data)
@@ -49,7 +59,7 @@ const validatePasswords = (data) =>
     )
     .apLeft(
       validate(
-        isEqual(data.password),
+        equals(data.password),
         passwordConfirmLense,
         PASSWORDS_MUST_MATCH,
         data
@@ -57,7 +67,7 @@ const validatePasswords = (data) =>
     )
     .apLeft(
       validate(
-        isEqual(data.confirmPassword),
+        equals(data.confirmPassword),
         passwordLense,
         PASSWORDS_MUST_MATCH,
         data
