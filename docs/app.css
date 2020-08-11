@@ -101,25 +101,22 @@ ul {
 }
 
 .currentMonth {
-  color: var(--primary);
+  color: var(--warning);
   font-size: 2.4rem;
 }
 
 .notThisMonth {
-  background-color: var(--teal);
+  color: var(--blue);
+  background: repeating-linear-gradient(45deg, var(--blue) 10px, var(--light) 10px, var(--secondary) 10px);
 }
 
 .selectedDay {
-  border: 1px solid var(--decline-invite);
+  border: 1px solid var(--primary);
 }
 
 .isToday {
-  background-color: var(--primary);
+  background-color: var(--warning);
   color: var(--white);
-}
-
-.selectedWeek {
-  background-color: var(--yellow);
 }
 
 .day {
@@ -209,12 +206,18 @@ ul {
   transform: rotate(180deg);
 }
 
+.events-map-container {
+  min-height: 250px;
+  min-width: 250px;
+}
+
 .event-items {
   max-height: 300px;
   overflow-y: auto;
 }
 
 .event-items-item {
+  position: relative;
   border-top: 1px solid var(--blue);
 }
 
@@ -223,6 +226,11 @@ ul {
   padding: 1rem 0;
   margin: 0;
   background-image: linear-gradient(white 60%, rgba(255, 255, 255, 0) 100%);
+}
+
+.events-remove-item {
+  position: absolute;
+  right: 0;
 }
 
 .event-form {

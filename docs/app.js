@@ -1407,13 +1407,10 @@ var Sidebar = function Sidebar() {
     view: function view(_ref) {
       var mdl = _ref.attrs.mdl;
       return m(".sidebar-page", [m("ul.sidebar", [m("li.sidebar-link", m(m.route.Link, {
-        // onclick: (e) => logout,
         href: "/".concat((0, _Utils.hyphenize)(mdl.User.name), "/").concat(M(mdl.selectedDate()).format("YYYY-MM-DD"))
       }, "Home")), m("li.sidebar-link", m(m.route.Link, {
-        // onclick: (e) => logout,
         href: "/profile/".concat((0, _Utils.hyphenize)(mdl.User.name))
       }, "Profile")), m("li.sidebar-link", m(m.route.Link, {
-        // onclick: (e) => logout,
         href: "/logout"
       }, "Logout"))])]);
     }
@@ -4092,7 +4089,7 @@ var Event = function Event(_ref) {
       container: dom,
       center: coords,
       zoom: 15,
-      style: "mapbox://styles/mapbox/streets-v11"
+      style: "mapbox://styles/mapbox/streets-v11?optimize=true"
     });
     createMarker();
   };
@@ -4106,9 +4103,9 @@ var Event = function Event(_ref) {
         data: data,
         part: "info",
         title: "Info"
-      }, [m("label", data.event.notes), m(".map", {
+      }, [m("label", data.event.notes), m(".events-map-container", {
         style: {
-          width: "250px",
+          width: "100%",
           height: "250px"
         },
         oncreate: setupMap
@@ -4184,35 +4181,35 @@ var Event = function Event(_ref) {
             item.userId = mdl.User.objectId;
             updateItem(mdl)(item);
           }
-        }, "click to select item"))), m(".col-xs-1-3 frow items-center", [m(".col-xs-2-3 frow column-center", [isUserOrUnclaimed(mdl)(item) && m("span.clickable", m(_cjs.AngleLine, {
+        }, "click to select item"))), m(".col-xs-1-3 frow items-center", [isUserOrUnclaimed(mdl)(item) && m(".events-remove-item", m("span.clickable", m(_cjs.RemoveLine, {
+          class: "smaller",
+          onclick: function onclick(e) {
+            return deleteItem(mdl)(item.objectId);
+          }
+        }))), m(".col-xs-2-3 frow column-center", [isUserOrUnclaimed(mdl)(item) && m(".col-xs-1-3", m("span.clickable", m(_cjs.AngleLine, {
           class: "smaller",
           onclick: function onclick(e) {
             item.quantity++;
             updateItem(mdl)(item);
           }
-        })), item.quantity, isUserOrUnclaimed(mdl)(item) && m("span.clickable.smaller", m(_cjs.AngleLine, {
+        }))), m(".col-xs-1-3 text-center pb-2", item.quantity), isUserOrUnclaimed(mdl)(item) && m(".col-xs-1-3", m("span.clickable.smaller", m(_cjs.AngleLine, {
           class: "decrement",
           onclick: function onclick(e) {
             item.quantity--;
             updateItem(mdl)(item);
           }
-        }))]), isUserOrUnclaimed(mdl)(item) && m(".col-xs-1-3 frow column-centered", m("span.clickable", m(_cjs.RemoveLine, {
-          class: "smaller",
-          onclick: function onclick(e) {
-            return deleteItem(mdl)(item.objectId);
-          }
-        })))])]);
+        })))])])]);
       }))]), m(_Components.AccordianItem, {
         mdl: mdl,
         state: state,
         data: data,
         part: "settings",
         title: "Settings"
-      }, m(".frow row-start", [m("button", {
+      }, m(".frow row-start", [m("button.btn", {
         onclick: function onclick(e) {
           return deleteInvite(mdl);
         }
-      }, "Delete"), m("button", {
+      }, "Delete"), m("button.btn", {
         onclick: function onclick(e) {
           return console.log("edit event ...");
         }

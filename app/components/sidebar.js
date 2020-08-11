@@ -10,7 +10,6 @@ export const Sidebar = () => {
             m(
               m.route.Link,
               {
-                // onclick: (e) => logout,
                 href: `/${hyphenize(mdl.User.name)}/${M(
                   mdl.selectedDate()
                 ).format("YYYY-MM-DD")}`,
@@ -24,7 +23,6 @@ export const Sidebar = () => {
             m(
               m.route.Link,
               {
-                // onclick: (e) => logout,
                 href: `/profile/${hyphenize(mdl.User.name)}`,
               },
               "Profile"
@@ -36,7 +34,6 @@ export const Sidebar = () => {
             m(
               m.route.Link,
               {
-                // onclick: (e) => logout,
                 href: `/logout`,
               },
               "Logout"

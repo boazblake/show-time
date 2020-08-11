@@ -241,7 +241,7 @@ export const Event = ({ attrs: { mdl } }) => {
       container: dom,
       center: coords,
       zoom: 15,
-      style: "mapbox://styles/mapbox/streets-v11",
+      style: "mapbox://styles/mapbox/streets-v11?optimize=true",
     })
 
     createMarker()
@@ -268,8 +268,8 @@ export const Event = ({ attrs: { mdl } }) => {
                 [
                   m("label", data.event.notes),
 
-                  m(".map", {
-                    style: { width: "250px", height: "250px" },
+                  m(".events-map-container", {
+                    style: { width: "100%", height: "250px" },
                     oncreate: setupMap,
                   }),
                 ]
@@ -412,34 +412,9 @@ export const Event = ({ attrs: { mdl } }) => {
                           )
                         ),
                         m(".col-xs-1-3 frow items-center", [
-                          m(".col-xs-2-3 frow column-center", [
-                            isUserOrUnclaimed(mdl)(item) &&
-                              m(
-                                "span.clickable",
-                                m(AngleLine, {
-                                  class: "smaller",
-                                  onclick: (e) => {
-                                    item.quantity++
-                                    updateItem(mdl)(item)
-                                  },
-                                })
-                              ),
-                            item.quantity,
-                            isUserOrUnclaimed(mdl)(item) &&
-                              m(
-                                "span.clickable.smaller",
-                                m(AngleLine, {
-                                  class: "decrement",
-                                  onclick: (e) => {
-                                    item.quantity--
-                                    updateItem(mdl)(item)
-                                  },
-                                })
-                              ),
-                          ]),
                           isUserOrUnclaimed(mdl)(item) &&
                             m(
-                              ".col-xs-1-3 frow column-centered",
+                              ".events-remove-item",
                               m(
                                 "span.clickable",
                                 m(RemoveLine, {
@@ -449,6 +424,37 @@ export const Event = ({ attrs: { mdl } }) => {
                                 })
                               )
                             ),
+                          m(".col-xs-2-3 frow column-center", [
+                            isUserOrUnclaimed(mdl)(item) &&
+                              m(
+                                ".col-xs-1-3",
+                                m(
+                                  "span.clickable",
+                                  m(AngleLine, {
+                                    class: "smaller",
+                                    onclick: (e) => {
+                                      item.quantity++
+                                      updateItem(mdl)(item)
+                                    },
+                                  })
+                                )
+                              ),
+                            m(".col-xs-1-3 text-center pb-2", item.quantity),
+                            isUserOrUnclaimed(mdl)(item) &&
+                              m(
+                                ".col-xs-1-3",
+                                m(
+                                  "span.clickable.smaller",
+                                  m(AngleLine, {
+                                    class: "decrement",
+                                    onclick: (e) => {
+                                      item.quantity--
+                                      updateItem(mdl)(item)
+                                    },
+                                  })
+                                )
+                              ),
+                          ]),
                         ]),
                       ])
                     )
@@ -460,9 +466,13 @@ export const Event = ({ attrs: { mdl } }) => {
                 AccordianItem,
                 { mdl, state, data, part: "settings", title: "Settings" },
                 m(".frow row-start", [
-                  m("button", { onclick: (e) => deleteInvite(mdl) }, "Delete"),
                   m(
-                    "button",
+                    "button.btn",
+                    { onclick: (e) => deleteInvite(mdl) },
+                    "Delete"
+                  ),
+                  m(
+                    "button.btn",
                     { onclick: (e) => console.log("edit event ...") },
                     "Edit"
                   ),
