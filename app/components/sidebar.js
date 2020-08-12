@@ -1,7 +1,7 @@
-import { jsonCopy } from "Utils"
+import { log, jsonCopy } from "Utils"
 import { HTTP, getItemsByUserIdTask } from "Http"
 import { Profile } from "Components"
-import { reduce } from "ramda"
+import { reduceBy, fromPairs } from "ramda"
 
 export const Sidebar = () => {
   const state = {
@@ -24,22 +24,16 @@ export const Sidebar = () => {
     },
   }
 
-  const toItemViewModel = reduce((acc, { name, quantity }) => {
-    const addNew = (n, q) => acc.push({ name: n, quantity: q })
-
-    acc.any()
-      ? acc.map((i) => {
-          console.log(
-            "i",
-            i.name.toLowerCase() == name.toLowerCase() ? "same" : name
-          )
-          i.name.toLowerCase() == name.toLowerCase()
-            ? (i.quantity += quantity)
-            : addNew(name.toLowerCase(), quantity)
-        })
-      : addNew(name, quantity)
-    return acc
-  }, [])
+  const toItemViewModel = (items) =>
+    Object.entries(
+      reduceBy(
+        (acc, { quantity }) => acc + quantity,
+        0,
+        ({ name }) => name.toLowerCase(),
+        items
+      )
+    )
+  // ).map(([name, quantity]) => ({ [name]: quantity }))
 
   const showState = (field) => {
     let keys = Object.keys(state)
@@ -108,11 +102,8 @@ export const Sidebar = () => {
                 m("p.sidebar-section-heading", "Items"),
                 m(
                   ".ul",
-                  state.Home.data.items.map((item) =>
-                    m(
-                      "li.sidebar-items-list",
-                      item.name + " : " + item.quantity
-                    )
+                  state.Home.data.items.map(([name, quantity]) =>
+                    m("li.sidebar-items-list", name + " : " + quantity)
                   )
                 ),
               ]),

@@ -198,10 +198,7 @@ export const Event = ({ attrs: { mdl } }) => {
 
     state.items.isSubmitted(true)
     validateItemTask(item)(data)
-      .chain((x) => {
-        console.log("data??", x)
-        return addItemTask(HTTP)(mdl)(x)
-      })
+      .chain(addItemTask(HTTP)(mdl))
       .chain((_) => loadEventTask(HTTP)(mdl)(mdl.Events.currentEventId()))
       .fork(onError, onSuccess)
   }
