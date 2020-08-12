@@ -1,5 +1,5 @@
-import { jsonCopy, hyphenize } from "Utils"
-import { propEq, compose, not, head, pluck } from "ramda"
+import { log, jsonCopy, hyphenize } from "Utils"
+import { propEq, compose, not, head, pluck, set, lensProp, prop } from "ramda"
 import mapboxgl from "mapbox-gl/dist/mapbox-gl.js"
 import {
   HTTP,
@@ -8,7 +8,6 @@ import {
   updateInviteTask,
   addItemTask,
   deleteItemTask,
-  deleteBulkItemsTask,
   deleteEventTask,
   updateItemTask,
   sendInviteTask,
@@ -112,19 +111,25 @@ export const Event = ({ attrs: { mdl } }) => {
       m.route.set(`/${name}/${date}`)
     }
 
-    let invite =
-      data.guests.length - 1
-        ? data.guests.filter(propEq("userId", mdl.User.objectId))[0]
-        : data.guests[0]
+    let isLast = !(data.guests.length - 1)
 
-    deleteInviteTask(HTTP)(mdl)(invite.objectId)
-      .chain(() => deleteBulkItemsTask(http)(mdl)(mdl.User.objectId))
-      .chain((res) =>
-        data.guests.length - 1
-          ? Task.of(res)
-          : deleteEventTask(HTTP)(mdl)(invite.eventId)
-      )
-      .fork(onError, onSuccess)
+    let invite = isLast
+      ? data.guests[0]
+      : data.guests.filter(propEq("userId", mdl.User.objectId))[0]
+
+    if (isLast) {
+      pluck("objectId", data.items)
+        .traverse(deleteItemTask(HTTP)(mdl), Task.of)
+        .chain(() => deleteEventTask(HTTP)(mdl)(invite.eventId))
+        .fork(onError, onSuccess)
+    } else {
+      data.items
+        .filter(propEq("userId", mdl.User.objectId))
+        .map(set(lensProp("userId"), null))
+        .traverse(updateItemTask(HTTP)(mdl), Task.of)
+        .chain(() => deleteInviteTask(HTTP)(mdl)(invite.objectId))
+        .fork(onError, onSuccess)
+    }
   }
 
   const updateInvite = (mdl) => (update) => {
@@ -211,7 +216,6 @@ export const Event = ({ attrs: { mdl } }) => {
     const onSuccess = (eventData) => {
       state.guests.email = ""
       state.guests.error(null)
-      console.log("invite add success", data)
       updateEvent(eventData)
     }
 

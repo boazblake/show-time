@@ -35,7 +35,6 @@ export const Editor = ({ attrs: { mdl } }) => {
       querySelected: "",
       locationWarning: Stream(null),
     }
-    console.log(EventFormState)
   }
 
   const validate = (state, data) => {

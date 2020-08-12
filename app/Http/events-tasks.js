@@ -41,14 +41,14 @@ const toGuestModel = (invite) => ({ name, email }) => ({
   email,
 })
 
-const getProfilesTask = (http) => (mdl) => (invite) =>
+const getGuestsTask = (http) => (mdl) => (invite) =>
   getUserProfileTask(http)(mdl)(invite.userId)
     .map(head)
     .map(toGuestModel(invite))
 
 const getEventGuestsByEventIdTask = (http) => (mdl) => (eventId) =>
   getInvitesTaskByEventId(http)(mdl)(eventId).chain(
-    traverse(Task.of, getProfilesTask(http)(mdl))
+    traverse(Task.of, getGuestsTask(http)(mdl))
   )
 
 export const getEventByIdTask = (http) => (mdl) => (eventId) =>

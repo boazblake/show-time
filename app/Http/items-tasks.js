@@ -1,5 +1,5 @@
 import Task from "data.task"
-
+import { log } from "Utils"
 export const addItemTask = (http) => (mdl) => ({ name, quantity }) => {
   return http.backEnd
     .postTask(mdl)("data/Items")({

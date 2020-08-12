@@ -14,8 +14,6 @@ const locateQuery = (mdl) => (state) => (query) => {
     state.queryResults = data
     state.status = "success"
     state.locationWarning(null)
-
-    console.log("succ d", state)
   }
 
   locateQueryTask(HTTP)(mdl)(query).fork(onError, onSuccess)
