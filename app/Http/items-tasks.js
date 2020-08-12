@@ -36,6 +36,11 @@ export const getItemsByUserIdTask = (http) => (mdl) => (userId) =>
     `data/Items?pageSize=100&where=userId%3D'${userId}'&sortBy=name%20asc`
   )
 
+export const deleteBulkItemsTask = (http) => (mdl) => (userId) =>
+  http.backEnd.deleteTask(mdl)(
+    `data/Items?where=userId%3D'${userId}'&sortBy=name%20asc`
+  )
+
 export const deleteItemTask = (http) => (mdl) => (id) =>
   http.backEnd.deleteTask(mdl)(`data/Items/${id}`)
 
