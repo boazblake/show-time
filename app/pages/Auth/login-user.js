@@ -40,13 +40,13 @@ const loginUser = (mdl) => (data) => {
     .fork(onError, onSuccess(mdl))
 }
 
-const data = {
+let data = {
   name: "",
   email: "",
   password: "",
 }
 
-const state = {
+let state = {
   isSubmitted: false,
   errors: {},
   httpError: undefined,
@@ -54,12 +54,19 @@ const state = {
   errorMsg: Stream(""),
 }
 
-const resetState = () => {
-  state.errors = {}
-  state.httpError = undefined
-  state.isSubmitted = false
-  state.showErrorMsg(false)
-  state.errorMsg("")
+const reset = () => {
+  state = {
+    isSubmitted: false,
+    errors: {},
+    httpError: undefined,
+    showErrorMsg: Stream(false),
+    errorMsg: Stream(""),
+  }
+  data = {
+    name: "",
+    email: "",
+    password: "",
+  }
 }
 
 const validate = () => {
@@ -76,7 +83,7 @@ const validate = () => {
 
 export const Login = () => {
   return {
-    onremove: () => resetState(),
+    onremove: () => reset(),
     view: ({ attrs: { mdl } }) =>
       m(
         ".login-pag.full-width",

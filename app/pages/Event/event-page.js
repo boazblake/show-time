@@ -8,12 +8,13 @@ import {
   updateInviteTask,
   addItemTask,
   deleteItemTask,
+  deleteBulkItemsTask,
+  deleteEventTask,
   updateItemTask,
   sendInviteTask,
 } from "Http"
 import { AccordianItem, AttendanceResponse } from "Components"
 import {
-  AddLine,
   AngleLine,
   RemoveLine,
   MinusCircleLine,
@@ -106,26 +107,23 @@ export const Event = ({ attrs: { mdl } }) => {
     const onSuccess = () => {
       state.error = {}
       state.status = "success"
-      m.route.set(
-        `/${hyphenize(mdl.User.name)}/${M(mdl.selectedDate()).format(
-          "YYYY-MM-DD"
-        )}`
-      )
+      let name = hyphenize(mdl.User.name)
+      let date = M(data.event.start).format("YYYY-MM-DD")
+      m.route.set(`/${name}/${date}`)
     }
 
     let invite =
-      data.guests.length > 1
+      data.guests.length - 1
         ? data.guests.filter(propEq("userId", mdl.User.objectId))[0]
         : data.guests[0]
 
-    console.log(invite, data.guests.length)
-
     deleteInviteTask(HTTP)(mdl)(invite.objectId)
-      .chain((res) => {
-        return data.guests.any()
+      .chain(() => deleteBulkItemsTask(http)(mdl)(mdl.User.objectId))
+      .chain((res) =>
+        data.guests.length - 1
           ? Task.of(res)
           : deleteEventTask(HTTP)(mdl)(invite.eventId)
-      })
+      )
       .fork(onError, onSuccess)
   }
 

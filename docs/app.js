@@ -3761,12 +3761,19 @@ var state = {
   errorMsg: Stream("")
 };
 
-var resetState = function resetState() {
-  state.errors = {};
-  state.httpError = undefined;
-  state.isSubmitted = false;
-  state.showErrorMsg(false);
-  state.errorMsg("");
+var reset = function reset() {
+  state = {
+    isSubmitted: false,
+    errors: {},
+    httpError: undefined,
+    showErrorMsg: Stream(false),
+    errorMsg: Stream("")
+  };
+  data = {
+    name: "",
+    email: "",
+    password: ""
+  };
 };
 
 var validate = function validate() {
@@ -3784,7 +3791,7 @@ var validate = function validate() {
 var Login = function Login() {
   return {
     onremove: function onremove() {
-      return resetState();
+      return reset();
     },
     view: function view(_ref) {
       var mdl = _ref.attrs.mdl;
@@ -4159,13 +4166,16 @@ var Event = function Event(_ref) {
     var onSuccess = function onSuccess() {
       state.error = {};
       state.status = "success";
-      m.route.set("/".concat((0, _Utils.hyphenize)(mdl.User.name), "/").concat(M(mdl.selectedDate()).format("YYYY-MM-DD")));
+      var name = (0, _Utils.hyphenize)(mdl.User.name);
+      var date = M(data.event.start).format("YYYY-MM-DD");
+      m.route.set("/".concat(name, "/").concat(date));
     };
 
-    var invite = data.guests.length > 1 ? data.guests.filter((0, _ramda.propEq)("userId", mdl.User.objectId))[0] : data.guests[0];
-    console.log(invite, data.guests.length);
-    (0, _Http.deleteInviteTask)(_Http.HTTP)(mdl)(invite.objectId).chain(function (res) {
-      return data.guests.any() ? _data.default.of(res) : deleteEventTask(_Http.HTTP)(mdl)(invite.eventId);
+    var invite = data.guests.length - 1 ? data.guests.filter((0, _ramda.propEq)("userId", mdl.User.objectId))[0] : data.guests[0];
+    (0, _Http.deleteInviteTask)(_Http.HTTP)(mdl)(invite.objectId).chain(function () {
+      return (0, _Http.deleteBulkItemsTask)(http)(mdl)(mdl.User.objectId);
+    }).chain(function (res) {
+      return data.guests.length - 1 ? _data.default.of(res) : (0, _Http.deleteEventTask)(_Http.HTTP)(mdl)(invite.eventId);
     }).fork(onError, onSuccess);
   };
 

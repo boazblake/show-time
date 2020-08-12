@@ -55,13 +55,11 @@ export const getEventByIdTask = (http) => (mdl) => (eventId) =>
   http.backEnd.getTask(mdl)(`data/Events/${eventId}`).map(toEventviewModel(mdl))
 
 export const loadEventTask = (http) => (mdl) => (eventId) =>
-  Task.of((event) => (items) => (guests) => {
-    return {
-      event,
-      guests,
-      items,
-    }
-  })
+  Task.of((event) => (items) => (guests) => ({
+    event,
+    guests,
+    items,
+  }))
     .ap(getEventByIdTask(http)(mdl)(eventId))
     .ap(getItemsByEventIdTask(http)(mdl)(eventId))
     .ap(getEventGuestsByEventIdTask(http)(mdl)(eventId))
