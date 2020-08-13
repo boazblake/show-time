@@ -24,6 +24,7 @@ export const AttendanceResponse = () => {
         getResponse(guest).map((response, idx) =>
           m(response, {
             class: guest.userId == mdl.User.objectId ? "clickable" : "",
+            fill: `var(--${inviteOptions[idx]}-invite)`,
             onclick: (e) => {
               if (guest.userId == mdl.User.objectId) {
                 guest.status = idx

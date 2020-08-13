@@ -125,10 +125,6 @@ export const Day = ({ attrs: { mdl } }) => {
                   mdl,
                   invites: day[hour],
                   hour,
-                  // hour: M()       NEedd to fix this...
-                  //   .hour(hour)
-                  //   .minutes("00")
-                  //   .format(displayTimeFormat(mdl)),
                   events: day[hour],
                 })
               }),

@@ -53,6 +53,7 @@ export const EventForm = () => {
                 m("input", {
                   type: "checkbox",
                   checked: data.allDay,
+                  oninput: (e) => state.isSubmitted && validate(state, data),
                   onclick: (e) => setAllDay(data),
                 })
               ),
@@ -180,8 +181,7 @@ export const EventForm = () => {
           ),
           m(
             "label",
-            m("input", {
-              type: "text",
+            m("textarea", {
               value: data.notes,
               oninput: (e) => (data.notes = e.target.value),
               onkeyup: (e) => state.isSubmitted && validate(state, data),
