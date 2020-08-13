@@ -915,13 +915,16 @@ var EventForm = function EventForm() {
         type: "address",
         value: data.location,
         oninput: function oninput(e) {
-          return data.location = e.target.value.trim();
+          return data.location = e.target.value;
         },
         onchange: function onchange(e) {
           return locateQuery(mdl)(state)(e.target.value.trim());
         },
-        onblur: function onblur(e) {
+        onkeyup: function onkeyup(e) {
           return state.isSubmitted && validate(state, data);
+        },
+        onblur: function onblur(e) {
+          return data.location = data.location.trim();
         }
       }), m(".frow row-start", ["Address", m("span.required-field", "*")])) : m("label.col-xs-4-5", m("input", {
         type: "url",
@@ -930,6 +933,9 @@ var EventForm = function EventForm() {
           return data.location = e.target.value.trim();
         },
         onblur: function onblur(e) {
+          return data.location = data.location.trim();
+        },
+        onkeyup: function onkeyup(e) {
           return state.isSubmitted && validate(state, data);
         }
       }), m(".frow row-start", ["URL link", m("span.required-field", "*")])), state.locationWarning() && m("p.location-info-text", state.locationWarning()), state.queryResults.any() && m("ul.event-form-query-container", state.queryResults.map(function (_ref2) {
@@ -946,19 +952,25 @@ var EventForm = function EventForm() {
         type: "text",
         value: data.text,
         oninput: function oninput(e) {
-          return data.title = e.target.value.trim();
+          return data.title = e.target.value;
+        },
+        onkeyup: function onkeyup(e) {
+          return state.isSubmitted && validate(state, data);
         },
         onblur: function onblur(e) {
-          return state.isSubmitted && validate(state, data);
+          return data.title = data.title.trim();
         }
       }), m(".frow row-start", ["Title", m("span.required-field", "*")]), state.errors && m("code.error-field", state.errors.title)), m("label", m("input", {
         type: "text",
         value: data.notes,
         oninput: function oninput(e) {
-          return data.notes = e.target.value.trim();
+          return data.notes = e.target.value;
+        },
+        onkeyup: function onkeyup(e) {
+          return state.isSubmitted && validate(state, data);
         },
         onblur: function onblur(e) {
-          return state.isSubmitted && validate(state, data);
+          return data.notes = data.notes.trim();
         }
       }), "Notes"), m("button.full-width", {
         onclick: function onclick(e) {
@@ -1261,6 +1273,18 @@ Object.keys(_attendanceResponse).forEach(function (key) {
   });
 });
 
+var _invitesToast = require("./invites-toast.js");
+
+Object.keys(_invitesToast).forEach(function (key) {
+  if (key === "default" || key === "__esModule") return;
+  Object.defineProperty(exports, key, {
+    enumerable: true,
+    get: function get() {
+      return _invitesToast[key];
+    }
+  });
+});
+
 var _profile = require("./profile");
 
 Object.keys(_profile).forEach(function (key) {
@@ -1272,6 +1296,84 @@ Object.keys(_profile).forEach(function (key) {
     }
   });
 });
+});
+
+;require.register("Components/invites-toast.js", function(exports, require, module) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.InvitesToast = void 0;
+
+var _cjs = require("@mithril-icons/clarity/cjs");
+
+var _Components = require("Components");
+
+var _Http = require("Http");
+
+var InvitesToast = function InvitesToast(_ref) {
+  var _ref$attrs = _ref.attrs,
+      mdl = _ref$attrs.mdl,
+      reLoad = _ref$attrs.reLoad;
+
+  var updateInvite = function updateInvite(mdl) {
+    return function (update) {
+      var onError = function onError(error) {
+        state.error = jsonCopy(error);
+        state.status = "failed";
+        console.log("invite update failed", state, update);
+      };
+
+      var onSuccess = function onSuccess(dto) {
+        console.log("success", dto);
+        reLoad({
+          attrs: {
+            mdl: mdl
+          }
+        });
+      };
+
+      (0, _Http.updateInviteTask)(_Http.HTTP)(mdl)(update).fork(onError, onSuccess);
+    };
+  };
+
+  var stackInvites = function stackInvites(idx, name) {
+    var bIdx = 87;
+    var lIdx = -5;
+    var bottom = idx * 80 + bIdx;
+    var left = lIdx * idx;
+    console.log("idx", name, idx, bottom);
+    return {
+      style: {
+        // left: `-${left}px`,
+        bottom: "".concat(bottom, "px")
+      }
+    };
+  };
+
+  return {
+    view: function view(_ref2) {
+      var _ref2$attrs = _ref2.attrs,
+          mdl = _ref2$attrs.mdl,
+          invites = _ref2$attrs.invites;
+      return m(".invite-alerts-container frow reverse", invites.map(function (invite, idx) {
+        return m(".invite-alert", stackInvites(idx, invite.title), invite.title, m(_Components.AttendanceResponse, {
+          mdl: mdl,
+          guest: invite,
+          updateInvite: updateInvite
+        }), m(_cjs.TimesCircleLine, {
+          onclick: function onclick(e) {
+            return console.log(invite.title);
+          },
+          class: "invite-alert-remove"
+        }));
+      }));
+    }
+  };
+};
+
+exports.InvitesToast = InvitesToast;
 });
 
 ;require.register("Components/layout.js", function(exports, require, module) {
@@ -3163,6 +3265,8 @@ var _Http = require("Http");
 
 var _data = _interopRequireDefault(require("data.task"));
 
+var _Utils = require("Utils");
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 var toInviteViewModel = function toInviteViewModel(_ref) {
@@ -3172,7 +3276,8 @@ var toInviteViewModel = function toInviteViewModel(_ref) {
       objectId = _ref.objectId,
       eventId = _ref.eventId,
       status = _ref.status,
-      userId = _ref.userId;
+      userId = _ref.userId,
+      updated = _ref.updated;
   return {
     start: M(start),
     end: M(end),
@@ -3180,7 +3285,8 @@ var toInviteViewModel = function toInviteViewModel(_ref) {
     eventId: eventId,
     title: title,
     status: status,
-    userId: userId
+    userId: userId,
+    updated: updated
   };
 };
 
@@ -4348,11 +4454,11 @@ var Event = function Event(_ref) {
         pills: [m(".pill", data.guests.length)]
       }, m(".guests-container", [m(".frow row event-input-group", [m("input.col-xs-4-5", {
         placeholder: "email",
+        type: "email",
         value: state.guests.email,
         oninput: function oninput(e) {
           return state.guests.email = e.target.value.trim();
-        },
-        type: "email"
+        }
       }), m("button.btn.col-xs-1-5.button-none", {
         onclick: function onclick(e) {
           return sendInvite(mdl);
@@ -4394,7 +4500,8 @@ var Event = function Event(_ref) {
           return validate("items")(state.items);
         },
         type: "number",
-        pattern: "mobile"
+        inputMode: "number",
+        pattern: "[0-9]*"
       }), m("button.btn.col-xs-1-5.button-none", {
         onclick: function onclick(e) {
           return addItem(mdl);
@@ -4541,8 +4648,9 @@ var Home = function Home(_ref) {
   var state = {
     error: null,
     status: "loading",
-    invites: null,
-    events: null
+    invitesToast: null,
+    events: null,
+    invitesWithRSVP: null
   };
 
   var load = function load(_ref2) {
@@ -4556,7 +4664,13 @@ var Home = function Home(_ref) {
 
     var onSuccess = function onSuccess(invites) {
       mdl.Invites.fetch(false);
-      state.invites = invites;
+      state.invitesToast = invites.filter(function (i) {
+        return !i.updated && i.status == 2;
+      });
+      state.invitesWithRSVP = invites.filter(function (i) {
+        return i.updated || i.status !== 2;
+      });
+      console.log(state);
       state.error = null;
       state.status = "success";
     };
@@ -4579,7 +4693,7 @@ var Home = function Home(_ref) {
       return m(".frow  ", state.status == "loading" && m("p.full-width", "FETCHING EVENTS..."), state.status == "failed" && m("p.full-width", "FAILED TO FETCH EVENTS"), state.status == "success" && [m(_Components.Calendar, {
         mdl: mdl,
         date: mdl.selectedDate(),
-        invites: state.invites
+        invites: state.invitesWithRSVP
       }), m(".frow.max-width", [m("".concat(mdl.Home.modal() ? ".col-xs-1-1" : ".col-xs-2-3"), m("button.btn.max-width.height-100", {
         onclick: function onclick(e) {
           return mdl.Home.modal(!mdl.Home.modal());
@@ -4590,11 +4704,15 @@ var Home = function Home(_ref) {
         }
       }, mdl.Day.listView() ? "Hour View" : "List View"))]), mdl.Home.modal() ? m(_Components.Editor, {
         mdl: mdl
-      }) : m(_Components.Day, {
+      }) : [m(_Components.Day, {
         mdl: mdl,
-        day: createDayVM(mdl)(getSelectedDayInvites(mdl)(state.invites)),
-        invites: getSelectedDayInvites(mdl)(state.invites)
-      })]);
+        day: createDayVM(mdl)(getSelectedDayInvites(mdl)(state.invitesWithRSVP)),
+        invites: getSelectedDayInvites(mdl)(state.invitesWithRSVP)
+      }), state.invitesToast.any() && m(_Components.InvitesToast, {
+        mdl: mdl,
+        invites: state.invitesToast,
+        reLoad: load
+      })]]);
     }
   };
 };
@@ -5069,8 +5187,6 @@ Object.keys(_timeFns).forEach(function (key) {
     }
   });
 });
-
-var _ramda = require("ramda");
 
 function _toConsumableArray(arr) { return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _unsupportedIterableToArray(arr) || _nonIterableSpread(); }
 

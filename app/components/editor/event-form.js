@@ -112,10 +112,12 @@ export const EventForm = () => {
                     m("input", {
                       type: "address",
                       value: data.location,
-                      oninput: (e) => (data.location = e.target.value.trim()),
+                      oninput: (e) => (data.location = e.target.value),
                       onchange: (e) =>
                         locateQuery(mdl)(state)(e.target.value.trim()),
-                      onblur: (e) => state.isSubmitted && validate(state, data),
+                      onkeyup: (e) =>
+                        state.isSubmitted && validate(state, data),
+                      onblur: (e) => (data.location = data.location.trim()),
                     }),
                     m(".frow row-start", [
                       "Address",
@@ -128,7 +130,9 @@ export const EventForm = () => {
                       type: "url",
                       value: data.url,
                       oninput: (e) => (data.location = e.target.value.trim()),
-                      onblur: (e) => state.isSubmitted && validate(state, data),
+                      onblur: (e) => (data.location = data.location.trim()),
+                      onkeyup: (e) =>
+                        state.isSubmitted && validate(state, data),
                     }),
                     m(".frow row-start", [
                       "URL link",
@@ -166,8 +170,9 @@ export const EventForm = () => {
             m("input", {
               type: "text",
               value: data.text,
-              oninput: (e) => (data.title = e.target.value.trim()),
-              onblur: (e) => state.isSubmitted && validate(state, data),
+              oninput: (e) => (data.title = e.target.value),
+              onkeyup: (e) => state.isSubmitted && validate(state, data),
+              onblur: (e) => (data.title = data.title.trim()),
             }),
             m(".frow row-start", ["Title", m("span.required-field", "*")]),
 
@@ -178,8 +183,9 @@ export const EventForm = () => {
             m("input", {
               type: "text",
               value: data.notes,
-              oninput: (e) => (data.notes = e.target.value.trim()),
-              onblur: (e) => state.isSubmitted && validate(state, data),
+              oninput: (e) => (data.notes = e.target.value),
+              onkeyup: (e) => state.isSubmitted && validate(state, data),
+              onblur: (e) => (data.notes = data.notes.trim()),
             }),
             "Notes"
           ),

@@ -296,10 +296,10 @@ export const Event = ({ attrs: { mdl } }) => {
                   m(".frow row event-input-group", [
                     m("input.col-xs-4-5", {
                       placeholder: "email",
+                      type: "email",
                       value: state.guests.email,
                       oninput: (e) =>
                         (state.guests.email = e.target.value.trim()),
-                      type: "email",
                     }),
 
                     m(
@@ -372,7 +372,8 @@ export const Event = ({ attrs: { mdl } }) => {
                         (state.items.quantity = e.target.value.trim()),
                       onblur: (e) => validate("items")(state.items),
                       type: "number",
-                      pattern: "mobile",
+                      inputMode: "number",
+                      pattern: "[0-9]*",
                     }),
                     m(
                       "button.btn.col-xs-1-5.button-none",

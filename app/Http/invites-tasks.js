@@ -1,6 +1,7 @@
 import { map } from "ramda"
 import { findUserByEmailTask } from "Http"
 import Task from "data.task"
+import { log } from "Utils"
 
 export const toInviteViewModel = ({
   start,
@@ -10,6 +11,7 @@ export const toInviteViewModel = ({
   eventId,
   status,
   userId,
+  updated,
 }) => ({
   start: M(start),
   end: M(end),
@@ -18,6 +20,7 @@ export const toInviteViewModel = ({
   title,
   status,
   userId,
+  updated,
 })
 
 const toInviteDto = ({ start, end, title, eventId, status, userId }) => ({

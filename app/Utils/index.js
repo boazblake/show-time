@@ -1,18 +1,6 @@
 export * from "./local-storage.js"
 export * from "./validations"
 export * from "./time-fns.js"
-import {
-  reduce,
-  evolve,
-  add,
-  head,
-  tail,
-  curry,
-  values,
-  map,
-  groupBy,
-  prop,
-} from "ramda"
 
 export const log = (m) => (v) => {
   console.log(m, v)

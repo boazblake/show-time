@@ -1,4 +1,4 @@
-import { Calendar, Day, Editor } from "Components"
+import { Calendar, Day, Editor, InvitesToast } from "Components"
 import { HTTP, getInvitesByUserIdTask } from "Http"
 import { dayModel } from "Models"
 import { datesAreSame } from "Utils"
@@ -18,8 +18,9 @@ export const Home = ({ attrs: { mdl } }) => {
   const state = {
     error: null,
     status: "loading",
-    invites: null,
+    invitesToast: null,
     events: null,
+    invitesWithRSVP: null,
   }
 
   const load = ({ attrs: { mdl } }) => {
@@ -31,7 +32,9 @@ export const Home = ({ attrs: { mdl } }) => {
 
     const onSuccess = (invites) => {
       mdl.Invites.fetch(false)
-      state.invites = invites
+      state.invitesToast = invites.filter((i) => !i.updated && i.status == 2)
+      state.invitesWithRSVP = invites.filter((i) => i.updated || i.status !== 2)
+      console.log(state)
       state.error = null
       state.status = "success"
     }
@@ -55,7 +58,7 @@ export const Home = ({ attrs: { mdl } }) => {
           m(Calendar, {
             mdl,
             date: mdl.selectedDate(),
-            invites: state.invites,
+            invites: state.invitesWithRSVP,
           }),
 
           m(`.frow.max-width`, [
@@ -81,15 +84,25 @@ export const Home = ({ attrs: { mdl } }) => {
                 )
               ),
           ]),
+
           mdl.Home.modal()
             ? m(Editor, { mdl })
-            : m(Day, {
-                mdl,
-                day: createDayVM(mdl)(
-                  getSelectedDayInvites(mdl)(state.invites)
-                ),
-                invites: getSelectedDayInvites(mdl)(state.invites),
-              }),
+            : [
+                m(Day, {
+                  mdl,
+                  day: createDayVM(mdl)(
+                    getSelectedDayInvites(mdl)(state.invitesWithRSVP)
+                  ),
+                  invites: getSelectedDayInvites(mdl)(state.invitesWithRSVP),
+                }),
+
+                state.invitesToast.any() &&
+                  m(InvitesToast, {
+                    mdl,
+                    invites: state.invitesToast,
+                    reLoad: load,
+                  }),
+              ],
         ]
       )
     },

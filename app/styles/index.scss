@@ -403,6 +403,33 @@ rgba(255, 255, 255, 0) 100%
   color: var(--light);
 }
 
+
+.invite-alerts-container {
+  position: relative;
+  bottom: 100px;
+  line-height: 3rem;
+  width: 100%;
+}
+
+.invite-alert {
+  position: relative;
+  border: 1px solid var(--warning);
+  border-radius: 2%;
+  width: 95%;
+  padding: 5px 20px;
+  margin: 0 auto;
+  background: var(--dark);
+  color: var(--light);
+}
+
+.invite-alert-remove {
+  position: absolute;
+  top: 0;
+  right: 10px;
+  fill: var(--light);
+  width: 20px;
+}
+
 @media screen and (min-width: 600px) and (max-width: 899px) {
 
 
