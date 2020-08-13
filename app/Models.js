@@ -2,6 +2,7 @@ import { getHoursInDay } from "Utils"
 import { calendarModel } from "Components/calendar/calendar-model"
 
 const State = {
+  notifications: Stream([]),
   isAuth: Stream(false),
   modal: Stream(false),
   isLoading: Stream(false),

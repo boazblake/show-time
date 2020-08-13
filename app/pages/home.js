@@ -34,6 +34,7 @@ export const Home = ({ attrs: { mdl } }) => {
       mdl.Invites.fetch(false)
       state.invitesToast = invites.filter((i) => !i.updated && i.status == 2)
       state.invitesWithRSVP = invites.filter((i) => i.updated || i.status !== 2)
+      mdl.State.notifications(state.invitesToast)
       console.log(state)
       state.error = null
       state.status = "success"

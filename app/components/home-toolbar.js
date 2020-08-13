@@ -16,6 +16,7 @@ export const HomeToolbar = () => {
       m(
         m.route.Link,
         {
+          disabled: mdl.Sidebar.isShowing(),
           class: "col-xs-1-2",
           selector: "button.btn",
           href: `/${hyphenize(mdl.User.name)}/${M().format("YYYY-MM-DD")}`,

@@ -84,13 +84,16 @@ export const Sidebar = () => {
             ),
 
             m(
-              m.route.Link,
-              {
-                href: `/logout`,
-                selector: "button.sidebar-tab",
-                class: "col-xs-1-3",
-              },
-              "Logout"
+              ".required-field",
+              m(
+                m.route.Link,
+                {
+                  href: `/logout`,
+                  selector: "button.sidebar-tab",
+                  class: "col-xs-1-3",
+                },
+                "Logout"
+              )
             ),
           ])
         ),

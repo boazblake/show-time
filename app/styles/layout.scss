@@ -1,3 +1,6 @@
+@import './types';
+
+
 .lt-grid-container {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
@@ -7,6 +10,12 @@
   "lt-header lt-header lt-header lt-header"
   "lt-body lt-body lt-body lt-body"
   "lt-footer lt-footer lt-footer lt-footer"
+}
+
+.notif-count {
+  @extend %badge;
+  top: 2px;
+  right: 34px;
 }
 
 .lt-header { grid-area: lt-header; }
