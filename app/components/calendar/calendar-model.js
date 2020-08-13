@@ -47,14 +47,14 @@ export const createCalendar = (mdl, invites, date) => {
   )
 
   return matrix.map((weekDay) => {
-    console.log(
-      "each day of int start",
-      weekDay
-      // eachDayOfInterval({
-      //   start: startOfISOWeek(weekDay),
-      //   end: endOfISOWeek(weekDay),
-      // })
-    )
+    // console.log(
+    //   "each day of int start",
+    //   weekDay
+    //   // eachDayOfInterval({
+    //   //   start: startOfISOWeek(weekDay),
+    //   //   end: endOfISOWeek(weekDay),
+    //   // })
+    // )
     return eachDayOfInterval({
       start: startOfWeek(weekDay, { weekStartsOn: mdl.Calendar.state.start() }),
       end: endOfWeek(weekDay, { weekStartsOn: mdl.Calendar.state.start() }),

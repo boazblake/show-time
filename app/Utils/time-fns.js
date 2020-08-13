@@ -38,19 +38,38 @@ export const isToday = (someDate) => {
 }
 
 export const daysOfTheWeek = [
+  "Sunday",
   "Monday",
   "Teusday",
   "Wednesday",
   "Thursday",
   "Friday",
   "Saturday",
-  "Sunday",
 ]
 
-export const daysOfTheWeekBeginAt = (idx) => {
-  console.log("start week at idx", idx)
-  return daysOfTheWeek
+const getFirstDay = (idx, weeks) => weeks[idx]
+
+const getNextDay = (week, weeks) => {
+  let lastDay = week[week.length - 1]
+  let nextDayIdx =
+    weeks.indexOf(lastDay) + 1 > 6
+      ? 0
+      : weeks.indexOf(lastDay) + 1 < 0
+      ? 6
+      : weeks.indexOf(lastDay) + 1
+  return weeks[nextDayIdx]
 }
+
+const toStartOf = (idx, weeks) => (week, day) => {
+  if (week.length == 7) return week
+  week.length > 0
+    ? week.push(getNextDay(week, weeks))
+    : week.push(getFirstDay(idx, weeks))
+  return week
+}
+
+export const daysOfTheWeekFrom = (idx) =>
+  daysOfTheWeek.reduce(toStartOf(idx, daysOfTheWeek), [])
 
 export const monthsOfTheYear = [
   "January",

@@ -415,11 +415,14 @@ var createCalendar = function createCalendar(mdl, invites, date) {
     weekStartsOn: 1
   });
   return matrix.map(function (weekDay) {
-    console.log("each day of int start", weekDay // eachDayOfInterval({
-    //   start: startOfISOWeek(weekDay),
-    //   end: endOfISOWeek(weekDay),
-    // })
-    );
+    // console.log(
+    //   "each day of int start",
+    //   weekDay
+    //   // eachDayOfInterval({
+    //   //   start: startOfISOWeek(weekDay),
+    //   //   end: endOfISOWeek(weekDay),
+    //   // })
+    // )
     return (0, _dateFns.eachDayOfInterval)({
       start: (0, _dateFns.startOfWeek)(weekDay, {
         weekStartsOn: mdl.Calendar.state.start()
@@ -526,19 +529,27 @@ var Navbar = function Navbar() {
 };
 
 var DaysOfWeek = function DaysOfWeek() {
+  var updateStartOfWeek = function updateStartOfWeek(mdl) {
+    return function (dir) {
+      var prev = mdl.Calendar.state.start();
+      var next = prev + dir > 6 ? 0 : prev + dir < 0 ? 6 : prev + dir;
+      mdl.Calendar.state.start(next);
+    };
+  };
+
   return {
     view: function view(_ref2) {
       var mdl = _ref2.attrs.mdl;
       return m(".frow width-100 row-between mt-10", [m(_cjs.AngleLine, {
         onclick: function onclick(e) {
-          return mdl.Calendar.state.start(mdl.Calendar.state.start() - 1);
+          return updateStartOfWeek(mdl)(-1);
         },
         class: "cal-day-prev"
-      }), (0, _Utils.daysOfTheWeekBeginAt)(mdl.Calendar.state.start()).map(function (day) {
+      }), (0, _Utils.daysOfTheWeekFrom)(mdl.Calendar.state.start()).map(function (day) {
         return m(".col-xs-1-7 text-center", m("span.width-auto.text-strong", day[0].toUpperCase()));
       }), m(_cjs.AngleLine, {
         onclick: function onclick(e) {
-          return mdl.Calendar.state.start(mdl.Calendar.state.start() + 1);
+          return updateStartOfWeek(mdl)(1);
         },
         class: "cal-day-next"
       })]);
@@ -3763,7 +3774,7 @@ var Calendar = {
     date: M()
   }),
   state: {
-    start: Stream(0)
+    start: Stream(1)
   }
 };
 var User = {};
@@ -5379,7 +5390,7 @@ exports.locals = locals;
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.firstInviteHour = exports.shortDateString = exports.toHourViewModel = exports.getFullDate = exports.fromFullDate = exports.monthsOfTheYear = exports.daysOfTheWeekBeginAt = exports.daysOfTheWeek = exports.isToday = exports.datesAreSame = exports.getHoursInDay = exports.displayTimeFormat = exports.getMin = exports.getHour = exports.pad0Left = exports.pad00Min = exports.padding = void 0;
+exports.firstInviteHour = exports.shortDateString = exports.toHourViewModel = exports.getFullDate = exports.fromFullDate = exports.monthsOfTheYear = exports.daysOfTheWeekFrom = exports.daysOfTheWeek = exports.isToday = exports.datesAreSame = exports.getHoursInDay = exports.displayTimeFormat = exports.getMin = exports.getHour = exports.pad0Left = exports.pad00Min = exports.padding = void 0;
 
 var _index = require("./index");
 
@@ -5450,15 +5461,32 @@ var isToday = function isToday(someDate) {
 };
 
 exports.isToday = isToday;
-var daysOfTheWeek = ["Monday", "Teusday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"];
+var daysOfTheWeek = ["Sunday", "Monday", "Teusday", "Wednesday", "Thursday", "Friday", "Saturday"];
 exports.daysOfTheWeek = daysOfTheWeek;
 
-var daysOfTheWeekBeginAt = function daysOfTheWeekBeginAt(idx) {
-  console.log("start week at idx", idx);
-  return daysOfTheWeek;
+var getFirstDay = function getFirstDay(idx, weeks) {
+  return weeks[idx];
 };
 
-exports.daysOfTheWeekBeginAt = daysOfTheWeekBeginAt;
+var getNextDay = function getNextDay(week, weeks) {
+  var lastDay = week[week.length - 1];
+  var nextDayIdx = weeks.indexOf(lastDay) + 1 > 6 ? 0 : weeks.indexOf(lastDay) + 1 < 0 ? 6 : weeks.indexOf(lastDay) + 1;
+  return weeks[nextDayIdx];
+};
+
+var toStartOf = function toStartOf(idx, weeks) {
+  return function (week, day) {
+    if (week.length == 7) return week;
+    week.length > 0 ? week.push(getNextDay(week, weeks)) : week.push(getFirstDay(idx, weeks));
+    return week;
+  };
+};
+
+var daysOfTheWeekFrom = function daysOfTheWeekFrom(idx) {
+  return daysOfTheWeek.reduce(toStartOf(idx, daysOfTheWeek), []);
+};
+
+exports.daysOfTheWeekFrom = daysOfTheWeekFrom;
 var monthsOfTheYear = ["January", "Febuary", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
 exports.monthsOfTheYear = monthsOfTheYear;
 

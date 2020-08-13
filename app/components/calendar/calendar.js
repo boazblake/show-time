@@ -1,5 +1,5 @@
 import { createCalendar, calendarDayStyle } from "./calendar-model"
-import { daysOfTheWeekBeginAt, firstInviteHour, hyphenize } from "Utils"
+import { daysOfTheWeekFrom, firstInviteHour, hyphenize } from "Utils"
 import { AngleLine } from "@mithril-icons/clarity/cjs"
 
 const Navbar = () => {
@@ -64,16 +64,21 @@ const Navbar = () => {
 }
 
 const DaysOfWeek = () => {
+  const updateStartOfWeek = (mdl) => (dir) => {
+    let prev = mdl.Calendar.state.start()
+    let next = prev + dir > 6 ? 0 : prev + dir < 0 ? 6 : prev + dir
+    mdl.Calendar.state.start(next)
+  }
+
   return {
     view: ({ attrs: { mdl } }) =>
       m(".frow width-100 row-between mt-10", [
         m(AngleLine, {
-          onclick: (e) =>
-            mdl.Calendar.state.start(mdl.Calendar.state.start() - 1),
+          onclick: (e) => updateStartOfWeek(mdl)(-1),
           class: "cal-day-prev",
         }),
 
-        daysOfTheWeekBeginAt(mdl.Calendar.state.start()).map((day) =>
+        daysOfTheWeekFrom(mdl.Calendar.state.start()).map((day) =>
           m(
             ".col-xs-1-7 text-center",
             m(
@@ -85,8 +90,7 @@ const DaysOfWeek = () => {
         ),
 
         m(AngleLine, {
-          onclick: (e) =>
-            mdl.Calendar.state.start(mdl.Calendar.state.start() + 1),
+          onclick: (e) => updateStartOfWeek(mdl)(1),
           class: "cal-day-next",
         }),
       ]),
