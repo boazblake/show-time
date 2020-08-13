@@ -2,7 +2,7 @@ import { Calendar, Day, Editor, InvitesToast } from "Components"
 import { HTTP, getInvitesByUserIdTask } from "Http"
 import { dayModel } from "Models"
 import { datesAreSame } from "Utils"
-
+import { without } from "ramda"
 const toDayViewModel = (dayViewModel, invite) => {
   dayViewModel[`${invite.start.format("HH")}:00`].push(invite)
   return dayViewModel
@@ -18,7 +18,7 @@ export const Home = ({ attrs: { mdl } }) => {
   const state = {
     error: null,
     status: "loading",
-    invitesToast: null,
+    invitesToast: Stream([]),
     events: null,
     invitesWithRSVP: null,
   }
@@ -32,10 +32,15 @@ export const Home = ({ attrs: { mdl } }) => {
 
     const onSuccess = (invites) => {
       mdl.Invites.fetch(false)
-      state.invitesToast = invites.filter((i) => !i.updated && i.status == 2)
+
+      mdl.State.invitesToast(
+        without(
+          mdl.State.notifications().invites,
+          invites.filter((i) => !i.updated && i.status == 2)
+        )
+      )
       state.invitesWithRSVP = invites.filter((i) => i.updated || i.status !== 2)
-      mdl.State.notifications(state.invitesToast)
-      console.log(state)
+      // console.log(state)
       state.error = null
       state.status = "success"
     }
@@ -97,11 +102,9 @@ export const Home = ({ attrs: { mdl } }) => {
                   invites: getSelectedDayInvites(mdl)(state.invitesWithRSVP),
                 }),
 
-                state.invitesToast.any() &&
+                mdl.State.invitesToast().any() &&
                   m(InvitesToast, {
                     mdl,
-                    invites: state.invitesToast,
-                    reLoad: load,
                   }),
               ],
         ]

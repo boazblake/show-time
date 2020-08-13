@@ -15,7 +15,7 @@ export const Sidebar = () => {
       status: Stream("loading"),
       data: {
         items: [],
-        invites: [],
+        invites: Stream([]),
       },
     },
     Profile: {
@@ -53,6 +53,8 @@ export const Sidebar = () => {
       state.load.error(null)
       state.load.status("success")
       state.Home.data.items = toItemViewModel(items)
+      state.Home.data.invites(mdl.State.notifications())
+      console.log("wtf", state.Home.data.invites())
     }
 
     getItemsByUserIdTask(HTTP)(mdl)(mdl.User.objectId).fork(onError, onSuccess)
@@ -107,6 +109,15 @@ export const Sidebar = () => {
                   ".ul",
                   state.Home.data.items.map(([name, quantity]) =>
                     m("li.sidebar-items-list", name + " : " + quantity)
+                  )
+                ),
+              ]),
+              m(".sidebar-article", [
+                m("p.sidebar-section-heading", "Invites"),
+                m(
+                  ".ul",
+                  mdl.State.notifications().invites.map((x) =>
+                    m("li.sidebar-items-list", x.title)
                   )
                 ),
               ]),

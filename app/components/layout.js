@@ -13,6 +13,13 @@ const Header = () => {
   }
 }
 
+const calcNotifs = (mdl) =>
+  Object.values(mdl.State.notifications()).reduce((acc, n) => {
+    acc += n.length
+    console.log(acc, n, mdl.State.notifications())
+    return acc
+  }, 0)
+
 const Hamburger = () => {
   return {
     view: ({ attrs: { mdl } }) => {
@@ -26,10 +33,12 @@ const Hamburger = () => {
           mdl.Sidebar.isShowing()
             ? m(CloseLine)
             : [
-                mdl.State.notifications().any() && [
-                  m(".notif-count", mdl.State.notifications().length),
-                  m(BellLine),
-                ],
+                Object.values(mdl.State.notifications()).map((v) => {
+                  console.log(v.any())
+                  return (
+                    v.any() && [m(".notif-count", calcNotifs(mdl)), m(BellLine)]
+                  )
+                }),
                 m(BarsLine),
               ]
         ),
