@@ -310,7 +310,8 @@ var AttendanceResponse = function AttendanceResponse() {
     view: function view(_ref2) {
       var _ref2$attrs = _ref2.attrs,
           mdl = _ref2$attrs.mdl,
-          guest = _ref2$attrs.guest;
+          guest = _ref2$attrs.guest,
+          updateFn = _ref2$attrs.updateFn;
       return m(".frow", getResponse(guest).map(function (response, idx) {
         return m(response, {
           class: guest.userId == mdl.User.objectId ? "clickable" : "",
@@ -319,7 +320,8 @@ var AttendanceResponse = function AttendanceResponse() {
             if (guest.userId == mdl.User.objectId) {
               guest.status = idx;
               updateInvite(mdl)(guest);
-              mdl.Invites.fetch(true);
+              updateFn(guest);
+              mdl.Home.fetch(true);
             }
           }
         });
@@ -836,7 +838,7 @@ var Editor = function Editor(_ref) {
     };
 
     var onSuccess = function onSuccess() {
-      mdl.Invites.fetch(true);
+      mdl.Home.fetch(true);
       mdl.State.modal(false);
     };
 
@@ -1356,30 +1358,15 @@ var _cjs = require("@mithril-icons/clarity/cjs");
 
 var _Components = require("Components");
 
-var InvitesToast = function InvitesToast(_ref) {
-  var _ref$attrs = _ref.attrs,
-      mdl = _ref$attrs.mdl,
-      reLoad = _ref$attrs.reLoad;
-
-  var stackInvites = function stackInvites(idx, name) {
-    var bIdx = 140;
-    var lIdx = -5;
-    var bottom = idx * 140 + bIdx;
-    var left = idx * 3 + lIdx; // console.log("idx", name, idx, bottom)
-
-    return {
-      style: {
-        left: "".concat(left, "px"),
-        bottom: "".concat(bottom, "px")
-      }
-    };
-  };
-
+var InvitesToast = function InvitesToast() {
   return {
-    view: function view(_ref2) {
-      var mdl = _ref2.attrs.mdl;
-      return m(".invite-alerts-container frow reverse", mdl.State.invitesToast().map(function (invite, idx) {
-        return m(".invite-alert", stackInvites(idx, invite.title), invite.title, m(_Components.AttendanceResponse, {
+    view: function view(_ref) {
+      var _ref$attrs = _ref.attrs,
+          mdl = _ref$attrs.mdl,
+          style = _ref$attrs.style,
+          invites = _ref$attrs.invites;
+      return m(".invite-alerts-container frow reverse", invites.map(function (invite, idx) {
+        return m(".invite-alert mb-10", style(idx), m(".frow mb-10", [m(".col-xs-1-2 text-ellipsis", "".concat(invite.title)), m(".col-xs-1-2", "On: ".concat(invite.start.format("MM-DD-YYYY"))), m(".col-xs-1-2", "From: ".concat(invite.start.format("HH:mm"))), m(".col-xs-1-2", "To: ".concat(invite.end.format("HH:mm")))]), m(_Components.AttendanceResponse, {
           mdl: mdl,
           guest: invite
         }), m(_cjs.TimesCircleLine, {
@@ -1388,6 +1375,7 @@ var InvitesToast = function InvitesToast(_ref) {
             mdl.State.notifications.map(function (state) {
               return state.invites.push(invite);
             });
+            mdl.Home.fetch(true);
           },
           class: "invite-alert-remove"
         }));
@@ -1701,9 +1689,16 @@ var Sidebar = function Sidebar() {
             quantity = _ref6[1];
 
         return m("li.sidebar-items-list", name + " : " + quantity);
-      }))]), m(".sidebar-article", [m("p.sidebar-section-heading", "Invites"), m(".ul", mdl.State.notifications().invites.map(function (x) {
-        return m("li.sidebar-items-list", x.title);
-      }))])])]), state.Profile.isShowing() && m(".sidebar-section", m(".frow column-center", [m(".sidebar-article", m(_Components.Profile, {
+      }))]), m(".sidebar-article", [m("p.sidebar-section-heading", "Invites"), mdl.State.notifications().invites.map(function (invite, idx) {
+        return m(".sidebar-invites", m(".frow mb-10", [m(".col-xs-1-2 text-ellipsis", "".concat(invite.title)), m(".col-xs-1-2", "On: ".concat(invite.start.format("MM-DD-YYYY"))), m(".col-xs-1-2", "From: ".concat(invite.start.format("HH:mm"))), m(".col-xs-1-2", "To: ".concat(invite.end.format("HH:mm")))]), m(_Components.AttendanceResponse, {
+          mdl: mdl,
+          updateFn: function updateFn(x) {
+            mdl.State.notifications().invites.removeAt(idx);
+            console.log("remove x from ...", x);
+          },
+          guest: invite
+        }));
+      })])])]), state.Profile.isShowing() && m(".sidebar-section", m(".frow column-center", [m(".sidebar-article", m(_Components.Profile, {
         mdl: mdl
       }))]))]);
     }
@@ -3750,9 +3745,7 @@ var Events = {
   currentEventId: Stream(null),
   currentEventStart: Stream(null)
 };
-var Invites = {
-  fetch: Stream(false)
-};
+var Invites = {};
 var Day = {
   data: dayModel({
     State: State
@@ -3761,6 +3754,7 @@ var Day = {
   listView: Stream(true)
 };
 var Home = {
+  fetch: Stream(false),
   modal: Stream(false)
 };
 var Settings = {
@@ -4710,7 +4704,7 @@ var Home = function Home(_ref) {
     };
 
     var onSuccess = function onSuccess(invites) {
-      mdl.Invites.fetch(false);
+      mdl.Home.fetch(false);
       mdl.State.invitesToast((0, _ramda.without)(mdl.State.notifications().invites, invites.filter(function (i) {
         return !i.updated && i.status == 2;
       })));
@@ -4729,7 +4723,7 @@ var Home = function Home(_ref) {
     oninit: load,
     onupdate: function onupdate(_ref3) {
       var mdl = _ref3.attrs.mdl;
-      return mdl.Invites.fetch() && load({
+      return mdl.Home.fetch() && load({
         attrs: {
           mdl: mdl
         }
@@ -4756,6 +4750,8 @@ var Home = function Home(_ref) {
         day: createDayVM(mdl)(getSelectedDayInvites(mdl)(state.invitesWithRSVP)),
         invites: getSelectedDayInvites(mdl)(state.invitesWithRSVP)
       }), mdl.State.invitesToast().any() && m(_Components.InvitesToast, {
+        invites: mdl.State.invitesToast(),
+        style: _Utils.stackInvites,
         mdl: mdl
       })]]);
     }
@@ -5178,6 +5174,7 @@ Object.defineProperty(exports, "__esModule", {
 });
 var _exportNames = {
   log: true,
+  stackInvites: true,
   debounce: true,
   inviteOptions: true,
   getInviteStatusColor: true,
@@ -5192,7 +5189,7 @@ var _exportNames = {
   range: true,
   isEqual: true
 };
-exports.isEqual = exports.range = exports.isSideBarActive = exports.jsonCopy = exports.nameFromRoute = exports.NoOp = exports.Pause = exports.randomPause = exports.rand = exports.hyphenize = exports.getInviteStatusColor = exports.inviteOptions = exports.debounce = exports.log = void 0;
+exports.isEqual = exports.range = exports.isSideBarActive = exports.jsonCopy = exports.nameFromRoute = exports.NoOp = exports.Pause = exports.randomPause = exports.rand = exports.hyphenize = exports.getInviteStatusColor = exports.inviteOptions = exports.debounce = exports.stackInvites = exports.log = void 0;
 
 var _localStorage = require("./local-storage.js");
 
@@ -5253,6 +5250,21 @@ var log = function log(m) {
 };
 
 exports.log = log;
+
+var stackInvites = function stackInvites(idx) {
+  var bIdx = 140;
+  var lIdx = -5;
+  var bottom = idx * 140 + bIdx;
+  var left = idx * 3 + lIdx;
+  return {
+    style: {
+      left: "".concat(left, "px"),
+      bottom: "".concat(bottom, "px")
+    }
+  };
+};
+
+exports.stackInvites = stackInvites;
 
 var debounce = function debounce(wait) {
   return function (func, immediate) {

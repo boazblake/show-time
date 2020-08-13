@@ -1,30 +1,21 @@
 import { TimesCircleLine } from "@mithril-icons/clarity/cjs"
 import { AttendanceResponse } from "Components"
 
-export const InvitesToast = ({ attrs: { mdl, reLoad } }) => {
-  const stackInvites = (idx, name) => {
-    let bIdx = 140
-    let lIdx = -5
-    let bottom = idx * 140 + bIdx
-    let left = idx * 3 + lIdx
-    // console.log("idx", name, idx, bottom)
-    return {
-      style: {
-        left: `${left}px`,
-        bottom: `${bottom}px`,
-      },
-    }
-  }
-
+export const InvitesToast = () => {
   return {
-    view: ({ attrs: { mdl } }) =>
+    view: ({ attrs: { mdl, style, invites } }) =>
       m(
         ".invite-alerts-container frow reverse",
-        mdl.State.invitesToast().map((invite, idx) =>
+        invites.map((invite, idx) =>
           m(
-            ".invite-alert",
-            stackInvites(idx, invite.title),
-            invite.title,
+            ".invite-alert mb-10",
+            style(idx),
+            m(".frow mb-10", [
+              m(".col-xs-1-2 text-ellipsis", `${invite.title}`),
+              m(".col-xs-1-2", `On: ${invite.start.format("MM-DD-YYYY")}`),
+              m(".col-xs-1-2", `From: ${invite.start.format("HH:mm")}`),
+              m(".col-xs-1-2", `To: ${invite.end.format("HH:mm")}`),
+            ]),
             m(AttendanceResponse, {
               mdl,
               guest: invite,
@@ -35,6 +26,7 @@ export const InvitesToast = ({ attrs: { mdl, reLoad } }) => {
                 mdl.State.notifications.map((state) =>
                   state.invites.push(invite)
                 )
+                mdl.Home.fetch(true)
               },
               class: "invite-alert-remove",
             })

@@ -1,7 +1,7 @@
 import { Calendar, Day, Editor, InvitesToast } from "Components"
 import { HTTP, getInvitesByUserIdTask } from "Http"
 import { dayModel } from "Models"
-import { datesAreSame } from "Utils"
+import { datesAreSame, stackInvites } from "Utils"
 import { without } from "ramda"
 
 const toDayViewModel = (dayViewModel, invite) => {
@@ -32,7 +32,7 @@ export const Home = ({ attrs: { mdl } }) => {
     }
 
     const onSuccess = (invites) => {
-      mdl.Invites.fetch(false)
+      mdl.Home.fetch(false)
 
       mdl.State.invitesToast(
         without(
@@ -55,7 +55,7 @@ export const Home = ({ attrs: { mdl } }) => {
   return {
     oninit: load,
     onupdate: ({ attrs: { mdl } }) =>
-      mdl.Invites.fetch() && load({ attrs: { mdl } }),
+      mdl.Home.fetch() && load({ attrs: { mdl } }),
     view: ({ attrs: { mdl } }) => {
       return m(
         ".frow  ",
@@ -105,6 +105,8 @@ export const Home = ({ attrs: { mdl } }) => {
 
                 mdl.State.invitesToast().any() &&
                   m(InvitesToast, {
+                    invites: mdl.State.invitesToast(),
+                    style: stackInvites,
                     mdl,
                   }),
               ],

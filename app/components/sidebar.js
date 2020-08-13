@@ -1,6 +1,6 @@
 import { log, jsonCopy } from "Utils"
 import { HTTP, getItemsByUserIdTask } from "Http"
-import { Profile } from "Components"
+import { Profile, AttendanceResponse } from "Components"
 import { reduceBy, fromPairs } from "ramda"
 
 export const Sidebar = () => {
@@ -114,10 +114,26 @@ export const Sidebar = () => {
               ]),
               m(".sidebar-article", [
                 m("p.sidebar-section-heading", "Invites"),
-                m(
-                  ".ul",
-                  mdl.State.notifications().invites.map((x) =>
-                    m("li.sidebar-items-list", x.title)
+                mdl.State.notifications().invites.map((invite, idx) =>
+                  m(
+                    ".sidebar-invites",
+                    m(".frow mb-10", [
+                      m(".col-xs-1-2 text-ellipsis", `${invite.title}`),
+                      m(
+                        ".col-xs-1-2",
+                        `On: ${invite.start.format("MM-DD-YYYY")}`
+                      ),
+                      m(".col-xs-1-2", `From: ${invite.start.format("HH:mm")}`),
+                      m(".col-xs-1-2", `To: ${invite.end.format("HH:mm")}`),
+                    ]),
+                    m(AttendanceResponse, {
+                      mdl,
+                      updateFn: (x) => {
+                        mdl.State.notifications().invites.removeAt(idx)
+                        console.log("remove x from ...", x)
+                      },
+                      guest: invite,
+                    })
                   )
                 ),
               ]),

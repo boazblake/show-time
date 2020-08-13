@@ -389,14 +389,22 @@ rgba(255, 255, 255, 0) 100%
 
   .sidebar-article {
     line-height: 3rem;
+    overflow: auto;
     border: 1px solid var(--warning);
     border-radius: 2%;
     width: 95%;
+    max-height: 300px;
     padding: 5px 20px;
     margin: 10px 0;
   }
 }
 
+}
+
+.sidebar-invites {
+  color: var(--white);
+  padding: 10px 0;
+  border-top: 1px solid var(--warning);
 }
 
 .sidebar-items-list {
@@ -407,7 +415,6 @@ rgba(255, 255, 255, 0) 100%
 .invite-alerts-container {
   position: relative;
   bottom: 100px;
-  line-height: 3rem;
   width: 100%;
 }
 
@@ -416,11 +423,12 @@ rgba(255, 255, 255, 0) 100%
   border: 1px solid var(--warning);
   border-radius: 2%;
   width: 95%;
-  min-height: 145px;
+  min-height: 155px;
   padding: 5px 20px;
   margin: 0 auto;
   background: var(--dark);
   color: var(--light);
+  line-height: 1.8rem;
 }
 
 .invite-alert-remove {

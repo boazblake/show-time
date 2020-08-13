@@ -31,9 +31,7 @@ const Events = {
   currentEventId: Stream(null),
   currentEventStart: Stream(null),
 }
-const Invites = {
-  fetch: Stream(false),
-}
+const Invites = {}
 const Day = {
   data: dayModel({ State }),
   update: Stream(false),
@@ -41,6 +39,7 @@ const Day = {
 }
 
 const Home = {
+  fetch: Stream(false),
   modal: Stream(false),
 }
 

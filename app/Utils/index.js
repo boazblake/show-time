@@ -7,6 +7,19 @@ export const log = (m) => (v) => {
   return v
 }
 
+export const stackInvites = (idx) => {
+  let bIdx = 140
+  let lIdx = -5
+  let bottom = idx * 140 + bIdx
+  let left = idx * 3 + lIdx
+  return {
+    style: {
+      left: `${left}px`,
+      bottom: `${bottom}px`,
+    },
+  }
+}
+
 export const debounce = (wait) => (func, immediate) => {
   console.log(wait)
   var timeout
