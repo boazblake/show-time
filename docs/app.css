@@ -23,6 +23,18 @@
   text-align: center;
 }
 
+.cal-day-next {
+  transform: rotate(90deg);
+}
+
+.cal-day-prev {
+  transform: rotate(-90deg);
+}
+
+.decrement {
+  transform: rotate(180deg);
+}
+
 :root {
   --blue: #042532;
   --indigo: #6610f2;
@@ -226,10 +238,6 @@ ul {
   transform: scale(0.5);
 }
 
-.decrement {
-  transform: rotate(180deg);
-}
-
 .events-map-container {
   min-height: 250px;
   min-width: 250px;
@@ -305,6 +313,18 @@ ul {
 .cal-toolbar-input {
   display: inline-block;
   width: 33%;
+}
+
+.cal-day-prev {
+  width: 20px;
+  position: absolute;
+  left: 0;
+}
+
+.cal-day-next {
+  width: 20px;
+  position: absolute;
+  right: 0;
 }
 
 .cal-invites-item {

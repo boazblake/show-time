@@ -47,6 +47,11 @@ export const daysOfTheWeek = [
   "Sunday",
 ]
 
+export const daysOfTheWeekBeginAt = (idx) => {
+  console.log("start week at idx", idx)
+  return daysOfTheWeek
+}
+
 export const monthsOfTheYear = [
   "January",
   "Febuary",

@@ -250,7 +250,7 @@ ul {
 }
 
 .decrement {
-  transform: rotate(180deg);
+  @extend %angle-line-down
 }
 
 .events-map-container {
@@ -335,6 +335,21 @@ rgba(255, 255, 255, 0) 100%
   display: inline-block;
   width: 33%;
 }
+
+.cal-day-prev {
+  @extend %angle-line-left;
+  width: 20px;
+  position: absolute;
+  left: 0;
+}
+
+.cal-day-next {
+  @extend %angle-line-right;
+  width: 20px;
+  position: absolute;
+  right: 0;
+}
+
 
 .cal-invites-item {
   @extend %badge;

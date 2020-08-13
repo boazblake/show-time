@@ -16,14 +16,12 @@ const Header = () => {
 const calcNotifs = (mdl) =>
   Object.values(mdl.State.notifications()).reduce((acc, n) => {
     acc += n.length
-    console.log(acc, n, mdl.State.notifications())
     return acc
   }, 0)
 
 const Hamburger = () => {
   return {
     view: ({ attrs: { mdl } }) => {
-      console.log(mdl.State.notifications())
       return [
         m(
           "button.col-xs-1-5.button-none.frow",
@@ -34,7 +32,6 @@ const Hamburger = () => {
             ? m(CloseLine)
             : [
                 Object.values(mdl.State.notifications()).map((v) => {
-                  console.log(v.any())
                   return (
                     v.any() && [m(".notif-count", calcNotifs(mdl)), m(BellLine)]
                   )

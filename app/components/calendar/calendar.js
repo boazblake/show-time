@@ -1,5 +1,6 @@
 import { createCalendar, calendarDayStyle } from "./calendar-model"
-import { daysOfTheWeek, firstInviteHour, hyphenize } from "Utils"
+import { daysOfTheWeekBeginAt, firstInviteHour, hyphenize } from "Utils"
+import { AngleLine } from "@mithril-icons/clarity/cjs"
 
 const Navbar = () => {
   return {
@@ -65,9 +66,14 @@ const Navbar = () => {
 const DaysOfWeek = () => {
   return {
     view: ({ attrs: { mdl } }) =>
-      m(
-        ".frow width-100 row-between mt-10",
-        daysOfTheWeek.map((day) =>
+      m(".frow width-100 row-between mt-10", [
+        m(AngleLine, {
+          onclick: (e) =>
+            mdl.Calendar.state.start(mdl.Calendar.state.start() - 1),
+          class: "cal-day-prev",
+        }),
+
+        daysOfTheWeekBeginAt(mdl.Calendar.state.start()).map((day) =>
           m(
             ".col-xs-1-7 text-center",
             m(
@@ -76,8 +82,14 @@ const DaysOfWeek = () => {
               day[0].toUpperCase()
             )
           )
-        )
-      ),
+        ),
+
+        m(AngleLine, {
+          onclick: (e) =>
+            mdl.Calendar.state.start(mdl.Calendar.state.start() + 1),
+          class: "cal-day-next",
+        }),
+      ]),
   }
 }
 
@@ -103,16 +115,16 @@ const CalendarDay = () => {
   }
 }
 
-const CalendarBody = () => {
-  return {
-    view: ({ attrs: { mdl, date, invites } }) => {},
-  }
-}
+// const CalendarBody = () => {
+//   return {
+//     view: ({ attrs: { mdl, date, invites } }) => {},
+//   }
+// }
 
 export const Calendar = () => {
   return {
     view: ({ attrs: { mdl, date, invites } }) => {
-      let matrix = createCalendar(invites, date)
+      let matrix = createCalendar(mdl, invites, date)
       return m(
         ".calendar",
         m(".frow frow-container", [

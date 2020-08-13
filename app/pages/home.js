@@ -3,6 +3,7 @@ import { HTTP, getInvitesByUserIdTask } from "Http"
 import { dayModel } from "Models"
 import { datesAreSame } from "Utils"
 import { without } from "ramda"
+
 const toDayViewModel = (dayViewModel, invite) => {
   dayViewModel[`${invite.start.format("HH")}:00`].push(invite)
   return dayViewModel

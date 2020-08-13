@@ -1,11 +1,12 @@
 import {
   eachDayOfInterval,
-  endOfISOWeek,
-  startOfISOWeek,
+  endOfWeek,
+  startOfWeek,
   eachWeekOfInterval,
   parseISO,
 } from "date-fns"
 import { datesAreSame } from "Utils"
+import { weekdays } from "moment"
 
 export const isCalenderDay = (invites, day) => ({
   day: day,
@@ -33,7 +34,7 @@ export const createCalendarDayViewModel = (
     : isNotCalenderDay(filterBy(day)(invites), M(day), date)
 }
 
-export const createCalendar = (invites, date) => {
+export const createCalendar = (mdl, invites, date) => {
   let start = parseISO(date.clone().startOf("month").toISOString())
   let end = parseISO(date.clone().endOf("month").toISOString())
 
@@ -45,16 +46,24 @@ export const createCalendar = (invites, date) => {
     { weekStartsOn: 1 }
   )
 
-  return matrix.map((weekDay) =>
-    eachDayOfInterval({
-      start: startOfISOWeek(weekDay),
-      end: endOfISOWeek(weekDay),
+  return matrix.map((weekDay) => {
+    console.log(
+      "each day of int start",
+      weekDay
+      // eachDayOfInterval({
+      //   start: startOfISOWeek(weekDay),
+      //   end: endOfISOWeek(weekDay),
+      // })
+    )
+    return eachDayOfInterval({
+      start: startOfWeek(weekDay, { weekStartsOn: mdl.Calendar.state.start() }),
+      end: endOfWeek(weekDay, { weekStartsOn: mdl.Calendar.state.start() }),
     }).map((day) =>
       createCalendarDayViewModel(invites, day, date, {
         isSameMonth: date.isSame(day, "month"),
       })
     )
-  )
+  })
 }
 
 export const calendarModel = ({ mdl, invites, date }) => {

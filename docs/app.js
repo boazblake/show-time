@@ -368,6 +368,8 @@ var _dateFns = require("date-fns");
 
 var _Utils = require("Utils");
 
+var _moment = require("moment");
+
 var isCalenderDay = function isCalenderDay(invites, day) {
   return {
     day: day,
@@ -403,7 +405,7 @@ var createCalendarDayViewModel = function createCalendarDayViewModel(invites, da
 
 exports.createCalendarDayViewModel = createCalendarDayViewModel;
 
-var createCalendar = function createCalendar(invites, date) {
+var createCalendar = function createCalendar(mdl, invites, date) {
   var start = (0, _dateFns.parseISO)(date.clone().startOf("month").toISOString());
   var end = (0, _dateFns.parseISO)(date.clone().endOf("month").toISOString());
   var matrix = (0, _dateFns.eachWeekOfInterval)({
@@ -413,9 +415,18 @@ var createCalendar = function createCalendar(invites, date) {
     weekStartsOn: 1
   });
   return matrix.map(function (weekDay) {
+    console.log("each day of int start", weekDay // eachDayOfInterval({
+    //   start: startOfISOWeek(weekDay),
+    //   end: endOfISOWeek(weekDay),
+    // })
+    );
     return (0, _dateFns.eachDayOfInterval)({
-      start: (0, _dateFns.startOfISOWeek)(weekDay),
-      end: (0, _dateFns.endOfISOWeek)(weekDay)
+      start: (0, _dateFns.startOfWeek)(weekDay, {
+        weekStartsOn: mdl.Calendar.state.start()
+      }),
+      end: (0, _dateFns.endOfWeek)(weekDay, {
+        weekStartsOn: mdl.Calendar.state.start()
+      })
     }).map(function (day) {
       return createCalendarDayViewModel(invites, day, date, {
         isSameMonth: date.isSame(day, "month")
@@ -489,6 +500,8 @@ var _calendarModel = require("./calendar-model");
 
 var _Utils = require("Utils");
 
+var _cjs = require("@mithril-icons/clarity/cjs");
+
 var Navbar = function Navbar() {
   return {
     view: function view(_ref) {
@@ -516,9 +529,19 @@ var DaysOfWeek = function DaysOfWeek() {
   return {
     view: function view(_ref2) {
       var mdl = _ref2.attrs.mdl;
-      return m(".frow width-100 row-between mt-10", _Utils.daysOfTheWeek.map(function (day) {
+      return m(".frow width-100 row-between mt-10", [m(_cjs.AngleLine, {
+        onclick: function onclick(e) {
+          return mdl.Calendar.state.start(mdl.Calendar.state.start() - 1);
+        },
+        class: "cal-day-prev"
+      }), (0, _Utils.daysOfTheWeekBeginAt)(mdl.Calendar.state.start()).map(function (day) {
         return m(".col-xs-1-7 text-center", m("span.width-auto.text-strong", day[0].toUpperCase()));
-      }));
+      }), m(_cjs.AngleLine, {
+        onclick: function onclick(e) {
+          return mdl.Calendar.state.start(mdl.Calendar.state.start() + 1);
+        },
+        class: "cal-day-next"
+      })]);
     }
   };
 };
@@ -540,37 +563,31 @@ var CalendarDay = function CalendarDay() {
       }, m(".".concat((0, _calendarModel.calendarDayStyle)(mdl.selectedDate(), day, dir)), [m("span.cal-date", day.format("D")), invites.any() && m(".cal-invites-item", invites.length)])));
     }
   };
-};
+}; // const CalendarBody = () => {
+//   return {
+//     view: ({ attrs: { mdl, date, invites } }) => {},
+//   }
+// }
 
-var CalendarBody = function CalendarBody() {
+
+var Calendar = function Calendar() {
   return {
     view: function view(_ref4) {
       var _ref4$attrs = _ref4.attrs,
           mdl = _ref4$attrs.mdl,
           date = _ref4$attrs.date,
           invites = _ref4$attrs.invites;
-    }
-  };
-};
-
-var Calendar = function Calendar() {
-  return {
-    view: function view(_ref5) {
-      var _ref5$attrs = _ref5.attrs,
-          mdl = _ref5$attrs.mdl,
-          date = _ref5$attrs.date,
-          invites = _ref5$attrs.invites;
-      var matrix = (0, _calendarModel.createCalendar)(invites, date);
+      var matrix = (0, _calendarModel.createCalendar)(mdl, invites, date);
       return m(".calendar", m(".frow frow-container", [m(Navbar, {
         mdl: mdl,
         date: date
       }), m(DaysOfWeek, {
         mdl: mdl
       }), m(".frow centered-column width-100 row-between mt-10 ", matrix.map(function (week) {
-        return m(".frow width-100", week.map(function (_ref6) {
-          var invites = _ref6.invites,
-              day = _ref6.day,
-              dir = _ref6.dir;
+        return m(".frow width-100", week.map(function (_ref5) {
+          var invites = _ref5.invites,
+              day = _ref5.day,
+              dir = _ref5.dir;
           return m(CalendarDay, {
             mdl: mdl,
             invites: invites,
@@ -1403,7 +1420,6 @@ var Header = function Header() {
 var calcNotifs = function calcNotifs(mdl) {
   return Object.values(mdl.State.notifications()).reduce(function (acc, n) {
     acc += n.length;
-    console.log(acc, n, mdl.State.notifications());
     return acc;
   }, 0);
 };
@@ -1412,13 +1428,11 @@ var Hamburger = function Hamburger() {
   return {
     view: function view(_ref2) {
       var mdl = _ref2.attrs.mdl;
-      console.log(mdl.State.notifications());
       return [m("button.col-xs-1-5.button-none.frow", {
         onclick: function onclick(e) {
           return mdl.Sidebar.isShowing(!mdl.Sidebar.isShowing());
         }
       }, mdl.Sidebar.isShowing() ? m(_cjs.CloseLine) : [Object.values(mdl.State.notifications()).map(function (v) {
-        console.log(v.any());
         return v.any() && [m(".notif-count", calcNotifs(mdl)), m(_cjs.BellLine)];
       }), m(_cjs.BarsLine)])];
     }
@@ -3747,7 +3761,10 @@ var Calendar = {
     mdl: Model,
     invites: [],
     date: M()
-  })
+  }),
+  state: {
+    start: Stream(0)
+  }
 };
 var User = {};
 var Sidebar = {
@@ -5362,7 +5379,7 @@ exports.locals = locals;
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.firstInviteHour = exports.shortDateString = exports.toHourViewModel = exports.getFullDate = exports.fromFullDate = exports.monthsOfTheYear = exports.daysOfTheWeek = exports.isToday = exports.datesAreSame = exports.getHoursInDay = exports.displayTimeFormat = exports.getMin = exports.getHour = exports.pad0Left = exports.pad00Min = exports.padding = void 0;
+exports.firstInviteHour = exports.shortDateString = exports.toHourViewModel = exports.getFullDate = exports.fromFullDate = exports.monthsOfTheYear = exports.daysOfTheWeekBeginAt = exports.daysOfTheWeek = exports.isToday = exports.datesAreSame = exports.getHoursInDay = exports.displayTimeFormat = exports.getMin = exports.getHour = exports.pad0Left = exports.pad00Min = exports.padding = void 0;
 
 var _index = require("./index");
 
@@ -5435,6 +5452,13 @@ var isToday = function isToday(someDate) {
 exports.isToday = isToday;
 var daysOfTheWeek = ["Monday", "Teusday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"];
 exports.daysOfTheWeek = daysOfTheWeek;
+
+var daysOfTheWeekBeginAt = function daysOfTheWeekBeginAt(idx) {
+  console.log("start week at idx", idx);
+  return daysOfTheWeek;
+};
+
+exports.daysOfTheWeekBeginAt = daysOfTheWeekBeginAt;
 var monthsOfTheYear = ["January", "Febuary", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
 exports.monthsOfTheYear = monthsOfTheYear;
 

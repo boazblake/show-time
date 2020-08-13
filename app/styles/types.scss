@@ -23,3 +23,15 @@
   border-radius: 50%;
   text-align: center;
 }
+
+%angle-line-right {
+  transform: rotate(90deg);
+}
+
+%angle-line-left {
+  transform: rotate(-90deg);
+}
+
+%angle-line-down {
+  transform: rotate(180deg);
+}
