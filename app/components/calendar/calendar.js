@@ -74,7 +74,7 @@ const DaysOfWeek = () => {
     view: ({ attrs: { mdl } }) =>
       m(".frow width-100 row-between mt-10", [
         m(AngleLine, {
-          onclick: (e) => updateStartOfWeek(mdl)(-1),
+          onclick: (e) => updateStartOfWeek(mdl)(1),
           class: "cal-day-prev",
         }),
 
@@ -90,7 +90,7 @@ const DaysOfWeek = () => {
         ),
 
         m(AngleLine, {
-          onclick: (e) => updateStartOfWeek(mdl)(1),
+          onclick: (e) => updateStartOfWeek(mdl)(-1),
           class: "cal-day-next",
         }),
       ]),

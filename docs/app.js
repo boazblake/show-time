@@ -542,14 +542,14 @@ var DaysOfWeek = function DaysOfWeek() {
       var mdl = _ref2.attrs.mdl;
       return m(".frow width-100 row-between mt-10", [m(_cjs.AngleLine, {
         onclick: function onclick(e) {
-          return updateStartOfWeek(mdl)(-1);
+          return updateStartOfWeek(mdl)(1);
         },
         class: "cal-day-prev"
       }), (0, _Utils.daysOfTheWeekFrom)(mdl.Calendar.state.start()).map(function (day) {
         return m(".col-xs-1-7 text-center", m("span.width-auto.text-strong", day[0].toUpperCase()));
       }), m(_cjs.AngleLine, {
         onclick: function onclick(e) {
-          return updateStartOfWeek(mdl)(1);
+          return updateStartOfWeek(mdl)(-1);
         },
         class: "cal-day-next"
       })]);
@@ -3774,7 +3774,7 @@ var Calendar = {
     date: M()
   }),
   state: {
-    start: Stream(1)
+    start: Stream(0)
   }
 };
 var User = {};

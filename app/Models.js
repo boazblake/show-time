@@ -48,7 +48,7 @@ const Settings = { profile: "", inspector: "" }
 
 const Calendar = {
   data: calendarModel({ mdl: Model, invites: [], date: M() }),
-  state: { start: Stream(1) },
+  state: { start: Stream(0) },
 }
 const User = {}
 
