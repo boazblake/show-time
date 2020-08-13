@@ -3,14 +3,14 @@ import { AttendanceResponse } from "Components"
 
 export const InvitesToast = ({ attrs: { mdl, reLoad } }) => {
   const stackInvites = (idx, name) => {
-    let bIdx = 87
+    let bIdx = 140
     let lIdx = -5
-    let bottom = idx * 80 + bIdx
-    let left = lIdx * idx
+    let bottom = idx * 140 + bIdx
+    let left = idx * 3 + lIdx
     // console.log("idx", name, idx, bottom)
     return {
       style: {
-        // left: `-${left}px`,
+        left: `${left}px`,
         bottom: `${bottom}px`,
       },
     }
