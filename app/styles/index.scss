@@ -393,7 +393,7 @@ rgba(255, 255, 255, 0) 100%
     border: 1px solid var(--warning);
     border-radius: 2%;
     width: 95%;
-    max-height: 300px;
+    max-height: 80vh;
     padding: 5px 20px;
     margin: 10px 0;
   }
@@ -423,7 +423,7 @@ rgba(255, 255, 255, 0) 100%
   border: 1px solid var(--warning);
   border-radius: 2%;
   width: 95%;
-  min-height: 155px;
+  // min-height: 155px;
   padding: 5px 20px;
   margin: 0 auto;
   background: var(--dark);

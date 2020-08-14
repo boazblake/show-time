@@ -360,8 +360,9 @@ export const Event = ({ attrs: { mdl } }) => {
                     m("input.col-xs-1-2", {
                       placeholder: "name",
                       value: state.items.name,
-                      oninput: (e) =>
-                        (state.items.name = e.target.value.trim()),
+                      oninput: (e) => (state.items.name = e.target.value),
+                      onchange: (e) =>
+                        (state.items.name = state.items.name.trim()),
                       onblur: (e) => validate("items")(state.items),
                       type: "text",
                     }),

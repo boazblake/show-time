@@ -1,9 +1,26 @@
 import { getHoursInDay } from "Utils"
 import { calendarModel } from "Components/calendar/calendar-model"
 
+// const Notifications = () => {
+//   let state = {
+//     invites: Stream([]),
+//     items: Stream([]),
+//     guests: Stream([]),
+//   }
+
+//   return {
+//     invites: state.invites,
+//     items: state.items,
+//     guests: state.guests,
+//     count: Stream.combine(
+//       (invites, items, guests) =>
+//         invites().length + items().length + guests().length,z,xnbkzjb/sNV/LZFNG
+//       [state.invites, state.items, state.guests]
+//     ),
+//   }
+// }
+
 const State = {
-  notifications: Stream({ invites: [] }),
-  invitesToast: Stream([]),
   isAuth: Stream(false),
   modal: Stream(false),
   isLoading: Stream(false),
@@ -30,8 +47,15 @@ export const inviteModel = () => ({
 const Events = {
   currentEventId: Stream(null),
   currentEventStart: Stream(null),
+  createNewEvent: Stream(false),
 }
-const Invites = {}
+
+const Invites = {
+  state: { error: null, status: Stream("loading") },
+  withRSVP: Stream([]),
+  needRSVP: Stream([]),
+}
+
 const Day = {
   data: dayModel({ State }),
   update: Stream(false),
@@ -40,7 +64,6 @@ const Day = {
 
 const Home = {
   fetch: Stream(false),
-  modal: Stream(false),
 }
 
 const Settings = { profile: "", inspector: "" }

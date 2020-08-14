@@ -1,8 +1,6 @@
-import { Calendar, Day, Editor, InvitesToast } from "Components"
-import { HTTP, getInvitesByUserIdTask } from "Http"
+import { Calendar, Day, Editor } from "Components"
 import { dayModel } from "Models"
-import { datesAreSame, stackInvites } from "Utils"
-import { without } from "ramda"
+import { datesAreSame } from "Utils"
 
 const toDayViewModel = (dayViewModel, invite) => {
   dayViewModel[`${invite.start.format("HH")}:00`].push(invite)
@@ -12,74 +10,44 @@ const toDayViewModel = (dayViewModel, invite) => {
 const createDayVM = (mdl) => (invites) =>
   invites.reduce(toDayViewModel, dayModel(mdl, mdl.selectedDate()))
 
-const getSelectedDayInvites = (mdl) => (invites) =>
-  invites.filter((i) => datesAreSame(i.start)(mdl.selectedDate())("YYYY-MM-DD"))
+const getSelectedDayInvites = (mdl) => (invites) => {
+  console.log(invites, mdl)
+  return invites.filter((i) =>
+    datesAreSame(i.start)(mdl.selectedDate())("YYYY-MM-DD")
+  )
+}
 
-export const Home = ({ attrs: { mdl } }) => {
-  const state = {
-    error: null,
-    status: "loading",
-    invitesToast: Stream([]),
-    events: null,
-    invitesWithRSVP: null,
-  }
-
-  const load = ({ attrs: { mdl } }) => {
-    mdl.Home.modal(false)
-    const onError = (err) => {
-      state.error = err
-      state.status = "failed"
-    }
-
-    const onSuccess = (invites) => {
-      mdl.Home.fetch(false)
-
-      mdl.State.invitesToast(
-        without(
-          mdl.State.notifications().invites,
-          invites.filter((i) => !i.updated && i.status == 2)
-        )
-      )
-      state.invitesWithRSVP = invites.filter((i) => i.updated || i.status !== 2)
-      // console.log(state)
-      state.error = null
-      state.status = "success"
-    }
-
-    getInvitesByUserIdTask(HTTP)(mdl)(mdl.User.objectId).fork(
-      onError,
-      onSuccess
-    )
-  }
-
+export const Home = () => {
   return {
-    oninit: load,
     onupdate: ({ attrs: { mdl } }) =>
       mdl.Home.fetch() && load({ attrs: { mdl } }),
     view: ({ attrs: { mdl } }) => {
       return m(
         ".frow  ",
-        state.status == "loading" && m("p.full-width", "FETCHING EVENTS..."),
-        state.status == "failed" && m("p.full-width", "FAILED TO FETCH EVENTS"),
-        state.status == "success" && [
+        mdl.Invites.state.status == "loading" &&
+          m("p.full-width", "FETCHING EVENTS..."),
+        mdl.Invites.state.status == "failed" &&
+          m("p.full-width", "FAILED TO FETCH EVENTS"),
+        mdl.Invites.state.status == "success" && [
           m(Calendar, {
             mdl,
             date: mdl.selectedDate(),
-            invites: state.invitesWithRSVP,
+            invites: mdl.Invites.withRSVP(),
           }),
 
           m(`.frow.max-width`, [
             m(
-              `${mdl.Home.modal() ? ".col-xs-1-1" : ".col-xs-2-3"}`,
+              `${mdl.Events.createNewEvent() ? ".col-xs-1-1" : ".col-xs-2-3"}`,
               m(
                 `button.btn.max-width.height-100`,
                 {
-                  onclick: (e) => mdl.Home.modal(!mdl.Home.modal()),
+                  onclick: (e) =>
+                    mdl.Events.createNewEvent(!mdl.Events.createNewEvent()),
                 },
-                mdl.Home.modal() ? "Cancel" : "Add Event"
+                mdl.Events.createNewEvent() ? "Cancel" : "Create New Event"
               )
             ),
-            !mdl.Home.modal() &&
+            !mdl.Events.createNewEvent() &&
               m(
                 "col-xs-1-3",
                 m(
@@ -92,23 +60,16 @@ export const Home = ({ attrs: { mdl } }) => {
               ),
           ]),
 
-          mdl.Home.modal()
+          mdl.Events.createNewEvent()
             ? m(Editor, { mdl })
             : [
                 m(Day, {
                   mdl,
                   day: createDayVM(mdl)(
-                    getSelectedDayInvites(mdl)(state.invitesWithRSVP)
+                    getSelectedDayInvites(mdl)(mdl.Invites.withRSVP())
                   ),
-                  invites: getSelectedDayInvites(mdl)(state.invitesWithRSVP),
+                  invites: getSelectedDayInvites(mdl)(mdl.Invites.withRSVP()),
                 }),
-
-                mdl.State.invitesToast().any() &&
-                  m(InvitesToast, {
-                    invites: mdl.State.invitesToast(),
-                    style: stackInvites,
-                    mdl,
-                  }),
               ],
         ]
       )

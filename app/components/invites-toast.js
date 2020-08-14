@@ -1,37 +1,36 @@
 import { TimesCircleLine } from "@mithril-icons/clarity/cjs"
-import { AttendanceResponse } from "Components"
 
 export const InvitesToast = () => {
+  const inviteMsg = (count) =>
+    count == 1 ? `is 1 invite` : `are ${count} invites`
+
+  const notificationStatus = () =>
+    localStorage.getItem("shindigit-showNotifications") == "true"
+
+  const setNotificationStatus = (val) =>
+    localStorage.setItem("shindigit-showNotifications", val)
+
   return {
-    view: ({ attrs: { mdl, style, invites } }) =>
+    view: ({ attrs: { mdl, invites, locale } }) =>
       m(
-        ".invite-alerts-container frow reverse",
-        invites.map((invite, idx) =>
+        ".invite-alerts-container frow",
+        m(".invite-alert mb-10 justify-between", [
+          m("p", `There ${inviteMsg(invites)} waiting your attention.`),
           m(
-            ".invite-alert mb-10",
-            style(idx),
-            m(".frow mb-10", [
-              m(".col-xs-1-2 text-ellipsis", `${invite.title}`),
-              m(".col-xs-1-2", `On: ${invite.start.format("MM-DD-YYYY")}`),
-              m(".col-xs-1-2", `From: ${invite.start.format("HH:mm")}`),
-              m(".col-xs-1-2", `To: ${invite.end.format("HH:mm")}`),
-            ]),
-            m(AttendanceResponse, {
-              mdl,
-              guest: invite,
+            "label.text-right",
+            m("input", {
+              type: "checkbox",
+              checked: notificationStatus(),
+              onclick: (e) => setNotificationStatus(notificationStatus()),
             }),
-            m(TimesCircleLine, {
-              onclick: (e) => {
-                mdl.State.invitesToast().removeAt(idx)
-                mdl.State.notifications.map((state) =>
-                  state.invites.push(invite)
-                )
-                mdl.Home.fetch(true)
-              },
-              class: "invite-alert-remove",
-            })
-          )
-        )
+            "Close and do not show again"
+          ),
+        ]),
+
+        m(TimesCircleLine, {
+          onclick: (e) => setNotificationStatus(false),
+          class: "invite-alert-remove",
+        })
       ),
   }
 }

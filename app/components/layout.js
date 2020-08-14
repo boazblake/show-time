@@ -1,5 +1,4 @@
-import { HomeToolbar, EventToolbar, Sidebar } from "Components"
-import { BellLine, BarsLine, CloseLine } from "@mithril-icons/clarity/cjs"
+import { HomeToolbar, EventToolbar, Sidebar, Hamburger } from "Components"
 
 const Header = () => {
   const getRoute = (mdl) => mdl.State.route.id
@@ -13,37 +12,6 @@ const Header = () => {
   }
 }
 
-const calcNotifs = (mdl) =>
-  Object.values(mdl.State.notifications()).reduce((acc, n) => {
-    acc += n.length
-    return acc
-  }, 0)
-
-const Hamburger = () => {
-  return {
-    view: ({ attrs: { mdl } }) => {
-      return [
-        m(
-          "button.col-xs-1-5.button-none.frow",
-          {
-            onclick: (e) => mdl.Sidebar.isShowing(!mdl.Sidebar.isShowing()),
-          },
-          mdl.Sidebar.isShowing()
-            ? m(CloseLine)
-            : [
-                Object.values(mdl.State.notifications()).map((v) => {
-                  return (
-                    v.any() && [m(".notif-count", calcNotifs(mdl)), m(BellLine)]
-                  )
-                }),
-                m(BarsLine),
-              ]
-        ),
-      ]
-    },
-  }
-}
-
 export const Layout = () => {
   return {
     view: ({ children, attrs: { mdl } }) =>
@@ -52,7 +20,9 @@ export const Layout = () => {
           ".lt-header.navbar",
           m(".frow row", [m(Header, { mdl }), m(Hamburger, { mdl })])
         ),
-        mdl.Sidebar.isShowing() ? m(Sidebar, { mdl }) : m(".lt-body", children),
+        mdl.Sidebar.isShowing()
+          ? m(Sidebar, { mdl })
+          : [m(".lt-body", children)],
         m(".lt-footer", "FOOTER"),
       ]),
   }

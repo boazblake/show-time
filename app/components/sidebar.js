@@ -1,7 +1,4 @@
-import { log, jsonCopy } from "Utils"
-import { HTTP, getItemsByUserIdTask } from "Http"
 import { Profile, AttendanceResponse } from "Components"
-import { reduceBy, fromPairs } from "ramda"
 
 export const Sidebar = () => {
   const state = {
@@ -10,30 +7,16 @@ export const Sidebar = () => {
       isShowing: Stream(false),
       status: Stream("loading"),
     },
-    Home: {
+    Invites: {
       isShowing: Stream(true),
       status: Stream("loading"),
-      data: {
-        items: [],
-        invites: Stream([]),
-      },
+      data: Stream([]),
     },
     Profile: {
       isShowing: Stream(false),
       is24Hrs: Stream(false),
     },
   }
-
-  const toItemViewModel = (items) =>
-    Object.entries(
-      reduceBy(
-        (acc, { quantity }) => acc + quantity,
-        0,
-        ({ name }) => name.toLowerCase(),
-        items
-      )
-    )
-  // ).map(([name, quantity]) => ({ [name]: quantity }))
 
   const showState = (field) => {
     let keys = Object.keys(state)
@@ -42,27 +25,7 @@ export const Sidebar = () => {
     )
   }
 
-  const load = ({ attrs: { mdl } }) => {
-    const onError = (error) => {
-      state.load.error(jsonCopy(error))
-      state.load.status = "failed"
-      console.log("error", error)
-    }
-
-    const onSuccess = (items) => {
-      state.load.error(null)
-      state.load.status("success")
-      state.Home.data.items = toItemViewModel(items)
-      state.Home.data.invites(mdl.State.notifications())
-      console.log("wtf", state.Home.data.invites())
-    }
-
-    getItemsByUserIdTask(HTTP)(mdl)(mdl.User.objectId).fork(onError, onSuccess)
-  }
-
   return {
-    oninit: load,
-    // oncreate: (v) => console.log("oncreate", v),
     view: ({ attrs: { mdl } }) => {
       return m(".sidebar-page", [
         m(
@@ -71,16 +34,16 @@ export const Sidebar = () => {
             m(
               "button.sidebar-tab.col-xs-1-3",
               {
-                class: state.Home.isShowing() ? "sidebar-tab-selected" : "",
-                onclick: (e) => showState(e.target.innerHTML),
+                class: state.Invites.isShowing() ? "sidebar-tab-selected" : "",
+                onclick: (e) => showState("Invites"),
               },
-              "Home"
+              "New Invites"
             ),
             m(
               "button.sidebar-tab.col-xs-1-3",
               {
                 class: state.Profile.isShowing() ? "sidebar-tab-selected" : "",
-                onclick: (e) => showState(e.target.innerHTML),
+                onclick: (e) => showState("Profile"),
               },
               "Profile"
             ),
@@ -100,22 +63,12 @@ export const Sidebar = () => {
           ])
         ),
 
-        state.Home.isShowing() &&
+        state.Invites.isShowing() &&
           m(".sidebar-section", [
-            m(".frow column-center", [
-              m(".sidebar-article", [
-                m("p.sidebar-section-heading", "Items"),
-                m(
-                  ".ul",
-                  state.Home.data.items.map(([name, quantity]) =>
-                    m("li.sidebar-items-list", name + " : " + quantity)
-                  )
-                ),
-              ]),
-              m(".sidebar-article", [
-                m("p.sidebar-section-heading", "Invites"),
-                mdl.State.notifications().invites.map((invite, idx) =>
-                  m(
+            m(".frow column-center height-100", [
+              m(".sidebar-article frow height-100", [
+                mdl.Invites.needRSVP().map((invite, idx) => {
+                  return m(
                     ".sidebar-invites",
                     m(".frow mb-10", [
                       m(".col-xs-1-2 text-ellipsis", `${invite.title}`),
@@ -129,13 +82,12 @@ export const Sidebar = () => {
                     m(AttendanceResponse, {
                       mdl,
                       updateFn: (x) => {
-                        mdl.State.notifications().invites.removeAt(idx)
                         console.log("remove x from ...", x)
                       },
                       guest: invite,
                     })
                   )
-                ),
+                }),
               ]),
             ]),
           ]),
