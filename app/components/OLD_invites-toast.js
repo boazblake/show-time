@@ -1,5 +1,5 @@
 import { TimesCircleLine } from "@mithril-icons/clarity/cjs"
-import { AttendanceResponse } from "Components"
+import { InviteRSVP } from "Components"
 
 export const InvitesToast = () => {
   return {
@@ -16,7 +16,7 @@ export const InvitesToast = () => {
               m(".col-xs-1-2", `From: ${invite.start.format("HH:mm")}`),
               m(".col-xs-1-2", `To: ${invite.end.format("HH:mm")}`),
             ]),
-            m(AttendanceResponse, {
+            m(InviteRSVP, {
               mdl,
               guest: invite,
               updateFn: (x) => console.log("update this item", invite),

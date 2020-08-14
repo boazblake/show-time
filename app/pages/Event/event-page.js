@@ -12,7 +12,7 @@ import {
   updateItemTask,
   sendInviteTask,
 } from "Http"
-import { AccordianItem, AttendanceResponse } from "Components"
+import { AccordianItem, InviteRSVP } from "Components"
 import {
   AngleLine,
   RemoveLine,
@@ -316,7 +316,7 @@ export const Event = ({ attrs: { mdl } }) => {
                     m(".col-xs-1-2", mdl.User.name),
                     m(
                       ".col-xs-1-2",
-                      m(AttendanceResponse, {
+                      m(InviteRSVP, {
                         mdl,
                         guest: head(
                           data.guests.filter(
@@ -334,7 +334,7 @@ export const Event = ({ attrs: { mdl } }) => {
                         m(".col-xs-1-2", guest.name),
                         m(
                           ".col-xs-1-2",
-                          m(AttendanceResponse, {
+                          m(InviteRSVP, {
                             mdl,
                             guest,
                             updateInvite,

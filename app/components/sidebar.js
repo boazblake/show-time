@@ -1,5 +1,4 @@
-import { Profile, AttendanceResponse, Logo } from "Components"
-import { getTimeFormat } from "Utils"
+import { Profile, SidebarRSVP } from "Components"
 
 export const Sidebar = () => {
   const state = {
@@ -67,42 +66,10 @@ export const Sidebar = () => {
         state.Invites.isShowing() &&
           m(".sidebar-section", [
             m(".frow column-center height-100", [
-              m(".sidebar-article frow height-100", [
-                mdl.Invites.needRSVP().length
-                  ? mdl.Invites.needRSVP().map((invite, idx) => {
-                      return m(
-                        ".sidebar-invites",
-                        m(".frow mb-10", [
-                          m(".col-xs-1-2 text-ellipsis", `${invite.title}`),
-                          m(
-                            ".col-xs-1-2",
-                            `On: ${invite.start.format("MM-DD-YYYY")}`
-                          ),
-                          m(
-                            ".col-xs-1-2",
-                            `From: ${invite.start.format(getTimeFormat(mdl))}`
-                          ),
-                          m(
-                            ".col-xs-1-2",
-                            `To: ${invite.end.format(getTimeFormat(mdl))}`
-                          ),
-                        ]),
-                        m(AttendanceResponse, {
-                          mdl,
-                          updateFn: (x) => {
-                            console.log("remove x from ...", x)
-                          },
-                          guest: invite,
-                        })
-                      )
-                    })
-                  : m(".logo-placeholder", [
-                      m("h3", "You have no outstanding invites"),
-                      Logo,
-                    ]),
-              ]),
+              m(".sidebar-article frow height-100", m(SidebarRSVP, { mdl })),
             ]),
           ]),
+
         state.Profile.isShowing() &&
           m(
             ".sidebar-section",

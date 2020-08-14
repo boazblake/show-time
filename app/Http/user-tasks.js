@@ -32,6 +32,8 @@ export const createProfileTask = (http) => (mdl) =>
     userId: mdl.User.objectId,
     name: mdl.User.name,
     email: mdl.User.email,
+    startWeekOnDay: 1,
+    use24Hrs: true,
   })
 
 export const linkProfileTask = (http) => (mdl) =>

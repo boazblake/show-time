@@ -245,7 +245,7 @@ var InvitesToast = function InvitesToast() {
           style = _ref$attrs.style,
           invites = _ref$attrs.invites;
       return m(".invite-alerts-container frow reverse", invites.map(function (invite, idx) {
-        return m(".invite-alert mb-10", style(idx), m(".frow mb-10", [m(".col-xs-1-2 text-ellipsis", "".concat(invite.title)), m(".col-xs-1-2", "On: ".concat(invite.start.format("MM-DD-YYYY"))), m(".col-xs-1-2", "From: ".concat(invite.start.format("HH:mm"))), m(".col-xs-1-2", "To: ".concat(invite.end.format("HH:mm")))]), m(_Components.AttendanceResponse, {
+        return m(".invite-alert mb-10", style(idx), m(".frow mb-10", [m(".col-xs-1-2 text-ellipsis", "".concat(invite.title)), m(".col-xs-1-2", "On: ".concat(invite.start.format("MM-DD-YYYY"))), m(".col-xs-1-2", "From: ".concat(invite.start.format("HH:mm"))), m(".col-xs-1-2", "To: ".concat(invite.end.format("HH:mm")))]), m(_Components.InviteRSVP, {
           mdl: mdl,
           guest: invite,
           updateFn: function updateFn(x) {
@@ -303,75 +303,6 @@ var AccordianItem = function AccordianItem() {
 };
 
 exports.AccordianItem = AccordianItem;
-});
-
-;require.register("Components/attendance-response.js", function(exports, require, module) {
-"use strict";
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.AttendanceResponse = void 0;
-
-var _Utils = require("Utils");
-
-var _cjs = require("@mithril-icons/clarity/cjs");
-
-var _Http = require("Http");
-
-var updateInvite = function updateInvite(mdl) {
-  return function (update) {
-    var onError = function onError(error) {
-      state.error = jsonCopy(error);
-      state.status = "failed";
-      console.log("invite update failed", state, update);
-    };
-
-    var onSuccess = function onSuccess(dto) {
-      console.log("success", dto); // reLoad({ attrs: { mdl } })
-    };
-
-    (0, _Http.updateInviteTask)(_Http.HTTP)(mdl)(update).fork(onError, onSuccess);
-  };
-};
-
-var responses = function responses() {
-  return [_cjs.SadFaceLine, _cjs.HappyFaceLine, _cjs.NeutralFaceLine];
-};
-
-var selectedResponses = [_cjs.SadFaceSolid, _cjs.HappyFaceSolid, _cjs.NeutralFaceSolid];
-
-var getResponse = function getResponse(_ref) {
-  var status = _ref.status;
-  var rs = responses();
-  rs.removeAt(status);
-  rs.insertAt(status, selectedResponses[status]);
-  return rs;
-};
-
-var AttendanceResponse = function AttendanceResponse() {
-  return {
-    view: function view(_ref2) {
-      var _ref2$attrs = _ref2.attrs,
-          mdl = _ref2$attrs.mdl,
-          guest = _ref2$attrs.guest;
-      return m(".frow", getResponse(guest).map(function (response, idx) {
-        return m(response, {
-          class: guest.userId == mdl.User.objectId ? "clickable" : "",
-          fill: "var(--".concat(_Utils.inviteOptions[idx], "-invite)"),
-          onclick: function onclick(e) {
-            if (guest.userId == mdl.User.objectId) {
-              guest.status = idx;
-              updateInvite(mdl)(guest); // mdl.Invites.fetch(true)
-            }
-          }
-        });
-      }));
-    }
-  };
-};
-
-exports.AttendanceResponse = AttendanceResponse;
 });
 
 ;require.register("Components/auth-layout.js", function(exports, require, module) {
@@ -684,6 +615,8 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.Day = exports.HourView = void 0;
 
+var _Components = require("Components");
+
 var _Utils = require("Utils");
 
 var createEventUrl = function createEventUrl(invite) {
@@ -793,7 +726,7 @@ var Day = function Day(_ref4) {
           mdl = _ref7$attrs.mdl,
           day = _ref7$attrs.day,
           invites = _ref7$attrs.invites;
-      return m(".day", [m(".day-container", [mdl.Day.listView() ? m(ListView, {
+      return m(".day", [m(".day-container", [invites.any() ? mdl.Day.listView() ? m(ListView, {
         mdl: mdl,
         invites: invites
       }) : (0, _Utils.getHoursInDay)().map(function (hour, idx) {
@@ -803,6 +736,8 @@ var Day = function Day(_ref4) {
           hour: hour,
           events: day[hour]
         });
+      }) : m(_Components.EmptyState, {
+        text: "You have no Invites today"
       })])]);
     }
   };
@@ -1145,6 +1080,28 @@ var validateTask = function validateTask(data) {
 exports.validateTask = validateTask;
 });
 
+;require.register("Components/empty-state.js", function(exports, require, module) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.EmptyState = void 0;
+
+var _Components = require("Components");
+
+var EmptyState = function EmptyState() {
+  return {
+    view: function view(_ref) {
+      var text = _ref.attrs.text;
+      return m(".logo-placeholder", [m("h3.text-center", text), _Components.Logo]);
+    }
+  };
+};
+
+exports.EmptyState = EmptyState;
+});
+
 ;require.register("Components/event-toolbar.js", function(exports, require, module) {
 "use strict";
 
@@ -1423,14 +1380,26 @@ Object.keys(_accordianItem).forEach(function (key) {
   });
 });
 
-var _attendanceResponse = require("./attendance-response.js");
+var _inviteRsvp = require("./invite-rsvp.js");
 
-Object.keys(_attendanceResponse).forEach(function (key) {
+Object.keys(_inviteRsvp).forEach(function (key) {
   if (key === "default" || key === "__esModule") return;
   Object.defineProperty(exports, key, {
     enumerable: true,
     get: function get() {
-      return _attendanceResponse[key];
+      return _inviteRsvp[key];
+    }
+  });
+});
+
+var _sidebarRsvp = require("./sidebar-rsvp.js");
+
+Object.keys(_sidebarRsvp).forEach(function (key) {
+  if (key === "default" || key === "__esModule") return;
+  Object.defineProperty(exports, key, {
+    enumerable: true,
+    get: function get() {
+      return _sidebarRsvp[key];
     }
   });
 });
@@ -1482,6 +1451,88 @@ Object.keys(_hamburger).forEach(function (key) {
     }
   });
 });
+
+var _emptyState = require("./empty-state");
+
+Object.keys(_emptyState).forEach(function (key) {
+  if (key === "default" || key === "__esModule") return;
+  Object.defineProperty(exports, key, {
+    enumerable: true,
+    get: function get() {
+      return _emptyState[key];
+    }
+  });
+});
+});
+
+;require.register("Components/invite-rsvp.js", function(exports, require, module) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.InviteRSVP = void 0;
+
+var _Utils = require("Utils");
+
+var _cjs = require("@mithril-icons/clarity/cjs");
+
+var _Http = require("Http");
+
+var updateInvite = function updateInvite(mdl) {
+  return function (update) {
+    var onError = function onError(error) {
+      state.error = jsonCopy(error);
+      state.status = "failed";
+      console.log("invite update failed", state, update);
+    };
+
+    var onSuccess = function onSuccess(dto) {
+      console.log("success", dto); // reLoad({ attrs: { mdl } })
+    };
+
+    (0, _Http.updateInviteTask)(_Http.HTTP)(mdl)(update).fork(onError, onSuccess);
+  };
+};
+
+var responses = function responses() {
+  return [_cjs.SadFaceLine, _cjs.HappyFaceLine, _cjs.NeutralFaceLine];
+};
+
+var selectedResponses = [_cjs.SadFaceSolid, _cjs.HappyFaceSolid, _cjs.NeutralFaceSolid];
+
+var getResponse = function getResponse(_ref) {
+  var status = _ref.status;
+  var rs = responses();
+  rs.removeAt(status);
+  rs.insertAt(status, selectedResponses[status]);
+  return rs;
+};
+
+var InviteRSVP = function InviteRSVP() {
+  return {
+    view: function view(_ref2) {
+      var _ref2$attrs = _ref2.attrs,
+          mdl = _ref2$attrs.mdl,
+          guest = _ref2$attrs.guest;
+      console.log(guest);
+      return m(".frow", getResponse(guest).map(function (response, idx) {
+        return m(response, {
+          class: guest.userId == mdl.User.objectId ? "clickable" : "",
+          fill: "var(--".concat(_Utils.inviteOptions[idx], "-invite)"),
+          onclick: function onclick(e) {
+            if (guest.userId == mdl.User.objectId) {
+              guest.status = idx;
+              updateInvite(mdl)(guest); // mdl.Invites.fetch(true)
+            }
+          }
+        });
+      }));
+    }
+  };
+};
+
+exports.InviteRSVP = InviteRSVP;
 });
 
 ;require.register("Components/invites-toast.js", function(exports, require, module) {
@@ -1723,8 +1774,7 @@ var Profile = function Profile() {
           mdl.User.profile.is24Hrs = !mdl.User.profile.is24Hrs;
           updatePrefs(mdl);
         }
-      })), m(".frow row-between", // "Start Week on Day:",
-      _Utils.daysOfTheWeek.map(function (day, idx) {
+      })), m("hr"), m("label", "Start Week on Day:", m(".frow row-between", _Utils.daysOfTheWeek.map(function (day, idx) {
         return m("label.col-xs-1-7", m("span", {
           key: idx
         }, day.slice(0, 3)), m("input", {
@@ -1741,12 +1791,46 @@ var Profile = function Profile() {
             updatePrefs(mdl);
           }
         }));
-      }))]);
+      })))]);
     }
   };
 };
 
 exports.Profile = Profile;
+});
+
+;require.register("Components/sidebar-rsvp.js", function(exports, require, module) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.SidebarRSVP = void 0;
+
+var _Components = require("Components");
+
+var _Utils = require("Utils");
+
+var SidebarRSVP = function SidebarRSVP() {
+  return {
+    view: function view(_ref) {
+      var mdl = _ref.attrs.mdl;
+      return m(".sidebar-rsvp", [mdl.Invites.needRSVP().length ? mdl.Invites.needRSVP().map(function (invite) {
+        return m(".sidebar-invites", m(".frow mb-10", [m(".col-xs-1-2 text-ellipsis", "".concat(invite.title)), m(".col-xs-1-2", "On: ".concat(invite.start.format("MM-DD-YYYY"))), m(".col-xs-1-2", "From: ".concat(invite.start.format((0, _Utils.getTimeFormat)(mdl)))), m(".col-xs-1-2", "To: ".concat(invite.end.format((0, _Utils.getTimeFormat)(mdl))))]), m(_Components.InviteRSVP, {
+          mdl: mdl,
+          updateFn: function updateFn(x) {
+            console.log("remove x from ...", x);
+          },
+          guest: invite
+        }));
+      }) : m(_Components.EmptyState, {
+        text: "You have no outstanding invites"
+      })]);
+    }
+  };
+};
+
+exports.SidebarRSVP = SidebarRSVP;
 });
 
 ;require.register("Components/sidebar.js", function(exports, require, module) {
@@ -1758,8 +1842,6 @@ Object.defineProperty(exports, "__esModule", {
 exports.Sidebar = void 0;
 
 var _Components = require("Components");
-
-var _Utils = require("Utils");
 
 var Sidebar = function Sidebar() {
   var state = {
@@ -1803,15 +1885,9 @@ var Sidebar = function Sidebar() {
         href: "/logout",
         selector: "button.sidebar-tab",
         class: "col-xs-1-3"
-      }, "Logout"))])), state.Invites.isShowing() && m(".sidebar-section", [m(".frow column-center height-100", [m(".sidebar-article frow height-100", [mdl.Invites.needRSVP().length ? mdl.Invites.needRSVP().map(function (invite, idx) {
-        return m(".sidebar-invites", m(".frow mb-10", [m(".col-xs-1-2 text-ellipsis", "".concat(invite.title)), m(".col-xs-1-2", "On: ".concat(invite.start.format("MM-DD-YYYY"))), m(".col-xs-1-2", "From: ".concat(invite.start.format((0, _Utils.getTimeFormat)(mdl)))), m(".col-xs-1-2", "To: ".concat(invite.end.format((0, _Utils.getTimeFormat)(mdl))))]), m(_Components.AttendanceResponse, {
-          mdl: mdl,
-          updateFn: function updateFn(x) {
-            console.log("remove x from ...", x);
-          },
-          guest: invite
-        }));
-      }) : m(".logo-placeholder", [m("h3", "You have no outstanding invites"), _Components.Logo])])])]), state.Profile.isShowing() && m(".sidebar-section", m(".frow column-center", [m(".sidebar-article", m(_Components.Profile, {
+      }, "Logout"))])), state.Invites.isShowing() && m(".sidebar-section", [m(".frow column-center height-100", [m(".sidebar-article frow height-100", m(_Components.SidebarRSVP, {
+        mdl: mdl
+      }))])]), state.Profile.isShowing() && m(".sidebar-section", m(".frow column-center", [m(".sidebar-article", m(_Components.Profile, {
         mdl: mdl
       }))]))]);
     }
@@ -3757,7 +3833,9 @@ var createProfileTask = function createProfileTask(http) {
     return http.backEnd.postTask(mdl)("data/Profiles")({
       userId: mdl.User.objectId,
       name: mdl.User.name,
-      email: mdl.User.email
+      email: mdl.User.email,
+      startWeekOnDay: 1,
+      use24Hrs: true
     });
   };
 };
@@ -4635,12 +4713,12 @@ var Event = function Event(_ref) {
         onclick: function onclick(e) {
           return sendInvite(mdl);
         }
-      }, "Invite"), state.guests.error() && m("code.error-field", state.guests.error())]), m(".frow row-start", [m(".col-xs-1-2", mdl.User.name), m(".col-xs-1-2", m(_Components.AttendanceResponse, {
+      }, "Invite"), state.guests.error() && m("code.error-field", state.guests.error())]), m(".frow row-start", [m(".col-xs-1-2", mdl.User.name), m(".col-xs-1-2", m(_Components.InviteRSVP, {
         mdl: mdl,
         guest: (0, _ramda.head)(data.guests.filter((0, _ramda.propEq)("userId", mdl.User.objectId))),
         updateInvite: updateInvite
       }))]), data.guests.filter((0, _ramda.compose)(_ramda.not, (0, _ramda.propEq)("userId", mdl.User.objectId))).map(function (guest) {
-        return m(".frow row-start", [m(".col-xs-1-2", guest.name), m(".col-xs-1-2", m(_Components.AttendanceResponse, {
+        return m(".frow row-start", [m(".col-xs-1-2", guest.name), m(".col-xs-1-2", m(_Components.InviteRSVP, {
           mdl: mdl,
           guest: guest,
           updateInvite: updateInvite

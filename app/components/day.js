@@ -1,3 +1,4 @@
+import { EmptyState } from "Components"
 import {
   getHoursInDay,
   firstInviteHour,
@@ -118,16 +119,18 @@ export const Day = ({ attrs: { mdl } }) => {
     view: ({ attrs: { mdl, day, invites } }) => {
       return m(".day", [
         m(".day-container", [
-          mdl.Day.listView()
-            ? m(ListView, { mdl, invites })
-            : getHoursInDay().map((hour, idx) => {
-                return m(HourView, {
-                  mdl,
-                  invites: day[hour],
-                  hour,
-                  events: day[hour],
+          invites.any()
+            ? mdl.Day.listView()
+              ? m(ListView, { mdl, invites })
+              : getHoursInDay().map((hour, idx) => {
+                  return m(HourView, {
+                    mdl,
+                    invites: day[hour],
+                    hour,
+                    events: day[hour],
+                  })
                 })
-              }),
+            : m(EmptyState, { text: "You have no Invites today" }),
         ]),
       ])
     },

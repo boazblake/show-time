@@ -32,9 +32,10 @@ const getResponse = ({ status }) => {
   rs.insertAt(status, selectedResponses[status])
   return rs
 }
-export const AttendanceResponse = () => {
+export const InviteRSVP = () => {
   return {
     view: ({ attrs: { mdl, guest } }) => {
+      console.log(guest)
       return m(
         ".frow",
         getResponse(guest).map((response, idx) =>

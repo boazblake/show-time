@@ -39,34 +39,37 @@ export const Profile = () => {
             },
           })
         ),
-
+        m("hr"),
         m(
-          ".frow row-between",
-          // "Start Week on Day:",
-          daysOfTheWeek.map((day, idx) =>
-            m(
-              "label.col-xs-1-7",
+          "label",
+          "Start Week on Day:",
+          m(
+            ".frow row-between",
+            daysOfTheWeek.map((day, idx) =>
               m(
-                "span",
-                {
+                "label.col-xs-1-7",
+                m(
+                  "span",
+                  {
+                    key: idx,
+                  },
+                  day.slice(0, 3)
+                ),
+                m("input", {
                   key: idx,
-                },
-                day.slice(0, 3)
-              ),
-              m("input", {
-                key: idx,
-                id: idx,
-                name: `startDay-${idx}`,
-                type: "radio",
-                value: mdl.User.profile.startWeekOnDay,
-                checked: mdl.User.profile.startWeekOnDay == idx,
-                onchange: (e) => {
-                  console.log(mdl.User)
-                  mdl.User.profile.startWeekOnDay = idx
-                  mdl.Calendar.state.start(idx)
-                  updatePrefs(mdl)
-                },
-              })
+                  id: idx,
+                  name: `startDay-${idx}`,
+                  type: "radio",
+                  value: mdl.User.profile.startWeekOnDay,
+                  checked: mdl.User.profile.startWeekOnDay == idx,
+                  onchange: (e) => {
+                    console.log(mdl.User)
+                    mdl.User.profile.startWeekOnDay = idx
+                    mdl.Calendar.state.start(idx)
+                    updatePrefs(mdl)
+                  },
+                })
+              )
             )
           )
         ),
