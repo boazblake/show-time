@@ -35,7 +35,7 @@ const getResponse = ({ status }) => {
 export const InviteRSVP = () => {
   return {
     view: ({ attrs: { mdl, guest } }) => {
-      console.log(guest)
+      // console.log(guest)
       return m(
         ".frow",
         getResponse(guest).map((response, idx) =>

@@ -1,5 +1,5 @@
 import { setUserToken, updateUserProfile, HTTP } from "Http"
-import { daysOfTheWeek } from "Utils"
+import { daysOfTheWeek, getBoundsFromLatLong } from "Utils"
 
 export const Profile = () => {
   const state = {
@@ -72,6 +72,23 @@ export const Profile = () => {
               )
             )
           )
+        ),
+        m("hr"),
+        m(
+          "label",
+          `Search Range Radius: ${mdl.User.profile.searchRadius}`,
+          m("input", {
+            type: "range",
+            value: mdl.User.profile.searchRadius,
+            min: 0,
+            max: 100,
+            onchange: (e) => {
+              mdl.User.profile.searchRadius = parseInt(e.target.value)
+              mdl.Map.bounds(getBoundsFromLatLong(mdl)(mdl.Map.locale()))
+              console.log(JSON.stringify(mdl.Map))
+              updatePrefs(mdl)
+            },
+          })
         ),
       ])
     },

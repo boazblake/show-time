@@ -69,9 +69,13 @@ const OpenCageUrl = `${OpenCage.baseUrl}?key=${OpenCage.key}&q=`
 
 const openCage = {
   getLocationTask: (mdl) => (query) =>
-    HttpTask(OpenCage.headers())("GET")(mdl)(OpenCageUrl + query + "&pretty=1")(
-      null
-    ),
+    HttpTask(OpenCage.headers())("GET")(mdl)(
+      OpenCageUrl +
+        query +
+        `&pretty=1&json&language=${
+          mdl.User.profile.language
+        }&bounds=${mdl.Map.bounds()}`
+    )(null),
 }
 
 const backEnd = {

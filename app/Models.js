@@ -20,6 +20,12 @@ import { calendarModel } from "Components/calendar/calendar-model"
 //   }
 // }
 
+const Map = {
+  locale: Stream(null),
+  bounds: Stream(encodeURIComponent("-125.5957, 24.36711, -65.39063, 48.944")),
+  defaultBounds: encodeURIComponent("-125.5957, 24.36711, -65.39063, 48.944"),
+}
+
 const State = {
   isAuth: Stream(false),
   modal: Stream(false),
@@ -89,6 +95,7 @@ const Model = {
   User,
   Home,
   Sidebar,
+  Map,
 }
 
 export default Model

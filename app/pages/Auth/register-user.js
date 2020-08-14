@@ -1,4 +1,4 @@
-import { hyphenize } from "Utils"
+import { hyphenize, getMyLocationTask } from "Utils"
 import { validateUserRegistrationTask } from "./Validations"
 import {
   HTTP,
@@ -78,6 +78,7 @@ export const registerUser = (mdl) => (data) => {
           mdl.User.profile = profile
           return linkProfileTask(HTTP)(mdl)
         })
+        .chain((_) => getMyLocationTask(mdl))
     )
     .fork(onError, onSuccess(mdl))
 }

@@ -1,3 +1,1 @@
-document.addEventListener("DOMContentLoaded", () => {
-  require("./index.js")
-})
+document.addEventListener("DOMContentLoaded", () => require("./index.js"))

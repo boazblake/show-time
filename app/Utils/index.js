@@ -1,4 +1,5 @@
 export * from "./local-storage.js"
+export * from "./geolocation.js"
 export * from "./validations"
 export * from "./time-fns.js"
 

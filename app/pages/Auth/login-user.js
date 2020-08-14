@@ -1,7 +1,7 @@
-import { hyphenize } from "Utils"
+import { log, hyphenize, getMyLocationTask } from "Utils"
 import { validateLoginTask } from "./Validations.js"
 import { HTTP, loginTask, getUserProfileTask, setUserToken } from "Http"
-import { map, prop } from "ramda"
+import { map } from "ramda"
 
 const loginUser = (mdl) => (data) => {
   const onError = (errs) => {
@@ -17,9 +17,8 @@ const loginUser = (mdl) => (data) => {
     }
   }
 
-  const onSuccess = (mdl) => (account) => {
+  const onSuccess = (mdl) => (s) => {
     state.errors = {}
-    mdl.User.account = account
     m.route.set(`/${hyphenize(mdl.User.name)}/${M().format("YYYY-MM-DD")}`)
   }
 
@@ -38,6 +37,10 @@ const loginUser = (mdl) => (data) => {
         setUserToken(mdl)(mdl.User)
       })
     )
+    .chain((account) => {
+      mdl.User.account = account
+      return getMyLocationTask(mdl)
+    })
     .fork(onError, onSuccess(mdl))
 }
 
