@@ -1,7 +1,7 @@
 import { hyphenize } from "Utils"
 import { validateLoginTask } from "./Validations.js"
 import { HTTP, loginTask, getUserProfileTask, setUserToken } from "Http"
-import { map } from "ramda"
+import { map, prop } from "ramda"
 
 const loginUser = (mdl) => (data) => {
   const onError = (errs) => {
@@ -34,6 +34,7 @@ const loginUser = (mdl) => (data) => {
     .map(
       map((profile) => {
         mdl.User.profile = profile
+        mdl.Calendar.state.start(profile.startWeekOnDay)
         setUserToken(mdl)(mdl.User)
       })
     )

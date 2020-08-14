@@ -1688,6 +1688,8 @@ exports.Profile = void 0;
 
 var _Http = require("Http");
 
+var _Utils = require("Utils");
+
 var Profile = function Profile() {
   var state = {
     errors: null,
@@ -1721,6 +1723,24 @@ var Profile = function Profile() {
           mdl.User.profile.is24Hrs = !mdl.User.profile.is24Hrs;
           updatePrefs(mdl);
         }
+      })), m(".frow row-between", // "Start Week on Day:",
+      _Utils.daysOfTheWeek.map(function (day, idx) {
+        return m("label.col-xs-1-7", m("span", {
+          key: idx
+        }, day.slice(0, 3)), m("input", {
+          key: idx,
+          id: idx,
+          name: "startDay-".concat(idx),
+          type: "radio",
+          value: mdl.User.profile.startWeekOnDay,
+          checked: mdl.User.profile.startWeekOnDay == idx,
+          onchange: function onchange(e) {
+            console.log(mdl.User);
+            mdl.User.profile.startWeekOnDay = idx;
+            mdl.Calendar.state.start(idx);
+            updatePrefs(mdl);
+          }
+        }));
       }))]);
     }
   };
@@ -4010,6 +4030,7 @@ var loginUser = function loginUser(mdl) {
       return (0, _Http.getUserProfileTask)(_Http.HTTP)(mdl)(mdl.User.objectId);
     }).map((0, _ramda.map)(function (profile) {
       mdl.User.profile = profile;
+      mdl.Calendar.state.start(profile.startWeekOnDay);
       (0, _Http.setUserToken)(mdl)(mdl.User);
     })).fork(onError, onSuccess(mdl));
   };

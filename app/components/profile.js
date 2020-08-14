@@ -1,4 +1,5 @@
 import { setUserToken, updateUserProfile, HTTP } from "Http"
+import { daysOfTheWeek } from "Utils"
 
 export const Profile = () => {
   const state = {
@@ -37,6 +38,37 @@ export const Profile = () => {
               updatePrefs(mdl)
             },
           })
+        ),
+
+        m(
+          ".frow row-between",
+          // "Start Week on Day:",
+          daysOfTheWeek.map((day, idx) =>
+            m(
+              "label.col-xs-1-7",
+              m(
+                "span",
+                {
+                  key: idx,
+                },
+                day.slice(0, 3)
+              ),
+              m("input", {
+                key: idx,
+                id: idx,
+                name: `startDay-${idx}`,
+                type: "radio",
+                value: mdl.User.profile.startWeekOnDay,
+                checked: mdl.User.profile.startWeekOnDay == idx,
+                onchange: (e) => {
+                  console.log(mdl.User)
+                  mdl.User.profile.startWeekOnDay = idx
+                  mdl.Calendar.state.start(idx)
+                  updatePrefs(mdl)
+                },
+              })
+            )
+          )
         ),
       ])
     },
