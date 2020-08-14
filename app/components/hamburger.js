@@ -29,7 +29,7 @@ export const Hamburger = () => {
     onupdate: ({ attrs: { mdl } }) =>
       mdl.Invites.fetch() && load({ attrs: { mdl } }),
     view: ({ attrs: { mdl } }) => {
-      console.log(mdl.Invites)
+      // console.log(JSON.stringify(mdl.Invites))
       return [
         m(
           "button.col-xs-1-5.button-none.frow",
@@ -39,7 +39,7 @@ export const Hamburger = () => {
           mdl.Sidebar.isShowing()
             ? m(CloseLine)
             : [
-                mdl.Invites.needRSVP().length && [
+                mdl.Invites.needRSVP().length > 0 && [
                   m(".notif-count", mdl.Invites.needRSVP().length),
                   m(BellLine),
                 ],

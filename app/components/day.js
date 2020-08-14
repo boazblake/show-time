@@ -3,7 +3,7 @@ import {
   firstInviteHour,
   inviteOptions,
   getInviteStatusColor,
-  displayTimeFormat,
+  getTimeFormat,
   hyphenize,
 } from "Utils"
 
@@ -97,8 +97,8 @@ const ListView = () => {
                   m(
                     "label.col-xs-1-1",
                     `${invite.start.format(
-                      displayTimeFormat(mdl)
-                    )} - ${invite.end.format(displayTimeFormat(mdl))}`
+                      getTimeFormat(mdl)
+                    )} - ${invite.end.format(getTimeFormat(mdl))}`
                   ),
                 ]),
               ]

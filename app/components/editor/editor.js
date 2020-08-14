@@ -61,7 +61,7 @@ export const Editor = ({ attrs: { mdl } }) => {
 
     const onSuccess = () => {
       mdl.Invites.fetch(true)
-      mdl.State.modal(false)
+      mdl.Events.createNewEvent(false)
     }
 
     state.isSubmitted = true

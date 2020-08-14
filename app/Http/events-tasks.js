@@ -6,7 +6,7 @@ import {
   getItemsByEventIdTask,
 } from "Http"
 import { traverse, head } from "ramda"
-import { getHour, getMin, displayTimeFormat } from "Utils"
+import { getHour, getMin, getTimeFormat } from "Utils"
 
 const toEventviewModel = (mdl) => ({
   objectId,
@@ -25,8 +25,8 @@ const toEventviewModel = (mdl) => ({
     title: title.toUpperCase(),
     start,
     end,
-    startTime: M(start).format(displayTimeFormat(mdl)),
-    endTime: M(end).format(displayTimeFormat(mdl)),
+    startTime: M(start).format(getTimeFormat(mdl)),
+    endTime: M(end).format(getTimeFormat(mdl)),
     notes,
     allDay,
     location,

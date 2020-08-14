@@ -8,7 +8,7 @@ export const pad0Left = (num) => `0${num}`
 export const getHour = (time) => time.split(":")[0]
 export const getMin = (time) => time.split(":")[1]
 
-export const displayTimeFormat = (mdl) =>
+export const getTimeFormat = (mdl) =>
   mdl.User.profile.is24Hrs ? "HH:mm" : "h:mm a"
 
 //need to fix to work for 12 hrs
