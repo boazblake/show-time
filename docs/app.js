@@ -354,8 +354,7 @@ var AttendanceResponse = function AttendanceResponse() {
     view: function view(_ref2) {
       var _ref2$attrs = _ref2.attrs,
           mdl = _ref2$attrs.mdl,
-          guest = _ref2$attrs.guest,
-          updateFn = _ref2$attrs.updateFn;
+          guest = _ref2$attrs.guest;
       return m(".frow", getResponse(guest).map(function (response, idx) {
         return m(response, {
           class: guest.userId == mdl.User.objectId ? "clickable" : "",
@@ -363,9 +362,7 @@ var AttendanceResponse = function AttendanceResponse() {
           onclick: function onclick(e) {
             if (guest.userId == mdl.User.objectId) {
               guest.status = idx;
-              updateInvite(mdl)(guest);
-              updateFn(guest);
-              mdl.Home.fetch(true);
+              updateInvite(mdl)(guest); // mdl.Invites.fetch(true)
             }
           }
         });
@@ -889,7 +886,7 @@ var Editor = function Editor(_ref) {
     };
 
     var onSuccess = function onSuccess() {
-      mdl.Home.fetch(true);
+      mdl.Invites.fetch(true);
       mdl.State.modal(false);
     };
 
@@ -1198,7 +1195,7 @@ var Hamburger = function Hamburger() {
     };
 
     var onSuccess = function onSuccess(invites) {
-      mdl.Home.fetch(false);
+      mdl.Invites.fetch(false);
       mdl.Invites.state.error = null;
 
       var forNewInvite = function forNewInvite(i) {
@@ -1219,8 +1216,16 @@ var Hamburger = function Hamburger() {
 
   return {
     oninit: load,
-    view: function view(_ref2) {
+    onupdate: function onupdate(_ref2) {
       var mdl = _ref2.attrs.mdl;
+      return mdl.Invites.fetch() && load({
+        attrs: {
+          mdl: mdl
+        }
+      });
+    },
+    view: function view(_ref3) {
+      var mdl = _ref3.attrs.mdl;
       console.log(mdl.Invites);
       return [m("button.col-xs-1-5.button-none.frow", {
         onclick: function onclick(e) {
@@ -3808,7 +3813,8 @@ var Invites = {
     status: Stream("loading")
   },
   withRSVP: Stream([]),
-  needRSVP: Stream([])
+  needRSVP: Stream([]),
+  fetch: Stream(false)
 };
 var Day = {
   data: dayModel({
@@ -3817,9 +3823,7 @@ var Day = {
   update: Stream(false),
   listView: Stream(true)
 };
-var Home = {
-  fetch: Stream(false)
-};
+var Home = {};
 var Settings = {
   profile: "",
   inspector: ""
@@ -4740,7 +4744,6 @@ var createDayVM = function createDayVM(mdl) {
 
 var getSelectedDayInvites = function getSelectedDayInvites(mdl) {
   return function (invites) {
-    console.log(invites, mdl);
     return invites.filter(function (i) {
       return (0, _Utils.datesAreSame)(i.start)(mdl.selectedDate())("YYYY-MM-DD");
     });
@@ -4749,16 +4752,8 @@ var getSelectedDayInvites = function getSelectedDayInvites(mdl) {
 
 var Home = function Home() {
   return {
-    onupdate: function onupdate(_ref) {
+    view: function view(_ref) {
       var mdl = _ref.attrs.mdl;
-      return mdl.Home.fetch() && load({
-        attrs: {
-          mdl: mdl
-        }
-      });
-    },
-    view: function view(_ref2) {
-      var mdl = _ref2.attrs.mdl;
       return m(".frow  ", mdl.Invites.state.status == "loading" && m("p.full-width", "FETCHING EVENTS..."), mdl.Invites.state.status == "failed" && m("p.full-width", "FAILED TO FETCH EVENTS"), mdl.Invites.state.status == "success" && [m(_Components.Calendar, {
         mdl: mdl,
         date: mdl.selectedDate(),

@@ -34,7 +34,7 @@ const getResponse = ({ status }) => {
 }
 export const AttendanceResponse = () => {
   return {
-    view: ({ attrs: { mdl, guest, updateFn } }) => {
+    view: ({ attrs: { mdl, guest } }) => {
       return m(
         ".frow",
         getResponse(guest).map((response, idx) =>
@@ -45,8 +45,7 @@ export const AttendanceResponse = () => {
               if (guest.userId == mdl.User.objectId) {
                 guest.status = idx
                 updateInvite(mdl)(guest)
-                updateFn(guest)
-                mdl.Home.fetch(true)
+                // mdl.Invites.fetch(true)
               }
             },
           })

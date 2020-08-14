@@ -54,6 +54,7 @@ const Invites = {
   state: { error: null, status: Stream("loading") },
   withRSVP: Stream([]),
   needRSVP: Stream([]),
+  fetch: Stream(false),
 }
 
 const Day = {
@@ -62,9 +63,7 @@ const Day = {
   listView: Stream(true),
 }
 
-const Home = {
-  fetch: Stream(false),
-}
+const Home = {}
 
 const Settings = { profile: "", inspector: "" }
 

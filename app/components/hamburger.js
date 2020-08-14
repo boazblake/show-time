@@ -9,7 +9,7 @@ export const Hamburger = () => {
     }
 
     const onSuccess = (invites) => {
-      mdl.Home.fetch(false)
+      mdl.Invites.fetch(false)
       mdl.Invites.state.error = null
       let forNewInvite = (i) => !i.updated && i.status == 2
       let forRsvpInvites = (i) => i.updated || i.status !== 2
@@ -26,6 +26,8 @@ export const Hamburger = () => {
   }
   return {
     oninit: load,
+    onupdate: ({ attrs: { mdl } }) =>
+      mdl.Invites.fetch() && load({ attrs: { mdl } }),
     view: ({ attrs: { mdl } }) => {
       console.log(mdl.Invites)
       return [

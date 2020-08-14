@@ -10,17 +10,11 @@ const toDayViewModel = (dayViewModel, invite) => {
 const createDayVM = (mdl) => (invites) =>
   invites.reduce(toDayViewModel, dayModel(mdl, mdl.selectedDate()))
 
-const getSelectedDayInvites = (mdl) => (invites) => {
-  console.log(invites, mdl)
-  return invites.filter((i) =>
-    datesAreSame(i.start)(mdl.selectedDate())("YYYY-MM-DD")
-  )
-}
+const getSelectedDayInvites = (mdl) => (invites) =>
+  invites.filter((i) => datesAreSame(i.start)(mdl.selectedDate())("YYYY-MM-DD"))
 
 export const Home = () => {
   return {
-    onupdate: ({ attrs: { mdl } }) =>
-      mdl.Home.fetch() && load({ attrs: { mdl } }),
     view: ({ attrs: { mdl } }) => {
       return m(
         ".frow  ",

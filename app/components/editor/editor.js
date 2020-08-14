@@ -60,7 +60,7 @@ export const Editor = ({ attrs: { mdl } }) => {
     }
 
     const onSuccess = () => {
-      mdl.Home.fetch(true)
+      mdl.Invites.fetch(true)
       mdl.State.modal(false)
     }
 
