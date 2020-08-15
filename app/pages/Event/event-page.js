@@ -1,5 +1,5 @@
-import { log, jsonCopy, hyphenize } from "Utils"
-import { propEq, compose, not, head, pluck, set, lensProp, prop } from "ramda"
+import { getTimeFormat, jsonCopy, hyphenize } from "Utils"
+import { propEq, compose, not, head, pluck, set, lensProp } from "ramda"
 import mapboxgl from "mapbox-gl/dist/mapbox-gl.js"
 import {
   HTTP,
@@ -12,12 +12,14 @@ import {
   updateItemTask,
   sendInviteTask,
   addCommentTask,
+  deleteCommentTask,
 } from "Http"
 import { AccordianItem, InviteRSVP } from "Components"
 import {
   AngleLine,
   RemoveLine,
   MinusCircleLine,
+  TimesCircleLine,
 } from "@mithril-icons/clarity/cjs"
 import Task from "data.task"
 import { validateItemTask, validateCommentTask } from "./validations"
@@ -187,6 +189,18 @@ export const Event = ({ attrs: { mdl } }) => {
     }
 
     deleteItemTask(HTTP)(mdl)(itemId)
+      .chain((_) => loadEventTask(HTTP)(mdl)(mdl.Events.currentEventId()))
+      .fork(onError, updateEvent)
+  }
+
+  const deleteComment = (mdl) => (commentId) => {
+    const onError = (error) => {
+      state.error = jsonCopy(error)
+      state.status = "failed"
+      console.log("delete comment failed", error)
+    }
+
+    deleteCommentTask(HTTP)(mdl)(commentId)
       .chain((_) => loadEventTask(HTTP)(mdl)(mdl.Events.currentEventId()))
       .fork(onError, updateEvent)
   }
@@ -523,11 +537,11 @@ export const Event = ({ attrs: { mdl } }) => {
                 m(".frow row-start", [
                   m(".frow width-100", [
                     m(
-                      ".events-messages-container",
+                      ".events-messages-container width-100",
                       data.comments.any()
                         ? data.comments.map((comment) =>
                             m(
-                              ".frow column-center width-100",
+                              ".frow column-center width-100 mb-40",
                               m(
                                 `.event-comments-message-container ${
                                   mdl.User.objectId == comment.userId
@@ -535,38 +549,61 @@ export const Event = ({ attrs: { mdl } }) => {
                                     : "other"
                                 }`,
                                 m(".event-comments-message frow items-end", [
-                                  m(".speech-bubble", comment.message),
-                                  m(".comment-name", comment.name),
+                                  m(".speech-bubble", [
+                                    m("span.text-left", comment.message),
+                                    mdl.User.objectId == comment.userId &&
+                                      m(TimesCircleLine, {
+                                        onclick: (e) =>
+                                          deleteComment(mdl)(comment.objectId),
+                                        class:
+                                          "event-comments-message-remove smaller",
+                                      }),
+                                  ]),
+                                  m(
+                                    "label.event-comment-name",
+                                    m(".frow row-between", [
+                                      m("span", comment.sender),
+                                      m(
+                                        "span",
+                                        M(comment.created).format(
+                                          getTimeFormat(mdl)
+                                        )
+                                      ),
+                                    ])
+                                  ),
                                 ])
                               )
                             )
                           )
                         : m("", "Start a conversation")
                     ),
-                    m(".frow items-end", [
-                      m(
-                        ".col-xs-4-5",
-                        m("textarea.comments-message-container", {
-                          row: 20,
-                          cols: 50,
-                          placeholder: "Say hi...",
-                          value: state.comments.message,
-                          oninput: (e) =>
-                            (state.comments.message = e.target.value),
-                          onchange: (e) =>
-                            (state.comments.message = state.comments.message.trim()),
-                          onblur: (e) => validate("comments")(state.comments),
-                        })
-                      ),
-                      m(
-                        ".col-xs-1-5",
+                    m(
+                      ".event-comment-textbox-container",
+                      m(".frow items-end", [
                         m(
-                          "button.button-none.comments-message-btn",
-                          { onclick: (e) => sendMessage(mdl) },
-                          "Send"
-                        )
-                      ),
-                    ]),
+                          ".col-xs-4-5",
+                          m("textarea.comments-message-container", {
+                            row: 20,
+                            cols: 50,
+                            placeholder: "Say hi...",
+                            value: state.comments.message,
+                            oninput: (e) =>
+                              (state.comments.message = e.target.value),
+                            onchange: (e) =>
+                              (state.comments.message = state.comments.message.trim()),
+                            onblur: (e) => validate("comments")(state.comments),
+                          })
+                        ),
+                        m(
+                          ".col-xs-1-5",
+                          m(
+                            "button.button-none.comments-message-btn",
+                            { onclick: (e) => sendMessage(mdl) },
+                            "Send"
+                          )
+                        ),
+                      ])
+                    ),
                     state.comments.error() &&
                       m("code.error-field", state.comments.error().name),
                   ]),

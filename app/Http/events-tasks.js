@@ -36,11 +36,20 @@ const toEventviewModel = (mdl) => ({
   }
 }
 
-const toCommentViewModel = ({ message, sender, userId, eventId }) => ({
+const toCommentViewModel = ({
   message,
   sender,
   userId,
   eventId,
+  created,
+  objectId,
+}) => ({
+  message,
+  sender,
+  userId,
+  eventId,
+  created,
+  objectId,
 })
 
 const toGuestModel = (invite) => ({ name, email }) => ({

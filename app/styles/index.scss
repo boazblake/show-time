@@ -431,6 +431,21 @@ rgba(255, 255, 255, 0) 100%
   width: 20px;
 }
 
+.event-comments-message {
+  position: relative;
+}
+
+.event-comment-name {
+  position: absolute;
+  top: 33px;
+}
+
+.event-comments-message-remove {
+  position: absolute;
+  left: 0;
+  fill: var(--light);
+}
+
 
 .events-messages-container {
   max-height: 300px;
@@ -439,6 +454,10 @@ rgba(255, 255, 255, 0) 100%
 
 .event-comments-message-container {
   width: 100%;
+}
+
+.event-comment-textbox-container {
+  border-top:1px solid var(--dark);
 }
 
 %speech-bubble-left {
@@ -486,9 +505,9 @@ rgba(255, 255, 255, 0) 100%
 
 .me {
   @extend %speech-bubble-right;
-  background-color: var(--red);
+  background-color: var(--teal);
   &:after {
-    border-left-color: var(--red);
+    border-left-color: var(--teal);
   }
 }
 
@@ -509,6 +528,8 @@ rgba(255, 255, 255, 0) 100%
   @extend %btn;
   width: 100%;
 }
+
+
 
 @media screen and (min-width: 600px) and (max-width: 899px) {
 
