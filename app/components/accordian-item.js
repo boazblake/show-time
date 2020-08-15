@@ -7,15 +7,15 @@ export const AccordianItem = () => {
         m(`.accordian-item-title${state[part].show() ? "-open" : "-closed"}`, [
           m(
             ".frow",
+            {
+              onclick: (e) => state[part].show(!state[part].show()),
+            },
             m(".col-xs-1-3", m("h4", title)),
             m(".col-xs-1-3", pills),
             m(
               ".frow row-end col-xs-1-3",
               m(
                 `.accordian-item-btn`,
-                {
-                  onclick: (e) => state[part].show(!state[part].show()),
-                },
                 state[part].show()
                   ? m(TimesLine, {
                       class: "clickable",

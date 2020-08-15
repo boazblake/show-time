@@ -1,6 +1,7 @@
 export * from "./http.js"
 export * from "./invites-tasks.js"
 export * from "./events-tasks.js"
+export * from "./comments-tasks.js"
 export * from "./items-tasks.js"
 export * from "./user-tasks.js"
 export * from "./open-cage.js"

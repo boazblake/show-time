@@ -1,12 +1,8 @@
 import Task from "data.task"
-import { log } from "Utils"
-export const addItemTask = (http) => (mdl) => ({ name, quantity }) => {
+
+export const addItemTask = (http) => (mdl) => (item) => {
   return http.backEnd
-    .postTask(mdl)("data/Items")({
-      eventId: mdl.Events.currentEventId(),
-      name,
-      quantity: parseInt(quantity),
-    })
+    .postTask(mdl)("data/Items")(item)
     .chain(({ objectId }) => {
       let itemId = objectId
       return Task.of((user) => (event) => ({

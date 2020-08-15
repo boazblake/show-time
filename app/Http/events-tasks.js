@@ -4,8 +4,9 @@ import {
   createInviteTask,
   getUserProfileTask,
   getItemsByEventIdTask,
+  getCommentsByEventIdTask,
 } from "Http"
-import { traverse, head } from "ramda"
+import { traverse, head, map } from "ramda"
 import { getHour, getMin, getTimeFormat } from "Utils"
 
 const toEventviewModel = (mdl) => ({
@@ -35,6 +36,13 @@ const toEventviewModel = (mdl) => ({
   }
 }
 
+const toCommentViewModel = ({ message, sender, userId, eventId }) => ({
+  message,
+  sender,
+  userId,
+  eventId,
+})
+
 const toGuestModel = (invite) => ({ name, email }) => ({
   ...invite,
   name,
@@ -55,13 +63,18 @@ export const getEventByIdTask = (http) => (mdl) => (eventId) =>
   http.backEnd.getTask(mdl)(`data/Events/${eventId}`).map(toEventviewModel(mdl))
 
 export const loadEventTask = (http) => (mdl) => (eventId) =>
-  Task.of((event) => (items) => (guests) => ({
+  Task.of((event) => (items) => (comments) => (guests) => ({
     event,
     guests,
+    comments,
     items,
   }))
     .ap(getEventByIdTask(http)(mdl)(eventId))
     .ap(getItemsByEventIdTask(http)(mdl)(eventId))
+    .ap(
+      getCommentsByEventIdTask(http)(mdl)(eventId).map(map(toCommentViewModel))
+    )
+
     .ap(getEventGuestsByEventIdTask(http)(mdl)(eventId))
 
 export const deleteEventTask = (http) => (mdl) => (id) =>

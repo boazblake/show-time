@@ -35,3 +35,23 @@
 %angle-line-down {
   transform: rotate(180deg);
 }
+
+%invite-list {
+  line-height: 2rem;
+  padding-left: 30px;
+  margin-bottom: 30px;
+}
+
+%base-color {
+  background-color: var(--dark);
+  > * {
+    color: var(--light);
+    fill: var(--light);
+  }
+}
+
+%btn {
+  border: 1px solid var(--dark) !important;
+  background-color: var(--light) !important;
+  color: var(--dark) !important;
+}

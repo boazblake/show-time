@@ -11,6 +11,7 @@ import {
   deleteEventTask,
   updateItemTask,
   sendInviteTask,
+  addCommentTask,
 } from "Http"
 import { AccordianItem, InviteRSVP } from "Components"
 import {
@@ -19,7 +20,7 @@ import {
   MinusCircleLine,
 } from "@mithril-icons/clarity/cjs"
 import Task from "data.task"
-import { validateItemTask } from "./validations"
+import { validateItemTask, validateCommentTask } from "./validations"
 
 const isUserOrUnclaimed = (mdl) => (item) =>
   [mdl.User.objectId, null].includes(item.userId)
@@ -45,12 +46,20 @@ export const Event = ({ attrs: { mdl } }) => {
       status: Stream("success"),
       isSubmitted: Stream(false),
     },
+    comments: {
+      message: "",
+      show: Stream(false),
+      error: Stream(null),
+      status: Stream("success"),
+      isSubmitted: Stream(false),
+    },
   }
 
   const data = {
     event: {},
     guests: [],
     items: [],
+    comments: [],
   }
 
   const validate = (field) => (input) => {
@@ -75,9 +84,11 @@ export const Event = ({ attrs: { mdl } }) => {
   const getUserFromId = (id) =>
     pluck("name", data.guests.filter(propEq("userId", id)))
 
-  const updateEvent = ({ event, guests, items }) => {
+  const updateEvent = ({ event, guests, items, comments }) => {
+    console.log(comments)
     data.event = event
     data.guests = guests
+    data.comments = comments
     data.items = items
     state.error = {}
     state.status = "success"
@@ -196,13 +207,42 @@ export const Event = ({ attrs: { mdl } }) => {
     }
 
     let item = {
+      eventId: mdl.Events.currentEventId(),
       name: state.items.name,
-      quantity: state.items.quantity,
+      quantity: parseInt(state.items.quantity),
     }
 
     state.items.isSubmitted(true)
     validateItemTask(item)(data)
       .chain(addItemTask(HTTP)(mdl))
+      .chain((_) => loadEventTask(HTTP)(mdl)(mdl.Events.currentEventId()))
+      .fork(onError, onSuccess)
+  }
+
+  const sendMessage = (mdl) => {
+    const onError = (error) => {
+      state.comments.error(jsonCopy(error))
+      console.log("add item failed", error)
+      state.comments.status("failed")
+    }
+
+    const onSuccess = (eventData) => {
+      state.comments.message = ""
+      state.comments.error(null)
+      state.comments.isSubmitted(false)
+      updateEvent(eventData)
+    }
+
+    let comment = {
+      message: state.comments.message,
+      sender: mdl.User.name,
+      userId: mdl.User.objectId,
+      eventId: mdl.Events.currentEventId(),
+    }
+    console.log(comment)
+    state.comments.isSubmitted(true)
+    validateCommentTask(comment)
+      .chain(addCommentTask(HTTP)(mdl))
       .chain((_) => loadEventTask(HTTP)(mdl)(mdl.Events.currentEventId()))
       .fork(onError, onSuccess)
   }
@@ -220,6 +260,7 @@ export const Event = ({ attrs: { mdl } }) => {
       updateEvent(eventData)
     }
 
+    //move to Validations
     let hasBeenInvited = data.guests.filter(propEq("email", state.guests.email))
     if (hasBeenInvited.any()) {
       state.guests.error("Guest Has Already Been Invited")
@@ -474,6 +515,62 @@ export const Event = ({ attrs: { mdl } }) => {
                     )
                   ),
                 ]
+              ),
+
+              m(
+                AccordianItem,
+                { mdl, state, data, part: "comments", title: "Comments" },
+                m(".frow row-start", [
+                  m(".frow width-100", [
+                    m(
+                      ".events-messages-container",
+                      data.comments.any()
+                        ? data.comments.map((comment) =>
+                            m(
+                              ".frow column-center width-100",
+                              m(
+                                `.event-comments-message-container ${
+                                  mdl.User.objectId == comment.userId
+                                    ? "me"
+                                    : "other"
+                                }`,
+                                m(".event-comments-message frow items-end", [
+                                  m(".speech-bubble", comment.message),
+                                  m(".comment-name", comment.name),
+                                ])
+                              )
+                            )
+                          )
+                        : m("", "Start a conversation")
+                    ),
+                    m(".frow items-end", [
+                      m(
+                        ".col-xs-4-5",
+                        m("textarea.comments-message-container", {
+                          row: 20,
+                          cols: 50,
+                          placeholder: "Say hi...",
+                          value: state.comments.message,
+                          oninput: (e) =>
+                            (state.comments.message = e.target.value),
+                          onchange: (e) =>
+                            (state.comments.message = state.comments.message.trim()),
+                          onblur: (e) => validate("comments")(state.comments),
+                        })
+                      ),
+                      m(
+                        ".col-xs-1-5",
+                        m(
+                          "button.button-none.comments-message-btn",
+                          { onclick: (e) => sendMessage(mdl) },
+                          "Send"
+                        )
+                      ),
+                    ]),
+                    state.comments.error() &&
+                      m("code.error-field", state.comments.error().name),
+                  ]),
+                ])
               ),
 
               m(
