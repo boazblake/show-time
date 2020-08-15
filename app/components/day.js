@@ -84,7 +84,6 @@ const ListView = () => {
       m(
         "ul",
         invites.map((invite) => {
-          // console.log(invite)
           return m(
             "li.frow-container",
             m(
@@ -130,7 +129,10 @@ export const Day = ({ attrs: { mdl } }) => {
                     events: day[hour],
                   })
                 })
-            : m(EmptyState, { text: "You have no Invites today" }),
+            : m(EmptyState, {
+                text:
+                  "You have no events scheduled for today - why not create one!",
+              }),
         ]),
       ])
     },

@@ -29,12 +29,14 @@ export const Hamburger = () => {
     onupdate: ({ attrs: { mdl } }) =>
       mdl.Invites.fetch() && load({ attrs: { mdl } }),
     view: ({ attrs: { mdl } }) => {
-      // console.log(JSON.stringify(mdl.Invites))
       return [
         m(
           "button.col-xs-1-5.button-none.frow",
           {
-            onclick: (e) => mdl.Sidebar.isShowing(!mdl.Sidebar.isShowing()),
+            onclick: (e) => {
+              mdl.Invites.fetch(true)
+              mdl.Sidebar.isShowing(!mdl.Sidebar.isShowing())
+            },
           },
           mdl.Sidebar.isShowing()
             ? m(CloseLine)

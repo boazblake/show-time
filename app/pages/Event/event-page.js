@@ -107,6 +107,7 @@ export const Event = ({ attrs: { mdl } }) => {
       state.error = {}
       state.status = "success"
       let name = hyphenize(mdl.User.name)
+      mdl.Invites.fetch(true)
       let date = M(data.event.start).format("YYYY-MM-DD")
       m.route.set(`/${name}/${date}`)
     }
@@ -318,6 +319,7 @@ export const Event = ({ attrs: { mdl } }) => {
                       ".col-xs-1-2",
                       m(InviteRSVP, {
                         mdl,
+                        reload: () => mdl.Invites.fetch(true),
                         guest: head(
                           data.guests.filter(
                             propEq("userId", mdl.User.objectId)

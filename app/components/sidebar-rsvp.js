@@ -23,9 +23,6 @@ export const SidebarRSVP = () => {
                 ]),
                 m(InviteRSVP, {
                   mdl,
-                  updateFn: (x) => {
-                    console.log("remove x from ...", x)
-                  },
                   guest: invite,
                 })
               )

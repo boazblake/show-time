@@ -9,7 +9,7 @@ import {
 } from "@mithril-icons/clarity/cjs"
 import { HTTP, updateInviteTask } from "Http"
 
-const updateInvite = (mdl) => (update) => {
+const updateInvite = (mdl) => (update) => (reload) => {
   const onError = (error) => {
     state.error = jsonCopy(error)
     state.status = "failed"
@@ -17,8 +17,9 @@ const updateInvite = (mdl) => (update) => {
   }
 
   const onSuccess = (dto) => {
-    console.log("success", dto)
-    // reLoad({ attrs: { mdl } })
+    if (reload) {
+      reload()
+    }
   }
 
   updateInviteTask(HTTP)(mdl)(update).fork(onError, onSuccess)
@@ -34,8 +35,7 @@ const getResponse = ({ status }) => {
 }
 export const InviteRSVP = () => {
   return {
-    view: ({ attrs: { mdl, guest } }) => {
-      // console.log(guest)
+    view: ({ attrs: { mdl, guest, reload } }) => {
       return m(
         ".frow",
         getResponse(guest).map((response, idx) =>
@@ -45,8 +45,7 @@ export const InviteRSVP = () => {
             onclick: (e) => {
               if (guest.userId == mdl.User.objectId) {
                 guest.status = idx
-                updateInvite(mdl)(guest)
-                // mdl.Invites.fetch(true)
+                updateInvite(mdl)(guest)(reload)
               }
             },
           })
