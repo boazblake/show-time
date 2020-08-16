@@ -92,6 +92,12 @@ export const deleteEventTask = (http) => (mdl) => (id) =>
     .chain(() =>
       http.backEnd.deleteTask(mdl)(`data/bulk/Invites?where=eventId%3D'${id}'`)
     )
+    .chain(() =>
+      http.backEnd.deleteTask(mdl)(`data/bulk/Items?where=eventId%3D'${id}'`)
+    )
+    .chain(() =>
+      http.backEnd.deleteTask(mdl)(`data/bulk/Comments?where=eventId%3D'${id}'`)
+    )
 
 export const submitEventTask = (http) => (mdl) => ({
   allDay,

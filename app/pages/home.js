@@ -1,6 +1,7 @@
 import { Calendar, Day, Editor } from "Components"
 import { dayModel } from "Models"
 import { datesAreSame } from "Utils"
+import { Animate, fadeInUp, fadeInDown, fadeOutUp, fadeOutDown } from "Styles"
 
 const toDayViewModel = (dayViewModel, invite) => {
   dayViewModel[`${invite.start.format("HH")}:00`].push(invite)
@@ -55,9 +56,15 @@ export const Home = () => {
           ]),
 
           mdl.Events.createNewEvent()
-            ? m(Editor, { mdl })
+            ? m(Editor, {
+                oncreate: Animate(fadeInDown, 1),
+                onbeforeremove: Animate(fadeOutUp, 2),
+                mdl,
+              })
             : [
                 m(Day, {
+                  oncreate: Animate(fadeInUp),
+                  onbeforeremove: Animate(fadeOutDown, 2),
                   mdl,
                   day: createDayVM(mdl)(
                     getSelectedDayInvites(mdl)(mdl.Invites.withRSVP())

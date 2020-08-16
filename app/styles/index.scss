@@ -431,6 +431,11 @@ rgba(255, 255, 255, 0) 100%
   width: 20px;
 }
 
+.event-page-title {
+  color: var(--warning);
+  background-color: var(--light);
+}
+
 .event-comments-message {
   position: relative;
 }

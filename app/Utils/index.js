@@ -53,7 +53,8 @@ const secureImg = (url) =>
 export const rand = (min, max) => Math.floor(Math.random() * (max - min) + min)
 
 export const randomPause = () => Math.random() * 1000
-export const Pause = (n) => n * 1000
+export const Pause = (n) => () => n * 1000
+
 export const NoOp = () => {}
 export const nameFromRoute = (route) => route.split("/")[1].toUpperCase()
 

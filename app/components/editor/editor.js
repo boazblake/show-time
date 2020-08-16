@@ -1,6 +1,7 @@
 import { EventForm } from "./event-form"
 import { HTTP, submitEventTask } from "Http"
 import { validateTask } from "./validations"
+import { Animate, slideInDown, slideOutUp } from "Styles"
 
 export const Editor = ({ attrs: { mdl } }) => {
   const EventFormData = {
@@ -73,6 +74,8 @@ export const Editor = ({ attrs: { mdl } }) => {
   return {
     view: ({ attrs: { mdl } }) =>
       m(EventForm, {
+        oncreate: Animate(slideInDown, 2),
+        onbeforeremove: Animate(slideOutUp, 2),
         mdl,
         data: EventFormData,
         state: EventFormState,

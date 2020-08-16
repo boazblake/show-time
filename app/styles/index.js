@@ -1,4 +1,3 @@
-import { NoOp } from "Utils"
 export * from "./animations.js"
 
 const duration = {
@@ -27,12 +26,10 @@ export const AnimatePage = (animation) => ({ dom }) => {
   // Animate(animation)({ dom })
 }
 
-export const Animate = (animation, pause = NoOp) => ({ dom }) =>
-  setTimeout(
-    () =>
-      dom.animate(animation, duration).finished.then(transitionEndPromise(dom)),
-    pause()
-  )
+export const Animate = (animation, delay) => ({ dom }) =>
+  dom
+    .animate(animation, { ...duration, delay })
+    .finished.then(transitionEndPromise(dom))
 
 export const AnimateChildren = (animation, pause) => ({ dom }) => {
   let children = [...dom.children]

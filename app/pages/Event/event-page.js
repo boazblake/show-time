@@ -87,7 +87,6 @@ export const Event = ({ attrs: { mdl } }) => {
     pluck("name", data.guests.filter(propEq("userId", id)))
 
   const updateEvent = ({ event, guests, items, comments }) => {
-    console.log(comments)
     data.event = event
     data.guests = guests
     data.comments = comments
@@ -253,7 +252,7 @@ export const Event = ({ attrs: { mdl } }) => {
       userId: mdl.User.objectId,
       eventId: mdl.Events.currentEventId(),
     }
-    console.log(comment)
+
     state.comments.isSubmitted(true)
     validateCommentTask(comment)
       .chain(addCommentTask(HTTP)(mdl))
@@ -318,7 +317,7 @@ export const Event = ({ attrs: { mdl } }) => {
         state.status == "failed" && m(".code", state.error.message),
         state.status == "success" &&
           m(".centered-column", [
-            m("h1.", data.event.title),
+            m("h1.event-page-title", data.event.title),
             m(
               "h3",
               `${data.event.date} | ${data.event.startTime} - ${data.event.endTime}`
@@ -538,6 +537,11 @@ export const Event = ({ attrs: { mdl } }) => {
                   m(".frow width-100", [
                     m(
                       ".events-messages-container width-100",
+                      {
+                        oncreate: ({ dom }) =>
+                          dom.scrollTo(0, dom.scrollHeight, "smooth"),
+                      },
+
                       data.comments.any()
                         ? data.comments.map((comment) =>
                             m(

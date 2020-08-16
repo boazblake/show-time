@@ -1,5 +1,6 @@
 import { BellLine, BarsLine, CloseLine } from "@mithril-icons/clarity/cjs"
 import { HTTP, getInvitesByUserIdTask } from "Http"
+import { Animate, pulsate } from "Styles"
 
 export const Hamburger = () => {
   const load = ({ attrs: { mdl } }) => {
@@ -26,6 +27,7 @@ export const Hamburger = () => {
   }
   return {
     oninit: load,
+    oncreate: Animate(pulsate),
     onupdate: ({ attrs: { mdl } }) =>
       mdl.Invites.fetch() && load({ attrs: { mdl } }),
     view: ({ attrs: { mdl } }) => {
