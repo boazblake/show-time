@@ -133,9 +133,11 @@ ul {
   overflow: auto;
 }
 
-.required-field > *{
+.required-field {
   color: var(--decline-invite) !important;
-}
+  &> *{
+  color: var(--decline-invite) !important;
+}}
 
 .error-field {
   color: var(--decline-invite);

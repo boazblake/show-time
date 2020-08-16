@@ -37,7 +37,7 @@ export const InviteRSVP = () => {
   return {
     view: ({ attrs: { mdl, guest, reload } }) => {
       return m(
-        ".frow",
+        ".frow justify-evenly",
         getResponse(guest).map((response, idx) =>
           m(response, {
             class: guest.userId == mdl.User.objectId ? "clickable" : "",

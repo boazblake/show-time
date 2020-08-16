@@ -57,14 +57,13 @@ export const Sidebar = () => {
               ),
 
               m(
-                ".required-field",
+                "button.sidebar-tab.col-xs-1-3",
                 m(
                   m.route.Link,
                   {
                     id: "scale-me",
                     href: `/logout`,
-                    selector: "button.sidebar-tab",
-                    class: "col-xs-1-3",
+                    class: "required-field",
                   },
                   "Logout"
                 )
