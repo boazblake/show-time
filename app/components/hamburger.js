@@ -27,7 +27,6 @@ export const Hamburger = () => {
   }
   return {
     oninit: load,
-    oncreate: Animate(pulsate),
     onupdate: ({ attrs: { mdl } }) =>
       mdl.Invites.fetch() && load({ attrs: { mdl } }),
     view: ({ attrs: { mdl } }) => {
@@ -43,10 +42,21 @@ export const Hamburger = () => {
           mdl.Sidebar.isShowing()
             ? m(CloseLine)
             : [
-                mdl.Invites.needRSVP().length > 0 && [
-                  m(".notif-count", mdl.Invites.needRSVP().length),
-                  m(BellLine),
-                ],
+                mdl.Invites.needRSVP().length > 0 &&
+                  m(".notifier", [
+                    m(BellLine),
+                    m(
+                      ".notif-count",
+                      {
+                        oncreate: Animate(pulsate, {
+                          delay: 0,
+                          iterations: 2,
+                          fill: "backwards",
+                        }),
+                      },
+                      mdl.Invites.needRSVP().length
+                    ),
+                  ]),
                 m(BarsLine),
               ]
         ),

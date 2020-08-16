@@ -74,8 +74,8 @@ export const Editor = ({ attrs: { mdl } }) => {
   return {
     view: ({ attrs: { mdl } }) =>
       m(EventForm, {
-        oncreate: Animate(slideInDown, 2),
-        onbeforeremove: Animate(slideOutUp, 2),
+        oncreate: Animate(slideInDown, { delay: 2 }),
+        onbeforeremove: Animate(slideOutUp, { delay: 2 }),
         mdl,
         data: EventFormData,
         state: EventFormState,

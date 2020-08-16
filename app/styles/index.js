@@ -1,6 +1,6 @@
 export * from "./animations.js"
 
-const duration = {
+const defaults = {
   duration: 700,
   easing: "ease-in-out",
   fill: "forwards",
@@ -17,18 +17,18 @@ function transitionEndPromise(element) {
   )
 }
 
-export const AnimatePage = (animation) => ({ dom }) => {
+export const AnimatePage = (animation, opts) => ({ dom }) => {
   // let origStyles = jsonCopy(dom.style)
   // dom.style.position = "absolute"
   // dom.style.top = -19
   // dom.style.width = "100%"
-  Animate(animation)({ dom })
+  Animate(animation, opts)({ dom })
   // Animate(animation)({ dom })
 }
 
-export const Animate = (animation, delay) => ({ dom }) =>
+export const Animate = (animation, opts) => ({ dom }) =>
   dom
-    .animate(animation, { ...duration, delay })
+    .animate(animation, { ...defaults, ...opts })
     .finished.then(transitionEndPromise(dom))
 
 export const AnimateChildren = (animation, pause) => ({ dom }) => {

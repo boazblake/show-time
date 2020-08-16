@@ -1,7 +1,15 @@
 import { Calendar, Day, Editor } from "Components"
 import { dayModel } from "Models"
 import { datesAreSame } from "Utils"
-import { Animate, fadeInUp, fadeInDown, fadeOutUp, fadeOutDown } from "Styles"
+import {
+  AnimatePage,
+  fadeInUp,
+  fadeInDown,
+  fadeOutUp,
+  fadeOutDown,
+  fadeIn,
+  fadeOut,
+} from "Styles"
 
 const toDayViewModel = (dayViewModel, invite) => {
   dayViewModel[`${invite.start.format("HH")}:00`].push(invite)
@@ -36,6 +44,8 @@ export const Home = () => {
               m(
                 `button.btn.max-width.height-100`,
                 {
+                  oncreate: AnimatePage(fadeIn),
+                  onbeforeremove: AnimatePage(fadeOut),
                   onclick: (e) =>
                     mdl.Events.createNewEvent(!mdl.Events.createNewEvent()),
                 },
@@ -48,6 +58,8 @@ export const Home = () => {
                 m(
                   "button.btn.max-width.height-100",
                   {
+                    oncreate: AnimatePage(fadeIn),
+                    onbeforeremove: AnimatePage(fadeOut),
                     onclick: (e) => mdl.Day.listView(!mdl.Day.listView()),
                   },
                   mdl.Day.listView() ? "Hour View" : "List View"
@@ -57,14 +69,14 @@ export const Home = () => {
 
           mdl.Events.createNewEvent()
             ? m(Editor, {
-                oncreate: Animate(fadeInDown, 1),
-                onbeforeremove: Animate(fadeOutUp, 2),
+                oncreate: AnimatePage(fadeInDown, { delay: 1 }),
+                onbeforeremove: AnimatePage(fadeOutUp, { delay: 2 }),
                 mdl,
               })
             : [
                 m(Day, {
-                  oncreate: Animate(fadeInUp),
-                  onbeforeremove: Animate(fadeOutDown, 2),
+                  oncreate: AnimatePage(fadeInUp),
+                  onbeforeremove: AnimatePage(fadeOutDown, { delay: 2 }),
                   mdl,
                   day: createDayVM(mdl)(
                     getSelectedDayInvites(mdl)(mdl.Invites.withRSVP())

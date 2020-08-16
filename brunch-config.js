@@ -8,7 +8,7 @@ exports.files = {
   },
   stylesheets: {
     order: {
-      before: ["./types.scss"],
+      before: ["./imports.scss"],
       after: ["app.css"],
     },
     joinTo: {

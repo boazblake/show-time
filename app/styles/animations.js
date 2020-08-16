@@ -128,18 +128,21 @@ export const slideInDown = [
   },
 ]
 
-// export const pulsate = {
-//   "0%": {
-//     transform: "scale(0.2)",
-//     opacity: 0.8,
-//   },
+export const pulsate = [
+  {
+    offset: 0,
+    transform: "scale(0.2)",
+    opacity: 0.8,
+  },
 
-//   "80%": {
-//     transform: "scale(1.2)",
-//     opacity: 0,
-//   },
-//   "100%": {
-//     transform: "scale(2.2)",
-//     opacity: 0,
-//   },
-// }
+  {
+    offset: 0.8,
+    transform: "scale(1.2)",
+    opacity: 0,
+  },
+  {
+    offset: 1,
+    transform: "scale(2.2)",
+    opacity: 0,
+  },
+]
