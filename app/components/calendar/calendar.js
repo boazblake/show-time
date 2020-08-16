@@ -22,7 +22,7 @@ const Navbar = () => {
             ),
             m(".centerMonthGroup", [
               m("h2.currentMonth", date.format("MMMM")),
-              m("h3.text-center", date.format("YYYY")),
+              m("h3.currentYear.text-center", date.format("YYYY")),
             ]),
             m(
               m.route.Link,
@@ -36,7 +36,7 @@ const Navbar = () => {
               m("h4", date.clone().add(1, "month").format("MMM"))
             ),
           ]),
-          m(".frow width-100 row-between mt-10", [
+          m(".frow width-100 row-between m-10", [
             m(
               m.route.Link,
               {
