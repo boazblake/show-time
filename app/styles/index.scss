@@ -311,6 +311,10 @@ rgba(255, 255, 255, 0) 100%
 }
 
 
+.cal-navbar {
+  background-color: var(--light);
+}
+
 .cal-toolbar-input {
   display: inline-block;
   width: 33%;
@@ -445,7 +449,6 @@ rgba(255, 255, 255, 0) 100%
 
 .event-page-title {
   color: var(--warning);
-  background-color: var(--light);
 }
 
 .event-comments-message {

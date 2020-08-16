@@ -5,60 +5,63 @@ import { AngleLine } from "@mithril-icons/clarity/cjs"
 const Navbar = () => {
   return {
     view: ({ attrs: { mdl, date } }) => {
-      return m(".frow width-100 ", [
-        m(".frow width-100 row-between", [
-          m(
-            m.route.Link,
-            {
-              selector: "button.btn",
-              href: `/${hyphenize(mdl.User.name)}/${date
-                .clone()
-                .subtract(1, "month")
-                .format("YYYY-MM-DD")}`,
-            },
-            m("h4", date.clone().subtract(1, "month").format("MMM"))
-          ),
-          m(".centerMonthGroup", [
-            m("h2.currentMonth", date.format("MMMM")),
-            m("h3.text-center", date.format("YYYY")),
+      return m(
+        ".cal-navbar",
+        m(".frow width-100 ", [
+          m(".frow width-100 row-between", [
+            m(
+              m.route.Link,
+              {
+                selector: "button.btn",
+                href: `/${hyphenize(mdl.User.name)}/${date
+                  .clone()
+                  .subtract(1, "month")
+                  .format("YYYY-MM-DD")}`,
+              },
+              m("h4", date.clone().subtract(1, "month").format("MMM"))
+            ),
+            m(".centerMonthGroup", [
+              m("h2.currentMonth", date.format("MMMM")),
+              m("h3.text-center", date.format("YYYY")),
+            ]),
+            m(
+              m.route.Link,
+              {
+                selector: "button.btn",
+                href: `/${hyphenize(mdl.User.name)}/${date
+                  .clone()
+                  .add(1, "month")
+                  .format("YYYY-MM-DD")}`,
+              },
+              m("h4", date.clone().add(1, "month").format("MMM"))
+            ),
           ]),
-          m(
-            m.route.Link,
-            {
-              selector: "button.btn",
-              href: `/${hyphenize(mdl.User.name)}/${date
-                .clone()
-                .add(1, "month")
-                .format("YYYY-MM-DD")}`,
-            },
-            m("h4", date.clone().add(1, "month").format("MMM"))
-          ),
-        ]),
-        m(".frow width-100 row-between mt-10", [
-          m(
-            m.route.Link,
-            {
-              selector: "button.btn",
-              href: `/${hyphenize(mdl.User.name)}/${date
-                .clone()
-                .subtract(1, "year")
-                .format("YYYY-MM-DD")}`,
-            },
-            date.clone().subtract(1, "year").format("YYYY")
-          ),
-          m(
-            m.route.Link,
-            {
-              selector: "button.btn",
-              href: `/${hyphenize(mdl.User.name)}/${date
-                .clone()
-                .add(1, "year")
-                .format("YYYY-MM-DD")}`,
-            },
-            date.clone().add(1, "year").format("YYYY")
-          ),
-        ]),
-      ])
+          m(".frow width-100 row-between mt-10", [
+            m(
+              m.route.Link,
+              {
+                selector: "button.btn",
+                href: `/${hyphenize(mdl.User.name)}/${date
+                  .clone()
+                  .subtract(1, "year")
+                  .format("YYYY-MM-DD")}`,
+              },
+              date.clone().subtract(1, "year").format("YYYY")
+            ),
+            m(
+              m.route.Link,
+              {
+                selector: "button.btn",
+                href: `/${hyphenize(mdl.User.name)}/${date
+                  .clone()
+                  .add(1, "year")
+                  .format("YYYY-MM-DD")}`,
+              },
+              date.clone().add(1, "year").format("YYYY")
+            ),
+          ]),
+        ])
+      )
     },
   }
 }
