@@ -4,7 +4,7 @@ import { datesAreSame } from "Utils"
 import {
   AnimatePage,
   fadeInUp,
-  fadeInDown,
+  shutterInTop,
   fadeOutUp,
   fadeOutDown,
   fadeIn,
@@ -69,7 +69,7 @@ export const Home = () => {
 
           mdl.Events.createNewEvent()
             ? m(Editor, {
-                oncreate: AnimatePage(fadeInDown, { delay: 1 }),
+                oncreate: AnimatePage(shutterInTop, { delay: 1 }),
                 onbeforeremove: AnimatePage(fadeOutUp, { delay: 2 }),
                 mdl,
               })

@@ -1,6 +1,6 @@
 import { BellLine, BarsLine, CloseLine } from "@mithril-icons/clarity/cjs"
 import { HTTP, getInvitesByUserIdTask } from "Http"
-import { Animate, pulsate } from "Styles"
+import { Animate, puffOutCenter, shake } from "Styles"
 
 export const Hamburger = () => {
   const load = ({ attrs: { mdl } }) => {
@@ -44,13 +44,18 @@ export const Hamburger = () => {
             : [
                 mdl.Invites.needRSVP().length > 0 &&
                   m(".notifier", [
-                    m(BellLine),
+                    m(BellLine, {
+                      oncreate: Animate(shake, {
+                        delay: 100,
+                        iterations: 1,
+                        fill: "backwards",
+                      }),
+                    }),
                     m(
                       ".notif-count",
                       {
-                        oncreate: Animate(pulsate, {
-                          delay: 0,
-                          iterations: 1,
+                        oncreate: Animate(puffOutCenter, {
+                          iterations: 1.2,
                           fill: "backwards",
                         }),
                       },

@@ -128,21 +128,62 @@ export const slideInDown = [
   },
 ]
 
-export const pulsate = [
+export const shake = [
   {
-    offset: 0,
-    transform: "scale(0.2)",
-    opacity: 0.8,
+    "-webkit-transform": "rotate(-15deg)",
+    offset: 0.0,
+    transform: "rotate(-15deg)",
   },
-
   {
+    "-webkit-transform": "rotate(15deg)",
+    offset: 0.2,
+    transform: "rotate(15deg)",
+  },
+  {
+    "-webkit-transform": "rotate(-18deg)",
+    offset: 0.4,
+    transform: "rotate(-18deg)",
+  },
+  {
+    "-webkit-transform": "rotate(18deg)",
+    offset: 0.6,
+    transform: "rotate(18deg)",
+  },
+  {
+    "-webkit-transform": "rotate(-22deg)",
     offset: 0.8,
-    transform: "scale(1.2)",
+    transform: "rotate(-22deg)",
+  },
+]
+
+export const puffOutCenter = [
+  {
+    "-webkit-transform": "scale(1)",
+    transform: "scale(1)",
+    filter: "blur(0)",
+    opacity: 1,
+  },
+  {
+    "-webkit-transform": "scale(2)",
+    transform: "scale(2)",
+    filter: "blur(4px)",
+    opacity: 0,
+  },
+]
+
+export const shutterTop = [
+  {
+    "-webkit-transform": "rotateX(-100deg)",
+    transform: " rotateX(-100deg)",
+    "-webkit-transform-origin": " top",
+    "transform-origin": " top",
     opacity: 0,
   },
   {
-    offset: 1,
-    transform: "scale(2.2)",
-    opacity: 0,
+    "-webkit-transform": " rotateX(0deg)",
+    transform: " rotateX(0deg)",
+    "-webkit-transform-origin": " top",
+    "transform-origin": " top",
+    opacity: 1,
   },
 ]

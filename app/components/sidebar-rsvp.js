@@ -4,7 +4,7 @@ import { getTimeFormat } from "Utils"
 export const SidebarRSVP = () => {
   return {
     view: ({ attrs: { mdl } }) =>
-      m(".sidebar-rsvp", [
+      m(".sidebar-rsvp pb-50", [
         mdl.Invites.needRSVP().length
           ? mdl.Invites.needRSVP().map((invite) => {
               return m(
