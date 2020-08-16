@@ -17,26 +17,23 @@ export const getBoundsFromLatLong = (mdl) => ([latitude, longitude]) => {
 }
 
 export const getMyLocationTask = (mdl) =>
-  new Task(
-    (rej, res) =>
-      new Promise((resolve, reject) =>
+  new Task((rej, res) =>
+    navigator.permissions
+      ? // Permission API is implemented
         navigator.permissions
-          ? // Permission API is implemented
-            navigator.permissions
-              .query({
-                name: "geolocation",
-              })
-              .then((permission) =>
-                // is geolocation granted?
-                permission.state === "granted"
-                  ? navigator.geolocation.getCurrentPosition((pos) =>
-                      resolve(pos.coords)
-                    )
-                  : resolve(null)
-              )
-          : // Permission API was not implemented
-            resolve("Permission API is not supported")
-      )
+          .query({
+            name: "geolocation",
+          })
+          .then((permission) =>
+            // is geolocation granted?
+            permission.state === "granted"
+              ? navigator.geolocation.getCurrentPosition((pos) =>
+                  res(pos.coords)
+                )
+              : res(null)
+          )
+      : // Permission API was not implemented
+        res(mdl.Map.defaultBounds)
   )
     // .map(prop("coords"))
     .map(props(["latitude", "longitude"]))
@@ -45,3 +42,4 @@ export const getMyLocationTask = (mdl) =>
       return getBoundsFromLatLong(mdl)(coords)
     })
     .map(mdl.Map.bounds)
+    .map(log("wtf"))
