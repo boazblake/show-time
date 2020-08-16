@@ -50,7 +50,7 @@ export const Hamburger = () => {
                       {
                         oncreate: Animate(pulsate, {
                           delay: 0,
-                          iterations: 2,
+                          iterations: 1,
                           fill: "backwards",
                         }),
                       },
