@@ -1,4 +1,4 @@
-const Logo = m("img.frow", {
+const Logo = m("img.logo", {
   src: "images/logo.svg",
   style: {
     paddingTop: "100px",

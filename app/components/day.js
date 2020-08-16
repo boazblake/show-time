@@ -81,11 +81,11 @@ export const HourView = () => {
 const ListView = () => {
   return {
     view: ({ attrs: { mdl, invites } }) =>
-      m(
-        "ul",
-        invites.map((invite) => {
-          return m(
-            "li.frow-container",
+      invites.map((invite) => {
+        return m(
+          ".invite-list-container",
+          m(
+            ".frow-container",
             m(
               `.invite-list-${inviteOptions[invite.status]}`,
               {
@@ -104,8 +104,8 @@ const ListView = () => {
               ]
             )
           )
-        })
-      ),
+        )
+      }),
   }
 }
 
