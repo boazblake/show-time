@@ -1,18 +1,18 @@
 import { createCalendar, calendarDayStyle } from "./calendar-model"
-import { daysOfTheWeekFrom, firstInviteHour, hyphenize } from "Utils"
+import { daysOfTheWeekFrom, firstInviteHour, hyphenize, getTheme } from "Utils"
 import { AngleLine } from "@mithril-icons/clarity/cjs"
 
 const Navbar = () => {
   return {
     view: ({ attrs: { mdl, date } }) => {
       return m(
-        ".cal-navbar width-100",
+        `.width-100 cal-navbar-${getTheme(mdl)}`,
         m(".frow ", [
           m(".frow width-100 row-between", [
             m(
               m.route.Link,
               {
-                selector: "button.btn",
+                selector: `button.btn-${getTheme(mdl)}`,
                 href: `/${hyphenize(mdl.User.name)}/${date
                   .clone()
                   .subtract(1, "month")
@@ -27,7 +27,7 @@ const Navbar = () => {
             m(
               m.route.Link,
               {
-                selector: "button.btn",
+                selector: `button.btn-${getTheme(mdl)}`,
                 href: `/${hyphenize(mdl.User.name)}/${date
                   .clone()
                   .add(1, "month")
@@ -40,7 +40,7 @@ const Navbar = () => {
             m(
               m.route.Link,
               {
-                selector: "button.btn",
+                selector: `button.btn-${getTheme(mdl)}`,
                 href: `/${hyphenize(mdl.User.name)}/${date
                   .clone()
                   .subtract(1, "year")
@@ -51,7 +51,7 @@ const Navbar = () => {
             m(
               m.route.Link,
               {
-                selector: "button.btn",
+                selector: `button.btn-${getTheme(mdl)}`,
                 href: `/${hyphenize(mdl.User.name)}/${date
                   .clone()
                   .add(1, "year")

@@ -8,6 +8,9 @@ export const log = (m) => (v) => {
   return v
 }
 
+export const getTheme = (mdl) =>
+  mdl.User.profile.isDarkTheme ? "dark" : "light"
+
 export const stackInvites = (idx) => {
   let bIdx = 140
   let lIdx = -5

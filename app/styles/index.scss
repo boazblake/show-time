@@ -58,6 +58,7 @@ body {
 html > * {
   box-sizing: border-box;
   font-family: 'Montserrat', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+  touch-action: manipulation;
 }
 
 
@@ -65,8 +66,12 @@ a {
   text-decoration: none;
 }
 
-.btn {
-  @extend %btn
+.btn-dark {
+  @extend %btn-dark;
+}
+
+.btn-light {
+  @extend %btn-light;
 }
 
 
@@ -78,20 +83,38 @@ ul {
   margin-top: 15px;
 }
 
-.invite-list-decline {
-  @extend %invite-list;
+.invite-list-decline-light {
+  @extend %invite-list-light;
   border-left: 2px solid var(--decline-invite);
 }
 
 
-.invite-list-accept {
-  @extend %invite-list;
+.invite-list-accept-light {
+  @extend %invite-list-light;
   border-left: 2px solid var(--accept-invite);
 }
 
 
-.invite-list-maybe {
-  @extend %invite-list;
+.invite-list-maybe-light {
+  @extend %invite-list-light;
+  border-left: 2px solid var(--maybe-invite);
+}
+
+
+.invite-list-decline-dark {
+  @extend %invite-list-dark;
+  border-left: 2px solid var(--decline-invite);
+}
+
+
+.invite-list-accept-dark {
+  @extend %invite-list-dark;
+  border-left: 2px solid var(--accept-invite);
+}
+
+
+.invite-list-maybe-dark {
+  @extend %invite-list-dark;
   border-left: 2px solid var(--maybe-invite);
 }
 
@@ -138,7 +161,13 @@ ul {
   width: 100vw;
 }
 
-.day-container {
+.day-container-light {
+  height: 360px;
+  overflow: auto;
+  background-color: var(--light);
+}
+
+.day-container-dark {
   height: 360px;
   overflow: auto;
   background-color: var(--dark);
@@ -161,7 +190,8 @@ ul {
   flex-direction: column;
   justify-content: center;
   min-height: 120px;
-  border-top: 1px dashed var(--dark);
+  border-top: 1px dashed var(--warning);
+  color: var(--warning);
 }
 
 .hour-time {
@@ -349,7 +379,12 @@ rgba(255, 255, 255, 0) 100%
 }
 
 
-.cal-navbar {
+.cal-navbar-light {
+  background-color: var(--light);
+  padding:0 10px;
+}
+
+.cal-navbar-dark {
   background-color: var(--dark);
   padding:0 10px;
 }
@@ -456,7 +491,6 @@ img.logo {
       padding: 5px 20px;
       margin: 10px 0;
       background-color: var(--light);
-
     }
   }
 
@@ -467,8 +501,19 @@ img.logo {
 
 }
 
-.sidebar-invites {
-  @extend %invite-list;
+.sidebar-invites-light {
+  @extend %invite-list-light;
+  color: var(--dark);
+  padding: 10px;
+  border-left: 1px solid var(--warning);
+  // -webkit-box-shadow: 0 8px 6px -6px var(--dark);
+  // -moz-box-shadow: 0 8px 6px -6px var(--dark);
+  //      box-shadow: 0 8px 6px -6px var(--dark);
+
+}
+
+.sidebar-invites-dark {
+  @extend %invite-list-dark;
   color: var(--dark);
   padding: 10px;
   border-left: 1px solid var(--warning);
@@ -607,8 +652,14 @@ img.logo {
   resize: none;
 }
 
-.comments-message-btn {
-  @extend %btn;
+.comments-message-btn-dark {
+  @extend %btn-dark;
+  width: 100%;
+}
+
+
+.comments-message-btn-light {
+  @extend %btn-light;
   width: 100%;
 }
 

@@ -1,10 +1,10 @@
-import { hyphenize } from "Utils"
+import { hyphenize, getTheme } from "Utils"
 
 export const EventToolbar = () => {
   return {
     view: ({ attrs: { mdl } }) => [
       m(
-        "button.btn.col-xs-1-1",
+        `button.col-xs-1-1.btn-${getTheme(mdl)}`,
         {
           onclick: (e) => {
             localStorage.removeItem("shindigit-eventId")

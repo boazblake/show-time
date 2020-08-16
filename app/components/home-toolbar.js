@@ -1,4 +1,4 @@
-import { hyphenize } from "Utils"
+import { hyphenize, getTheme } from "Utils"
 
 export const HomeToolbar = () => {
   return {
@@ -18,7 +18,7 @@ export const HomeToolbar = () => {
         {
           disabled: mdl.Sidebar.isShowing(),
           class: "col-xs-1-2",
-          selector: "button.btn",
+          selector: `button.btn-${getTheme(mdl)}`,
           href: `/${hyphenize(mdl.User.name)}/${M().format("YYYY-MM-DD")}`,
         },
         "Today"

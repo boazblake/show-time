@@ -1,6 +1,6 @@
 import { Calendar, Day, Editor } from "Components"
 import { dayModel } from "Models"
-import { datesAreSame } from "Utils"
+import { datesAreSame, getTheme } from "Utils"
 import {
   Animate,
   AnimatePage,
@@ -45,7 +45,7 @@ export const Home = () => {
             m(
               `${mdl.Events.createNewEvent() ? ".col-xs-1-1" : ".col-xs-2-3"}`,
               m(
-                `button.btn.max-width.height-100`,
+                `button.btn-${getTheme(mdl)}.max-width.height-100`,
                 {
                   // key: new Date(),
                   onclick: (e) =>
@@ -74,7 +74,7 @@ export const Home = () => {
               m(
                 "col-xs-1-3",
                 m(
-                  "button.btn.max-width.height-100",
+                  `button.btn-${getTheme(mdl)}.max-width.height-100`,
                   {
                     oncreate: Animate(shutterInRight),
                     onbeforeremove: Animate(shutterOutRight),

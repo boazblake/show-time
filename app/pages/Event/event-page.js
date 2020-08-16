@@ -1,4 +1,4 @@
-import { getTimeFormat, jsonCopy, hyphenize } from "Utils"
+import { getTimeFormat, jsonCopy, hyphenize, getTheme } from "Utils"
 import { propEq, compose, not, head, pluck, set, lensProp } from "ramda"
 import mapboxgl from "mapbox-gl/dist/mapbox-gl.js"
 import {
@@ -359,7 +359,7 @@ export const Event = ({ attrs: { mdl } }) => {
                     }),
 
                     m(
-                      "button.btn.col-xs-1-5.button-none",
+                      `button.btn-${getTheme(mdl)}.col-xs-1-5.button-none`,
                       { onclick: (e) => sendInvite(mdl) },
                       "Invite"
                     ),
@@ -434,7 +434,7 @@ export const Event = ({ attrs: { mdl } }) => {
                       pattern: "[0-9]*",
                     }),
                     m(
-                      "button.btn.col-xs-1-5.button-none",
+                      `button.btn-${getTheme(mdl)}.col-xs-1-5.button-none`,
                       { onclick: (e) => addItem(mdl) },
                       "Add"
                     ),
@@ -602,7 +602,9 @@ export const Event = ({ attrs: { mdl } }) => {
                         m(
                           ".col-xs-1-5",
                           m(
-                            "button.button-none.comments-message-btn",
+                            `button.button-none.comments-message-btn-${getTheme(
+                              mdl
+                            )}`,
                             { onclick: (e) => sendMessage(mdl) },
                             "Send"
                           )
@@ -620,12 +622,12 @@ export const Event = ({ attrs: { mdl } }) => {
                 { mdl, state, data, part: "settings", title: "Settings" },
                 m(".frow row-start", [
                   m(
-                    "button.btn",
+                    `button.btn-${getTheme(mdl)}`,
                     { onclick: (e) => deleteInvite(mdl) },
                     "Delete"
                   ),
                   m(
-                    "button.btn",
+                    `button.btn-${getTheme(mdl)}`,
                     { onclick: (e) => console.log("edit event ...") },
                     "Edit"
                   ),

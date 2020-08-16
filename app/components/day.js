@@ -6,6 +6,7 @@ import {
   getInviteStatusColor,
   getTimeFormat,
   hyphenize,
+  getTheme,
 } from "Utils"
 
 const createEventUrl = (invite) =>
@@ -27,7 +28,7 @@ const HourInvite = () => {
       return m(
         `.col-xs-1-${col + 2}`,
         m(
-          ".invite-list-item ",
+          `.invite-list-item-${getTheme(mdl)}`,
           {
             onclick: (e) => navToInvite(mdl)(invite),
             style: {
@@ -67,7 +68,7 @@ export const HourView = () => {
         m(".hour ", [
           m("p.hour-time", { id: hour }, hour),
           m(
-            ".invite-list frow ",
+            ".invite-list frow",
             events.map((invite, idx) =>
               m(HourInvite, { mdl, invite, col: events.length, key: idx })
             )
@@ -87,7 +88,7 @@ const ListView = () => {
           m(
             ".frow-container",
             m(
-              `.invite-list-${inviteOptions[invite.status]}`,
+              `.invite-list-${inviteOptions[invite.status]}-${getTheme(mdl)}`,
               {
                 onclick: (e) => navToInvite(mdl)(invite),
               },
@@ -117,7 +118,7 @@ export const Day = ({ attrs: { mdl } }) => {
       mdl.State.toAnchor() && scrollToCurrentTimeOrInvite(mdl, invites),
     view: ({ attrs: { mdl, day, invites } }) => {
       return m(".day", [
-        m(".day-container", [
+        m(`.day-container-${getTheme(mdl)}`, [
           invites.any()
             ? mdl.Day.listView()
               ? m(ListView, { mdl, invites })

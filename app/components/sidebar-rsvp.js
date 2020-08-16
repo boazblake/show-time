@@ -8,7 +8,7 @@ export const SidebarRSVP = () => {
         mdl.Invites.needRSVP().length
           ? mdl.Invites.needRSVP().map((invite) => {
               return m(
-                ".sidebar-invites",
+                `..sidebar-invites-${getTheme(mdl)}`,
                 m(".frow mb-10", [
                   m(".col-xs-1-2 text-ellipsis", `${invite.title}`),
                   m(".col-xs-1-2", `On: ${invite.start.format("MM-DD-YYYY")}`),

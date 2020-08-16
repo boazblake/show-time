@@ -29,6 +29,19 @@ export const Profile = () => {
       return m(".profile-section", [
         m(
           "label",
+          "Dark Theme",
+          m("input", {
+            type: "checkbox",
+            checked: mdl.User.profile.isDarkTheme,
+            onclick: (e) => {
+              mdl.User.profile.isDarkTheme = !mdl.User.profile.isDarkTheme
+              updatePrefs(mdl)
+            },
+          })
+        ),
+        m("hr"),
+        m(
+          "label",
           "Use 24 Hrs",
           m("input", {
             type: "checkbox",

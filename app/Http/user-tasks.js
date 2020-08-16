@@ -34,6 +34,7 @@ export const createProfileTask = (http) => (mdl) =>
     email: mdl.User.email,
     startWeekOnDay: 1,
     use24Hrs: true,
+    isDarkTheme: true,
     language: "en",
     searchRadius: 20,
   })
