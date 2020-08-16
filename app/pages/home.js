@@ -5,10 +5,12 @@ import {
   AnimatePage,
   fadeInUp,
   shutterInTop,
-  fadeOutUp,
-  fadeOutDown,
-  fadeIn,
-  fadeOut,
+  shutterOutTop,
+  shutterOutDown,
+  shutterOutLeft,
+  shutterInLeft,
+  shutterInRight,
+  shutterOutRight,
 } from "Styles"
 
 const toDayViewModel = (dayViewModel, invite) => {
@@ -41,11 +43,14 @@ export const Home = () => {
           m(`.frow.max-width`, [
             m(
               `${mdl.Events.createNewEvent() ? ".col-xs-1-1" : ".col-xs-2-3"}`,
+              {
+                oncreate: AnimatePage(shutterInLeft),
+              },
               m(
                 `button.btn.max-width.height-100`,
                 {
-                  oncreate: AnimatePage(fadeIn),
-                  onbeforeremove: AnimatePage(fadeOut),
+                  oncreate: AnimatePage(shutterInLeft),
+                  onbeforeremove: AnimatePage(shutterOutLeft),
                   onclick: (e) =>
                     mdl.Events.createNewEvent(!mdl.Events.createNewEvent()),
                 },
@@ -58,8 +63,8 @@ export const Home = () => {
                 m(
                   "button.btn.max-width.height-100",
                   {
-                    oncreate: AnimatePage(fadeIn),
-                    onbeforeremove: AnimatePage(fadeOut),
+                    oncreate: AnimatePage(shutterInRight),
+                    onbeforeremove: AnimatePage(shutterOutRight),
                     onclick: (e) => mdl.Day.listView(!mdl.Day.listView()),
                   },
                   mdl.Day.listView() ? "Hour View" : "List View"
@@ -70,13 +75,13 @@ export const Home = () => {
           mdl.Events.createNewEvent()
             ? m(Editor, {
                 oncreate: AnimatePage(shutterInTop, { delay: 1 }),
-                onbeforeremove: AnimatePage(fadeOutUp, { delay: 2 }),
+                onbeforeremove: AnimatePage(shutterOutTop, { delay: 2 }),
                 mdl,
               })
             : [
                 m(Day, {
                   oncreate: AnimatePage(fadeInUp),
-                  onbeforeremove: AnimatePage(fadeOutDown, { delay: 2 }),
+                  onbeforeremove: AnimatePage(shutterOutDown, { delay: 2 }),
                   mdl,
                   day: createDayVM(mdl)(
                     getSelectedDayInvites(mdl)(mdl.Invites.withRSVP())

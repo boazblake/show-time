@@ -171,19 +171,138 @@ export const puffOutCenter = [
   },
 ]
 
-export const shutterTop = [
+export const shutterInTop = [
   {
     "-webkit-transform": "rotateX(-100deg)",
     transform: " rotateX(-100deg)",
-    "-webkit-transform-origin": " top",
-    "transform-origin": " top",
+    "-webkit-transform-origin": "top",
+    "transform-origin": "top",
     opacity: 0,
   },
   {
     "-webkit-transform": " rotateX(0deg)",
     transform: " rotateX(0deg)",
-    "-webkit-transform-origin": " top",
-    "transform-origin": " top",
+    "-webkit-transform-origin": "top",
+    "transform-origin": "top",
     opacity: 1,
+  },
+]
+
+export const shutterOutTop = [
+  {
+    "-webkit-transform": "rotateX(0deg)",
+    transform: " rotateX(0deg)",
+    "-webkit-transform-origin": "top",
+    "transform-origin": "top",
+    opacity: 1,
+  },
+  {
+    "-webkit-transform": " rotateX(70deg)",
+    transform: " rotateX(70deg)",
+    "-webkit-transform-origin": "top",
+    "transform-origin": "top",
+    opacity: 0,
+  },
+]
+
+export const shutterOutBottom = [
+  {
+    "-webkit-transform": "rotateX(0deg)",
+    transform: " rotateX(0deg)",
+    "-webkit-transform-origin": "bottom",
+    "transform-origin": "bottom",
+    opacity: 1,
+  },
+  {
+    "-webkit-transform": " rotateX(-70deg)",
+    transform: " rotateX(-70deg)",
+    "-webkit-transform-origin": "bottom",
+    "transform-origin": "bottom",
+    opacity: 0,
+  },
+]
+
+export const shutterInBottom = [
+  {
+    "-webkit-transform": "rotateX(100deg)",
+    transform: " rotateX(100deg)",
+    "-webkit-transform-origin": "bottom",
+    "transform-origin": "bottom",
+    opacity: 0,
+  },
+  {
+    "-webkit-transform": " rotateX(0deg)",
+    transform: " rotateX(0deg)",
+    "-webkit-transform-origin": "bottom",
+    "transform-origin": "bottom",
+    opacity: 1,
+  },
+]
+
+export const shutterInLeft = [
+  {
+    "-webkit-transform": "rotateY(100deg)",
+    transform: " rotateY(100deg)",
+    "-webkit-transform-origin": "left",
+    "transform-origin": "left",
+    opacity: 0,
+  },
+  {
+    "-webkit-transform": " rotateY(0deg)",
+    transform: " rotateY(0deg)",
+    "-webkit-transform-origin": "left",
+    "transform-origin": "left",
+    opacity: 1,
+  },
+]
+
+export const shutterOutLeft = [
+  {
+    "-webkit-transform": "rotateY(0deg)",
+    transform: " rotateY(0deg)",
+    "-webkit-transform-origin": "left",
+    "transform-origin": "left",
+    opacity: 1,
+  },
+  {
+    "-webkit-transform": " rotateY(-70deg)",
+    transform: " rotateY(-70deg)",
+    "-webkit-transform-origin": "left",
+    "transform-origin": "left",
+    opacity: 0,
+  },
+]
+
+export const shutterInRight = [
+  {
+    "-webkit-transform": "rotateY(-100deg)",
+    transform: " rotateY(-100deg)",
+    "-webkit-transform-origin": "right",
+    "transform-origin": "right",
+    opacity: 0,
+  },
+  {
+    "-webkit-transform": " rotateY(0deg)",
+    transform: " rotateY(0deg)",
+    "-webkit-transform-origin": "right",
+    "transform-origin": "right",
+    opacity: 1,
+  },
+]
+
+export const shutterOutRight = [
+  {
+    "-webkit-transform": "rotateY(0deg)",
+    transform: " rotateY(0deg)",
+    "-webkit-transform-origin": "right",
+    "transform-origin": "right",
+    opacity: 1,
+  },
+  {
+    "-webkit-transform": " rotateY(70deg)",
+    transform: " rotateY(70deg)",
+    "-webkit-transform-origin": "right",
+    "transform-origin": "right",
+    opacity: 0,
   },
 ]

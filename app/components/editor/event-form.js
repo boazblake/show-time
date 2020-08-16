@@ -1,6 +1,6 @@
 import { HTTP, locateQueryTask } from "Http"
 import { hyphenize } from "Utils"
-import { Animate, slideOutUp } from "Styles"
+import { Animate, shutterOutTop } from "Styles"
 
 const locateQuery = (mdl) => (state) => (query) => {
   const onError = (err) => {
@@ -33,7 +33,7 @@ export const EventForm = () => {
   }
 
   return {
-    onbeforeremove: Animate(slideOutUp),
+    onbeforeremove: Animate(shutterOutTop),
     view: ({ attrs: { data, state, resetState, mdl, validate, submit } }) => {
       return m(
         "form.event-form",
