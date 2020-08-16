@@ -1,6 +1,6 @@
 import { BellLine, BarsLine, CloseLine } from "@mithril-icons/clarity/cjs"
 import { HTTP, getInvitesByUserIdTask } from "Http"
-import { Animate, puffOutCenter, shake } from "Styles"
+import { Animate, puffOutCenter, shake, focusInContract } from "Styles"
 
 export const Hamburger = () => {
   const load = ({ attrs: { mdl } }) => {
@@ -40,7 +40,7 @@ export const Hamburger = () => {
             },
           },
           mdl.Sidebar.isShowing()
-            ? m(CloseLine)
+            ? m(CloseLine, { oncreate: Animate(focusInContract) })
             : [
                 mdl.Invites.needRSVP().length > 0 &&
                   m(".notifier", [
@@ -62,7 +62,9 @@ export const Hamburger = () => {
                       mdl.Invites.needRSVP().length
                     ),
                   ]),
-                m(BarsLine),
+                m(BarsLine, {
+                  oncreate: Animate(focusInContract, { delay: 200 }),
+                }),
               ]
         ),
       ]

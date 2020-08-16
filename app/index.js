@@ -3,7 +3,6 @@ import App from "./App.js"
 import Model from "Models"
 import { Fp } from "Fp"
 import { getMyLocationTask } from "Utils"
-
 Fp.configure()
 
 const root = document.body

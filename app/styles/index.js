@@ -26,11 +26,12 @@ export const AnimatePage = (animation, opts) => ({ dom }) => {
   // Animate(animation)({ dom })
 }
 
-export const Animate = (animation, opts) => ({ dom }) =>
-  dom
+export const Animate = (animation, opts) => ({ dom }) => {
+  console.log(animation)
+  return dom
     .animate(animation, { ...defaults, ...opts })
     .finished.then(transitionEndPromise(dom))
-
+}
 export const AnimateChildren = (animation, pause) => ({ dom }) => {
   let children = [...dom.children]
 
@@ -41,4 +42,52 @@ export const AnimateChildren = (animation, pause) => ({ dom }) => {
       Animate(animation)({ dom: child })
     }, pause())
   })
+}
+
+function ease(v, pow = 4) {
+  return 1 - Math.pow(1 - v, pow)
+}
+
+function calculateCollapsedScale(el) {
+  // The menu title can act as the marker for the collapsed state.
+  const collapsed = document.getElementById("scale-me").getBoundingClientRect()
+
+  // Whereas the menu as a whole (title plus items) can act as
+  // a proxy for the expanded state.
+  const expanded = el.getBoundingClientRect()
+  return {
+    x: collapsed.width / expanded.width,
+    y: collapsed.height / expanded.height,
+  }
+}
+
+export const createKeyframeAnimation = (isEntrance) => ({ dom }) => {
+  let animation = []
+  let inverseAnimation = []
+  // Figure out the size of the element when collapsed.
+  let { x, y } = calculateCollapsedScale(dom)
+
+  for (let step = 0; step <= 100; step++) {
+    // Remap the step value to an eased one.
+    let easedStep = ease(step / 100)
+
+    // Calculate the scale of the element.
+    const xScale = x + (1 - x) * easedStep
+    const yScale = y + (1 - y) * easedStep
+
+    animation.push({
+      transform: `scale(${xScale}, ${yScale})`,
+    })
+
+    // And now the inverse for the contents.
+    const invXScale = 1 / xScale
+    const invYScale = 1 / yScale
+    inverseAnimation.push({
+      transform: `scale(${invXScale}, ${invYScale})`,
+    })
+  }
+
+  console.log(isEntrance ? animation : inverseAnimation)
+
+  return isEntrance ? animation : inverseAnimation
 }

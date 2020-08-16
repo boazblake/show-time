@@ -306,3 +306,14 @@ export const shutterOutRight = [
     opacity: 0,
   },
 ]
+
+export const focusInContract = [
+  {
+    filter: "blur(12px)",
+    opacity: 0,
+  },
+  {
+    filter: "blur(0)",
+    opacity: 1,
+  },
+]

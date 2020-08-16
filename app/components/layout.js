@@ -1,4 +1,5 @@
 import { HomeToolbar, EventToolbar, Sidebar, Hamburger } from "Components"
+import { Animate, createKeyframeAnimation } from "Styles"
 
 const Header = () => {
   const getRoute = (mdl) => mdl.State.route.id
@@ -21,7 +22,13 @@ export const Layout = () => {
           m(".frow row", [m(Header, { mdl }), m(Hamburger, { mdl })])
         ),
         mdl.Sidebar.isShowing()
-          ? m(Sidebar, { mdl })
+          ? m(Sidebar, {
+              oncreate: ({ dom }) =>
+                Animate(createKeyframeAnimation(true)({ dom }))({ dom }),
+              onbeforeremove: ({ dom }) =>
+                Animate(createKeyframeAnimation(false)({ dom }))({ dom }),
+              mdl,
+            })
           : [m(".lt-body", children)],
         m(".lt-footer", "FOOTER"),
       ]),

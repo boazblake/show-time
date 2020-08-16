@@ -12,10 +12,14 @@
   "lt-footer lt-footer lt-footer lt-footer"
 }
 
+.notifier {
+  position: relative;
+}
+
 .notif-count {
   @extend %badge;
   top: 2px;
-  right: 34px;
+  right: -10px;
   background-color: var(--warning);
 }
 
