@@ -2,6 +2,7 @@ import { Calendar, Day, Editor } from "Components"
 import { dayModel } from "Models"
 import { datesAreSame } from "Utils"
 import {
+  Animate,
   AnimatePage,
   fadeInUp,
   shutterInTop,
@@ -43,18 +44,30 @@ export const Home = () => {
           m(`.frow.max-width`, [
             m(
               `${mdl.Events.createNewEvent() ? ".col-xs-1-1" : ".col-xs-2-3"}`,
-              {
-                oncreate: AnimatePage(shutterInLeft),
-              },
               m(
                 `button.btn.max-width.height-100`,
                 {
-                  oncreate: AnimatePage(shutterInLeft),
-                  onbeforeremove: AnimatePage(shutterOutLeft),
+                  // key: new Date(),
                   onclick: (e) =>
                     mdl.Events.createNewEvent(!mdl.Events.createNewEvent()),
                 },
-                mdl.Events.createNewEvent() ? "Cancel" : "Create New Event"
+                mdl.Events.createNewEvent()
+                  ? m(
+                      "",
+                      {
+                        oncreate: Animate(shutterInLeft),
+                        onbeforeremove: Animate(shutterOutLeft),
+                      },
+                      "Cancel"
+                    )
+                  : m(
+                      "",
+                      {
+                        oncreate: Animate(shutterInLeft),
+                        onbeforeremove: Animate(shutterOutLeft),
+                      },
+                      "Create New Event"
+                    )
               )
             ),
             !mdl.Events.createNewEvent() &&
@@ -63,8 +76,8 @@ export const Home = () => {
                 m(
                   "button.btn.max-width.height-100",
                   {
-                    oncreate: AnimatePage(shutterInRight),
-                    onbeforeremove: AnimatePage(shutterOutRight),
+                    oncreate: Animate(shutterInRight),
+                    onbeforeremove: Animate(shutterOutRight),
                     onclick: (e) => mdl.Day.listView(!mdl.Day.listView()),
                   },
                   mdl.Day.listView() ? "Hour View" : "List View"
