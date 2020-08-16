@@ -5,6 +5,8 @@ import { Fp } from "Fp"
 import { getMyLocationTask } from "Utils"
 Fp.configure()
 
+getMyLocationTask(Model).fork(log("location err"), log("location s"))
+
 const root = document.body
 let winW = window.innerWidth
 
@@ -55,8 +57,6 @@ if (sessionStorage.getItem("shindigit-user")) {
   Model.User = JSON.parse(sessionStorage.getItem("shindigit-user"))
   Model.State.isAuth(true)
   Model.User.profile && Model.State.is24Hrs(Model.User.profile.is24Hrs)
-
-  getMyLocationTask(Model).fork(log("location err"), log("location s"))
 
   if (localStorage.getItem("shindigit-eventId")) {
     Model.Events.currentEventId(localStorage.getItem("shindigit-eventId"))
