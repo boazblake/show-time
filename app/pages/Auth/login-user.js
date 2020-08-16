@@ -39,9 +39,6 @@ const loginUser = (mdl) => (data) => {
     )
     .chain((account) => {
       mdl.User.account = account
-
-      console.log(getMyLocationTask(mdl).fork(log("wtf"), log("wtf")))
-
       return getMyLocationTask(mdl)
     })
     .fork(onError, onSuccess(mdl))

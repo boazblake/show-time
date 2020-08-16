@@ -6,8 +6,8 @@ const Navbar = () => {
   return {
     view: ({ attrs: { mdl, date } }) => {
       return m(
-        ".cal-navbar",
-        m(".frow width-100 ", [
+        ".cal-navbar width-100",
+        m(".frow ", [
           m(".frow width-100 row-between", [
             m(
               m.route.Link,
@@ -134,7 +134,7 @@ export const Calendar = () => {
       let matrix = createCalendar(mdl, invites, date)
       return m(
         ".calendar",
-        m(".frow frow-container", [
+        m(".frow", [
           m(Navbar, { mdl, date }),
           m(DaysOfWeek, { mdl }),
           m(

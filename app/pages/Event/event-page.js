@@ -316,13 +316,14 @@ export const Event = ({ attrs: { mdl } }) => {
         state.status == "loading" && m(".", "Fetching Event..."),
         state.status == "failed" && m(".code", state.error.message),
         state.status == "success" &&
-          m(".centered-column", [
-            m("h1.event-page-title", data.event.title),
-            m(
-              "h3",
-              `${data.event.date} | ${data.event.startTime} - ${data.event.endTime}`
-            ),
-
+          m(".width-100", [
+            m(".event-page-heading", [
+              m("h1.event-page-title.text-center", data.event.title),
+              m(
+                "h3.event-page-subheading",
+                `${data.event.date} | ${data.event.startTime} - ${data.event.endTime}`
+              ),
+            ]),
             m(".accordian", [
               m(
                 AccordianItem,

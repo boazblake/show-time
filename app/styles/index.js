@@ -27,7 +27,6 @@ export const AnimatePage = (animation, opts) => ({ dom }) => {
 }
 
 export const Animate = (animation, opts) => ({ dom }) => {
-  console.log(animation)
   return dom
     .animate(animation, { ...defaults, ...opts })
     .finished.then(transitionEndPromise(dom))
@@ -86,8 +85,6 @@ export const createKeyframeAnimation = (isEntrance) => ({ dom }) => {
       transform: `scale(${invXScale}, ${invYScale})`,
     })
   }
-
-  console.log(isEntrance ? animation : inverseAnimation)
 
   return isEntrance ? animation : inverseAnimation
 }

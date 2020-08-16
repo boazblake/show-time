@@ -27,4 +27,3 @@ export const getBoundsTask = (http) => (mdl) => (coords) =>
         `${southwest.lng},${southwest.lat},${northeast.lng},${northeast.lat}`
       )
     )
-    .map(log("wtf"))

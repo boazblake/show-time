@@ -42,4 +42,3 @@ export const getMyLocationTask = (mdl) =>
       return getBoundsFromLatLong(mdl)(coords)
     })
     .map(mdl.Map.bounds)
-    .map(log("wtf"))

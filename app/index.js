@@ -56,7 +56,7 @@ if (sessionStorage.getItem("shindigit-user")) {
   Model.State.isAuth(true)
   Model.User.profile && Model.State.is24Hrs(Model.User.profile.is24Hrs)
 
-  getMyLocationTask(Model).fork(log("location err"), log("location s"))
+  getMyLocationTask(Model).fork(log("location err"), log("location: "))
 
   if (localStorage.getItem("shindigit-eventId")) {
     Model.Events.currentEventId(localStorage.getItem("shindigit-eventId"))
