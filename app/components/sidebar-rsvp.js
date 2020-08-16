@@ -1,5 +1,5 @@
 import { EmptyState, InviteRSVP } from "Components"
-import { getTimeFormat } from "Utils"
+import { getTimeFormat, getTheme } from "Utils"
 
 export const SidebarRSVP = () => {
   return {
