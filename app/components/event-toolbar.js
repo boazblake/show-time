@@ -6,6 +6,7 @@ export const EventToolbar = () => {
       m(
         `button.col-xs-1-1.btn-${getTheme(mdl)}`,
         {
+          disabled: mdl.Sidebar.isShowing(),
           onclick: (e) => {
             localStorage.removeItem("shindigit-eventId")
             mdl.State.toAnchor(M(mdl.Events.currentEventStart()).format("HH"))

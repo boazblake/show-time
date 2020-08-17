@@ -312,16 +312,24 @@ export const Event = ({ attrs: { mdl } }) => {
   return {
     oninit: load,
     view: () => {
+      console.log(data.event)
       return m(".event-page", [
         state.status == "loading" && m(".", "Fetching Event..."),
         state.status == "failed" && m(".code", state.error.message),
         state.status == "success" &&
           m(".width-100", [
-            m(".event-page-heading", [
+            m(".event-page-heading width-100", [
               m("h1.event-page-title.text-center", data.event.title),
               m(
-                "h3.event-page-subheading",
-                `${data.event.date} | ${data.event.startTime} - ${data.event.endTime}`
+                ".frow row width-100",
+                m(
+                  "h3.event-page-subheading.col-xs-1-2",
+                  `${M(data.event.start).format("ddd MM-DD-YYYY")} | `
+                ),
+                m(
+                  "h3.event-page-subheading.col-xs-1-2",
+                  `${data.event.startTime} - ${data.event.endTime}`
+                )
               ),
             ]),
             m(".accordian", [

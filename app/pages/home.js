@@ -29,7 +29,8 @@ export const Home = () => {
   return {
     view: ({ attrs: { mdl } }) => {
       return m(
-        ".frow",
+        ".home-page",
+        (".frow",
         mdl.Invites.state.status == "loading" &&
           m("p.full-width", "FETCHING EVENTS..."),
         mdl.Invites.state.status == "failed" &&
@@ -102,7 +103,7 @@ export const Home = () => {
                   invites: getSelectedDayInvites(mdl)(mdl.Invites.withRSVP()),
                 }),
               ],
-        ]
+        ])
       )
     },
   }

@@ -84,7 +84,7 @@ const ListView = () => {
     view: ({ attrs: { mdl, invites } }) =>
       invites.map((invite) => {
         return m(
-          ".invite-list-container",
+          ".invite-list-item-container",
           m(
             ".frow-container",
             m(
