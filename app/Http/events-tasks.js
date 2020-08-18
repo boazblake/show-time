@@ -38,14 +38,14 @@ const toEventviewModel = (mdl) => ({
 
 const toCommentViewModel = ({
   message,
-  sender,
+  name,
   userId,
   eventId,
   created,
   objectId,
 }) => ({
   message,
-  sender,
+  name,
   userId,
   eventId,
   created,
