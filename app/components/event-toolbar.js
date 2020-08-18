@@ -9,6 +9,8 @@ export const EventToolbar = () => {
           disabled: mdl.Sidebar.isShowing(),
           onclick: (e) => {
             localStorage.removeItem("shindigit-eventId")
+            localStorage.removeItem("shindigit-eventStart")
+            mdl.Invites.fetch(true)
             mdl.State.toAnchor(M(mdl.Events.currentEventStart()).format("HH"))
             m.route.set(
               `/${hyphenize(mdl.User.name)}/${M(

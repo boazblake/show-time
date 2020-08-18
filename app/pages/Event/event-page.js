@@ -248,7 +248,7 @@ export const Event = ({ attrs: { mdl } }) => {
 
     let comment = {
       message: state.comments.message,
-      sender: mdl.User.name,
+      name: mdl.User.name,
       userId: mdl.User.objectId,
       eventId: mdl.Events.currentEventId(),
     }
@@ -575,7 +575,7 @@ export const Event = ({ attrs: { mdl } }) => {
                                   m(
                                     "label.event-comment-name",
                                     m(".frow row-between", [
-                                      m("span", comment.sender),
+                                      m("span", comment.name),
                                       m(
                                         "span",
                                         M(comment.created).format(
