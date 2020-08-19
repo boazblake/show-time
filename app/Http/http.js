@@ -53,7 +53,6 @@ const HttpTask = (_headers) => (method) => (mdl) => (url) => (body) => {
         method,
         url,
         headers: {
-          "content-type": "application/json",
           ..._headers,
         },
         body,

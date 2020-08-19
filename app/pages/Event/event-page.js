@@ -175,23 +175,14 @@ export const Event = ({ attrs: { mdl } }) => {
       state.items.name = ""
       state.items.quantity = ""
       updateEvent(eventData)
+      state.items.isSubmitted(false)
     }
 
     state.items.isSubmitted(true)
     updateItemTask(HTTP)(mdl)(item)
       .chain((item) =>
         item.guestId
-          ? Task.of((event) => (user) => {
-              event, user
-            })
-              .ap(
-                relateItemsToEventTask(HTTP)(mdl)(mdl.Events.currentEventId())([
-                  item.objectId,
-                ])
-              )
-              .ap(
-                relateItemsToUserTask(HTTP)(mdl)(item.guestId)([item.objectId])
-              )
+          ? relateItemsToUserTask(HTTP)(mdl)(item.guestId)([item.objectId])
           : unRelateItemToUserTask(HTTP)(mdl)(mdl.User.objectId)(item.objectId)
       )
       .chain((_) => loadEventTask(HTTP)(mdl)(mdl.Events.currentEventId()))

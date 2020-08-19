@@ -1579,10 +1579,10 @@ var InviteRSVP = function InviteRSVP() {
       // console.log("guest", guest)
       return m(".frow justify-evenly", getResponse(guest).map(function (response, idx) {
         return m(response, {
-          class: guest.hostId == mdl.User.objectId ? "clickable" : "",
+          class: guest.guestId == mdl.User.objectId ? "clickable" : "",
           fill: "var(--".concat(_Utils.inviteOptions[idx], "-invite)"),
           onclick: function onclick(e) {
-            if (guest.hostId == mdl.User.objectId) {
+            if (guest.guestId == mdl.User.objectId) {
               guest.status = idx;
               updateInvite(mdl)(guest)(reload);
             }
@@ -3601,9 +3601,7 @@ var HttpTask = function HttpTask(_headers) {
             return m.request(_objectSpread({
               method: method,
               url: url,
-              headers: _objectSpread({
-                "content-type": "application/json"
-              }, _headers),
+              headers: _objectSpread({}, _headers),
               body: body,
               withCredentials: false
             }, xhrProgress(mdl))).then(parseHttpSuccess(mdl)(res), parseHttpError(mdl)(rej));
@@ -4173,7 +4171,7 @@ var unRelateItemToUserTask = function unRelateItemToUserTask(http) {
   return function (mdl) {
     return function (userId) {
       return function (itemId) {
-        return http.backEnd.deleteTask(mdl)("data/Users/".concat(userId, "/items:Users?where=objectId%3D'").concat(itemId, "'"));
+        return http.backEnd.deleteTask(mdl)("data/Users/".concat(userId, "/items?whereClause=objectId%3D'").concat(encodeURI(itemId), "'"));
       };
     };
   };
@@ -4923,15 +4921,12 @@ var Event = function Event(_ref) {
         state.items.name = "";
         state.items.quantity = "";
         updateEvent(eventData);
+        state.items.isSubmitted(false);
       };
 
       state.items.isSubmitted(true);
       (0, _Http.updateItemTask)(_Http.HTTP)(mdl)(item).chain(function (item) {
-        return item.guestId ? _data.default.of(function (event) {
-          return function (user) {
-            event, user;
-          };
-        }).ap((0, _Http.relateItemsToEventTask)(_Http.HTTP)(mdl)(mdl.Events.currentEventId())([item.objectId])).ap((0, _Http.relateItemsToUserTask)(_Http.HTTP)(mdl)(item.guestId)([item.objectId])) : (0, _Http.unRelateItemToUserTask)(_Http.HTTP)(mdl)(mdl.User.objectId)(item.objectId);
+        return item.guestId ? (0, _Http.relateItemsToUserTask)(_Http.HTTP)(mdl)(item.guestId)([item.objectId]) : (0, _Http.unRelateItemToUserTask)(_Http.HTTP)(mdl)(mdl.User.objectId)(item.objectId);
       }).chain(function (_) {
         return (0, _Http.loadEventTask)(_Http.HTTP)(mdl)(mdl.Events.currentEventId());
       }).fork(onError, onSuccess);
