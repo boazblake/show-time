@@ -5,11 +5,13 @@ import {
   getUserProfileTask,
   getItemsByEventIdTask,
   getCommentsByEventIdTask,
+  addItemTask,
 } from "Http"
 import { traverse, head, map } from "ramda"
 import { getHour, getMin, getTimeFormat } from "Utils"
 
 const toEventviewModel = (mdl) => ({
+  hostId,
   objectId,
   start,
   end,
@@ -33,20 +35,21 @@ const toEventviewModel = (mdl) => ({
     location,
     inPerson,
     latlong,
+    hostId,
   }
 }
 
 const toCommentViewModel = ({
   message,
   name,
-  userId,
+  guestId,
   eventId,
   created,
   objectId,
 }) => ({
   message,
   name,
-  userId,
+  guestId,
   eventId,
   created,
   objectId,
@@ -59,7 +62,7 @@ const toGuestModel = (invite) => ({ name, email }) => ({
 })
 
 const getGuestsTask = (http) => (mdl) => (invite) =>
-  getUserProfileTask(http)(mdl)(invite.userId)
+  getUserProfileTask(http)(mdl)(invite.guestId)
     .map(head)
     .map(toGuestModel(invite))
 
@@ -99,7 +102,7 @@ export const deleteEventTask = (http) => (mdl) => (id) =>
       http.backEnd.deleteTask(mdl)(`data/bulk/Comments?where=eventId%3D'${id}'`)
     )
 
-export const submitEventTask = (http) => (mdl) => ({
+export const createEventTask = (http) => (mdl) => ({
   allDay,
   startTime,
   endTime,
@@ -124,15 +127,15 @@ export const submitEventTask = (http) => (mdl) => ({
       inPerson,
       location,
       latlong,
-      createdBy: mdl.User.objectId,
+      hostId: mdl.User.objectId,
     })
-    .chain(({ objectId, ownerId, end, start, title }) => {
+    .chain(({ objectId, hostId, end, start, title }) => {
       let eventId = objectId
-      let userId = ownerId
       let status = 1
       return createInviteTask(http)(mdl)({
         eventId,
-        userId,
+        hostId,
+        guestId: hostId,
         status,
         end,
         start,
@@ -149,14 +152,39 @@ export const submitEventTask = (http) => (mdl) => ({
         }))
           .ap(
             http.backEnd.postTask(mdl)(
-              `data/Users/${mdl.User.objectId}/invites%3AInvites%3An`
+              `data/Users/${mdl.User.objectId}/invites`
             )([inviteId])
           )
-          .ap(
-            http.backEnd.postTask(mdl)(
-              `data/Events/${eventId}/invites%3AInvites%3An`
-            )([inviteId])
-          )
+          .ap(relateInvitesToEventTask(http)(mdl)(eventId)([inviteId]))
       })
     })
 }
+
+export const addItemToEventTask = (http) => (mdl) => (eventId) => (item) =>
+  addItemTask(http)(mdl)(item).chain(({ objectId }) =>
+    relateItemsToEventTask(http)(mdl)(eventId)([objectId])
+  )
+
+export const relateItemsToEventTask = (http) => (mdl) => (eventId) => (
+  itemIds
+) => http.backEnd.putTask(mdl)(`data/Events/${eventId}/items`)(itemIds)
+
+// export const unRelateItemsToEventTask = (http) => (mdl) => (eventId) => (
+//   itemIds
+// ) => http.backEnd.deleteTask(mdl)(`data/Events/${eventId}/items`)(itemIds)
+
+export const relateCommentsToEventTask = (http) => (mdl) => (eventId) => (
+  commentIds
+) => http.backEnd.putTask(mdl)(`data/Events/${eventId}/comments`)(commentIds)
+
+// export const unRelateCommentsToEventTask = (http) => (mdl) => (eventId) => (
+//   commentIds
+// ) => http.backEnd.deleteTask(mdl)(`data/Events/${eventId}/comments`)(commentIds)
+
+export const relateInvitesToEventTask = (http) => (mdl) => (eventId) => (
+  inviteIds
+) => http.backEnd.putTask(mdl)(`data/Events/${eventId}/invites`)(inviteIds)
+
+// export const unRelateInvitesToEventTask = (http) => (mdl) => (eventId) => (
+//   inviteIds
+// ) => http.backEnd.deleteTask(mdl)(`data/Events/${eventId}/invites`)(inviteIds)

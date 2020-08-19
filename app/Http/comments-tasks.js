@@ -27,13 +27,13 @@ export const getCommentsByEventIdTask = (http) => (mdl) => (eventId) =>
     `data/Comments?pageSize=100&where=eventId%3D'${eventId}'&sortBy=created%20asc`
   )
 
-export const getCommentsByUserIdTask = (http) => (mdl) => (userId) =>
+export const getCommentsByguestIdTask = (http) => (mdl) => (guestId) =>
   http.backEnd.getTask(mdl)(
-    `data/Comments?pageSize=100&where=userId%3D'${userId}'&sortBy=created%20asc`
+    `data/Comments?pageSize=100&where=guestId%3D'${guestId}'&sortBy=created%20asc`
   )
 
-export const deleteBulkCommentsTask = (http) => (mdl) => (userId) =>
-  http.backEnd.deleteTask(mdl)(`data/Comments?where=userId%3D'${userId}'`)
+export const deleteBulkCommentsTask = (http) => (mdl) => (guestId) =>
+  http.backEnd.deleteTask(mdl)(`data/Comments?where=guestId%3D'${guestId}'`)
 
 export const deleteCommentTask = (http) => (mdl) => (id) =>
   http.backEnd.deleteTask(mdl)(`data/Comments/${id}`)

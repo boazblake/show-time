@@ -6,13 +6,16 @@ import {
   loadEventTask,
   deleteInviteTask,
   updateInviteTask,
-  addItemTask,
+  addItemToEventTask,
   deleteItemTask,
+  relateItemsToEventTask,
   deleteEventTask,
   updateItemTask,
   sendInviteTask,
   addCommentTask,
   deleteCommentTask,
+  relateItemsToUserTask,
+  unRelateItemToUserTask,
 } from "Http"
 import { AccordianItem, InviteRSVP } from "Components"
 import {
@@ -25,7 +28,7 @@ import Task from "data.task"
 import { validateItemTask, validateCommentTask } from "./validations"
 
 const isUserOrUnclaimed = (mdl) => (item) =>
-  [mdl.User.objectId, null].includes(item.userId)
+  [mdl.User.objectId, null].includes(item.guestId)
 
 export const Event = ({ attrs: { mdl } }) => {
   const state = {
@@ -84,7 +87,7 @@ export const Event = ({ attrs: { mdl } }) => {
   }
 
   const getUserFromId = (id) =>
-    pluck("name", data.guests.filter(propEq("userId", id)))
+    pluck("name", data.guests.filter(propEq("guestId", id)))
 
   const updateEvent = ({ event, guests, items, comments }) => {
     data.event = event
@@ -128,7 +131,7 @@ export const Event = ({ attrs: { mdl } }) => {
 
     let invite = isLast
       ? data.guests[0]
-      : data.guests.filter(propEq("userId", mdl.User.objectId))[0]
+      : data.guests.filter(propEq("guestId", mdl.User.objectId))[0]
 
     if (isLast) {
       pluck("objectId", data.items)
@@ -137,8 +140,8 @@ export const Event = ({ attrs: { mdl } }) => {
         .fork(onError, onSuccess)
     } else {
       data.items
-        .filter(propEq("userId", mdl.User.objectId))
-        .map(set(lensProp("userId"), null))
+        .filter(propEq("guestId", mdl.User.objectId))
+        .map(set(lensProp("guestId"), null))
         .traverse(updateItemTask(HTTP)(mdl), Task.of)
         .chain(() => deleteInviteTask(HTTP)(mdl)(invite.objectId))
         .fork(onError, onSuccess)
@@ -176,6 +179,21 @@ export const Event = ({ attrs: { mdl } }) => {
 
     state.items.isSubmitted(true)
     updateItemTask(HTTP)(mdl)(item)
+      .chain((item) =>
+        item.guestId
+          ? Task.of((event) => (user) => {
+              event, user
+            })
+              .ap(
+                relateItemsToEventTask(HTTP)(mdl)(mdl.Events.currentEventId())([
+                  item.objectId,
+                ])
+              )
+              .ap(
+                relateItemsToUserTask(HTTP)(mdl)(item.guestId)([item.objectId])
+              )
+          : unRelateItemToUserTask(HTTP)(mdl)(mdl.User.objectId)(item.objectId)
+      )
       .chain((_) => loadEventTask(HTTP)(mdl)(mdl.Events.currentEventId()))
       .fork(onError, onSuccess)
   }
@@ -227,7 +245,7 @@ export const Event = ({ attrs: { mdl } }) => {
 
     state.items.isSubmitted(true)
     validateItemTask(item)(data)
-      .chain(addItemTask(HTTP)(mdl))
+      .chain(addItemToEventTask(HTTP)(mdl)(mdl.Events.currentEventId()))
       .chain((_) => loadEventTask(HTTP)(mdl)(mdl.Events.currentEventId()))
       .fork(onError, onSuccess)
   }
@@ -249,7 +267,7 @@ export const Event = ({ attrs: { mdl } }) => {
     let comment = {
       message: state.comments.message,
       name: mdl.User.name,
-      userId: mdl.User.objectId,
+      guestId: mdl.User.objectId,
       eventId: mdl.Events.currentEventId(),
     }
 
@@ -312,7 +330,7 @@ export const Event = ({ attrs: { mdl } }) => {
   return {
     oninit: load,
     view: () => {
-      console.log(data.event)
+      // console.log(data.event)
       return m(".event-page", [
         state.status == "loading" && m(".", "Fetching Event..."),
         state.status == "failed" && m(".code", state.error.message),
@@ -385,7 +403,7 @@ export const Event = ({ attrs: { mdl } }) => {
                         reload: () => mdl.Invites.fetch(true),
                         guest: head(
                           data.guests.filter(
-                            propEq("userId", mdl.User.objectId)
+                            propEq("guestId", mdl.User.objectId)
                           )
                         ),
                         updateInvite,
@@ -393,7 +411,7 @@ export const Event = ({ attrs: { mdl } }) => {
                     ),
                   ]),
                   data.guests
-                    .filter(compose(not, propEq("userId", mdl.User.objectId)))
+                    .filter(compose(not, propEq("guestId", mdl.User.objectId)))
                     .map((guest) =>
                       m(".frow row-start", [
                         m(".col-xs-1-2", guest.name),
@@ -461,26 +479,26 @@ export const Event = ({ attrs: { mdl } }) => {
                           m("h4", item.name),
                           m(
                             "label",
-                            item.userId
+                            item.guestId
                               ? [
                                   m(
                                     "span.clickable.frow row-start",
                                     isUserOrUnclaimed(mdl)(item) &&
                                       m(MinusCircleLine, {
                                         onclick: (e) => {
-                                          item.userId = null
+                                          item.guestId = null
                                           updateItem(mdl)(item)
                                         },
                                         class: "smaller",
                                       }),
-                                    getUserFromId(item.userId)
+                                    getUserFromId(item.guestId)
                                   ),
                                 ]
                               : m(
                                   "i.clickable",
                                   {
                                     onclick: (e) => {
-                                      item.userId = mdl.User.objectId
+                                      item.guestId = mdl.User.objectId
                                       updateItem(mdl)(item)
                                     },
                                   },
@@ -557,14 +575,14 @@ export const Event = ({ attrs: { mdl } }) => {
                               ".frow column-center width-100 mb-40",
                               m(
                                 `.event-comments-message-container ${
-                                  mdl.User.objectId == comment.userId
+                                  mdl.User.objectId == comment.guestId
                                     ? "me"
                                     : "other"
                                 }`,
                                 m(".event-comments-message frow items-end", [
                                   m(".speech-bubble", [
                                     m("span.text-left", comment.message),
-                                    mdl.User.objectId == comment.userId &&
+                                    mdl.User.objectId == comment.guestId &&
                                       m(TimesCircleLine, {
                                         onclick: (e) =>
                                           deleteComment(mdl)(comment.objectId),

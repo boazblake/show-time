@@ -1,5 +1,5 @@
 import { BellLine, BarsLine, CloseLine } from "@mithril-icons/clarity/cjs"
-import { HTTP, getInvitesByUserIdTask } from "Http"
+import { HTTP, getInvitesByGuestIdTask } from "Http"
 import { Animate, puffOutCenter, shake, focusInContract } from "Styles"
 
 export const Hamburger = () => {
@@ -20,7 +20,7 @@ export const Hamburger = () => {
       mdl.Invites.state.status = "success"
     }
 
-    getInvitesByUserIdTask(HTTP)(mdl)(mdl.User.objectId).fork(
+    getInvitesByGuestIdTask(HTTP)(mdl)(mdl.User.objectId).fork(
       onError,
       onSuccess
     )

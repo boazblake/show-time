@@ -1,5 +1,5 @@
 import { EventForm } from "./event-form"
-import { HTTP, submitEventTask } from "Http"
+import { HTTP, createEventTask } from "Http"
 import { validateTask } from "./validations"
 import { Animate, slideInDown, slideOutUp } from "Styles"
 
@@ -67,7 +67,7 @@ export const Editor = ({ attrs: { mdl } }) => {
 
     state.isSubmitted = true
     validateTask(data)
-      .chain(submitEventTask(HTTP)(mdl))
+      .chain(createEventTask(HTTP)(mdl))
       .fork(onError, onSuccess)
   }
 

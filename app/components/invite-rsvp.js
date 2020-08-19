@@ -36,14 +36,15 @@ const getResponse = ({ status }) => {
 export const InviteRSVP = () => {
   return {
     view: ({ attrs: { mdl, guest, reload } }) => {
+      // console.log("guest", guest)
       return m(
         ".frow justify-evenly",
         getResponse(guest).map((response, idx) =>
           m(response, {
-            class: guest.userId == mdl.User.objectId ? "clickable" : "",
+            class: guest.hostId == mdl.User.objectId ? "clickable" : "",
             fill: `var(--${inviteOptions[idx]}-invite)`,
             onclick: (e) => {
-              if (guest.userId == mdl.User.objectId) {
+              if (guest.hostId == mdl.User.objectId) {
                 guest.status = idx
                 updateInvite(mdl)(guest)(reload)
               }

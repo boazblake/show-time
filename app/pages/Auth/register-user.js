@@ -5,7 +5,7 @@ import {
   loginTask,
   registerTask,
   createProfileTask,
-  linkProfileTask,
+  relateProfileToUserTask,
 } from "Http"
 
 const data = {
@@ -76,7 +76,9 @@ export const registerUser = (mdl) => (data) => {
         .chain((_) => createProfileTask(HTTP)(mdl))
         .chain((profile) => {
           mdl.User.profile = profile
-          return linkProfileTask(HTTP)(mdl)
+          return relateProfileToUserTask(HTTP)(mdl)(mdl.User.objectId)(
+            profile.objectId
+          )
         })
         .chain((_) => getMyLocationTask(mdl))
     )

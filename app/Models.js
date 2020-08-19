@@ -44,12 +44,6 @@ export const dayModel = (mdl) =>
     return day
   }, {})
 
-export const inviteModel = () => ({
-  eventId: "",
-  status: "",
-  userId: "",
-})
-
 const Events = {
   currentEventId: Stream(null),
   currentEventStart: Stream(null),

@@ -1,44 +1,21 @@
-import Task from "data.task"
-
-export const addItemTask = (http) => (mdl) => (item) => {
-  return http.backEnd
-    .postTask(mdl)("data/Items")(item)
-    .chain(({ objectId }) => {
-      let itemId = objectId
-      return Task.of((user) => (event) => ({
-        user,
-        event,
-      }))
-        .ap(
-          http.backEnd.postTask(mdl)(
-            `data/Users/${mdl.User.objectId}/items%3AItems%3An`
-          )([itemId])
-        )
-        .ap(
-          http.backEnd.postTask(mdl)(
-            `data/Events/${mdl.Events.currentEventId()}/items%3AItems%3An`
-          )([itemId])
-        )
-    })
-}
+export const addItemTask = (http) => (mdl) => (item) =>
+  http.backEnd.postTask(mdl)("data/Items")(item)
 
 export const getItemsByEventIdTask = (http) => (mdl) => (eventId) =>
   http.backEnd.getTask(mdl)(
     `data/Items?pageSize=100&where=eventId%3D'${eventId}'&sortBy=name%20asc`
   )
 
-export const getItemsByUserIdTask = (http) => (mdl) => (userId) =>
+export const getItemsByGuestIdTask = (http) => (mdl) => (guestId) =>
   http.backEnd.getTask(mdl)(
-    `data/Items?pageSize=100&where=userId%3D'${userId}'&sortBy=name%20asc`
+    `data/Items?pageSize=100&where=guestId%3D'${guestId}'&sortBy=name%20asc`
   )
 
-export const deleteBulkItemsTask = (http) => (mdl) => (userId) =>
-  http.backEnd.deleteTask(mdl)(
-    `data/Items?where=userId%3D'${userId}'&sortBy=name%20asc`
-  )
+export const deleteBulkItemsTask = (http) => (mdl) => (guestId) =>
+  http.backEnd.deleteTask(mdl)(`data/Items?where=guestId%3D'${guestId}'`)
 
-export const deleteItemTask = (http) => (mdl) => (id) =>
-  http.backEnd.deleteTask(mdl)(`data/Items/${id}`)
+export const deleteItemTask = (http) => (mdl) => (itemId) =>
+  http.backEnd.deleteTask(mdl)(`data/Items/${itemId}`)
 
 export const updateItemTask = (http) => (mdl) => (item) =>
   http.backEnd.putTask(mdl)(`data/Items/${item.objectId}`)(item)

@@ -1,7 +1,10 @@
 import { map } from "ramda"
-import { findUserByEmailTask } from "Http"
+import {
+  findUserByEmailTask,
+  relateInvitesToEventTask,
+  relateInvitesToUserTask,
+} from "Http"
 import Task from "data.task"
-import { log } from "Utils"
 
 export const toInviteViewModel = ({
   start,
@@ -10,7 +13,8 @@ export const toInviteViewModel = ({
   objectId,
   eventId,
   status,
-  userId,
+  hostId,
+  guestId,
   updated,
 }) => ({
   start: M(start),
@@ -19,17 +23,27 @@ export const toInviteViewModel = ({
   eventId,
   title,
   status,
-  userId,
+  hostId,
+  guestId,
   updated,
 })
 
-const toInviteDto = ({ start, end, title, eventId, status, userId }) => ({
+const toInviteDto = ({
+  start,
+  end,
+  title,
+  eventId,
+  status,
+  guestId,
+  hostId,
+}) => ({
   start,
   end,
   eventId,
   title,
   status,
-  userId,
+  guestId,
+  hostId,
 })
 
 export const updateInviteTask = (http) => (mdl) => (invite) =>
@@ -37,10 +51,10 @@ export const updateInviteTask = (http) => (mdl) => (invite) =>
     .putTask(mdl)(`data/Invites/${invite.objectId}`)(toInviteDto(invite))
     .map(toInviteViewModel)
 
-export const getInvitesByUserIdTask = (http) => (mdl) => (userId) =>
+export const getInvitesByGuestIdTask = (http) => (mdl) => (guestId) =>
   http.backEnd
     .getTask(mdl)(
-      `data/Invites?pageSize=100&where=userId%3D'${userId}'&sortBy=start%20asc`
+      `data/Invites?pageSize=100&where=guestId%3D'${guestId}'&sortBy=start%20asc`
     )
     .map(map(toInviteViewModel))
 
@@ -53,13 +67,14 @@ export const getInvitesTaskByEventId = (http) => (mdl) => (eventId) =>
 
 export const sendInviteTask = (http) => (mdl) => (
   guestEmail,
-  { eventId, start, end, title, allDay, inPerson, location, latlong }
+  { hostId, eventId, start, end, title, allDay, inPerson, location, latlong }
 ) =>
   findUserByEmailTask(http)(mdl)(guestEmail).chain((users) =>
     users.any()
       ? createInviteTask(http)(mdl)({
           eventId,
-          userId: users[0].objectId,
+          guestId: users[0].objectId,
+          hostId,
           status: 2,
           end,
           start,
@@ -68,13 +83,22 @@ export const sendInviteTask = (http) => (mdl) => (
           inPerson,
           location,
           latlong,
-        })
+        }).chain(({ objectId }) =>
+          Task.of((event) => (user) => {
+            event, user
+          })
+            .ap(
+              relateInvitesToUserTask(http)(mdl)(users[0].objectId)([objectId])
+            )
+            .ap(relateInvitesToEventTask(http)(mdl)(eventId)([objectId]))
+        )
       : Task.rejected("No User with that email")
   )
 
 export const createInviteTask = (http) => (mdl) => ({
   eventId,
-  userId,
+  guestId,
+  hostId,
   status,
   end,
   start,
@@ -86,7 +110,8 @@ export const createInviteTask = (http) => (mdl) => ({
 }) =>
   http.backEnd.postTask(mdl)("data/Invites")({
     eventId,
-    userId,
+    guestId,
+    hostId,
     status,
     end,
     start,
