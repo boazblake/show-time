@@ -1,5 +1,15 @@
-import { getTimeFormat, jsonCopy, hyphenize, getTheme } from "Utils"
-import { propEq, compose, not, head, pluck, set, lensProp } from "ramda"
+import { getTimeFormat, jsonCopy, hyphenize, getTheme, log } from "Utils"
+import {
+  propEq,
+  compose,
+  map,
+  not,
+  head,
+  pluck,
+  set,
+  lensProp,
+  traverse,
+} from "ramda"
 import mapboxgl from "mapbox-gl/dist/mapbox-gl.js"
 import {
   HTTP,
@@ -8,14 +18,12 @@ import {
   updateInviteTask,
   addItemToEventTask,
   deleteItemTask,
-  relateItemsToEventTask,
   deleteEventTask,
-  updateItemTask,
   sendInviteTask,
   addCommentTask,
   deleteCommentTask,
-  relateItemsToUserTask,
-  unRelateItemToUserTask,
+  updateItemTask,
+  updateItemToGuestTask,
 } from "Http"
 import { AccordianItem, InviteRSVP } from "Components"
 import {
@@ -27,8 +35,7 @@ import {
 import Task from "data.task"
 import { validateItemTask, validateCommentTask } from "./validations"
 
-const isUserOrUnclaimed = (mdl) => (item) =>
-  [mdl.User.objectId, null].includes(item.guestId)
+const isUserItem = (mdl) => (item) => mdl.User.objectId == item.guestId
 
 export const Event = ({ attrs: { mdl } }) => {
   const state = {
@@ -50,6 +57,7 @@ export const Event = ({ attrs: { mdl } }) => {
       error: Stream(null),
       status: Stream("success"),
       isSubmitted: Stream(false),
+      updateGuest: Stream(false),
     },
     comments: {
       message: "",
@@ -143,6 +151,7 @@ export const Event = ({ attrs: { mdl } }) => {
         .filter(propEq("guestId", mdl.User.objectId))
         .map(set(lensProp("guestId"), null))
         .traverse(updateItemTask(HTTP)(mdl), Task.of)
+        .chain(traverse(Task.of, updateItemToGuestTask(HTTP)(mdl)))
         .chain(() => deleteInviteTask(HTTP)(mdl)(invite.objectId))
         .fork(onError, onSuccess)
     }
@@ -174,6 +183,7 @@ export const Event = ({ attrs: { mdl } }) => {
     const onSuccess = (eventData) => {
       state.items.name = ""
       state.items.quantity = ""
+      state.items.updateGuest(false)
       updateEvent(eventData)
       state.items.isSubmitted(false)
     }
@@ -181,9 +191,9 @@ export const Event = ({ attrs: { mdl } }) => {
     state.items.isSubmitted(true)
     updateItemTask(HTTP)(mdl)(item)
       .chain((item) =>
-        item.guestId
-          ? relateItemsToUserTask(HTTP)(mdl)(item.guestId)([item.objectId])
-          : unRelateItemToUserTask(HTTP)(mdl)(mdl.User.objectId)(item.objectId)
+        state.items.updateGuest()
+          ? updateItemToGuestTask(HTTP)(mdl)(item)
+          : Task.of(item)
       )
       .chain((_) => loadEventTask(HTTP)(mdl)(mdl.Events.currentEventId()))
       .fork(onError, onSuccess)
@@ -366,24 +376,27 @@ export const Event = ({ attrs: { mdl } }) => {
                   pills: [m(".pill", data.guests.length)],
                 },
                 m(".guests-container", [
-                  m(".frow row event-input-group", [
-                    m("input.col-xs-4-5", {
-                      placeholder: "email",
-                      type: "email",
-                      value: state.guests.email,
-                      oninput: (e) =>
-                        (state.guests.email = e.target.value.trim()),
-                    }),
+                  m(
+                    ".event-forms",
+                    m(".frow row event-input-group", [
+                      m("input.col-xs-4-5", {
+                        placeholder: "email",
+                        type: "email",
+                        value: state.guests.email,
+                        oninput: (e) =>
+                          (state.guests.email = e.target.value.trim()),
+                      }),
 
-                    m(
-                      `button.btn-${getTheme(mdl)}.col-xs-1-5.button-none`,
-                      { onclick: (e) => sendInvite(mdl) },
-                      "Invite"
-                    ),
+                      m(
+                        `button.btn-${getTheme(mdl)}.col-xs-1-5.button-none`,
+                        { onclick: (e) => sendInvite(mdl) },
+                        "Invite"
+                      ),
 
-                    state.guests.error() &&
-                      m("code.error-field", state.guests.error()),
-                  ]),
+                      state.guests.error() &&
+                        m("code.error-field", state.guests.error()),
+                    ])
+                  ),
 
                   m(".frow row-start", [
                     m(".col-xs-1-2", mdl.User.name),
@@ -474,10 +487,11 @@ export const Event = ({ attrs: { mdl } }) => {
                               ? [
                                   m(
                                     "span.clickable.frow row-start",
-                                    isUserOrUnclaimed(mdl)(item) &&
+                                    isUserItem(mdl)(item) &&
                                       m(MinusCircleLine, {
                                         onclick: (e) => {
                                           item.guestId = null
+                                          state.items.updateGuest(true)
                                           updateItem(mdl)(item)
                                         },
                                         class: "smaller",
@@ -490,6 +504,7 @@ export const Event = ({ attrs: { mdl } }) => {
                                   {
                                     onclick: (e) => {
                                       item.guestId = mdl.User.objectId
+                                      state.items.updateGuest(true)
                                       updateItem(mdl)(item)
                                     },
                                   },
@@ -498,7 +513,7 @@ export const Event = ({ attrs: { mdl } }) => {
                           )
                         ),
                         m(".col-xs-1-3 frow items-center", [
-                          isUserOrUnclaimed(mdl)(item) &&
+                          isUserItem(mdl)(item) &&
                             m(
                               ".events-remove-item",
                               m(
@@ -511,7 +526,7 @@ export const Event = ({ attrs: { mdl } }) => {
                               )
                             ),
                           m(".col-xs-2-3 frow column-center", [
-                            isUserOrUnclaimed(mdl)(item) &&
+                            isUserItem(mdl)(item) &&
                               m(
                                 ".col-xs-1-3",
                                 m(
@@ -526,7 +541,7 @@ export const Event = ({ attrs: { mdl } }) => {
                                 )
                               ),
                             m(".col-xs-1-3 text-center pb-2", item.quantity),
-                            isUserOrUnclaimed(mdl)(item) &&
+                            isUserItem(mdl)(item) &&
                               m(
                                 ".col-xs-1-3",
                                 m(
@@ -534,7 +549,7 @@ export const Event = ({ attrs: { mdl } }) => {
                                   m(AngleLine, {
                                     class: "decrement",
                                     onclick: (e) => {
-                                      item.quantity--
+                                      item.quantity > 0 && item.quantity--
                                       updateItem(mdl)(item)
                                     },
                                   })

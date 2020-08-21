@@ -3242,7 +3242,7 @@ exports.updateCommentTask = updateCommentTask;
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.relateInvitesToEventTask = exports.relateCommentsToEventTask = exports.relateItemsToEventTask = exports.addItemToEventTask = exports.createEventTask = exports.deleteEventTask = exports.loadEventTask = exports.getEventByIdTask = void 0;
+exports.relateInvitesToEventTask = exports.relateCommentsToEventTask = exports.relateItemsToEventTask = exports.updateItemToGuestTask = exports.addItemToEventTask = exports.createEventTask = exports.deleteEventTask = exports.loadEventTask = exports.getEventByIdTask = void 0;
 
 var _data = _interopRequireDefault(require("data.task"));
 
@@ -3459,6 +3459,16 @@ var addItemToEventTask = function addItemToEventTask(http) {
 };
 
 exports.addItemToEventTask = addItemToEventTask;
+
+var updateItemToGuestTask = function updateItemToGuestTask(http) {
+  return function (mdl) {
+    return function (item) {
+      return item.guestId ? (0, _Http.relateItemsToUserTask)(http)(mdl)(item.guestId)([item.objectId]) : (0, _Http.unRelateItemToUserTask)(http)(mdl)(mdl.User.objectId)(item.objectId);
+    };
+  };
+};
+
+exports.updateItemToGuestTask = updateItemToGuestTask;
 
 var relateItemsToEventTask = function relateItemsToEventTask(http) {
   return function (mdl) {
@@ -4283,6 +4293,9 @@ var Invites = {
   needRSVP: Stream([]),
   fetch: Stream(false)
 };
+var Items = {
+  updateItemAndGuest: Stream(false)
+};
 var Day = {
   data: dayModel({
     State: State
@@ -4321,7 +4334,8 @@ var Model = {
   User: User,
   Home: Home,
   Sidebar: Sidebar,
-  Map: Map
+  Map: Map,
+  Items: Items
 };
 var _default = Model;
 exports.default = _default;
@@ -4763,9 +4777,9 @@ var _validations = require("./validations");
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-var isUserOrUnclaimed = function isUserOrUnclaimed(mdl) {
+var isUserItem = function isUserItem(mdl) {
   return function (item) {
-    return [mdl.User.objectId, null].includes(item.guestId);
+    return mdl.User.objectId == item.guestId;
   };
 };
 
@@ -4796,7 +4810,8 @@ var Event = function Event(_ref) {
       show: Stream(false),
       error: Stream(null),
       status: Stream("success"),
-      isSubmitted: Stream(false)
+      isSubmitted: Stream(false),
+      updateGuest: Stream(false)
     },
     comments: {
       message: "",
@@ -4885,7 +4900,7 @@ var Event = function Event(_ref) {
         return (0, _Http.deleteEventTask)(_Http.HTTP)(mdl)(invite.eventId);
       }).fork(onError, onSuccess);
     } else {
-      data.items.filter((0, _ramda.propEq)("guestId", mdl.User.objectId)).map((0, _ramda.set)((0, _ramda.lensProp)("guestId"), null)).traverse((0, _Http.updateItemTask)(_Http.HTTP)(mdl), _data.default.of).chain(function () {
+      data.items.filter((0, _ramda.propEq)("guestId", mdl.User.objectId)).map((0, _ramda.set)((0, _ramda.lensProp)("guestId"), null)).traverse((0, _Http.updateItemTask)(_Http.HTTP)(mdl), _data.default.of).chain((0, _ramda.traverse)(_data.default.of, (0, _Http.updateItemToGuestTask)(_Http.HTTP)(mdl))).chain(function () {
         return (0, _Http.deleteInviteTask)(_Http.HTTP)(mdl)(invite.objectId);
       }).fork(onError, onSuccess);
     }
@@ -4920,13 +4935,14 @@ var Event = function Event(_ref) {
       var onSuccess = function onSuccess(eventData) {
         state.items.name = "";
         state.items.quantity = "";
+        state.items.updateGuest(false);
         updateEvent(eventData);
         state.items.isSubmitted(false);
       };
 
       state.items.isSubmitted(true);
       (0, _Http.updateItemTask)(_Http.HTTP)(mdl)(item).chain(function (item) {
-        return item.guestId ? (0, _Http.relateItemsToUserTask)(_Http.HTTP)(mdl)(item.guestId)([item.objectId]) : (0, _Http.unRelateItemToUserTask)(_Http.HTTP)(mdl)(mdl.User.objectId)(item.objectId);
+        return state.items.updateGuest() ? (0, _Http.updateItemToGuestTask)(_Http.HTTP)(mdl)(item) : _data.default.of(item);
       }).chain(function (_) {
         return (0, _Http.loadEventTask)(_Http.HTTP)(mdl)(mdl.Events.currentEventId());
       }).fork(onError, onSuccess);
@@ -5048,15 +5064,16 @@ var Event = function Event(_ref) {
       var coords = JSON.parse(data.event.latlong);
 
       var createMarker = function createMarker() {
-        return new _mapboxGl.default.Marker().setLngLat(coords).addTo(map);
+        return new _mapboxGl.default.Marker().setLngLat(coords).addTo(_map);
       };
 
-      var map = new _mapboxGl.default.Map({
+      var _map = new _mapboxGl.default.Map({
         container: dom,
         center: coords,
         zoom: 15,
         style: "mapbox://styles/mapbox/streets-v11?optimize=true"
       });
+
       state.info.map.status(true);
       createMarker();
     } catch (error) {
@@ -5088,7 +5105,7 @@ var Event = function Event(_ref) {
         part: "guests",
         title: "Guests",
         pills: [m(".pill", data.guests.length)]
-      }, m(".guests-container", [m(".frow row event-input-group", [m("input.col-xs-4-5", {
+      }, m(".guests-container", [m(".event-forms", m(".frow row event-input-group", [m("input.col-xs-4-5", {
         placeholder: "email",
         type: "email",
         value: state.guests.email,
@@ -5099,7 +5116,7 @@ var Event = function Event(_ref) {
         onclick: function onclick(e) {
           return sendInvite(mdl);
         }
-      }, "Invite"), state.guests.error() && m("code.error-field", state.guests.error())]), m(".frow row-start", [m(".col-xs-1-2", mdl.User.name), m(".col-xs-1-2", m(_Components.InviteRSVP, {
+      }, "Invite"), state.guests.error() && m("code.error-field", state.guests.error())])), m(".frow row-start", [m(".col-xs-1-2", mdl.User.name), m(".col-xs-1-2", m(_Components.InviteRSVP, {
         mdl: mdl,
         reload: function reload() {
           return mdl.Invites.fetch(true);
@@ -5149,32 +5166,34 @@ var Event = function Event(_ref) {
           return addItem(mdl);
         }
       }, "Add"), state.items.error() && m("code.error-field", state.items.error().name), state.items.error() && m("code.error-field", state.items.error().quantity)]), m(".event-items", data.items.map(function (item) {
-        return m(".event-items-item frow ", [m(".col-xs-2-3 ", m("h4", item.name), m("label", item.guestId ? [m("span.clickable.frow row-start", isUserOrUnclaimed(mdl)(item) && m(_cjs.MinusCircleLine, {
+        return m(".event-items-item frow ", [m(".col-xs-2-3 ", m("h4", item.name), m("label", item.guestId ? [m("span.clickable.frow row-start", isUserItem(mdl)(item) && m(_cjs.MinusCircleLine, {
           onclick: function onclick(e) {
             item.guestId = null;
+            state.items.updateGuest(true);
             updateItem(mdl)(item);
           },
           class: "smaller"
         }), getUserFromId(item.guestId))] : m("i.clickable", {
           onclick: function onclick(e) {
             item.guestId = mdl.User.objectId;
+            state.items.updateGuest(true);
             updateItem(mdl)(item);
           }
-        }, "click to select item"))), m(".col-xs-1-3 frow items-center", [isUserOrUnclaimed(mdl)(item) && m(".events-remove-item", m("span.clickable", m(_cjs.RemoveLine, {
+        }, "click to select item"))), m(".col-xs-1-3 frow items-center", [isUserItem(mdl)(item) && m(".events-remove-item", m("span.clickable", m(_cjs.RemoveLine, {
           class: "smaller",
           onclick: function onclick(e) {
             return deleteItem(mdl)(item.objectId);
           }
-        }))), m(".col-xs-2-3 frow column-center", [isUserOrUnclaimed(mdl)(item) && m(".col-xs-1-3", m("span.clickable", m(_cjs.AngleLine, {
+        }))), m(".col-xs-2-3 frow column-center", [isUserItem(mdl)(item) && m(".col-xs-1-3", m("span.clickable", m(_cjs.AngleLine, {
           class: "smaller",
           onclick: function onclick(e) {
             item.quantity++;
             updateItem(mdl)(item);
           }
-        }))), m(".col-xs-1-3 text-center pb-2", item.quantity), isUserOrUnclaimed(mdl)(item) && m(".col-xs-1-3", m("span.clickable.smaller", m(_cjs.AngleLine, {
+        }))), m(".col-xs-1-3 text-center pb-2", item.quantity), isUserItem(mdl)(item) && m(".col-xs-1-3", m("span.clickable.smaller", m(_cjs.AngleLine, {
           class: "decrement",
           onclick: function onclick(e) {
-            item.quantity--;
+            item.quantity > 0 && item.quantity--;
             updateItem(mdl)(item);
           }
         })))])])]);

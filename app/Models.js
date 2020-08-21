@@ -57,6 +57,10 @@ const Invites = {
   fetch: Stream(false),
 }
 
+const Items = {
+  updateItemAndGuest: Stream(false),
+}
+
 const Day = {
   data: dayModel({ State }),
   update: Stream(false),
@@ -90,6 +94,7 @@ const Model = {
   Home,
   Sidebar,
   Map,
+  Items,
 }
 
 export default Model

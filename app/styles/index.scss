@@ -310,10 +310,8 @@ ul {
   width: 100%;
   padding:1rem 0;
   margin: 0;
-  background-image: linear-gradient(
-rgba(255, 255, 255, 1) 60%,
-rgba(255, 255, 255, 0) 100%
-);
+  box-shadow: 0 8px 47px -6px var(--dark);
+
 }
 
 .events-remove-item {

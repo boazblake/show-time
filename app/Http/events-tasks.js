@@ -6,6 +6,8 @@ import {
   getItemsByEventIdTask,
   getCommentsByEventIdTask,
   addItemTask,
+  relateItemsToUserTask,
+  unRelateItemToUserTask,
 } from "Http"
 import { traverse, head, map } from "ramda"
 import { getHour, getMin, getTimeFormat } from "Utils"
@@ -164,6 +166,11 @@ export const addItemToEventTask = (http) => (mdl) => (eventId) => (item) =>
   addItemTask(http)(mdl)(item).chain(({ objectId }) =>
     relateItemsToEventTask(http)(mdl)(eventId)([objectId])
   )
+
+export const updateItemToGuestTask = (http) => (mdl) => (item) =>
+  item.guestId
+    ? relateItemsToUserTask(http)(mdl)(item.guestId)([item.objectId])
+    : unRelateItemToUserTask(http)(mdl)(mdl.User.objectId)(item.objectId)
 
 export const relateItemsToEventTask = (http) => (mdl) => (eventId) => (
   itemIds
