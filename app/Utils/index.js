@@ -8,6 +8,8 @@ export const log = (m) => (v) => {
   return v
 }
 
+export const autoFocus = ({ dom }) => dom.focus()
+
 export const getTheme = (mdl) =>
   mdl.User.profile.isDarkTheme ? "dark" : "light"
 

@@ -1,4 +1,10 @@
-import { HomeToolbar, EventToolbar, Sidebar, Hamburger } from "Components"
+import {
+  HomeToolbar,
+  EventToolbar,
+  Sidebar,
+  Hamburger,
+  ProgressBar,
+} from "Components"
 import { Animate, createKeyframeAnimation } from "Styles"
 
 const Header = () => {
@@ -19,7 +25,11 @@ export const Layout = () => {
       m(".lt-grid-container", [
         m(
           ".lt-header.navbar",
-          m(".frow row", [m(Header, { mdl }), m(Hamburger, { mdl })])
+          m(".frow row", [
+            m(ProgressBar, { mdl }),
+            m(Header, { mdl }),
+            m(Hamburger, { mdl }),
+          ])
         ),
         mdl.Sidebar.isShowing()
           ? m(Sidebar, {

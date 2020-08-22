@@ -1,4 +1,11 @@
-import { getTimeFormat, jsonCopy, hyphenize, getTheme, log } from "Utils"
+import {
+  getTimeFormat,
+  jsonCopy,
+  hyphenize,
+  getTheme,
+  log,
+  autoFocus,
+} from "Utils"
 import {
   propEq,
   compose,
@@ -569,7 +576,7 @@ export const Event = ({ attrs: { mdl } }) => {
                 m(".frow row-start", [
                   m(".frow width-100", [
                     m(
-                      ".events-messages-container width-100",
+                      ".events-messages-container width-100 text-center",
                       {
                         oncreate: ({ dom }) =>
                           dom.scrollTo(0, dom.scrollHeight, "smooth"),
@@ -612,7 +619,10 @@ export const Event = ({ attrs: { mdl } }) => {
                               )
                             )
                           )
-                        : m("", "Start a conversation")
+                        : m(
+                            ".events-messages-container-empty",
+                            "Start a conversation"
+                          )
                     ),
                     m(
                       ".event-comment-textbox-container",
@@ -624,6 +634,7 @@ export const Event = ({ attrs: { mdl } }) => {
                             cols: 50,
                             placeholder: "Say hi...",
                             value: state.comments.message,
+                            oncreate: autoFocus,
                             oninput: (e) =>
                               (state.comments.message = e.target.value),
                             onchange: (e) =>
