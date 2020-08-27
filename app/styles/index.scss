@@ -693,8 +693,8 @@ img.logo {
 
 .events-messages-container {
   padding-top:10px;
-  overflow: auto;
-  height: 600px;
+  overflow: scroll;
+  height: 400px;
 }
 
 .events-messages-container-empty {

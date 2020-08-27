@@ -10,7 +10,7 @@ const isUserItem = (mdl) => (item) => mdl.User.objectId == item.guestId
 const getUserFromId = (id) => (guests) =>
   pluck("name", guests.filter(propEq("guestId", id)))
 
-export const EventItems = ({ attrs: { validate, addItem } }) => {
+export const EventItems = ({ attrs: { validate, addItem, updateItem } }) => {
   return {
     view: ({ attrs: { mdl, data, state } }) =>
       m(".event-items-section", [

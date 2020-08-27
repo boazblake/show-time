@@ -626,7 +626,14 @@ export const Event = ({ attrs: { mdl } }) => {
                 m(EventGuests, { mdl, data, state, sendInvite }),
 
               state.items.isShowing() &&
-                m(EventItems, { mdl, data, state, validate, addItem }),
+                m(EventItems, {
+                  mdl,
+                  data,
+                  state,
+                  validate,
+                  addItem,
+                  updateItem,
+                }),
 
               state.comments.isShowing() &&
                 m(EventComments, { mdl, data, state, validate, sendMessage }),
