@@ -371,18 +371,26 @@ ul {
 }
 
 .modal {
+  position: absolute;
   width: 100vw;
+  height: 100vh;
+  background-color: rgba(255, 255, 255, 0.15);
+  backdrop-filter: blur(5px);
+  z-index: 1000;
 }
 
 .modal-container {
+  position: relative;
+  margin: 0 auto;
+  padding: 10px;
+  top: 15%;
+  width: 310px;
   overflow-y: auto;
   overflow-x: hidden;
   background-color: var(--light);
-  height: 310px;
 }
-.modal-container .modal-container .modal-body {
+.modal-container .modal-body {
   width: 80%;
-  overflow: auto;
 }
 .accordian .accordian-item {
   line-height: 3rem;

@@ -4,14 +4,11 @@ export const Modal = () => {
       return m(
         ".modal",
         children.map(({ header, body, footer }) =>
-          m(
-            ".modal-container",
-            m(".modal.full-width", [
-              m(".modal-header", header),
-              m(".modal-body", body),
-              m(".modal-footer", footer),
-            ])
-          )
+          m(".modal-container", [
+            m(".modal-header", header),
+            m(".modal-body", body),
+            m(".modal-footer", footer),
+          ])
         )
       )
     },

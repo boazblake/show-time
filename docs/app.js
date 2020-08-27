@@ -1808,7 +1808,7 @@ var Modal = function Modal() {
         var header = _ref2.header,
             body = _ref2.body,
             footer = _ref2.footer;
-        return m(".modal-container", m(".modal.full-width", [m(".modal-header", header), m(".modal-body", body), m(".modal-footer", footer)]));
+        return m(".modal-container", [m(".modal-header", header), m(".modal-body", body), m(".modal-footer", footer)]);
       }));
     }
   };
@@ -4986,6 +4986,7 @@ var Event = function Event(_ref) {
     state.error = {};
     state.status = "success";
     state.modal.isShowing(null);
+    state.modal.newHost(null);
   };
 
   var load = function load(_ref3) {
@@ -5287,11 +5288,15 @@ var Event = function Event(_ref) {
       }, [{
         header: "Your the last to leave! click ok to delete this event",
         body: m(_cjs.WarningStandardLine),
-        footer: m("button", {
+        footer: m(".frow", [m("button.col-xs-1-2", {
           onclick: function onclick(e) {
             return deleteEvent(data.guests[0]);
           }
-        }, "Delete")
+        }, "Delete"), m("button.col-xs-1-2", {
+          onclick: function onclick(e) {
+            return state.modal.isShowing(null);
+          }
+        }, "go back to event")])
       }]), state.modal.isShowing() == "isHost" && m(_Components.Modal, {
         mdl: mdl
       }, [{
@@ -5309,6 +5314,7 @@ var Event = function Event(_ref) {
           }), name);
         })),
         footer: m(".frow ", [m("button.col-xs-1-2", {
+          disabled: !state.modal.newHost(),
           onclick: function onclick(e) {
             return assignNewHostAndLeaveEvent();
           }
@@ -5334,6 +5340,7 @@ var Event = function Event(_ref) {
           }), name);
         })),
         footer: m(".frow ", [m("button.col-xs-1-2", {
+          disabled: !state.modal.newHost(),
           onclick: function onclick(e) {
             return assignNewHost();
           }

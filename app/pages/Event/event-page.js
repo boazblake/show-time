@@ -128,6 +128,7 @@ export const Event = ({ attrs: { mdl } }) => {
     state.error = {}
     state.status = "success"
     state.modal.isShowing(null)
+    state.modal.newHost(null)
   }
 
   const load = ({ attrs: { mdl } }) => {
@@ -443,11 +444,18 @@ export const Event = ({ attrs: { mdl } }) => {
                     header:
                       "Your the last to leave! click ok to delete this event",
                     body: m(WarningStandardLine),
-                    footer: m(
-                      "button",
-                      { onclick: (e) => deleteEvent(data.guests[0]) },
-                      "Delete"
-                    ),
+                    footer: m(".frow", [
+                      m(
+                        "button.col-xs-1-2",
+                        { onclick: (e) => deleteEvent(data.guests[0]) },
+                        "Delete"
+                      ),
+                      m(
+                        "button.col-xs-1-2",
+                        { onclick: (e) => state.modal.isShowing(null) },
+                        "go back to event"
+                      ),
+                    ]),
                   },
                 ]),
               state.modal.isShowing() == "isHost" &&
@@ -476,6 +484,7 @@ export const Event = ({ attrs: { mdl } }) => {
                       m(
                         "button.col-xs-1-2",
                         {
+                          disabled: !state.modal.newHost(),
                           onclick: (e) => assignNewHostAndLeaveEvent(),
                         },
                         "Assign new Host and leave Event"
@@ -514,6 +523,7 @@ export const Event = ({ attrs: { mdl } }) => {
                       m(
                         "button.col-xs-1-2",
                         {
+                          disabled: !state.modal.newHost(),
                           onclick: (e) => assignNewHost(),
                         },
                         "Assign new Host"
