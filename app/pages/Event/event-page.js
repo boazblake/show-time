@@ -127,6 +127,7 @@ export const Event = ({ attrs: { mdl } }) => {
     data.items = items
     state.error = {}
     state.status = "success"
+    state.modal.isShowing(null)
   }
 
   const load = ({ attrs: { mdl } }) => {
@@ -142,21 +143,7 @@ export const Event = ({ attrs: { mdl } }) => {
     )
   }
 
-  // const updateItemAndDeleteInvite = () => {
-  //   pluck("objectId", data.items)
-  //     .traverse(deleteItemTask(HTTP)(mdl), Task.of)
-  //     .chain(() => deleteEventTask(HTTP)(mdl)(invite.eventId))
-  //     .fork(onError, onSuccess)
-
-  //   without(
-  //     data.guests.filter(propEq("hostId", mdl.User.objectId)),
-  //     data.guests
-  //   )
-  //     .filter(propEq("status", 1))
-  //     .map(prop("name"))
-  // }
-
-  const leaveEvent = (invite) => {
+  const deleteEvent = (invite) => {
     const onError = (error) => {
       state.error = jsonCopy(error)
       state.status = "failed"
@@ -171,11 +158,11 @@ export const Event = ({ attrs: { mdl } }) => {
       let date = M(data.event.start).format("YYYY-MM-DD")
       m.route.set(`/${name}/${date}`)
     }
-
+    console.log(invite)
     deleteEventTask(HTTP)(mdl)(invite.eventId).fork(onError, onSuccess)
   }
 
-  const deleteEvent = (invite) => {
+  const leaveEvent = (invite) => {
     const onError = (error) => {
       state.error = jsonCopy(error)
       state.status = "failed"
@@ -198,6 +185,29 @@ export const Event = ({ attrs: { mdl } }) => {
       .chain(traverse(Task.of, updateItemToGuestTask(HTTP)(mdl)))
       .chain(() => deleteInviteTask(HTTP)(mdl)(invite.objectId))
       .fork(onError, onSuccess)
+  }
+
+  const assignNewHost = () => {
+    const onError = (error) => {
+      state.error = jsonCopy(error)
+      state.status = "failed"
+      console.log("assign new host failed", error)
+    }
+
+    let hostId = state.modal.newHost()
+
+    console.log(data)
+    updateEventTask(HTTP)(mdl)(data.event.eventId)({
+      hostId,
+    })
+      .chain(() =>
+        data.guests.traverse(
+          (guest) => updateInviteTask(HTTP)(mdl)(guest.objectId)({ hostId }),
+          Task.of
+        )
+      )
+      .chain((_) => loadEventTask(HTTP)(mdl)(mdl.Events.currentEventId()))
+      .fork(onError, updateEventView)
   }
 
   const assignNewHostAndLeaveEvent = () => {
@@ -230,26 +240,20 @@ export const Event = ({ attrs: { mdl } }) => {
   const otherGuests = (guests) =>
     without(guests.filter(propEq("guestId", mdl.User.objectId)), guests)
 
+  const isHost = (guests) =>
+    guests.filter(propEq("hostId", mdl.User.objectId)).any()
+
+  const isLast = (guests) =>
+    !otherGuests(guests).filter(propEq("status", 1)).any()
+
+  const invite = (guests) => find(propEq("guestId", mdl.User.objectId), guests)
+
   const deleteInvite = (mdl) => {
-    let isLast = !otherGuests(data.guests).filter(propEq("status", 1)).any()
-
-    let isHost = data.guests.filter(propEq("hostId", mdl.User.objectId)).any()
-
-    let invite = find(propEq("guestId", mdl.User.objectId), data.guests)
-
-    console.log("ishost", isHost)
-    console.log("isLast", isLast)
-    console.log("invite", invite)
-    // let modalContent = createEvent(mdl, isHost, isLast, invite)
-
-    // state.modal.contents(modalContent)
-    // state.modal.isShowing(true)
-
-    isLast
+    isLast(data.guests)
       ? state.modal.isShowing("isLast")
-      : isHost
+      : isHost(data.guests)
       ? state.modal.isShowing("isHost")
-      : leaveEvent(invite)
+      : leaveEvent(invite(data.guests))
   }
 
   // const updateInvite = (mdl) => (update) => {
@@ -441,7 +445,7 @@ export const Event = ({ attrs: { mdl } }) => {
                     body: m(WarningStandardLine),
                     footer: m(
                       "button",
-                      { onclick: (e) => leaveEvent(data.guests[0]) },
+                      { onclick: (e) => deleteEvent(data.guests[0]) },
                       "Delete"
                     ),
                   },
@@ -461,7 +465,7 @@ export const Event = ({ attrs: { mdl } }) => {
                             m("input", {
                               id: guestId,
                               type: "radio",
-                              name: "find-houst",
+                              name: "find-host",
                               oninput: (e) => state.modal.newHost(e.target.id),
                             }),
                             name
@@ -484,6 +488,45 @@ export const Event = ({ attrs: { mdl } }) => {
                     ]),
                   },
                 ]),
+
+              state.modal.isShowing() == "newHost" &&
+                m(Modal, { mdl }, [
+                  {
+                    header: "Select the new host",
+                    body: m(
+                      "ul",
+                      otherGuests(data.guests)
+                        .filter(propEq("status", 1))
+                        .map(({ name, guestId }) =>
+                          m(
+                            "span",
+                            m("input", {
+                              id: guestId,
+                              type: "radio",
+                              name: "find-host",
+                              oninput: (e) => state.modal.newHost(e.target.id),
+                            }),
+                            name
+                          )
+                        )
+                    ),
+                    footer: m(".frow ", [
+                      m(
+                        "button.col-xs-1-2",
+                        {
+                          onclick: (e) => assignNewHost(),
+                        },
+                        "Assign new Host"
+                      ),
+                      m(
+                        "button.col-xs-1-2",
+                        { onclick: (e) => state.modal.isShowing(null) },
+                        "Cancel and return to event"
+                      ),
+                    ]),
+                  },
+                ]),
+
               m("h1.event-page-title.text-center", data.event.title),
               m(
                 ".frow row width-100",
@@ -827,6 +870,15 @@ export const Event = ({ attrs: { mdl } }) => {
                     { onclick: (e) => deleteInvite(mdl) },
                     data.guests.length == 1 ? "Delete Event" : "Leave Event"
                   ),
+                  isHost(data.guests) &&
+                    m(
+                      `button.btn-${getTheme(mdl)}`,
+                      {
+                        disabled: isLast(data.guests),
+                        onclick: (e) => state.modal.isShowing("newHost"),
+                      },
+                      "Change Host"
+                    ),
                   m(
                     `button.btn-${getTheme(mdl)}`,
                     { onclick: (e) => console.log("edit event ...") },

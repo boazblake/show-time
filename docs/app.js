@@ -4985,6 +4985,7 @@ var Event = function Event(_ref) {
     data.items = items;
     state.error = {};
     state.status = "success";
+    state.modal.isShowing(null);
   };
 
   var load = function load(_ref3) {
@@ -4997,37 +4998,6 @@ var Event = function Event(_ref) {
     };
 
     (0, _Http.loadEventTask)(_Http.HTTP)(mdl)(mdl.Events.currentEventId()).fork(onError, updateEventView);
-  }; // const updateItemAndDeleteInvite = () => {
-  //   pluck("objectId", data.items)
-  //     .traverse(deleteItemTask(HTTP)(mdl), Task.of)
-  //     .chain(() => deleteEventTask(HTTP)(mdl)(invite.eventId))
-  //     .fork(onError, onSuccess)
-  //   without(
-  //     data.guests.filter(propEq("hostId", mdl.User.objectId)),
-  //     data.guests
-  //   )
-  //     .filter(propEq("status", 1))
-  //     .map(prop("name"))
-  // }
-
-
-  var leaveEvent = function leaveEvent(invite) {
-    var onError = function onError(error) {
-      state.error = (0, _Utils.jsonCopy)(error);
-      state.status = "failed";
-      console.log("delete event failed", error);
-    };
-
-    var onSuccess = function onSuccess() {
-      state.error = {};
-      state.status = "success";
-      var name = (0, _Utils.hyphenize)(mdl.User.name);
-      mdl.Invites.fetch(true);
-      var date = M(data.event.start).format("YYYY-MM-DD");
-      m.route.set("/".concat(name, "/").concat(date));
-    };
-
-    (0, _Http.deleteEventTask)(_Http.HTTP)(mdl)(invite.eventId).fork(onError, onSuccess);
   };
 
   var deleteEvent = function deleteEvent(invite) {
@@ -5046,9 +5016,51 @@ var Event = function Event(_ref) {
       m.route.set("/".concat(name, "/").concat(date));
     };
 
+    console.log(invite);
+    (0, _Http.deleteEventTask)(_Http.HTTP)(mdl)(invite.eventId).fork(onError, onSuccess);
+  };
+
+  var leaveEvent = function leaveEvent(invite) {
+    var onError = function onError(error) {
+      state.error = (0, _Utils.jsonCopy)(error);
+      state.status = "failed";
+      console.log("delete event failed", error);
+    };
+
+    var onSuccess = function onSuccess() {
+      state.error = {};
+      state.status = "success";
+      var name = (0, _Utils.hyphenize)(mdl.User.name);
+      mdl.Invites.fetch(true);
+      var date = M(data.event.start).format("YYYY-MM-DD");
+      m.route.set("/".concat(name, "/").concat(date));
+    };
+
     data.items.filter((0, _ramda.propEq)("guestId", mdl.User.objectId)).map((0, _ramda.set)((0, _ramda.lensProp)("guestId"), null)).traverse((0, _Http.updateItemTask)(_Http.HTTP)(mdl), _data.default.of).chain((0, _ramda.traverse)(_data.default.of, (0, _Http.updateItemToGuestTask)(_Http.HTTP)(mdl))).chain(function () {
       return (0, _Http.deleteInviteTask)(_Http.HTTP)(mdl)(invite.objectId);
     }).fork(onError, onSuccess);
+  };
+
+  var assignNewHost = function assignNewHost() {
+    var onError = function onError(error) {
+      state.error = (0, _Utils.jsonCopy)(error);
+      state.status = "failed";
+      console.log("assign new host failed", error);
+    };
+
+    var hostId = state.modal.newHost();
+    console.log(data);
+    (0, _Http.updateEventTask)(_Http.HTTP)(mdl)(data.event.eventId)({
+      hostId: hostId
+    }).chain(function () {
+      return data.guests.traverse(function (guest) {
+        return (0, _Http.updateInviteTask)(_Http.HTTP)(mdl)(guest.objectId)({
+          hostId: hostId
+        });
+      }, _data.default.of);
+    }).chain(function (_) {
+      return (0, _Http.loadEventTask)(_Http.HTTP)(mdl)(mdl.Events.currentEventId());
+    }).fork(onError, updateEventView);
   };
 
   var assignNewHostAndLeaveEvent = function assignNewHostAndLeaveEvent() {
@@ -5080,17 +5092,20 @@ var Event = function Event(_ref) {
     return (0, _ramda.without)(guests.filter((0, _ramda.propEq)("guestId", mdl.User.objectId)), guests);
   };
 
-  var deleteInvite = function deleteInvite(mdl) {
-    var isLast = !otherGuests(data.guests).filter((0, _ramda.propEq)("status", 1)).any();
-    var isHost = data.guests.filter((0, _ramda.propEq)("hostId", mdl.User.objectId)).any();
-    var invite = (0, _ramda.find)((0, _ramda.propEq)("guestId", mdl.User.objectId), data.guests);
-    console.log("ishost", isHost);
-    console.log("isLast", isLast);
-    console.log("invite", invite); // let modalContent = createEvent(mdl, isHost, isLast, invite)
-    // state.modal.contents(modalContent)
-    // state.modal.isShowing(true)
+  var isHost = function isHost(guests) {
+    return guests.filter((0, _ramda.propEq)("hostId", mdl.User.objectId)).any();
+  };
 
-    isLast ? state.modal.isShowing("isLast") : isHost ? state.modal.isShowing("isHost") : leaveEvent(invite);
+  var isLast = function isLast(guests) {
+    return !otherGuests(guests).filter((0, _ramda.propEq)("status", 1)).any();
+  };
+
+  var invite = function invite(guests) {
+    return (0, _ramda.find)((0, _ramda.propEq)("guestId", mdl.User.objectId), guests);
+  };
+
+  var deleteInvite = function deleteInvite(mdl) {
+    isLast(data.guests) ? state.modal.isShowing("isLast") : isHost(data.guests) ? state.modal.isShowing("isHost") : leaveEvent(invite(data.guests));
   }; // const updateInvite = (mdl) => (update) => {
   //   const onError = (error) => {
   //     state.error = jsonCopy(error)
@@ -5274,7 +5289,7 @@ var Event = function Event(_ref) {
         body: m(_cjs.WarningStandardLine),
         footer: m("button", {
           onclick: function onclick(e) {
-            return leaveEvent(data.guests[0]);
+            return deleteEvent(data.guests[0]);
           }
         }, "Delete")
       }]), state.modal.isShowing() == "isHost" && m(_Components.Modal, {
@@ -5287,7 +5302,7 @@ var Event = function Event(_ref) {
           return m("span", m("input", {
             id: guestId,
             type: "radio",
-            name: "find-houst",
+            name: "find-host",
             oninput: function oninput(e) {
               return state.modal.newHost(e.target.id);
             }
@@ -5298,6 +5313,31 @@ var Event = function Event(_ref) {
             return assignNewHostAndLeaveEvent();
           }
         }, "Assign new Host and leave Event"), m("button.col-xs-1-2", {
+          onclick: function onclick(e) {
+            return state.modal.isShowing(null);
+          }
+        }, "Cancel and return to event")])
+      }]), state.modal.isShowing() == "newHost" && m(_Components.Modal, {
+        mdl: mdl
+      }, [{
+        header: "Select the new host",
+        body: m("ul", otherGuests(data.guests).filter((0, _ramda.propEq)("status", 1)).map(function (_ref6) {
+          var name = _ref6.name,
+              guestId = _ref6.guestId;
+          return m("span", m("input", {
+            id: guestId,
+            type: "radio",
+            name: "find-host",
+            oninput: function oninput(e) {
+              return state.modal.newHost(e.target.id);
+            }
+          }), name);
+        })),
+        footer: m(".frow ", [m("button.col-xs-1-2", {
+          onclick: function onclick(e) {
+            return assignNewHost();
+          }
+        }, "Assign new Host"), m("button.col-xs-1-2", {
           onclick: function onclick(e) {
             return state.modal.isShowing(null);
           }
@@ -5425,8 +5465,8 @@ var Event = function Event(_ref) {
         part: "comments",
         title: "Comments"
       }, m(".frow row-start", [m(".frow width-100", [m(".events-messages-container width-100 text-center", {
-        oncreate: function oncreate(_ref6) {
-          var dom = _ref6.dom;
+        oncreate: function oncreate(_ref7) {
+          var dom = _ref7.dom;
           return dom.scrollTo(0, dom.scrollHeight, "smooth");
         }
       }, data.comments.any() ? data.comments.map(function (comment) {
@@ -5465,7 +5505,12 @@ var Event = function Event(_ref) {
         onclick: function onclick(e) {
           return deleteInvite(mdl);
         }
-      }, data.guests.length == 1 ? "Delete Event" : "Leave Event"), m("button.btn-".concat((0, _Utils.getTheme)(mdl)), {
+      }, data.guests.length == 1 ? "Delete Event" : "Leave Event"), isHost(data.guests) && m("button.btn-".concat((0, _Utils.getTheme)(mdl)), {
+        disabled: isLast(data.guests),
+        onclick: function onclick(e) {
+          return state.modal.isShowing("newHost");
+        }
+      }, "Change Host"), m("button.btn-".concat((0, _Utils.getTheme)(mdl)), {
         onclick: function onclick(e) {
           return console.log("edit event ...");
         }
