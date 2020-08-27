@@ -9,47 +9,6 @@ export const EventComments = ({ attrs: { validate, sendMessage } }) => {
         m(".frow row-start", [
           m(".frow width-100", [
             m(
-              ".events-messages-container width-100 text-center",
-              {
-                oncreate: ({ dom }) =>
-                  dom.scrollTo(0, dom.scrollHeight, "smooth"),
-              },
-
-              data.comments.any()
-                ? data.comments.map((comment) =>
-                    m(
-                      ".frow column-center width-100 mb-40",
-                      m(
-                        `.event-comments-message-container ${
-                          mdl.User.objectId == comment.guestId ? "me" : "other"
-                        }`,
-                        m(".event-comments-message frow items-end", [
-                          m(".speech-bubble", [
-                            m("span.text-left", comment.message),
-                            mdl.User.objectId == comment.guestId &&
-                              m(TimesCircleLine, {
-                                onclick: (e) =>
-                                  deleteComment(mdl)(comment.objectId),
-                                class: "event-comments-message-remove smaller",
-                              }),
-                          ]),
-                          m(
-                            "label.event-comment-name",
-                            m(".frow row-between", [
-                              m("span", comment.name),
-                              m(
-                                "span",
-                                M(comment.created).format(getTimeFormat(mdl))
-                              ),
-                            ])
-                          ),
-                        ])
-                      )
-                    )
-                  )
-                : m(".events-messages-container-empty", "Start a conversation")
-            ),
-            m(
               ".event-comment-textbox-container",
               m(".frow items-end", [
                 m(
@@ -78,6 +37,56 @@ export const EventComments = ({ attrs: { validate, sendMessage } }) => {
             ),
             state.comments.error() &&
               m("code.error-field", state.comments.error().name),
+            m(
+              ".width-100 justify-end",
+              m(
+                ".events-messages-container ",
+                {
+                  oncreate: ({ dom }) =>
+                    dom.scrollTo(0, dom.scrollHeight, "smooth"),
+                },
+
+                data.comments.any()
+                  ? data.comments.map((comment) =>
+                      m(
+                        ".frow column-center width-100 mb-40",
+                        m(
+                          `.event-comments-message-container ${
+                            mdl.User.objectId == comment.guestId
+                              ? "me"
+                              : "other"
+                          }`,
+                          m(".event-comments-message", [
+                            m(".speech-bubble", [
+                              m(".frow.text-left.pt-10", comment.message),
+                              mdl.User.objectId == comment.guestId &&
+                                m(TimesCircleLine, {
+                                  onclick: (e) =>
+                                    deleteComment(mdl)(comment.objectId),
+                                  class:
+                                    "event-comments-message-remove smaller",
+                                }),
+                            ]),
+                            m(
+                              "label.event-comment-name",
+                              m(".frow row-between", [
+                                m("span", comment.name),
+                                m(
+                                  "span",
+                                  M(comment.created).format(getTimeFormat(mdl))
+                                ),
+                              ])
+                            ),
+                          ])
+                        )
+                      )
+                    )
+                  : m(
+                      ".events-messages-container-empty",
+                      "Start a conversation"
+                    )
+              )
+            ),
           ]),
         ])
       ),

@@ -4919,25 +4919,6 @@ var _default = Register;
 exports.default = _default;
 });
 
-;require.register("Pages/Event/component.js", function(exports, require, module) {
-"use strict";
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.Component = void 0;
-
-var Component = function Component() {
-  return {
-    view: function view() {
-      return m(".");
-    }
-  };
-};
-
-exports.Component = Component;
-});
-
 ;require.register("Pages/Event/components.js", function(exports, require, module) {
 "use strict";
 
@@ -5016,19 +4997,7 @@ var EventComments = function EventComments(_ref) {
           mdl = _ref2$attrs.mdl,
           data = _ref2$attrs.data,
           state = _ref2$attrs.state;
-      return m(".comments-items", m(".frow row-start", [m(".frow width-100", [m(".events-messages-container width-100 text-center", {
-        oncreate: function oncreate(_ref3) {
-          var dom = _ref3.dom;
-          return dom.scrollTo(0, dom.scrollHeight, "smooth");
-        }
-      }, data.comments.any() ? data.comments.map(function (comment) {
-        return m(".frow column-center width-100 mb-40", m(".event-comments-message-container ".concat(mdl.User.objectId == comment.guestId ? "me" : "other"), m(".event-comments-message frow items-end", [m(".speech-bubble", [m("span.text-left", comment.message), mdl.User.objectId == comment.guestId && m(_cjs.TimesCircleLine, {
-          onclick: function onclick(e) {
-            return deleteComment(mdl)(comment.objectId);
-          },
-          class: "event-comments-message-remove smaller"
-        })]), m("label.event-comment-name", m(".frow row-between", [m("span", comment.name), m("span", M(comment.created).format((0, _Utils.getTimeFormat)(mdl)))]))])));
-      }) : m(".events-messages-container-empty", "Start a conversation")), m(".event-comment-textbox-container", m(".frow items-end", [m(".col-xs-4-5", m("textarea.comments-message-container", {
+      return m(".comments-items", m(".frow row-start", [m(".frow width-100", [m(".event-comment-textbox-container", m(".frow items-end", [m(".col-xs-4-5", m("textarea.comments-message-container", {
         row: 20,
         cols: 50,
         placeholder: "Say hi...",
@@ -5047,7 +5016,19 @@ var EventComments = function EventComments(_ref) {
         onclick: function onclick(e) {
           return sendMessage(mdl);
         }
-      }, "Send"))])), state.comments.error() && m("code.error-field", state.comments.error().name)])]));
+      }, "Send"))])), state.comments.error() && m("code.error-field", state.comments.error().name), m(".width-100 justify-end", m(".events-messages-container ", {
+        oncreate: function oncreate(_ref3) {
+          var dom = _ref3.dom;
+          return dom.scrollTo(0, dom.scrollHeight, "smooth");
+        }
+      }, data.comments.any() ? data.comments.map(function (comment) {
+        return m(".frow column-center width-100 mb-40", m(".event-comments-message-container ".concat(mdl.User.objectId == comment.guestId ? "me" : "other"), m(".event-comments-message", [m(".speech-bubble", [m(".frow.text-left.pt-10", comment.message), mdl.User.objectId == comment.guestId && m(_cjs.TimesCircleLine, {
+          onclick: function onclick(e) {
+            return deleteComment(mdl)(comment.objectId);
+          },
+          class: "event-comments-message-remove smaller"
+        })]), m("label.event-comment-name", m(".frow row-between", [m("span", comment.name), m("span", M(comment.created).format((0, _Utils.getTimeFormat)(mdl)))]))])));
+      }) : m(".events-messages-container-empty", "Start a conversation")))])]));
     }
   };
 };
