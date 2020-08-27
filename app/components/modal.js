@@ -3,13 +3,13 @@ export const Modal = () => {
     view: ({ children }) => {
       return m(
         ".modal",
-        m(
-          ".modal-container",
-          children.map((child) =>
+        children.map(({ header, body, footer }) =>
+          m(
+            ".modal-container",
             m(".modal.full-width", [
-              m(".modal-header", child.header),
-              m(".modal-body", child.body),
-              m(".modal-footer", child.footer),
+              m(".modal-header", header),
+              m(".modal-body", body),
+              m(".modal-footer", footer),
             ])
           )
         )

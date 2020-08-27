@@ -9,7 +9,7 @@ import {
   relateItemsToUserTask,
   unRelateItemToUserTask,
 } from "Http"
-import { traverse, head, map } from "ramda"
+import { traverse, head, map, propEq } from "ramda"
 import { getHour, getMin, getTimeFormat } from "Utils"
 
 const toEventviewModel = (mdl) => ({
@@ -76,9 +76,15 @@ const getEventGuestsByEventIdTask = (http) => (mdl) => (eventId) =>
 export const getEventByIdTask = (http) => (mdl) => (eventId) =>
   http.backEnd.getTask(mdl)(`data/Events/${eventId}`).map(toEventviewModel(mdl))
 
+const addHostDataToEvent = (event) => (guests) => {
+  let host = guests.filter(propEq("guestId", event.hostId))[0]
+  event.hostId = host
+  return event
+}
+
 export const loadEventTask = (http) => (mdl) => (eventId) =>
   Task.of((event) => (items) => (comments) => (guests) => ({
-    event,
+    event: addHostDataToEvent(event)(guests),
     guests,
     comments,
     items,
@@ -195,3 +201,6 @@ export const relateInvitesToEventTask = (http) => (mdl) => (eventId) => (
 // export const unRelateInvitesToEventTask = (http) => (mdl) => (eventId) => (
 //   inviteIds
 // ) => http.backEnd.deleteTask(mdl)(`data/Events/${eventId}/invites`)(inviteIds)
+
+export const updateEventTask = (http) => (mdl) => (eventId) => (event) =>
+  http.backEnd.putTask(mdl)(`data/Events/${eventId}`)(event)

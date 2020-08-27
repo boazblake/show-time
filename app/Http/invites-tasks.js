@@ -46,9 +46,9 @@ const toInviteDto = ({
   hostId,
 })
 
-export const updateInviteTask = (http) => (mdl) => (invite) =>
+export const updateInviteTask = (http) => (mdl) => (inviteId) => (invite) =>
   http.backEnd
-    .putTask(mdl)(`data/Invites/${invite.objectId}`)(toInviteDto(invite))
+    .putTask(mdl)(`data/Invites/${inviteId}`)(toInviteDto(invite))
     .map(toInviteViewModel)
 
 export const getInvitesByGuestIdTask = (http) => (mdl) => (guestId) =>

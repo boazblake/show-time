@@ -1,27 +1,22 @@
+import { getTimeFormat, jsonCopy, hyphenize, getTheme, autoFocus } from "Utils"
 import {
-  getTimeFormat,
-  jsonCopy,
-  hyphenize,
-  getTheme,
-  log,
-  autoFocus,
-} from "Utils"
-import {
+  without,
   propEq,
   compose,
-  map,
   not,
   head,
   pluck,
   set,
   lensProp,
   traverse,
+  find,
 } from "ramda"
 import mapboxgl from "mapbox-gl/dist/mapbox-gl.js"
 import {
   HTTP,
   loadEventTask,
   deleteInviteTask,
+  updateEventTask,
   updateInviteTask,
   addItemToEventTask,
   deleteItemTask,
@@ -32,12 +27,13 @@ import {
   updateItemTask,
   updateItemToGuestTask,
 } from "Http"
-import { AccordianItem, InviteRSVP } from "Components"
+import { AccordianItem, InviteRSVP, Modal } from "Components"
 import {
   AngleLine,
   RemoveLine,
   MinusCircleLine,
   TimesCircleLine,
+  WarningStandardLine,
 } from "@mithril-icons/clarity/cjs"
 import Task from "data.task"
 import { validateItemTask, validateCommentTask } from "./validations"
@@ -48,11 +44,21 @@ export const Event = ({ attrs: { mdl } }) => {
   const state = {
     error: {},
     status: "loading",
-    info: { show: Stream(false), map: { status: Stream(false) } },
+    selected: Stream(null),
     settings: { show: Stream(false) },
+    modal: {
+      isShowing: Stream(false),
+      newHost: Stream(null),
+    },
+    info: {
+      show: Stream(false),
+      isShowing: Stream(true),
+      map: { status: Stream(false) },
+    },
     guests: {
       name: "",
       show: Stream(false),
+      isShowing: Stream(false),
       status: Stream("success"),
       isSubmitted: Stream(false),
       error: Stream(null),
@@ -61,6 +67,7 @@ export const Event = ({ attrs: { mdl } }) => {
       name: "",
       quantity: "",
       show: Stream(false),
+      isShowing: Stream(false),
       error: Stream(null),
       status: Stream("success"),
       isSubmitted: Stream(false),
@@ -69,6 +76,7 @@ export const Event = ({ attrs: { mdl } }) => {
     comments: {
       message: "",
       show: Stream(false),
+      isShowing: Stream(false),
       error: Stream(null),
       status: Stream("success"),
       isSubmitted: Stream(false),
@@ -80,6 +88,14 @@ export const Event = ({ attrs: { mdl } }) => {
     guests: [],
     items: [],
     comments: [],
+  }
+
+  const showTab = (tab) => {
+    state.info.isShowing(false)
+    state.guests.isShowing(false)
+    state.comments.isShowing(false)
+    state.items.isShowing(false)
+    state[tab].isShowing(true)
   }
 
   const validate = (field) => (input) => {
@@ -104,7 +120,7 @@ export const Event = ({ attrs: { mdl } }) => {
   const getUserFromId = (id) =>
     pluck("name", data.guests.filter(propEq("guestId", id)))
 
-  const updateEvent = ({ event, guests, items, comments }) => {
+  const updateEventView = ({ event, guests, items, comments }) => {
     data.event = event
     data.guests = guests
     data.comments = comments
@@ -122,11 +138,25 @@ export const Event = ({ attrs: { mdl } }) => {
 
     loadEventTask(HTTP)(mdl)(mdl.Events.currentEventId()).fork(
       onError,
-      updateEvent
+      updateEventView
     )
   }
 
-  const deleteInvite = (mdl) => {
+  // const updateItemAndDeleteInvite = () => {
+  //   pluck("objectId", data.items)
+  //     .traverse(deleteItemTask(HTTP)(mdl), Task.of)
+  //     .chain(() => deleteEventTask(HTTP)(mdl)(invite.eventId))
+  //     .fork(onError, onSuccess)
+
+  //   without(
+  //     data.guests.filter(propEq("hostId", mdl.User.objectId)),
+  //     data.guests
+  //   )
+  //     .filter(propEq("status", 1))
+  //     .map(prop("name"))
+  // }
+
+  const leaveEvent = (invite) => {
     const onError = (error) => {
       state.error = jsonCopy(error)
       state.status = "failed"
@@ -142,43 +172,101 @@ export const Event = ({ attrs: { mdl } }) => {
       m.route.set(`/${name}/${date}`)
     }
 
-    let isLast = !(data.guests.length - 1)
-
-    let invite = isLast
-      ? data.guests[0]
-      : data.guests.filter(propEq("guestId", mdl.User.objectId))[0]
-
-    if (isLast) {
-      pluck("objectId", data.items)
-        .traverse(deleteItemTask(HTTP)(mdl), Task.of)
-        .chain(() => deleteEventTask(HTTP)(mdl)(invite.eventId))
-        .fork(onError, onSuccess)
-    } else {
-      data.items
-        .filter(propEq("guestId", mdl.User.objectId))
-        .map(set(lensProp("guestId"), null))
-        .traverse(updateItemTask(HTTP)(mdl), Task.of)
-        .chain(traverse(Task.of, updateItemToGuestTask(HTTP)(mdl)))
-        .chain(() => deleteInviteTask(HTTP)(mdl)(invite.objectId))
-        .fork(onError, onSuccess)
-    }
+    deleteEventTask(HTTP)(mdl)(invite.eventId).fork(onError, onSuccess)
   }
 
-  const updateInvite = (mdl) => (update) => {
+  const deleteEvent = (invite) => {
     const onError = (error) => {
       state.error = jsonCopy(error)
       state.status = "failed"
-      console.log("invite update failed", state, update)
+      console.log("delete event failed", error)
     }
 
-    const onSuccess = (eventData) => {
-      updateEvent(eventData)
+    const onSuccess = () => {
+      state.error = {}
+      state.status = "success"
+      let name = hyphenize(mdl.User.name)
+      mdl.Invites.fetch(true)
+      let date = M(data.event.start).format("YYYY-MM-DD")
+      m.route.set(`/${name}/${date}`)
     }
 
-    updateInviteTask(HTTP)(mdl)(update)
-      .chain((_) => loadEventTask(HTTP)(mdl)(mdl.Events.currentEventId()))
+    data.items
+      .filter(propEq("guestId", mdl.User.objectId))
+      .map(set(lensProp("guestId"), null))
+      .traverse(updateItemTask(HTTP)(mdl), Task.of)
+      .chain(traverse(Task.of, updateItemToGuestTask(HTTP)(mdl)))
+      .chain(() => deleteInviteTask(HTTP)(mdl)(invite.objectId))
       .fork(onError, onSuccess)
   }
+
+  const assignNewHostAndLeaveEvent = () => {
+    const onError = (error) => {
+      state.error = jsonCopy(error)
+      state.status = "failed"
+      console.log("delete event failed", error)
+    }
+
+    const onSuccess = () => {
+      leaveEvent(find(propEq("guestId", mdl.User.objectId), data.guests))
+    }
+
+    let hostId = state.modal.newHost()
+
+    console.log(data)
+    //updateEvent, invites,
+    updateEventTask(HTTP)(mdl)(data.event.eventId)({
+      hostId,
+    })
+      .chain(() =>
+        data.guests.traverse(
+          (guest) => updateInviteTask(HTTP)(mdl)(guest.objectId)({ hostId }),
+          Task.of
+        )
+      )
+      .fork(onError, onSuccess)
+  }
+
+  const otherGuests = (guests) =>
+    without(guests.filter(propEq("guestId", mdl.User.objectId)), guests)
+
+  const deleteInvite = (mdl) => {
+    let isLast = !otherGuests(data.guests).filter(propEq("status", 1)).any()
+
+    let isHost = data.guests.filter(propEq("hostId", mdl.User.objectId)).any()
+
+    let invite = find(propEq("guestId", mdl.User.objectId), data.guests)
+
+    console.log("ishost", isHost)
+    console.log("isLast", isLast)
+    console.log("invite", invite)
+    // let modalContent = createEvent(mdl, isHost, isLast, invite)
+
+    // state.modal.contents(modalContent)
+    // state.modal.isShowing(true)
+
+    isLast
+      ? state.modal.isShowing("isLast")
+      : isHost
+      ? state.modal.isShowing("isHost")
+      : leaveEvent(invite)
+  }
+
+  // const updateInvite = (mdl) => (update) => {
+  //   const onError = (error) => {
+  //     state.error = jsonCopy(error)
+  //     state.status = "failed"
+  //     console.log("invite update failed", state, update)
+  //   }
+
+  //   const onSuccess = (eventData) => {
+  //     updateEventView(eventData)
+  //   }
+
+  //   updateInviteTask(HTTP)(mdl)(invite.objectId)(update)
+  //     .chain((_) => loadEventTask(HTTP)(mdl)(mdl.Events.currentEventId()))
+  //     .fork(onError, onSuccess)
+  // }
 
   const updateItem = (mdl) => (item) => {
     const onError = (error) => {
@@ -191,7 +279,7 @@ export const Event = ({ attrs: { mdl } }) => {
       state.items.name = ""
       state.items.quantity = ""
       state.items.updateGuest(false)
-      updateEvent(eventData)
+      updateEventView(eventData)
       state.items.isSubmitted(false)
     }
 
@@ -215,7 +303,7 @@ export const Event = ({ attrs: { mdl } }) => {
 
     deleteItemTask(HTTP)(mdl)(itemId)
       .chain((_) => loadEventTask(HTTP)(mdl)(mdl.Events.currentEventId()))
-      .fork(onError, updateEvent)
+      .fork(onError, updateEventView)
   }
 
   const deleteComment = (mdl) => (commentId) => {
@@ -227,7 +315,7 @@ export const Event = ({ attrs: { mdl } }) => {
 
     deleteCommentTask(HTTP)(mdl)(commentId)
       .chain((_) => loadEventTask(HTTP)(mdl)(mdl.Events.currentEventId()))
-      .fork(onError, updateEvent)
+      .fork(onError, updateEventView)
   }
 
   const addItem = (mdl) => {
@@ -242,7 +330,7 @@ export const Event = ({ attrs: { mdl } }) => {
       state.items.quantity = ""
       state.items.error(null)
       state.items.isSubmitted(false)
-      updateEvent(eventData)
+      updateEventView(eventData)
     }
 
     let item = {
@@ -269,7 +357,7 @@ export const Event = ({ attrs: { mdl } }) => {
       state.comments.message = ""
       state.comments.error(null)
       state.comments.isSubmitted(false)
-      updateEvent(eventData)
+      updateEventView(eventData)
     }
 
     let comment = {
@@ -296,7 +384,7 @@ export const Event = ({ attrs: { mdl } }) => {
     const onSuccess = (eventData) => {
       state.guests.email = ""
       state.guests.error(null)
-      updateEvent(eventData)
+      updateEventView(eventData)
     }
 
     //move to Validations
@@ -345,16 +433,86 @@ export const Event = ({ attrs: { mdl } }) => {
         state.status == "success" &&
           m(".width-100", [
             m(".event-page-heading width-100", [
+              state.modal.isShowing() == "isLast" &&
+                m(Modal, { mdl }, [
+                  {
+                    header:
+                      "Your the last to leave! click ok to delete this event",
+                    body: m(WarningStandardLine),
+                    footer: m(
+                      "button",
+                      { onclick: (e) => leaveEvent(data.guests[0]) },
+                      "Delete"
+                    ),
+                  },
+                ]),
+              state.modal.isShowing() == "isHost" &&
+                m(Modal, { mdl }, [
+                  {
+                    header:
+                      "Your the Host! to leave this event you need to assign a new host",
+                    body: m(
+                      "ul",
+                      otherGuests(data.guests)
+                        .filter(propEq("status", 1))
+                        .map(({ name, guestId }) =>
+                          m(
+                            "span",
+                            m("input", {
+                              id: guestId,
+                              type: "radio",
+                              name: "find-houst",
+                              oninput: (e) => state.modal.newHost(e.target.id),
+                            }),
+                            name
+                          )
+                        )
+                    ),
+                    footer: m(".frow ", [
+                      m(
+                        "button.col-xs-1-2",
+                        {
+                          onclick: (e) => assignNewHostAndLeaveEvent(),
+                        },
+                        "Assign new Host and leave Event"
+                      ),
+                      m(
+                        "button.col-xs-1-2",
+                        { onclick: (e) => state.modal.isShowing(null) },
+                        "Cancel and return to event"
+                      ),
+                    ]),
+                  },
+                ]),
               m("h1.event-page-title.text-center", data.event.title),
               m(
                 ".frow row width-100",
                 m(
                   "h3.event-page-subheading.col-xs-1-2",
-                  `${M(data.event.start).format("ddd MM-DD-YYYY")} | `
+                  `${M(data.event.start).format("ddd MM-DD-YYYY")}`
                 ),
                 m(
                   "h3.event-page-subheading.col-xs-1-2",
                   `${data.event.startTime} - ${data.event.endTime}`
+                )
+              ),
+
+              m(
+                `.navbar-tab-section-${getTheme(mdl)}`,
+                m(
+                  ".frow row width-100",
+                  ["info", "guests", "comments", "items"].map((tab) =>
+                    m(
+                      `button.navbar-tab-${getTheme(mdl)}.col-xs-1-4`,
+                      {
+                        class: state[tab].isShowing()
+                          ? `navbar-tab-selected`
+                          : "",
+                        onclick: (e) => showTab(tab),
+                      },
+                      tab
+                    )
+                  )
                 )
               ),
             ]),
@@ -364,6 +522,8 @@ export const Event = ({ attrs: { mdl } }) => {
                 { mdl, state, data, part: "info", title: "Info" },
                 [
                   m("label", data.event.notes),
+                  m("label", data.event.hostId.name),
+                  m("label", data.event.hostId.email),
 
                   m(".events-map-container", {
                     style: { width: "100%", height: "250px" },
@@ -417,7 +577,6 @@ export const Event = ({ attrs: { mdl } }) => {
                             propEq("guestId", mdl.User.objectId)
                           )
                         ),
-                        updateInvite,
                       })
                     ),
                   ]),
@@ -431,7 +590,6 @@ export const Event = ({ attrs: { mdl } }) => {
                           m(InviteRSVP, {
                             mdl,
                             guest,
-                            updateInvite,
                           })
                         ),
                       ])
@@ -667,7 +825,7 @@ export const Event = ({ attrs: { mdl } }) => {
                   m(
                     `button.btn-${getTheme(mdl)}`,
                     { onclick: (e) => deleteInvite(mdl) },
-                    "Delete"
+                    data.guests.length == 1 ? "Delete Event" : "Leave Event"
                   ),
                   m(
                     `button.btn-${getTheme(mdl)}`,

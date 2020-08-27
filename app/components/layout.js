@@ -3,6 +3,7 @@ import {
   EventToolbar,
   Sidebar,
   Hamburger,
+  IndiPb,
   ProgressBar,
 } from "Components"
 import { Animate, createKeyframeAnimation } from "Styles"
@@ -26,7 +27,8 @@ export const Layout = () => {
         m(
           ".lt-header.navbar",
           m(".frow row", [
-            m(ProgressBar, { mdl }),
+            mdl.State.isLoading() && m(IndiPb),
+            // m(ProgressBar, { mdl }),
             m(Header, { mdl }),
             m(Hamburger, { mdl }),
           ])

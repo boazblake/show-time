@@ -1,16 +1,6 @@
 import { AddLine, TimesLine } from "@mithril-icons/clarity/cjs"
-import {
-  Animate,
-  AnimatePage,
-  fadeInUp,
-  shutterInTop,
-  shutterOutTop,
-  shutterOutDown,
-  shutterOutLeft,
-  shutterInLeft,
-  shutterInRight,
-  shutterOutRight,
-} from "Styles"
+import { Animate, fadeInDown, shutterInTop, shutterOutTop } from "Styles"
+import { log } from "Utils"
 
 export const AccordianItem = () => {
   return {
@@ -18,33 +8,39 @@ export const AccordianItem = () => {
       m(
         ".accordian-item.full-width",
         {
+          id: part,
           oncreate: Animate(shutterInTop),
           onbeforeremove: Animate(shutterOutTop),
         },
         [
           m(
             `.accordian-item-title${state[part].show() ? "-open" : "-closed"}`,
-            [
-              m(
-                ".frow",
-                {
-                  onclick: (e) => state[part].show(!state[part].show()),
+            m(
+              ".frow",
+              {
+                onclick: (e) => {
+                  if (state[part].show()) {
+                    state.selected(null)
+                  } else {
+                    state.selected(part)
+                  }
+                  state[part].show(!state[part].show())
                 },
-                m(".col-xs-1-3", m("h4", title)),
-                m(".col-xs-1-3", pills),
+              },
+              m(".col-xs-1-3", m("h4", title)),
+              m(".col-xs-1-3", pills),
+              m(
+                ".frow row-end col-xs-1-3",
                 m(
-                  ".frow row-end col-xs-1-3",
-                  m(
-                    `.accordian-item-btn`,
-                    state[part].show()
-                      ? m(TimesLine, {
-                          class: "clickable",
-                        })
-                      : m(AddLine, { class: "clickable" })
-                  )
+                  `.accordian-item-btn`,
+                  state[part].show()
+                    ? m(TimesLine, {
+                        class: "clickable",
+                      })
+                    : m(AddLine, { class: "clickable" })
                 )
-              ),
-            ]
+              )
+            )
           ),
           state[part].show() &&
             m(

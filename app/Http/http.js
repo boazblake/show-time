@@ -47,7 +47,7 @@ export const parseHttpSuccess = (mdl) => (res) => (data) => {
 }
 
 const HttpTask = (_headers) => (method) => (mdl) => (url) => (body) => {
-  mdl.State.isLoading(true)
+  // mdl.State.isLoading(true)
   return new Task((rej, res) =>
     m
       .request({

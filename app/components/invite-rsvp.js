@@ -22,7 +22,7 @@ const updateInvite = (mdl) => (update) => (reload) => {
     }
   }
 
-  updateInviteTask(HTTP)(mdl)(update).fork(onError, onSuccess)
+  updateInviteTask(HTTP)(mdl)(update.objectId)(update).fork(onError, onSuccess)
 }
 
 const responses = () => [SadFaceLine, HappyFaceLine, NeutralFaceLine]

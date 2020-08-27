@@ -1,4 +1,5 @@
 import { Profile, SidebarRSVP } from "Components"
+import { getTheme } from "Utils"
 
 export const Sidebar = () => {
   const state = {
@@ -32,32 +33,28 @@ export const Sidebar = () => {
 
         [
           m(
-            ".sidebar-tab-section",
+            `.navbar-tab-section-${getTheme(mdl)}`,
 
             m(".frow row ", [
               m(
-                "button.sidebar-tab.col-xs-1-3",
+                `button.navbar-tab-${getTheme(mdl)}.col-xs-1-3`,
                 {
-                  class: state.Invites.isShowing()
-                    ? "sidebar-tab-selected"
-                    : "",
+                  class: state.Invites.isShowing() ? `navbar-tab-selected` : "",
                   onclick: (e) => showState("Invites"),
                 },
                 "New Invites"
               ),
               m(
-                "button.sidebar-tab.col-xs-1-3",
+                `button.navbar-tab-${getTheme(mdl)}.col-xs-1-3`,
                 {
-                  class: state.Profile.isShowing()
-                    ? "sidebar-tab-selected"
-                    : "",
+                  class: state.Profile.isShowing() ? `navbar-tab-selected` : "",
                   onclick: (e) => showState("Profile"),
                 },
                 "Profile"
               ),
 
               m(
-                "button.sidebar-tab.col-xs-1-3",
+                `button.navbar-tab-${getTheme(mdl)}.col-xs-1-3`,
                 m(
                   m.route.Link,
                   {
