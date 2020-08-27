@@ -9,17 +9,12 @@ import {
   getTheme,
 } from "Utils"
 
-const createEventUrl = (invite) =>
-  `${invite.start.format("YYYY-MM-DD")}/${invite.start.format(
-    "h"
-  )}/${invite.start.format("mm")}`
-
 const navToInvite = (mdl) => (invite) => {
   mdl.Events.currentEventId(invite.eventId)
   mdl.Events.currentEventStart(invite.start)
   localStorage.setItem("shindigit-eventId", invite.eventId)
   localStorage.setItem("shindigit-eventStart", invite.start)
-  m.route.set(`/${hyphenize(mdl.User.name)}/${createEventUrl(invite)}`)
+  m.route.set(`/${hyphenize(mdl.User.name)}/events/${hyphenize(invite.title)}`)
 }
 
 const HourInvite = () => {

@@ -652,17 +652,13 @@ var _Components = require("Components");
 
 var _Utils = require("Utils");
 
-var createEventUrl = function createEventUrl(invite) {
-  return "".concat(invite.start.format("YYYY-MM-DD"), "/").concat(invite.start.format("h"), "/").concat(invite.start.format("mm"));
-};
-
 var navToInvite = function navToInvite(mdl) {
   return function (invite) {
     mdl.Events.currentEventId(invite.eventId);
     mdl.Events.currentEventStart(invite.start);
     localStorage.setItem("shindigit-eventId", invite.eventId);
     localStorage.setItem("shindigit-eventStart", invite.start);
-    m.route.set("/".concat((0, _Utils.hyphenize)(mdl.User.name), "/").concat(createEventUrl(invite)));
+    m.route.set("/".concat((0, _Utils.hyphenize)(mdl.User.name), "/events/").concat((0, _Utils.hyphenize)(invite.title)));
   };
 };
 
@@ -5775,7 +5771,8 @@ var AuthenticatedRoutes = [// {
   id: "event",
   name: "Event",
   // icon: Icons.logo,
-  route: "/:username/:date/:hour/:min",
+  // route: "/:username/:date/:hour/:min",
+  route: "/:username/events/:title/",
   position: ["toolbar"],
   group: ["authenticated"],
   children: [],
