@@ -790,9 +790,27 @@ var _validations = require("./validations");
 
 var _Styles = require("Styles");
 
+var _ramda = require("ramda");
+
+var _invitesTasks = require("../../Http/invites-tasks");
+
 var Editor = function Editor(_ref) {
-  var mdl = _ref.attrs.mdl;
-  var EventFormData = {
+  var _ref$attrs = _ref.attrs,
+      mdl = _ref$attrs.mdl,
+      id = _ref$attrs.id,
+      event = _ref$attrs.event,
+      invites = _ref$attrs.invites;
+  var EventFormData = id ? {
+    shortDate: M(event.start).format("YYYY-MM-DD"),
+    allDay: event.allDay,
+    inPerson: event.inPerson,
+    location: event.location,
+    latlong: event.latlong,
+    startTime: M(event.start).format("HH:mm"),
+    endTime: M(event.end).format("HH:mm"),
+    title: event.title,
+    notes: event.notes
+  } : {
     shortDate: mdl.selectedDate().format("YYYY-MM-DD"),
     allDay: false,
     inPerson: true,
@@ -803,6 +821,7 @@ var Editor = function Editor(_ref) {
     title: "",
     notes: ""
   };
+  console.log(EventFormData);
   var EventFormState = {
     status: "loading",
     errors: null,
@@ -859,9 +878,32 @@ var Editor = function Editor(_ref) {
     (0, _validations.validateTask)(data).chain((0, _Http.createEventTask)(_Http.HTTP)(mdl)).fork(onError, onSuccess);
   };
 
+  var updateEvent = function updateEvent(_ref3) {
+    var mdl = _ref3.mdl,
+        data = _ref3.data,
+        state = _ref3.state;
+
+    var onError = function onError(errors) {
+      state.errors = errors;
+      state.status = "failed";
+    };
+
+    var onSuccess = function onSuccess() {
+      mdl.Invites.fetch(true);
+      mdl.Events.fetch(true);
+      mdl.Events.createNewEvent(false);
+      mdl.Events.updateEvent(false);
+    };
+
+    state.isSubmitted = true;
+    (0, _validations.validateTask)(data).chain((0, _invitesTasks.updateBulkInvites)(_Http.HTTP)(mdl)("eventId='".concat(mdl.Events.currentEventId(), "'"))).chain(function () {
+      return (0, _Http.updateEventTask)(_Http.HTTP)(mdl)(mdl.Events.currentEventId())(data);
+    }).fork(onError, onSuccess);
+  };
+
   return {
-    view: function view(_ref3) {
-      var mdl = _ref3.attrs.mdl;
+    view: function view(_ref4) {
+      var mdl = _ref4.attrs.mdl;
       return m(_eventForm.EventForm, {
         oncreate: (0, _Styles.Animate)(_Styles.slideInDown, {
           delay: 2
@@ -874,7 +916,9 @@ var Editor = function Editor(_ref) {
         state: EventFormState,
         validate: validate,
         resetState: resetState,
-        submit: addNewEvent
+        submit: addNewEvent,
+        update: updateEvent,
+        isEdit: id
       });
     }
   };
@@ -917,7 +961,12 @@ var locateQuery = function locateQuery(mdl) {
   };
 };
 
-var EventForm = function EventForm() {
+var EventForm = function EventForm(_ref) {
+  var _ref$attrs = _ref.attrs,
+      update = _ref$attrs.update,
+      validate = _ref$attrs.validate,
+      submit = _ref$attrs.submit;
+
   var setAllDay = function setAllDay(data) {
     data.allDay = !data.allDay;
 
@@ -932,20 +981,19 @@ var EventForm = function EventForm() {
 
   return {
     onbeforeremove: (0, _Styles.Animate)(_Styles.shutterOutTop),
-    view: function view(_ref) {
-      var _ref$attrs = _ref.attrs,
-          data = _ref$attrs.data,
-          state = _ref$attrs.state,
-          resetState = _ref$attrs.resetState,
-          mdl = _ref$attrs.mdl,
-          validate = _ref$attrs.validate,
-          submit = _ref$attrs.submit;
+    view: function view(_ref2) {
+      var _ref2$attrs = _ref2.attrs,
+          data = _ref2$attrs.data,
+          state = _ref2$attrs.state,
+          resetState = _ref2$attrs.resetState,
+          mdl = _ref2$attrs.mdl,
+          isEdit = _ref2$attrs.isEdit;
       return m("form.event-form", m(".frow column-centered", [m(".full-width", m("label.frow row row-evenly ", [m("input.col-xs-2-3 ", {
         onchange: function onchange(e) {
-          return m.route.set("/".concat((0, _Utils.hyphenize)(mdl.User.name), "/").concat(e.target.value.trim()));
+          return isEdit ? data.start = e.target.value : m.route.set("/".concat((0, _Utils.hyphenize)(mdl.User.name), "/").concat(e.target.value.trim()));
         },
         type: "date",
-        value: mdl.selectedDate().format("YYYY-MM-DD")
+        value: M(data.start).format("YYYY-MM-DD")
       }), m("label.pl-30.col-xs-1-3", "All Day", m("input", {
         type: "checkbox",
         checked: data.allDay,
@@ -1008,9 +1056,9 @@ var EventForm = function EventForm() {
         onkeyup: function onkeyup(e) {
           return state.isSubmitted && validate(state, data);
         }
-      }), m(".frow row-start", ["URL link", m("span.required-field", "*")])), state.locationWarning() && m("p.location-info-text", state.locationWarning()), state.queryResults.any() && m("ul.event-form-query-container", state.queryResults.map(function (_ref2) {
-        var address = _ref2.address,
-            latlong = _ref2.latlong;
+      }), m(".frow row-start", ["URL link", m("span.required-field", "*")])), state.locationWarning() && m("p.location-info-text", state.locationWarning()), state.queryResults.any() && m("ul.event-form-query-container", state.queryResults.map(function (_ref3) {
+        var address = _ref3.address,
+            latlong = _ref3.latlong;
         return m("li", m("code.form-event-query-result", {
           onclick: function onclick(e) {
             data.location = address;
@@ -1020,7 +1068,7 @@ var EventForm = function EventForm() {
         }, address));
       })), state.errors && m("code.error-field", state.errors.location)])), m("label", m("input", {
         type: "text",
-        value: data.text,
+        value: data.title,
         oninput: function oninput(e) {
           return data.title = e.target.value;
         },
@@ -1044,7 +1092,11 @@ var EventForm = function EventForm() {
       }), "Notes"), m("button.full-width", {
         onclick: function onclick(e) {
           e.preventDefault();
-          submit({
+          isEdit ? update({
+            mdl: mdl,
+            data: data,
+            state: state
+          }) : submit({
             mdl: mdl,
             data: data,
             state: state
@@ -3863,7 +3915,7 @@ Object.keys(_openCage).forEach(function (key) {
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.deleteInviteTask = exports.createInviteTask = exports.sendInviteTask = exports.getInvitesTaskByEventId = exports.getInvitesByGuestIdTask = exports.updateInviteTask = exports.toInviteViewModel = void 0;
+exports.deleteInviteTask = exports.createInviteTask = exports.sendInviteTask = exports.getInvitesTaskByEventId = exports.getInvitesByGuestIdTask = exports.updateInviteTask = exports.updateBulkInvites = exports.toInviteViewModel = void 0;
 
 var _ramda = require("ramda");
 
@@ -3916,6 +3968,18 @@ var toInviteDto = function toInviteDto(_ref2) {
     hostId: hostId
   };
 };
+
+var updateBulkInvites = function updateBulkInvites(http) {
+  return function (mdl) {
+    return function (cond) {
+      return function (update) {
+        return http.backEnd.putTask(mdl)("data/bulk/Invites?where=".concat(encodeURIComponent(cond)))(update);
+      };
+    };
+  };
+};
+
+exports.updateBulkInvites = updateBulkInvites;
 
 var updateInviteTask = function updateInviteTask(http) {
   return function (mdl) {
@@ -4283,7 +4347,7 @@ var unRelateItemToUserTask = function unRelateItemToUserTask(http) {
   return function (mdl) {
     return function (userId) {
       return function (itemId) {
-        return http.backEnd.deleteTask(mdl)("data/Users/".concat(userId, "/items?whereClause=objectId%3D'").concat(encodeURI(itemId), "'"));
+        return http.backEnd.deleteTask(mdl)("data/Users/".concat(userId, "/items?whereClause=objectId%3D'").concat(itemId, "'"));
       };
     };
   };
@@ -4384,7 +4448,9 @@ exports.dayModel = dayModel;
 var Events = {
   currentEventId: Stream(null),
   currentEventStart: Stream(null),
-  createNewEvent: Stream(false)
+  createNewEvent: Stream(false),
+  updateEvent: Stream(false),
+  fetch: Stream(false)
 };
 var Invites = {
   state: {
@@ -4853,6 +4919,338 @@ var _default = Register;
 exports.default = _default;
 });
 
+;require.register("Pages/Event/component.js", function(exports, require, module) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.Component = void 0;
+
+var Component = function Component() {
+  return {
+    view: function view() {
+      return m(".");
+    }
+  };
+};
+
+exports.Component = Component;
+});
+
+;require.register("Pages/Event/components.js", function(exports, require, module) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _eventComments = require("./event-comments.js");
+
+Object.keys(_eventComments).forEach(function (key) {
+  if (key === "default" || key === "__esModule") return;
+  Object.defineProperty(exports, key, {
+    enumerable: true,
+    get: function get() {
+      return _eventComments[key];
+    }
+  });
+});
+
+var _eventItems = require("./event-items.js");
+
+Object.keys(_eventItems).forEach(function (key) {
+  if (key === "default" || key === "__esModule") return;
+  Object.defineProperty(exports, key, {
+    enumerable: true,
+    get: function get() {
+      return _eventItems[key];
+    }
+  });
+});
+
+var _eventGuests = require("./event-guests.js");
+
+Object.keys(_eventGuests).forEach(function (key) {
+  if (key === "default" || key === "__esModule") return;
+  Object.defineProperty(exports, key, {
+    enumerable: true,
+    get: function get() {
+      return _eventGuests[key];
+    }
+  });
+});
+
+var _eventInfo = require("./event-info.js");
+
+Object.keys(_eventInfo).forEach(function (key) {
+  if (key === "default" || key === "__esModule") return;
+  Object.defineProperty(exports, key, {
+    enumerable: true,
+    get: function get() {
+      return _eventInfo[key];
+    }
+  });
+});
+});
+
+;require.register("Pages/Event/event-comments.js", function(exports, require, module) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.EventComments = void 0;
+
+var _Utils = require("Utils");
+
+var _cjs = require("@mithril-icons/clarity/cjs");
+
+var EventComments = function EventComments(_ref) {
+  var _ref$attrs = _ref.attrs,
+      validate = _ref$attrs.validate,
+      sendMessage = _ref$attrs.sendMessage;
+  return {
+    view: function view(_ref2) {
+      var _ref2$attrs = _ref2.attrs,
+          mdl = _ref2$attrs.mdl,
+          data = _ref2$attrs.data,
+          state = _ref2$attrs.state;
+      return m(".comments-items", m(".frow row-start", [m(".frow width-100", [m(".events-messages-container width-100 text-center", {
+        oncreate: function oncreate(_ref3) {
+          var dom = _ref3.dom;
+          return dom.scrollTo(0, dom.scrollHeight, "smooth");
+        }
+      }, data.comments.any() ? data.comments.map(function (comment) {
+        return m(".frow column-center width-100 mb-40", m(".event-comments-message-container ".concat(mdl.User.objectId == comment.guestId ? "me" : "other"), m(".event-comments-message frow items-end", [m(".speech-bubble", [m("span.text-left", comment.message), mdl.User.objectId == comment.guestId && m(_cjs.TimesCircleLine, {
+          onclick: function onclick(e) {
+            return deleteComment(mdl)(comment.objectId);
+          },
+          class: "event-comments-message-remove smaller"
+        })]), m("label.event-comment-name", m(".frow row-between", [m("span", comment.name), m("span", M(comment.created).format((0, _Utils.getTimeFormat)(mdl)))]))])));
+      }) : m(".events-messages-container-empty", "Start a conversation")), m(".event-comment-textbox-container", m(".frow items-end", [m(".col-xs-4-5", m("textarea.comments-message-container", {
+        row: 20,
+        cols: 50,
+        placeholder: "Say hi...",
+        value: state.comments.message,
+        oncreate: _Utils.autoFocus,
+        oninput: function oninput(e) {
+          return state.comments.message = e.target.value;
+        },
+        onchange: function onchange(e) {
+          return state.comments.message = state.comments.message.trim();
+        },
+        onblur: function onblur(e) {
+          return validate("comments")(state.comments);
+        }
+      })), m(".col-xs-1-5", m("button.button-none.comments-message-btn-".concat((0, _Utils.getTheme)(mdl)), {
+        onclick: function onclick(e) {
+          return sendMessage(mdl);
+        }
+      }, "Send"))])), state.comments.error() && m("code.error-field", state.comments.error().name)])]));
+    }
+  };
+};
+
+exports.EventComments = EventComments;
+});
+
+;require.register("Pages/Event/event-guests.js", function(exports, require, module) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.EventGuests = void 0;
+
+var _Components = require("Components");
+
+var _Utils = require("Utils");
+
+var _ramda = require("ramda");
+
+var EventGuests = function EventGuests(_ref) {
+  var sendInvite = _ref.attrs.sendInvite;
+  return {
+    view: function view(_ref2) {
+      var _ref2$attrs = _ref2.attrs,
+          mdl = _ref2$attrs.mdl,
+          data = _ref2$attrs.data,
+          state = _ref2$attrs.state;
+      return m(".event-guests", m(".guests-container", [m(".event-forms", m(".frow row event-input-group", [m("input.col-xs-4-5", {
+        placeholder: "email",
+        type: "email",
+        value: state.guests.email,
+        oninput: function oninput(e) {
+          return state.guests.email = e.target.value.trim();
+        }
+      }), m("button.btn-".concat((0, _Utils.getTheme)(mdl), ".col-xs-1-5.button-none"), {
+        onclick: function onclick(e) {
+          return sendInvite(mdl);
+        }
+      }, "Invite"), state.guests.error() && m("code.error-field", state.guests.error())])), m(".frow row-start", [m(".col-xs-1-2", mdl.User.name), m(".col-xs-1-2", m(_Components.InviteRSVP, {
+        mdl: mdl,
+        reload: function reload() {
+          return mdl.Invites.fetch(true);
+        },
+        guest: (0, _ramda.head)(data.guests.filter((0, _ramda.propEq)("guestId", mdl.User.objectId)))
+      }))]), data.guests.filter((0, _ramda.compose)(_ramda.not, (0, _ramda.propEq)("guestId", mdl.User.objectId))).map(function (guest) {
+        return m(".frow row-start", [m(".col-xs-1-2", guest.name), m(".col-xs-1-2", m(_Components.InviteRSVP, {
+          mdl: mdl,
+          guest: guest
+        }))]);
+      })]));
+    }
+  };
+};
+
+exports.EventGuests = EventGuests;
+});
+
+;require.register("Pages/Event/event-info.js", function(exports, require, module) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.EventInfo = void 0;
+
+var _ramda = require("ramda");
+
+var EventInfo = function EventInfo(_ref) {
+  var _ref$attrs = _ref.attrs,
+      setupMap = _ref$attrs.setupMap,
+      otherGuests = _ref$attrs.otherGuests;
+  return {
+    view: function view(_ref2) {
+      var _ref2$attrs = _ref2.attrs,
+          mdl = _ref2$attrs.mdl,
+          data = _ref2$attrs.data,
+          state = _ref2$attrs.state;
+      return m(".event-info", [m("h3.heading", "Hosted by: ".concat(data.event.hostId.name)), m("h3.heading", "Notes: ".concat(data.event.notes)), m("h3.heading", "Location:"), m(".events-map-container", {
+        style: {
+          width: "100%",
+          height: "250px"
+        },
+        oncreate: setupMap
+      }), m("h3.heading", "Guests: Invited ".concat(otherGuests(data.guests).length, " , Accepted  ").concat(otherGuests(data.guests).filter((0, _ramda.propEq)("status", 1)).length, " , Total: ").concat(data.guests.length)), m("h3.heading", "Items: Total ".concat(data.items.length, ", selected: ").concat(data.items.filter((0, _ramda.propEq)("guestId")).length)), m("button.required-field", {
+        onclick: function onclick(e) {
+          return state.modal.isShowing("settings");
+        }
+      }, "Event Settings")]);
+    }
+  };
+};
+
+exports.EventInfo = EventInfo;
+});
+
+;require.register("Pages/Event/event-items.js", function(exports, require, module) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.EventItems = void 0;
+
+var _Utils = require("Utils");
+
+var _cjs = require("@mithril-icons/clarity/cjs");
+
+var _ramda = require("ramda");
+
+var isUserItem = function isUserItem(mdl) {
+  return function (item) {
+    return mdl.User.objectId == item.guestId;
+  };
+};
+
+var getUserFromId = function getUserFromId(id) {
+  return function (guests) {
+    return (0, _ramda.pluck)("name", guests.filter((0, _ramda.propEq)("guestId", id)));
+  };
+};
+
+var EventItems = function EventItems(_ref) {
+  var _ref$attrs = _ref.attrs,
+      validate = _ref$attrs.validate,
+      addItem = _ref$attrs.addItem;
+  return {
+    view: function view(_ref2) {
+      var _ref2$attrs = _ref2.attrs,
+          mdl = _ref2$attrs.mdl,
+          data = _ref2$attrs.data,
+          state = _ref2$attrs.state;
+      return m(".event-items-section", [m(".frow row event-input-group", [m("input.col-xs-1-2", {
+        placeholder: "name",
+        value: state.items.name,
+        oncreate: _Utils.autoFocus,
+        oninput: function oninput(e) {
+          return state.items.name = e.target.value;
+        },
+        onchange: function onchange(e) {
+          return state.items.name = state.items.name.trim();
+        },
+        onblur: function onblur(e) {
+          return validate("items")(state.items);
+        },
+        type: "text"
+      }), m("input.col-xs-1-4", {
+        placeholder: "quantity",
+        value: state.items.quantity,
+        oninput: function oninput(e) {
+          return state.items.quantity = e.target.value.trim();
+        },
+        onblur: function onblur(e) {
+          return validate("items")(state.items);
+        },
+        type: "number",
+        inputMode: "number",
+        pattern: "[0-9]*"
+      }), m("button.btn-".concat((0, _Utils.getTheme)(mdl), ".col-xs-1-5.button-none"), {
+        onclick: function onclick(e) {
+          return addItem(mdl);
+        }
+      }, "Add"), state.items.error() && m("code.error-field", state.items.error().name), state.items.error() && m("code.error-field", state.items.error().quantity)]), m(".event-items", data.items.map(function (item) {
+        return m(".event-items-item frow ", [m(".col-xs-2-3 ", m("h4", item.name), m("label", item.guestId ? [m("span.clickable.frow row-start", isUserItem(mdl)(item) && m(_cjs.MinusCircleLine, {
+          onclick: function onclick(e) {
+            item.guestId = null;
+            state.items.updateGuest(true);
+            updateItem(mdl)(item);
+          },
+          class: "smaller"
+        }), getUserFromId(item.guestId)(data.guests))] : m("i.clickable", {
+          onclick: function onclick(e) {
+            item.guestId = mdl.User.objectId;
+            state.items.updateGuest(true);
+            updateItem(mdl)(item);
+          }
+        }, "click to select item"))), m(".col-xs-1-3 frow items-center", [isUserItem(mdl)(item) && m(".events-remove-item", m("span.clickable", m(_cjs.RemoveLine, {
+          class: "smaller",
+          onclick: function onclick(e) {
+            return deleteItem(mdl)(item.objectId);
+          }
+        }))), m(".col-xs-2-3 frow column-center", [isUserItem(mdl)(item) && m(".col-xs-1-3", m("span.clickable", m(_cjs.AngleLine, {
+          class: "smaller",
+          onclick: function onclick(e) {
+            item.quantity++;
+            updateItem(mdl)(item);
+          }
+        }))), m(".col-xs-1-3 text-center pb-2", item.quantity), isUserItem(mdl)(item) && m(".col-xs-1-3", m("span.clickable.smaller", m(_cjs.AngleLine, {
+          class: "decrement",
+          onclick: function onclick(e) {
+            item.quantity > 0 && item.quantity--;
+            updateItem(mdl)(item);
+          }
+        })))])])]);
+      }))]);
+    }
+  };
+};
+
+exports.EventItems = EventItems;
+});
+
 ;require.register("Pages/Event/event-page.js", function(exports, require, module) {
 "use strict";
 
@@ -4877,13 +5275,9 @@ var _data = _interopRequireDefault(require("data.task"));
 
 var _validations = require("./validations");
 
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+var _components = require("./components");
 
-var isUserItem = function isUserItem(mdl) {
-  return function (item) {
-    return mdl.User.objectId == item.guestId;
-  };
-};
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 var Event = function Event(_ref) {
   var mdl = _ref.attrs.mdl;
@@ -4966,10 +5360,6 @@ var Event = function Event(_ref) {
     };
   };
 
-  var getUserFromId = function getUserFromId(id) {
-    return (0, _ramda.pluck)("name", data.guests.filter((0, _ramda.propEq)("guestId", id)));
-  };
-
   var updateEventView = function updateEventView(_ref2) {
     var event = _ref2.event,
         guests = _ref2.guests,
@@ -4983,6 +5373,7 @@ var Event = function Event(_ref) {
     state.status = "success";
     state.modal.isShowing(null);
     state.modal.newHost(null);
+    mdl.Events.fetch(false);
   };
 
   var load = function load(_ref3) {
@@ -5103,20 +5494,7 @@ var Event = function Event(_ref) {
 
   var deleteInvite = function deleteInvite(mdl) {
     isLast(data.guests) ? state.modal.isShowing("isLast") : isHost(data.guests) ? state.modal.isShowing("isHost") : leaveEvent(invite(data.guests));
-  }; // const updateInvite = (mdl) => (update) => {
-  //   const onError = (error) => {
-  //     state.error = jsonCopy(error)
-  //     state.status = "failed"
-  //     console.log("invite update failed", state, update)
-  //   }
-  //   const onSuccess = (eventData) => {
-  //     updateEventView(eventData)
-  //   }
-  //   updateInviteTask(HTTP)(mdl)(invite.objectId)(update)
-  //     .chain((_) => loadEventTask(HTTP)(mdl)(mdl.Events.currentEventId()))
-  //     .fork(onError, onSuccess)
-  // }
-
+  };
 
   var updateItem = function updateItem(mdl) {
     return function (item) {
@@ -5277,6 +5655,14 @@ var Event = function Event(_ref) {
 
   return {
     oninit: load,
+    onupdate: function onupdate(_ref5) {
+      var mdl = _ref5.attrs.mdl;
+      return mdl.Events.fetch() && load({
+        attrs: {
+          mdl: mdl
+        }
+      });
+    },
     view: function view() {
       // console.log(data.event)
       return m(".event-page", [state.status == "loading" && m(".", "Fetching Event..."), state.status == "failed" && m(".code", state.error.message), state.status == "success" && m(".width-100", [m(".event-page-heading width-100", [state.modal.isShowing() == "isLast" && m(_Components.Modal, {
@@ -5297,9 +5683,9 @@ var Event = function Event(_ref) {
         mdl: mdl
       }, [{
         header: "Your the Host! to leave this event you need to assign a new host",
-        body: m("ul", otherGuests(data.guests).filter((0, _ramda.propEq)("status", 1)).map(function (_ref5) {
-          var name = _ref5.name,
-              guestId = _ref5.guestId;
+        body: m("ul", otherGuests(data.guests).filter((0, _ramda.propEq)("status", 1)).map(function (_ref6) {
+          var name = _ref6.name,
+              guestId = _ref6.guestId;
           return m("span", m("input", {
             id: guestId,
             type: "radio",
@@ -5323,9 +5709,9 @@ var Event = function Event(_ref) {
         mdl: mdl
       }, [{
         header: "Select the new host",
-        body: m("ul", otherGuests(data.guests).filter((0, _ramda.propEq)("status", 1)).map(function (_ref6) {
-          var name = _ref6.name,
-              guestId = _ref6.guestId;
+        body: m("ul", otherGuests(data.guests).filter((0, _ramda.propEq)("status", 1)).map(function (_ref7) {
+          var name = _ref7.name,
+              guestId = _ref7.guestId;
           return m("span", m("input", {
             id: guestId,
             type: "radio",
@@ -5345,179 +5731,82 @@ var Event = function Event(_ref) {
             return state.modal.isShowing(null);
           }
         }, "Cancel and return to event")])
-      }]), m("h1.event-page-title.text-center", data.event.title), m(".frow row width-100", m("h3.event-page-subheading.col-xs-1-2", "".concat(M(data.event.start).format("ddd MM-DD-YYYY"))), m("h3.event-page-subheading.col-xs-1-2", "".concat(data.event.startTime, " - ").concat(data.event.endTime))), m(".navbar-tab-section-".concat((0, _Utils.getTheme)(mdl)), m(".frow row width-100", ["info", "guests", "comments", "items"].map(function (tab) {
+      }]), state.modal.isShowing() == "settings" && m(_Components.Modal, {
+        mdl: mdl
+      }, [{
+        header: "Event Settings",
+        body: m(".frow row-start", [m("button.btn-".concat((0, _Utils.getTheme)(mdl)), {
+          onclick: function onclick(e) {
+            return deleteInvite(mdl);
+          }
+        }, data.guests.length == 1 ? "Delete Event" : "Leave Event"), isHost(data.guests) && [m("button.btn-".concat((0, _Utils.getTheme)(mdl)), {
+          disabled: isLast(data.guests),
+          onclick: function onclick(e) {
+            return state.modal.isShowing("newHost");
+          }
+        }, "Change Host"), m("button.btn-".concat((0, _Utils.getTheme)(mdl)), {
+          onclick: function onclick(e) {
+            mdl.Events.updateEvent(true);
+            state.modal.isShowing("editEvent");
+          }
+        }, "Edit")]]),
+        footer: [m("button.btn-".concat((0, _Utils.getTheme)(mdl)), {
+          onclick: function onclick(e) {
+            state.modal.isShowing(null);
+          }
+        }, "Back To Event")]
+      }]), state.modal.isShowing() == "editEvent" && mdl.Events.updateEvent() && m(_Components.Modal, {
+        mdl: mdl
+      }, [{
+        header: "Edit Event",
+        body: m(_Components.Editor, {
+          mdl: mdl,
+          id: data.event.eventId,
+          event: data.event,
+          invites: data.guests
+        }),
+        footer: [m("button.btn-".concat((0, _Utils.getTheme)(mdl)), {
+          onclick: function onclick(e) {
+            state.modal.isShowing("settings");
+            mdl.Events.updateEvent(false);
+          }
+        }, "Back To Settings"), m("button.btn-".concat((0, _Utils.getTheme)(mdl)), {
+          onclick: function onclick(e) {
+            mdl.Events.updateEvent(false);
+            state.modal.isShowing(null);
+          }
+        }, "Back To Event")]
+      }]), m("h1.event-page-title.text-center", data.event.title), m(".frow row width-100", m("h3.event-page-subheading.col-xs-1-2", "".concat(M(data.event.start).format("ddd MM-DD-YYYY"))), m("h3.event-page-subheading.col-xs-1-2", "".concat(data.event.startTime, " - ").concat(data.event.endTime))), m("nav.navbar-tab-section-".concat((0, _Utils.getTheme)(mdl)), m(".frow row width-100", ["info", "guests", "comments", "items"].map(function (tab) {
         return m("button.navbar-tab-".concat((0, _Utils.getTheme)(mdl), ".col-xs-1-4"), {
           class: state[tab].isShowing() ? "navbar-tab-selected" : "",
           onclick: function onclick(e) {
             return showTab(tab);
           }
         }, tab);
-      })))]), m(".accordian", [m(_Components.AccordianItem, {
+      })))]), m("section.event-view-section", [state.info.isShowing() && m(_components.EventInfo, {
         mdl: mdl,
-        state: state,
         data: data,
-        part: "info",
-        title: "Info"
-      }, [m("label", data.event.notes), m("label", data.event.hostId.name), m("label", data.event.hostId.email), m(".events-map-container", {
-        style: {
-          width: "100%",
-          height: "250px"
-        },
-        oncreate: setupMap
-      })]), m(_Components.AccordianItem, {
-        mdl: mdl,
         state: state,
+        setupMap: setupMap,
+        otherGuests: otherGuests
+      }), state.guests.isShowing() && m(_components.EventGuests, {
+        mdl: mdl,
         data: data,
-        part: "guests",
-        title: "Guests",
-        pills: [m(".pill", data.guests.length)]
-      }, m(".guests-container", [m(".event-forms", m(".frow row event-input-group", [m("input.col-xs-4-5", {
-        placeholder: "email",
-        type: "email",
-        value: state.guests.email,
-        oninput: function oninput(e) {
-          return state.guests.email = e.target.value.trim();
-        }
-      }), m("button.btn-".concat((0, _Utils.getTheme)(mdl), ".col-xs-1-5.button-none"), {
-        onclick: function onclick(e) {
-          return sendInvite(mdl);
-        }
-      }, "Invite"), state.guests.error() && m("code.error-field", state.guests.error())])), m(".frow row-start", [m(".col-xs-1-2", mdl.User.name), m(".col-xs-1-2", m(_Components.InviteRSVP, {
-        mdl: mdl,
-        reload: function reload() {
-          return mdl.Invites.fetch(true);
-        },
-        guest: (0, _ramda.head)(data.guests.filter((0, _ramda.propEq)("guestId", mdl.User.objectId)))
-      }))]), data.guests.filter((0, _ramda.compose)(_ramda.not, (0, _ramda.propEq)("guestId", mdl.User.objectId))).map(function (guest) {
-        return m(".frow row-start", [m(".col-xs-1-2", guest.name), m(".col-xs-1-2", m(_Components.InviteRSVP, {
-          mdl: mdl,
-          guest: guest
-        }))]);
-      })])), m(_Components.AccordianItem, {
-        mdl: mdl,
         state: state,
-        data: data,
-        part: "items",
-        title: "Items",
-        pills: [m(".pill", data.items.length)]
-      }, [m(".frow row event-input-group", [m("input.col-xs-1-2", {
-        placeholder: "name",
-        value: state.items.name,
-        oninput: function oninput(e) {
-          return state.items.name = e.target.value;
-        },
-        onchange: function onchange(e) {
-          return state.items.name = state.items.name.trim();
-        },
-        onblur: function onblur(e) {
-          return validate("items")(state.items);
-        },
-        type: "text"
-      }), m("input.col-xs-1-4", {
-        placeholder: "quantity",
-        value: state.items.quantity,
-        oninput: function oninput(e) {
-          return state.items.quantity = e.target.value.trim();
-        },
-        onblur: function onblur(e) {
-          return validate("items")(state.items);
-        },
-        type: "number",
-        inputMode: "number",
-        pattern: "[0-9]*"
-      }), m("button.btn-".concat((0, _Utils.getTheme)(mdl), ".col-xs-1-5.button-none"), {
-        onclick: function onclick(e) {
-          return addItem(mdl);
-        }
-      }, "Add"), state.items.error() && m("code.error-field", state.items.error().name), state.items.error() && m("code.error-field", state.items.error().quantity)]), m(".event-items", data.items.map(function (item) {
-        return m(".event-items-item frow ", [m(".col-xs-2-3 ", m("h4", item.name), m("label", item.guestId ? [m("span.clickable.frow row-start", isUserItem(mdl)(item) && m(_cjs.MinusCircleLine, {
-          onclick: function onclick(e) {
-            item.guestId = null;
-            state.items.updateGuest(true);
-            updateItem(mdl)(item);
-          },
-          class: "smaller"
-        }), getUserFromId(item.guestId))] : m("i.clickable", {
-          onclick: function onclick(e) {
-            item.guestId = mdl.User.objectId;
-            state.items.updateGuest(true);
-            updateItem(mdl)(item);
-          }
-        }, "click to select item"))), m(".col-xs-1-3 frow items-center", [isUserItem(mdl)(item) && m(".events-remove-item", m("span.clickable", m(_cjs.RemoveLine, {
-          class: "smaller",
-          onclick: function onclick(e) {
-            return deleteItem(mdl)(item.objectId);
-          }
-        }))), m(".col-xs-2-3 frow column-center", [isUserItem(mdl)(item) && m(".col-xs-1-3", m("span.clickable", m(_cjs.AngleLine, {
-          class: "smaller",
-          onclick: function onclick(e) {
-            item.quantity++;
-            updateItem(mdl)(item);
-          }
-        }))), m(".col-xs-1-3 text-center pb-2", item.quantity), isUserItem(mdl)(item) && m(".col-xs-1-3", m("span.clickable.smaller", m(_cjs.AngleLine, {
-          class: "decrement",
-          onclick: function onclick(e) {
-            item.quantity > 0 && item.quantity--;
-            updateItem(mdl)(item);
-          }
-        })))])])]);
-      }))]), m(_Components.AccordianItem, {
+        sendInvite: sendInvite
+      }), state.items.isShowing() && m(_components.EventItems, {
         mdl: mdl,
-        state: state,
         data: data,
-        part: "comments",
-        title: "Comments"
-      }, m(".frow row-start", [m(".frow width-100", [m(".events-messages-container width-100 text-center", {
-        oncreate: function oncreate(_ref7) {
-          var dom = _ref7.dom;
-          return dom.scrollTo(0, dom.scrollHeight, "smooth");
-        }
-      }, data.comments.any() ? data.comments.map(function (comment) {
-        return m(".frow column-center width-100 mb-40", m(".event-comments-message-container ".concat(mdl.User.objectId == comment.guestId ? "me" : "other"), m(".event-comments-message frow items-end", [m(".speech-bubble", [m("span.text-left", comment.message), mdl.User.objectId == comment.guestId && m(_cjs.TimesCircleLine, {
-          onclick: function onclick(e) {
-            return deleteComment(mdl)(comment.objectId);
-          },
-          class: "event-comments-message-remove smaller"
-        })]), m("label.event-comment-name", m(".frow row-between", [m("span", comment.name), m("span", M(comment.created).format((0, _Utils.getTimeFormat)(mdl)))]))])));
-      }) : m(".events-messages-container-empty", "Start a conversation")), m(".event-comment-textbox-container", m(".frow items-end", [m(".col-xs-4-5", m("textarea.comments-message-container", {
-        row: 20,
-        cols: 50,
-        placeholder: "Say hi...",
-        value: state.comments.message,
-        oncreate: _Utils.autoFocus,
-        oninput: function oninput(e) {
-          return state.comments.message = e.target.value;
-        },
-        onchange: function onchange(e) {
-          return state.comments.message = state.comments.message.trim();
-        },
-        onblur: function onblur(e) {
-          return validate("comments")(state.comments);
-        }
-      })), m(".col-xs-1-5", m("button.button-none.comments-message-btn-".concat((0, _Utils.getTheme)(mdl)), {
-        onclick: function onclick(e) {
-          return sendMessage(mdl);
-        }
-      }, "Send"))])), state.comments.error() && m("code.error-field", state.comments.error().name)])])), m(_Components.AccordianItem, {
+        state: state,
+        validate: validate,
+        addItem: addItem
+      }), state.comments.isShowing() && m(_components.EventComments, {
         mdl: mdl,
-        state: state,
         data: data,
-        part: "settings",
-        title: "Settings"
-      }, m(".frow row-start", [m("button.btn-".concat((0, _Utils.getTheme)(mdl)), {
-        onclick: function onclick(e) {
-          return deleteInvite(mdl);
-        }
-      }, data.guests.length == 1 ? "Delete Event" : "Leave Event"), isHost(data.guests) && m("button.btn-".concat((0, _Utils.getTheme)(mdl)), {
-        disabled: isLast(data.guests),
-        onclick: function onclick(e) {
-          return state.modal.isShowing("newHost");
-        }
-      }, "Change Host"), m("button.btn-".concat((0, _Utils.getTheme)(mdl)), {
-        onclick: function onclick(e) {
-          return console.log("edit event ...");
-        }
-      }, "Edit")]))])])]);
+        state: state,
+        validate: validate,
+        sendMessage: sendMessage
+      })])])]);
     }
   };
 };

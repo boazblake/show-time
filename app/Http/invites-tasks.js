@@ -46,6 +46,11 @@ const toInviteDto = ({
   hostId,
 })
 
+export const updateBulkInvites = (http) => (mdl) => (cond) => (update) =>
+  http.backEnd.putTask(mdl)(
+    `data/bulk/Invites?where=${encodeURIComponent(cond)}`
+  )(update)
+
 export const updateInviteTask = (http) => (mdl) => (inviteId) => (invite) =>
   http.backEnd
     .putTask(mdl)(`data/Invites/${inviteId}`)(toInviteDto(invite))

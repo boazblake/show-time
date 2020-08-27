@@ -1,16 +1,5 @@
-import { getTimeFormat, jsonCopy, hyphenize, getTheme, autoFocus } from "Utils"
-import {
-  without,
-  propEq,
-  compose,
-  not,
-  head,
-  pluck,
-  set,
-  lensProp,
-  traverse,
-  find,
-} from "ramda"
+import { jsonCopy, hyphenize, getTheme } from "Utils"
+import { without, propEq, set, lensProp, traverse, find } from "ramda"
 import mapboxgl from "mapbox-gl/dist/mapbox-gl.js"
 import {
   HTTP,
@@ -27,18 +16,11 @@ import {
   updateItemTask,
   updateItemToGuestTask,
 } from "Http"
-import { AccordianItem, InviteRSVP, Modal } from "Components"
-import {
-  AngleLine,
-  RemoveLine,
-  MinusCircleLine,
-  TimesCircleLine,
-  WarningStandardLine,
-} from "@mithril-icons/clarity/cjs"
+import { Modal, Editor } from "Components"
+import { WarningStandardLine } from "@mithril-icons/clarity/cjs"
 import Task from "data.task"
 import { validateItemTask, validateCommentTask } from "./validations"
-
-const isUserItem = (mdl) => (item) => mdl.User.objectId == item.guestId
+import { EventComments, EventItems, EventGuests, EventInfo } from "./components"
 
 export const Event = ({ attrs: { mdl } }) => {
   const state = {
@@ -117,9 +99,6 @@ export const Event = ({ attrs: { mdl } }) => {
       validateTask[field](input)(data).fork(onError, onSuccess)
   }
 
-  const getUserFromId = (id) =>
-    pluck("name", data.guests.filter(propEq("guestId", id)))
-
   const updateEventView = ({ event, guests, items, comments }) => {
     data.event = event
     data.guests = guests
@@ -129,6 +108,7 @@ export const Event = ({ attrs: { mdl } }) => {
     state.status = "success"
     state.modal.isShowing(null)
     state.modal.newHost(null)
+    mdl.Events.fetch(false)
   }
 
   const load = ({ attrs: { mdl } }) => {
@@ -256,22 +236,6 @@ export const Event = ({ attrs: { mdl } }) => {
       ? state.modal.isShowing("isHost")
       : leaveEvent(invite(data.guests))
   }
-
-  // const updateInvite = (mdl) => (update) => {
-  //   const onError = (error) => {
-  //     state.error = jsonCopy(error)
-  //     state.status = "failed"
-  //     console.log("invite update failed", state, update)
-  //   }
-
-  //   const onSuccess = (eventData) => {
-  //     updateEventView(eventData)
-  //   }
-
-  //   updateInviteTask(HTTP)(mdl)(invite.objectId)(update)
-  //     .chain((_) => loadEventTask(HTTP)(mdl)(mdl.Events.currentEventId()))
-  //     .fork(onError, onSuccess)
-  // }
 
   const updateItem = (mdl) => (item) => {
     const onError = (error) => {
@@ -430,6 +394,8 @@ export const Event = ({ attrs: { mdl } }) => {
 
   return {
     oninit: load,
+    onupdate: ({ attrs: { mdl } }) =>
+      mdl.Events.fetch() && load({ attrs: { mdl } }),
     view: () => {
       // console.log(data.event)
       return m(".event-page", [
@@ -458,6 +424,7 @@ export const Event = ({ attrs: { mdl } }) => {
                     ]),
                   },
                 ]),
+
               state.modal.isShowing() == "isHost" &&
                 m(Modal, { mdl }, [
                   {
@@ -537,6 +504,87 @@ export const Event = ({ attrs: { mdl } }) => {
                   },
                 ]),
 
+              state.modal.isShowing() == "settings" &&
+                m(Modal, { mdl }, [
+                  {
+                    header: "Event Settings",
+                    body: m(".frow row-start", [
+                      m(
+                        `button.btn-${getTheme(mdl)}`,
+                        { onclick: (e) => deleteInvite(mdl) },
+                        data.guests.length == 1 ? "Delete Event" : "Leave Event"
+                      ),
+                      isHost(data.guests) && [
+                        m(
+                          `button.btn-${getTheme(mdl)}`,
+                          {
+                            disabled: isLast(data.guests),
+                            onclick: (e) => state.modal.isShowing("newHost"),
+                          },
+                          "Change Host"
+                        ),
+                        m(
+                          `button.btn-${getTheme(mdl)}`,
+                          {
+                            onclick: (e) => {
+                              mdl.Events.updateEvent(true)
+                              state.modal.isShowing("editEvent")
+                            },
+                          },
+                          "Edit"
+                        ),
+                      ],
+                    ]),
+                    footer: [
+                      m(
+                        `button.btn-${getTheme(mdl)}`,
+                        {
+                          onclick: (e) => {
+                            state.modal.isShowing(null)
+                          },
+                        },
+                        "Back To Event"
+                      ),
+                    ],
+                  },
+                ]),
+
+              state.modal.isShowing() == "editEvent" &&
+                mdl.Events.updateEvent() &&
+                m(Modal, { mdl }, [
+                  {
+                    header: "Edit Event",
+                    body: m(Editor, {
+                      mdl,
+                      id: data.event.eventId,
+                      event: data.event,
+                      invites: data.guests,
+                    }),
+                    footer: [
+                      m(
+                        `button.btn-${getTheme(mdl)}`,
+                        {
+                          onclick: (e) => {
+                            state.modal.isShowing("settings")
+                            mdl.Events.updateEvent(false)
+                          },
+                        },
+                        "Back To Settings"
+                      ),
+                      m(
+                        `button.btn-${getTheme(mdl)}`,
+                        {
+                          onclick: (e) => {
+                            mdl.Events.updateEvent(false)
+                            state.modal.isShowing(null)
+                          },
+                        },
+                        "Back To Event"
+                      ),
+                    ],
+                  },
+                ]),
+
               m("h1.event-page-title.text-center", data.event.title),
               m(
                 ".frow row width-100",
@@ -551,7 +599,7 @@ export const Event = ({ attrs: { mdl } }) => {
               ),
 
               m(
-                `.navbar-tab-section-${getTheme(mdl)}`,
+                `nav.navbar-tab-section-${getTheme(mdl)}`,
                 m(
                   ".frow row width-100",
                   ["info", "guests", "comments", "items"].map((tab) =>
@@ -569,333 +617,19 @@ export const Event = ({ attrs: { mdl } }) => {
                 )
               ),
             ]),
-            m(".accordian", [
-              m(
-                AccordianItem,
-                { mdl, state, data, part: "info", title: "Info" },
-                [
-                  m("label", data.event.notes),
-                  m("label", data.event.hostId.name),
-                  m("label", data.event.hostId.email),
 
-                  m(".events-map-container", {
-                    style: { width: "100%", height: "250px" },
-                    oncreate: setupMap,
-                  }),
-                ]
-              ),
+            m("section.event-view-section", [
+              state.info.isShowing() &&
+                m(EventInfo, { mdl, data, state, setupMap, otherGuests }),
 
-              m(
-                AccordianItem,
-                {
-                  mdl,
-                  state,
-                  data,
-                  part: "guests",
-                  title: "Guests",
-                  pills: [m(".pill", data.guests.length)],
-                },
-                m(".guests-container", [
-                  m(
-                    ".event-forms",
-                    m(".frow row event-input-group", [
-                      m("input.col-xs-4-5", {
-                        placeholder: "email",
-                        type: "email",
-                        value: state.guests.email,
-                        oninput: (e) =>
-                          (state.guests.email = e.target.value.trim()),
-                      }),
+              state.guests.isShowing() &&
+                m(EventGuests, { mdl, data, state, sendInvite }),
 
-                      m(
-                        `button.btn-${getTheme(mdl)}.col-xs-1-5.button-none`,
-                        { onclick: (e) => sendInvite(mdl) },
-                        "Invite"
-                      ),
+              state.items.isShowing() &&
+                m(EventItems, { mdl, data, state, validate, addItem }),
 
-                      state.guests.error() &&
-                        m("code.error-field", state.guests.error()),
-                    ])
-                  ),
-
-                  m(".frow row-start", [
-                    m(".col-xs-1-2", mdl.User.name),
-                    m(
-                      ".col-xs-1-2",
-                      m(InviteRSVP, {
-                        mdl,
-                        reload: () => mdl.Invites.fetch(true),
-                        guest: head(
-                          data.guests.filter(
-                            propEq("guestId", mdl.User.objectId)
-                          )
-                        ),
-                      })
-                    ),
-                  ]),
-                  data.guests
-                    .filter(compose(not, propEq("guestId", mdl.User.objectId)))
-                    .map((guest) =>
-                      m(".frow row-start", [
-                        m(".col-xs-1-2", guest.name),
-                        m(
-                          ".col-xs-1-2",
-                          m(InviteRSVP, {
-                            mdl,
-                            guest,
-                          })
-                        ),
-                      ])
-                    ),
-                ])
-              ),
-
-              m(
-                AccordianItem,
-                {
-                  mdl,
-                  state,
-                  data,
-                  part: "items",
-                  title: "Items",
-                  pills: [m(".pill", data.items.length)],
-                },
-                [
-                  m(".frow row event-input-group", [
-                    m("input.col-xs-1-2", {
-                      placeholder: "name",
-                      value: state.items.name,
-                      oninput: (e) => (state.items.name = e.target.value),
-                      onchange: (e) =>
-                        (state.items.name = state.items.name.trim()),
-                      onblur: (e) => validate("items")(state.items),
-                      type: "text",
-                    }),
-                    m("input.col-xs-1-4", {
-                      placeholder: "quantity",
-                      value: state.items.quantity,
-                      oninput: (e) =>
-                        (state.items.quantity = e.target.value.trim()),
-                      onblur: (e) => validate("items")(state.items),
-                      type: "number",
-                      inputMode: "number",
-                      pattern: "[0-9]*",
-                    }),
-                    m(
-                      `button.btn-${getTheme(mdl)}.col-xs-1-5.button-none`,
-                      { onclick: (e) => addItem(mdl) },
-                      "Add"
-                    ),
-                    state.items.error() &&
-                      m("code.error-field", state.items.error().name),
-                    state.items.error() &&
-                      m("code.error-field", state.items.error().quantity),
-                  ]),
-
-                  m(
-                    ".event-items",
-                    data.items.map((item) =>
-                      m(".event-items-item frow ", [
-                        m(
-                          ".col-xs-2-3 ",
-                          m("h4", item.name),
-                          m(
-                            "label",
-                            item.guestId
-                              ? [
-                                  m(
-                                    "span.clickable.frow row-start",
-                                    isUserItem(mdl)(item) &&
-                                      m(MinusCircleLine, {
-                                        onclick: (e) => {
-                                          item.guestId = null
-                                          state.items.updateGuest(true)
-                                          updateItem(mdl)(item)
-                                        },
-                                        class: "smaller",
-                                      }),
-                                    getUserFromId(item.guestId)
-                                  ),
-                                ]
-                              : m(
-                                  "i.clickable",
-                                  {
-                                    onclick: (e) => {
-                                      item.guestId = mdl.User.objectId
-                                      state.items.updateGuest(true)
-                                      updateItem(mdl)(item)
-                                    },
-                                  },
-                                  "click to select item"
-                                )
-                          )
-                        ),
-                        m(".col-xs-1-3 frow items-center", [
-                          isUserItem(mdl)(item) &&
-                            m(
-                              ".events-remove-item",
-                              m(
-                                "span.clickable",
-                                m(RemoveLine, {
-                                  class: "smaller",
-                                  onclick: (e) =>
-                                    deleteItem(mdl)(item.objectId),
-                                })
-                              )
-                            ),
-                          m(".col-xs-2-3 frow column-center", [
-                            isUserItem(mdl)(item) &&
-                              m(
-                                ".col-xs-1-3",
-                                m(
-                                  "span.clickable",
-                                  m(AngleLine, {
-                                    class: "smaller",
-                                    onclick: (e) => {
-                                      item.quantity++
-                                      updateItem(mdl)(item)
-                                    },
-                                  })
-                                )
-                              ),
-                            m(".col-xs-1-3 text-center pb-2", item.quantity),
-                            isUserItem(mdl)(item) &&
-                              m(
-                                ".col-xs-1-3",
-                                m(
-                                  "span.clickable.smaller",
-                                  m(AngleLine, {
-                                    class: "decrement",
-                                    onclick: (e) => {
-                                      item.quantity > 0 && item.quantity--
-                                      updateItem(mdl)(item)
-                                    },
-                                  })
-                                )
-                              ),
-                          ]),
-                        ]),
-                      ])
-                    )
-                  ),
-                ]
-              ),
-
-              m(
-                AccordianItem,
-                { mdl, state, data, part: "comments", title: "Comments" },
-                m(".frow row-start", [
-                  m(".frow width-100", [
-                    m(
-                      ".events-messages-container width-100 text-center",
-                      {
-                        oncreate: ({ dom }) =>
-                          dom.scrollTo(0, dom.scrollHeight, "smooth"),
-                      },
-
-                      data.comments.any()
-                        ? data.comments.map((comment) =>
-                            m(
-                              ".frow column-center width-100 mb-40",
-                              m(
-                                `.event-comments-message-container ${
-                                  mdl.User.objectId == comment.guestId
-                                    ? "me"
-                                    : "other"
-                                }`,
-                                m(".event-comments-message frow items-end", [
-                                  m(".speech-bubble", [
-                                    m("span.text-left", comment.message),
-                                    mdl.User.objectId == comment.guestId &&
-                                      m(TimesCircleLine, {
-                                        onclick: (e) =>
-                                          deleteComment(mdl)(comment.objectId),
-                                        class:
-                                          "event-comments-message-remove smaller",
-                                      }),
-                                  ]),
-                                  m(
-                                    "label.event-comment-name",
-                                    m(".frow row-between", [
-                                      m("span", comment.name),
-                                      m(
-                                        "span",
-                                        M(comment.created).format(
-                                          getTimeFormat(mdl)
-                                        )
-                                      ),
-                                    ])
-                                  ),
-                                ])
-                              )
-                            )
-                          )
-                        : m(
-                            ".events-messages-container-empty",
-                            "Start a conversation"
-                          )
-                    ),
-                    m(
-                      ".event-comment-textbox-container",
-                      m(".frow items-end", [
-                        m(
-                          ".col-xs-4-5",
-                          m("textarea.comments-message-container", {
-                            row: 20,
-                            cols: 50,
-                            placeholder: "Say hi...",
-                            value: state.comments.message,
-                            oncreate: autoFocus,
-                            oninput: (e) =>
-                              (state.comments.message = e.target.value),
-                            onchange: (e) =>
-                              (state.comments.message = state.comments.message.trim()),
-                            onblur: (e) => validate("comments")(state.comments),
-                          })
-                        ),
-                        m(
-                          ".col-xs-1-5",
-                          m(
-                            `button.button-none.comments-message-btn-${getTheme(
-                              mdl
-                            )}`,
-                            { onclick: (e) => sendMessage(mdl) },
-                            "Send"
-                          )
-                        ),
-                      ])
-                    ),
-                    state.comments.error() &&
-                      m("code.error-field", state.comments.error().name),
-                  ]),
-                ])
-              ),
-
-              m(
-                AccordianItem,
-                { mdl, state, data, part: "settings", title: "Settings" },
-                m(".frow row-start", [
-                  m(
-                    `button.btn-${getTheme(mdl)}`,
-                    { onclick: (e) => deleteInvite(mdl) },
-                    data.guests.length == 1 ? "Delete Event" : "Leave Event"
-                  ),
-                  isHost(data.guests) &&
-                    m(
-                      `button.btn-${getTheme(mdl)}`,
-                      {
-                        disabled: isLast(data.guests),
-                        onclick: (e) => state.modal.isShowing("newHost"),
-                      },
-                      "Change Host"
-                    ),
-                  m(
-                    `button.btn-${getTheme(mdl)}`,
-                    { onclick: (e) => console.log("edit event ...") },
-                    "Edit"
-                  ),
-                ])
-              ),
+              state.comments.isShowing() &&
+                m(EventComments, { mdl, data, state, validate, sendMessage }),
             ]),
           ]),
       ])

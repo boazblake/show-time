@@ -55,7 +55,7 @@ export const relateItemsToUserTask = (http) => (mdl) => (userId) => (itemIds) =>
 
 export const unRelateItemToUserTask = (http) => (mdl) => (userId) => (itemId) =>
   http.backEnd.deleteTask(mdl)(
-    `data/Users/${userId}/items?whereClause=objectId%3D'${encodeURI(itemId)}'`
+    `data/Users/${userId}/items?whereClause=objectId%3D'${itemId}'`
   )
 
 export const relateInvitesToUserTask = (http) => (mdl) => (userId) => (

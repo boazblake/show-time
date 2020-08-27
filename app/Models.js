@@ -48,6 +48,8 @@ const Events = {
   currentEventId: Stream(null),
   currentEventStart: Stream(null),
   createNewEvent: Stream(false),
+  updateEvent: Stream(false),
+  fetch: Stream(false),
 }
 
 const Invites = {

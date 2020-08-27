@@ -20,7 +20,7 @@ const locateQuery = (mdl) => (state) => (query) => {
   locateQueryTask(HTTP)(mdl)(query).fork(onError, onSuccess)
 }
 
-export const EventForm = () => {
+export const EventForm = ({ attrs: { update, validate, submit } }) => {
   const setAllDay = (data) => {
     data.allDay = !data.allDay
     if (data.allDay) {
@@ -34,7 +34,7 @@ export const EventForm = () => {
 
   return {
     onbeforeremove: Animate(shutterOutTop),
-    view: ({ attrs: { data, state, resetState, mdl, validate, submit } }) => {
+    view: ({ attrs: { data, state, resetState, mdl, isEdit } }) => {
       return m(
         "form.event-form",
         m(".frow column-centered", [
@@ -43,11 +43,13 @@ export const EventForm = () => {
             m("label.frow row row-evenly ", [
               m("input.col-xs-2-3 ", {
                 onchange: (e) =>
-                  m.route.set(
-                    `/${hyphenize(mdl.User.name)}/${e.target.value.trim()}`
-                  ),
+                  isEdit
+                    ? (data.start = e.target.value)
+                    : m.route.set(
+                        `/${hyphenize(mdl.User.name)}/${e.target.value.trim()}`
+                      ),
                 type: "date",
-                value: mdl.selectedDate().format("YYYY-MM-DD"),
+                value: M(data.start).format("YYYY-MM-DD"),
               }),
               m(
                 "label.pl-30.col-xs-1-3",
@@ -172,7 +174,7 @@ export const EventForm = () => {
             "label",
             m("input", {
               type: "text",
-              value: data.text,
+              value: data.title,
               oninput: (e) => (data.title = e.target.value),
               onkeyup: (e) => state.isSubmitted && validate(state, data),
               onblur: (e) => (data.title = data.title.trim()),
@@ -196,11 +198,17 @@ export const EventForm = () => {
             {
               onclick: (e) => {
                 e.preventDefault()
-                submit({
-                  mdl,
-                  data,
-                  state,
-                })
+                isEdit
+                  ? update({
+                      mdl,
+                      data,
+                      state,
+                    })
+                  : submit({
+                      mdl,
+                      data,
+                      state,
+                    })
               },
             },
             "Submit"
