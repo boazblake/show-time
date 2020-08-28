@@ -49,86 +49,89 @@ export const EventItems = ({
         m(
           ".event-items",
           data.items.map((item) =>
-            m(".event-items-item frow ", [
-              m(
-                ".col-xs-2-3 ",
-                m("h4", item.name),
+            m(
+              ".event-items-item",
+              m(".frow items-start", [
                 m(
-                  "label",
-                  item.guestId
-                    ? [
-                        m(
-                          "span.clickable.frow row-start",
-                          isUserItem(mdl)(item) &&
-                            m(MinusCircleLine, {
-                              onclick: (e) => {
-                                item.guestId = null
-                                state.items.updateGuest(true)
-                                updateItem(mdl)(item)
-                              },
-                              class: "smaller",
-                            }),
-                          getUserFromId(item.guestId)(data.guests)
-                        ),
-                      ]
-                    : m(
-                        "i.clickable",
-                        {
-                          onclick: (e) => {
-                            item.guestId = mdl.User.objectId
-                            state.items.updateGuest(true)
-                            updateItem(mdl)(item)
-                          },
-                        },
-                        "click to select item"
-                      )
-                )
-              ),
-              m(".col-xs-1-3 frow items-center", [
-                isUserItem(mdl)(item) &&
+                  ".frow col-xs-2-3",
+                  m("h3.frow col-xs-1-1", item.name),
                   m(
-                    ".events-remove-item",
-                    m(
-                      "span.clickable",
-                      m(RemoveLine, {
-                        class: "smaller",
-                        onclick: (e) => deleteItem(mdl)(item.objectId),
-                      })
-                    )
-                  ),
-                m(".col-xs-2-3 frow column-center", [
+                    "label.frow col-xs-1-1",
+                    item.guestId
+                      ? [
+                          m(
+                            "span.clickable.frow row-start pt-10",
+                            isUserItem(mdl)(item) &&
+                              m(MinusCircleLine, {
+                                onclick: (e) => {
+                                  item.guestId = null
+                                  state.items.updateGuest(true)
+                                  updateItem(mdl)(item)
+                                },
+                                class: "smaller",
+                              }),
+                            getUserFromId(item.guestId)(data.guests)
+                          ),
+                        ]
+                      : m(
+                          "i.clickable pt-10",
+                          {
+                            onclick: (e) => {
+                              item.guestId = mdl.User.objectId
+                              state.items.updateGuest(true)
+                              updateItem(mdl)(item)
+                            },
+                          },
+                          "click to select item"
+                        )
+                  )
+                ),
+                m(".col-xs-1-3 frow items-center", [
                   isUserItem(mdl)(item) &&
                     m(
-                      ".col-xs-1-3",
+                      ".events-remove-item",
                       m(
                         "span.clickable",
-                        m(AngleLine, {
+                        m(RemoveLine, {
                           class: "smaller",
-                          onclick: (e) => {
-                            item.quantity++
-                            updateItem(mdl)(item)
-                          },
+                          onclick: (e) => deleteItem(mdl)(item.objectId),
                         })
                       )
                     ),
-                  m(".col-xs-1-3 text-center pb-2", item.quantity),
-                  isUserItem(mdl)(item) &&
-                    m(
-                      ".col-xs-1-3",
+                  m("h3.col-xs-1-3", item.quantity),
+                  m(".col-xs-1-3 ", [
+                    isUserItem(mdl)(item) && [
                       m(
-                        "span.clickable.smaller",
-                        m(AngleLine, {
-                          class: "decrement",
-                          onclick: (e) => {
-                            item.quantity > 0 && item.quantity--
-                            updateItem(mdl)(item)
-                          },
-                        })
-                      )
-                    ),
+                        ".col-xs-1-3",
+                        m(
+                          "span.clickable",
+                          m(AngleLine, {
+                            class: "smaller",
+                            onclick: (e) => {
+                              item.quantity++
+                              updateItem(mdl)(item)
+                            },
+                          })
+                        )
+                      ),
+                      m(
+                        ".col-xs-1-3",
+                        m(
+                          "span.clickable.smaller",
+                          m(AngleLine, {
+                            class: "decrement",
+                            onclick: (e) => {
+                              item.quantity > 0 && item.quantity--
+                              updateItem(mdl)(item)
+                            },
+                          })
+                        )
+                      ),
+                    ],
+                  ]),
                 ]),
-              ]),
-            ])
+              ])
+            )
           )
         ),
       ]),

@@ -408,8 +408,10 @@ export const Event = ({ attrs: { mdl } }) => {
               state.modal.isShowing() == "isLast" &&
                 m(Modal, { mdl }, [
                   {
-                    header:
-                      "Your the last to leave! click ok to delete this event",
+                    header: m(
+                      "h2.frow.text-center",
+                      "Your The Last to Leave! Click OK to Delete This Event!"
+                    ),
                     body: m(WarningStandardLine),
                     footer: m(".frow", [
                       m(
@@ -429,22 +431,28 @@ export const Event = ({ attrs: { mdl } }) => {
               state.modal.isShowing() == "isHost" &&
                 m(Modal, { mdl }, [
                   {
-                    header:
-                      "Your the Host! to leave this event you need to assign a new host",
+                    header: m(
+                      "h2.frow.text-center",
+                      "Your the Host! to leave this event you need to assign a new host"
+                    ),
                     body: m(
-                      "ul",
+                      "ul.frow direction-column",
                       otherGuests(data.guests)
                         .filter(propEq("status", 1))
                         .map(({ name, guestId }) =>
                           m(
-                            "span",
-                            m("input", {
-                              id: guestId,
-                              type: "radio",
-                              name: "find-host",
-                              oninput: (e) => state.modal.newHost(e.target.id),
-                            }),
-                            name
+                            ".frow row justify-start",
+                            m(".col-xs-1-2", name),
+                            m(
+                              "span.col-xs-1-2",
+                              m("input", {
+                                id: guestId,
+                                type: "radio",
+                                name: "find-host",
+                                oninput: (e) =>
+                                  state.modal.newHost(e.target.id),
+                              })
+                            )
                           )
                         )
                     ),
@@ -469,21 +477,25 @@ export const Event = ({ attrs: { mdl } }) => {
               state.modal.isShowing() == "newHost" &&
                 m(Modal, { mdl }, [
                   {
-                    header: "Select the new host",
+                    header: m("h2.frow.text-center", "Select the new host"),
                     body: m(
-                      "ul",
+                      "ul.frow direction-column",
                       otherGuests(data.guests)
                         .filter(propEq("status", 1))
                         .map(({ name, guestId }) =>
                           m(
-                            "span",
-                            m("input", {
-                              id: guestId,
-                              type: "radio",
-                              name: "find-host",
-                              oninput: (e) => state.modal.newHost(e.target.id),
-                            }),
-                            name
+                            ".frow row justify-start mb-10",
+                            m(".col-xs-1-2", name),
+                            m(
+                              "span.col-xs-1-2",
+                              m("input", {
+                                id: guestId,
+                                type: "radio",
+                                name: "find-host",
+                                oninput: (e) =>
+                                  state.modal.newHost(e.target.id),
+                              })
+                            )
                           )
                         )
                     ),
@@ -508,7 +520,7 @@ export const Event = ({ attrs: { mdl } }) => {
               state.modal.isShowing() == "settings" &&
                 m(Modal, { mdl }, [
                   {
-                    header: "Event Settings",
+                    header: m("h2.frow.text-center", "Event Settings"),
                     body: m(".frow row-start", [
                       m(
                         `button.btn-${getTheme(mdl)}`,
@@ -554,7 +566,7 @@ export const Event = ({ attrs: { mdl } }) => {
                 mdl.Events.updateEvent() &&
                 m(Modal, { mdl }, [
                   {
-                    header: "Edit Event",
+                    header: m("h2.frow.text-center", "Edit Event"),
                     body: m(Editor, {
                       mdl,
                       id: data.event.eventId,

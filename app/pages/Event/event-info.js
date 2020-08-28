@@ -1,8 +1,8 @@
-import { propEq } from "ramda"
+import { propEq, prop } from "ramda"
 
-export const EventInfo = ({ attrs: { setupMap, otherGuests } }) => {
+export const EventInfo = ({ attrs: { data, setupMap, otherGuests } }) => {
   return {
-    view: ({ attrs: { mdl, data, state } }) =>
+    view: ({ attrs: { data, state } }) =>
       m(
         ".event-info",
         m(".frow column-start height-100 justify-evenly", [
@@ -23,7 +23,7 @@ export const EventInfo = ({ attrs: { setupMap, otherGuests } }) => {
           m(
             "h3.heading",
             `Items: Total ${data.items.length}, selected: ${
-              data.items.filter(propEq("guestId")).length
+              data.items.filter(prop("guestId")).length
             }`
           ),
 
