@@ -289,7 +289,8 @@ ul {
   width: 100vw;
   height: 100vh;
   background-color: rgba(255, 255, 255, .15);
-  backdrop-filter: blur(5px);
+  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
   z-index:1000;
 }
 
@@ -370,6 +371,10 @@ ul {
   @extend %angle-line-down
 }
 
+.event-info {
+  height: 100%;
+}
+
 .events-map-container {
   min-height: 250px;
   min-width: 250px;
@@ -422,8 +427,7 @@ ul {
 
 .event-page {
   width: 100vw;
-  padding: 12px;
-  overflow-y: auto;
+  overflow-y: hidden;
   overflow-x: hidden;
   height: 700px;
 }
