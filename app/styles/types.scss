@@ -72,37 +72,30 @@
 }
 
 
-// %btn-light {
-  //   background-color: var(--light) !important;
-  //   height: 200px !important;
-  //   margin-right: 4rem;
-  //   width: 200px;
-  // }
-  %btn-light {
-    border: 1px solid var(--dark) !important;
-    color: var(--dark) !important;
-    align-items: center !important;
-    background-color: var(--light) !important;
-    border-radius: 50px !important;
-    display: flex !important;
-    justify-content: center !important;
-
-    & :active {
-      color: var(--warning) !important;
-  }
-}
-
-
-%btn-dark {
-    border: 1px solid var(--light) !important;
-  color: var(--light) !important;
+%btn {
   align-items: center !important;
-  background-color: var(--dark) !important;
   border-radius: 50px !important;
   display: flex !important;
   justify-content: center !important;
+  height: 31px;
 
   & :active {
     color: var(--warning) !important;
   }
+}
+
+
+%btn-light {
+  @extend %btn;
+  border: 1px solid var(--dark) !important;
+  color: var(--dark) !important;
+  background-color: var(--light) !important;
+}
+
+%btn-dark {
+  @extend %btn;
+  border: 1px solid var(--light) !important;
+  color: var(--light) !important;
+  background-color: var(--dark) !important;
+
 }

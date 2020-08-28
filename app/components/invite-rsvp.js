@@ -35,7 +35,7 @@ const getResponse = ({ status }) => {
 }
 export const InviteRSVP = () => {
   return {
-    view: ({ attrs: { mdl, guest, reload } }) => {
+    view: ({ attrs: { mdl, guest, reload, isOther } }) => {
       // console.log("guest", guest)
       return m(
         ".frow justify-evenly",
@@ -43,6 +43,9 @@ export const InviteRSVP = () => {
           m(response, {
             class: guest.guestId == mdl.User.objectId ? "clickable" : "",
             fill: `var(--${inviteOptions[idx]}-invite)`,
+            "fill-opacity": isOther ? 0.8 : 1,
+            // `-webkit-filter`: `drop-shadow( 3px 3px 2px rgba(0, 0, 0, .7))`,
+            filter: !isOther && "drop-shadow( 3px 3px 2px rgba(0, 0, 0, .7))",
             onclick: (e) => {
               if (guest.guestId == mdl.User.objectId) {
                 guest.status = idx

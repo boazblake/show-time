@@ -337,10 +337,11 @@ export const Event = ({ attrs: { mdl } }) => {
     }
 
     state.comments.isSubmitted(true)
-    validateCommentTask(comment)
-      .chain(addCommentTask(HTTP)(mdl))
-      .chain((_) => loadEventTask(HTTP)(mdl)(mdl.Events.currentEventId()))
-      .fork(onError, onSuccess)
+    comment.message &&
+      validateCommentTask(comment)
+        .chain(addCommentTask(HTTP)(mdl))
+        .chain((_) => loadEventTask(HTTP)(mdl)(mdl.Events.currentEventId()))
+        .fork(onError, onSuccess)
   }
 
   const sendInvite = (mdl) => {
@@ -633,10 +634,18 @@ export const Event = ({ attrs: { mdl } }) => {
                   validate,
                   addItem,
                   updateItem,
+                  deleteItem,
                 }),
 
               state.comments.isShowing() &&
-                m(EventComments, { mdl, data, state, validate, sendMessage }),
+                m(EventComments, {
+                  mdl,
+                  data,
+                  state,
+                  validate,
+                  sendMessage,
+                  deleteComment,
+                }),
             ]),
           ]),
       ])

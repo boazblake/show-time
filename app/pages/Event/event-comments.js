@@ -1,7 +1,14 @@
 import { getTimeFormat, getTheme, autoFocus } from "Utils"
 import { TimesCircleLine } from "@mithril-icons/clarity/cjs"
+import { Animate, slideInRight, slideOutLeft } from "Styles"
 
-export const EventComments = ({ attrs: { validate, sendMessage } }) => {
+const scrollToBottom = (dom) => dom.scrollTo(0, dom.scrollHeight, "smooth")
+
+export const EventComments = ({
+  attrs: { data, validate, sendMessage, deleteComment },
+}) => {
+  let l = data.comments.length
+  let _dom
   return {
     view: ({ attrs: { mdl, data, state } }) =>
       m(
@@ -42,14 +49,27 @@ export const EventComments = ({ attrs: { validate, sendMessage } }) => {
               m(
                 ".events-messages-container ",
                 {
-                  oncreate: ({ dom }) =>
-                    dom.scrollTo(0, dom.scrollHeight, "smooth"),
+                  oncreate: ({ dom }) => {
+                    _dom = dom
+                    scrollToBottom(dom)
+                  },
+                  onupdate: () => scrollToBottom(_dom),
                 },
 
                 data.comments.any()
-                  ? data.comments.map((comment) =>
+                  ? data.comments.map((comment, idx) =>
                       m(
                         ".frow column-center width-100 mb-40",
+                        {
+                          oncreate: ({ dom }) => {
+                            l < data.comments.length &&
+                              Animate(slideInRight)({ dom })
+                          },
+                          onbeforeremove: ({ dom }) => {
+                            l--
+                            return Animate(slideOutLeft)({ dom })
+                          },
+                        },
                         m(
                           `.event-comments-message-container ${
                             mdl.User.objectId == comment.guestId

@@ -10,7 +10,7 @@ export const EventGuests = ({ attrs: { sendInvite } }) => {
           m(
             ".event-forms",
             m(".frow row event-input-group", [
-              m("input.col-xs-4-5", {
+              m("input.col-xs-4-5 pb-20", {
                 placeholder: "email",
                 type: "email",
                 value: state.guests.email,
@@ -28,7 +28,7 @@ export const EventGuests = ({ attrs: { sendInvite } }) => {
             ])
           ),
 
-          m(".frow row-start", [
+          m(".frow row-start mb-20 pl-5", [
             m(".col-xs-1-2", mdl.User.name),
             m(
               ".col-xs-1-2",
@@ -41,16 +41,18 @@ export const EventGuests = ({ attrs: { sendInvite } }) => {
               })
             ),
           ]),
+          m("hr"),
           data.guests
             .filter(compose(not, propEq("guestId", mdl.User.objectId)))
             .map((guest) =>
-              m(".frow row-start", [
+              m(".frow row-start mb-20 pl-5", [
                 m(".col-xs-1-2", guest.name),
                 m(
                   ".col-xs-1-2",
                   m(InviteRSVP, {
                     mdl,
                     guest,
+                    isOther: true,
                   })
                 ),
               ])
