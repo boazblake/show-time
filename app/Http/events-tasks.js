@@ -8,7 +8,9 @@ import {
   addItemTask,
   relateItemsToUserTask,
   unRelateItemToUserTask,
+  updateBulkInvites,
 } from "Http"
+
 import { traverse, head, map, propEq } from "ramda"
 import { getHour, getMin, getTimeFormat } from "Utils"
 
@@ -110,6 +112,16 @@ export const deleteEventTask = (http) => (mdl) => (id) =>
       http.backEnd.deleteTask(mdl)(`data/bulk/Comments?where=eventId%3D'${id}'`)
     )
 
+// allDay: true
+// endTime: "23:59"
+// inPerson: true
+// latlong: ""
+// location: "sdgsfg"
+// notes: "sdfgdf"
+// shortDate: "2020-08-05"
+// startTime: "00:00"
+// title: "SDFGDFG"
+
 export const createEventTask = (http) => (mdl) => ({
   allDay,
   startTime,
@@ -124,6 +136,17 @@ export const createEventTask = (http) => (mdl) => ({
   let start = M(mdl.selectedDate())
     .hour(getHour(startTime))
     .minute(getMin(startTime))
+  console.log("created event", {
+    end,
+    start,
+    notes,
+    title,
+    allDay,
+    inPerson,
+    location,
+    latlong,
+    hostId: mdl.User.objectId,
+  })
 
   return http.backEnd
     .postTask(mdl)("data/Events")({
@@ -202,5 +225,41 @@ export const relateInvitesToEventTask = (http) => (mdl) => (eventId) => (
 //   inviteIds
 // ) => http.backEnd.deleteTask(mdl)(`data/Events/${eventId}/invites`)(inviteIds)
 
-export const updateEventTask = (http) => (mdl) => (eventId) => (event) =>
-  http.backEnd.putTask(mdl)(`data/Events/${eventId}`)(event)
+export const updateEventTask = (http) => (mdl) => (eventId) => ({
+  shortDate,
+  endTime,
+  startTime,
+  allDay,
+  inPerson,
+  latlong,
+  location,
+  notes,
+  title,
+}) => {
+  let updatedEvent = {
+    end: M(shortDate).hour(getHour(endTime)).minute(getMin(endTime)),
+    start: M(shortDate).hour(getHour(startTime)).minute(getMin(startTime)),
+    allDay,
+    inPerson,
+    latlong,
+    location,
+    notes,
+    title,
+  }
+
+  return http.backEnd
+    .putTask(mdl)(`data/Events/${eventId}`)(updatedEvent)
+    .chain(({ end, start, title, allDay, inPerson, location, latlong }) => {
+      return updateBulkInvites(http)(mdl)(
+        `eventId='${mdl.Events.currentEventId()}'`
+      )({
+        end,
+        start,
+        title,
+        allDay,
+        inPerson,
+        location,
+        latlong,
+      })
+    })
+}

@@ -1,13 +1,17 @@
 import { propEq, prop } from "ramda"
 
-export const EventInfo = ({ attrs: { data, setupMap, otherGuests } }) => {
+export const EventInfo = ({ attrs: { setupMap, otherGuests } }) => {
+  const invitedGuests = (guests) => otherGuests(guests).length
+  const acceptedGuests = (guests) =>
+    otherGuests(guests).filter(propEq("status", 1)).length
+  const itemsSelected = (items) => items.filter(prop("guestId")).length
+
   return {
     view: ({ attrs: { data, state } }) =>
       m(
         ".event-info",
         m(".frow column-start height-100 justify-evenly", [
           m("h3.heading", `Hosted by: ${data.event.hostId.name}`),
-          m("h3.heading", `Notes: ${data.event.notes}`),
           m(".events-map-container", {
             style: { width: "100%", height: "250px" },
             oncreate: setupMap,
@@ -16,16 +20,19 @@ export const EventInfo = ({ attrs: { data, setupMap, otherGuests } }) => {
 
           m(
             "h3.heading",
-            `Guests: Invited ${otherGuests(data.guests).length} , Accepted  ${
-              otherGuests(data.guests).filter(propEq("status", 1)).length
-            } , Total: ${data.guests.length}`
+            `Guests: Invited ${invitedGuests(
+              data.guests
+            )} , Accepted  ${acceptedGuests(data.guests)} , Total: ${
+              data.guests.length
+            }`
           ),
           m(
             "h3.heading",
-            `Items: Total ${data.items.length}, selected: ${
-              data.items.filter(prop("guestId")).length
-            }`
+            `Items: Total ${data.items.length}, selected: ${itemsSelected(
+              data.guests
+            )}`
           ),
+          m("h3.heading", `Notes: ${data.event.notes}`),
 
           m(
             "button.required-field",

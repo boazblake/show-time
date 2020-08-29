@@ -2,37 +2,37 @@ import { EventForm } from "./event-form"
 import { HTTP, createEventTask, updateEventTask } from "Http"
 import { validateTask } from "./validations"
 import { Animate, slideInDown, slideOutUp } from "Styles"
-import { traverse } from "ramda"
-import { updateBulkInvites } from "../../Http/invites-tasks"
 
-export const Editor = ({ attrs: { mdl, id, event, invites } }) => {
-  const EventFormData = id
-    ? {
-        shortDate: M(event.start).format("YYYY-MM-DD"),
-        allDay: event.allDay,
-        inPerson: event.inPerson,
-        location: event.location,
-        latlong: event.latlong,
-        startTime: M(event.start).format("HH:mm"),
-        endTime: M(event.end).format("HH:mm"),
-        title: event.title,
-        notes: event.notes,
-      }
-    : {
-        shortDate: mdl.selectedDate().format("YYYY-MM-DD"),
-        allDay: false,
-        inPerson: true,
-        location: "",
-        latlong: "",
-        startTime: "",
-        endTime: "",
-        title: "",
-        notes: "",
-      }
+export const Editor = ({ attrs: { mdl, event } }) => {
+  const getData = (id) => {
+    let res = id
+      ? {
+          shortDate: M(event.start).format("YYYY-MM-DD"),
+          allDay: event.allDay,
+          inPerson: event.inPerson,
+          location: event.location,
+          latlong: event.latlong,
+          startTime: M(event.start).format("HH:mm"),
+          endTime: M(event.end).format("HH:mm"),
+          title: event.title,
+          notes: event.notes,
+        }
+      : {
+          shortDate: M(mdl.selectedDate()).format("YYYY-MM-DD"),
+          allDay: false,
+          inPerson: true,
+          location: "",
+          latlong: "",
+          startTime: "",
+          endTime: "",
+          title: "",
+          notes: "",
+        }
 
-  console.log(EventFormData)
+    return res
+  }
 
-  let EventFormState = {
+  let state = {
     status: "loading",
     errors: null,
     isSubmitted: false,
@@ -43,7 +43,7 @@ export const Editor = ({ attrs: { mdl, id, event, invites } }) => {
   }
 
   const resetState = (state) => {
-    EventFormState = {
+    state = {
       status: "loading",
       errors: null,
       isSubmitted: false,
@@ -103,23 +103,21 @@ export const Editor = ({ attrs: { mdl, id, event, invites } }) => {
     state.isSubmitted = true
 
     validateTask(data)
-      .chain(
-        updateBulkInvites(HTTP)(mdl)(`eventId='${mdl.Events.currentEventId()}'`)
-      )
-      .chain(() =>
-        updateEventTask(HTTP)(mdl)(mdl.Events.currentEventId())(data)
-      )
+      .chain(() => {
+        console.log("data??", data)
+        return updateEventTask(HTTP)(mdl)(mdl.Events.currentEventId())(data)
+      })
       .fork(onError, onSuccess)
   }
 
   return {
-    view: ({ attrs: { mdl } }) =>
+    view: ({ attrs: { mdl, id } }) =>
       m(EventForm, {
         oncreate: Animate(slideInDown, { delay: 2 }),
         onbeforeremove: Animate(slideOutUp, { delay: 2 }),
         mdl,
-        data: EventFormData,
-        state: EventFormState,
+        data: getData(id),
+        state,
         validate,
         resetState,
         submit: addNewEvent,

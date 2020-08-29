@@ -20,7 +20,7 @@ const locateQuery = (mdl) => (state) => (query) => {
   locateQueryTask(HTTP)(mdl)(query).fork(onError, onSuccess)
 }
 
-export const EventForm = ({ attrs: { update, validate, submit } }) => {
+export const EventForm = ({ attrs: { data, update, validate, submit } }) => {
   const setAllDay = (data) => {
     data.allDay = !data.allDay
     if (data.allDay) {
@@ -34,7 +34,7 @@ export const EventForm = ({ attrs: { update, validate, submit } }) => {
 
   return {
     onbeforeremove: Animate(shutterOutTop),
-    view: ({ attrs: { data, state, resetState, mdl, isEdit } }) => {
+    view: ({ attrs: { state, resetState, mdl, isEdit } }) => {
       return m(
         "form.event-form",
         m(".frow column-centered", [
@@ -44,12 +44,12 @@ export const EventForm = ({ attrs: { update, validate, submit } }) => {
               m("input.col-xs-2-3 ", {
                 onchange: (e) =>
                   isEdit
-                    ? (data.start = e.target.value)
+                    ? (data.shortDate = e.target.value)
                     : m.route.set(
                         `/${hyphenize(mdl.User.name)}/${e.target.value.trim()}`
                       ),
                 type: "date",
-                value: M(data.start).format("YYYY-MM-DD"),
+                value: data.shortDate,
               }),
               m(
                 "label.pl-30.col-xs-1-3",

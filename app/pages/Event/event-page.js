@@ -108,10 +108,10 @@ export const Event = ({ attrs: { mdl } }) => {
     state.status = "success"
     state.modal.isShowing(null)
     state.modal.newHost(null)
-    mdl.Events.fetch(false)
   }
 
   const load = ({ attrs: { mdl } }) => {
+    mdl.Events.fetch(false)
     const onError = (error) => {
       state.error = jsonCopy(error)
       state.status = "failed"
@@ -139,7 +139,7 @@ export const Event = ({ attrs: { mdl } }) => {
       let date = M(data.event.start).format("YYYY-MM-DD")
       m.route.set(`/${name}/${date}`)
     }
-    console.log(invite)
+
     deleteEventTask(HTTP)(mdl)(invite.eventId).fork(onError, onSuccess)
   }
 
