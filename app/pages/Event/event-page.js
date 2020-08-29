@@ -5,7 +5,7 @@ import {
   HTTP,
   loadEventTask,
   deleteInviteTask,
-  updateEventTask,
+  updateEventHostTask,
   updateInviteTask,
   addItemToEventTask,
   deleteItemTask,
@@ -177,10 +177,7 @@ export const Event = ({ attrs: { mdl } }) => {
 
     let hostId = state.modal.newHost()
 
-    console.log(data)
-    updateEventTask(HTTP)(mdl)(data.event.eventId)({
-      hostId,
-    })
+    updateEventHostTask(HTTP)(mdl)(data.event.eventId)(hostId)
       .chain(() =>
         data.guests.traverse(
           (guest) => updateInviteTask(HTTP)(mdl)(guest.objectId)({ hostId }),
@@ -204,11 +201,7 @@ export const Event = ({ attrs: { mdl } }) => {
 
     let hostId = state.modal.newHost()
 
-    console.log(data)
-    //updateEvent, invites,
-    updateEventTask(HTTP)(mdl)(data.event.eventId)({
-      hostId,
-    })
+    updateEventHostTask(HTTP)(mdl)(data.event.eventId)(hostId)
       .chain(() =>
         data.guests.traverse(
           (guest) => updateInviteTask(HTTP)(mdl)(guest.objectId)({ hostId }),
@@ -410,12 +403,12 @@ export const Event = ({ attrs: { mdl } }) => {
                   {
                     header: m(
                       "h2.frow.text-center",
-                      "Your The Last to Leave! Click OK to Delete This Event!"
+                      "Your The Last to Leave! Click Delete if you are sure you want to Delete this Event!"
                     ),
                     body: m(WarningStandardLine),
                     footer: m(".frow", [
                       m(
-                        "button.col-xs-1-2",
+                        "button.col-xs-1-2.required-field",
                         { onclick: (e) => deleteEvent(data.guests[0]) },
                         "Delete"
                       ),

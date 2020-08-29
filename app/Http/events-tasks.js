@@ -112,16 +112,6 @@ export const deleteEventTask = (http) => (mdl) => (id) =>
       http.backEnd.deleteTask(mdl)(`data/bulk/Comments?where=eventId%3D'${id}'`)
     )
 
-// allDay: true
-// endTime: "23:59"
-// inPerson: true
-// latlong: ""
-// location: "sdgsfg"
-// notes: "sdfgdf"
-// shortDate: "2020-08-05"
-// startTime: "00:00"
-// title: "SDFGDFG"
-
 export const createEventTask = (http) => (mdl) => ({
   allDay,
   startTime,
@@ -136,17 +126,6 @@ export const createEventTask = (http) => (mdl) => ({
   let start = M(mdl.selectedDate())
     .hour(getHour(startTime))
     .minute(getMin(startTime))
-  console.log("created event", {
-    end,
-    start,
-    notes,
-    title,
-    allDay,
-    inPerson,
-    location,
-    latlong,
-    hostId: mdl.User.objectId,
-  })
 
   return http.backEnd
     .postTask(mdl)("data/Events")({
@@ -205,25 +184,16 @@ export const relateItemsToEventTask = (http) => (mdl) => (eventId) => (
   itemIds
 ) => http.backEnd.putTask(mdl)(`data/Events/${eventId}/items`)(itemIds)
 
-// export const unRelateItemsToEventTask = (http) => (mdl) => (eventId) => (
-//   itemIds
-// ) => http.backEnd.deleteTask(mdl)(`data/Events/${eventId}/items`)(itemIds)
-
 export const relateCommentsToEventTask = (http) => (mdl) => (eventId) => (
   commentIds
 ) => http.backEnd.putTask(mdl)(`data/Events/${eventId}/comments`)(commentIds)
-
-// export const unRelateCommentsToEventTask = (http) => (mdl) => (eventId) => (
-//   commentIds
-// ) => http.backEnd.deleteTask(mdl)(`data/Events/${eventId}/comments`)(commentIds)
 
 export const relateInvitesToEventTask = (http) => (mdl) => (eventId) => (
   inviteIds
 ) => http.backEnd.putTask(mdl)(`data/Events/${eventId}/invites`)(inviteIds)
 
-// export const unRelateInvitesToEventTask = (http) => (mdl) => (eventId) => (
-//   inviteIds
-// ) => http.backEnd.deleteTask(mdl)(`data/Events/${eventId}/invites`)(inviteIds)
+export const updateEventHostTask = (http) => (mdl) => (eventId) => (hostId) =>
+  http.backEnd.putTask(mdl)(`data/Events/${eventId}`)({ hostId })
 
 export const updateEventTask = (http) => (mdl) => (eventId) => ({
   shortDate,

@@ -49,7 +49,7 @@ export const EventForm = ({ attrs: { data, update, validate, submit } }) => {
                         `/${hyphenize(mdl.User.name)}/${e.target.value.trim()}`
                       ),
                 type: "date",
-                value: data.shortDate,
+                value: M(mdl.selectedDate()).format("YYYY-MM-DD"),
               }),
               m(
                 "label.pl-30.col-xs-1-3",

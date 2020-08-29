@@ -15,6 +15,7 @@ export const EventInfo = ({ attrs: { setupMap, otherGuests } }) => {
           m(".events-map-container", {
             style: { width: "100%", height: "250px" },
             oncreate: setupMap,
+            onupdate: setupMap,
           }),
           m("label", `${data.event.location}`),
 

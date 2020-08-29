@@ -61,6 +61,7 @@ if (sessionStorage.getItem("shindigit-user")) {
   if (localStorage.getItem("shindigit-eventId")) {
     Model.Events.currentEventId(localStorage.getItem("shindigit-eventId"))
     Model.Events.currentEventStart(localStorage.getItem("shindigit-eventStart"))
+    Model.selectedDate(localStorage.getItem("shindigit-eventStart"))
   }
 } else {
   m.route.set("/logout")

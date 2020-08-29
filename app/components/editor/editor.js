@@ -103,10 +103,7 @@ export const Editor = ({ attrs: { mdl, event } }) => {
     state.isSubmitted = true
 
     validateTask(data)
-      .chain(() => {
-        console.log("data??", data)
-        return updateEventTask(HTTP)(mdl)(mdl.Events.currentEventId())(data)
-      })
+      .chain(updateEventTask(HTTP)(mdl)(mdl.Events.currentEventId()))
       .fork(onError, onSuccess)
   }
 
