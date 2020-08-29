@@ -78,6 +78,7 @@ export const Event = ({ attrs: { mdl } }) => {
     state.comments.isShowing(false)
     state.items.isShowing(false)
     state[tab].isShowing(true)
+    tab == "info" && mdl.Events.fetch(true)
   }
 
   const validate = (field) => (input) => {
@@ -626,7 +627,13 @@ export const Event = ({ attrs: { mdl } }) => {
 
             m("section.event-view-section", [
               state.info.isShowing() &&
-                m(EventInfo, { mdl, data, state, setupMap, otherGuests }),
+                m(EventInfo, {
+                  mdl,
+                  data,
+                  state,
+                  setupMap,
+                  otherGuests,
+                }),
 
               state.guests.isShowing() &&
                 m(EventGuests, { mdl, data, state, sendInvite }),

@@ -13,9 +13,9 @@ export const EventToolbar = () => {
             mdl.Invites.fetch(true)
             mdl.State.toAnchor(M(mdl.Events.currentEventStart()).format("HH"))
             m.route.set(
-              `/${hyphenize(mdl.User.name)}/${M(
-                mdl.Events.currentEventStart()
-              ).format("YYYY-MM-DD")}`
+              `/${hyphenize(mdl.User.name)}/${M(mdl.selectedDate()).format(
+                "YYYY-MM-DD"
+              )}`
             )
           },
         },
