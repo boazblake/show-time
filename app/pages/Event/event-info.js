@@ -29,7 +29,7 @@ export const EventInfo = ({ attrs: { setupMap, otherGuests } }) => {
           m(
             "h3.heading",
             `Items: Total ${data.items.length}, selected: ${itemsSelected(
-              data.guests
+              data.items
             )}`
           ),
           m("h3.heading", `Notes: ${data.event.notes}`),
