@@ -319,11 +319,35 @@ export const shutterOutRight = [
 
 export const focusInContract = [
   {
+    letterSpacing: "1em",
     filter: "blur(12px)",
     opacity: 0,
   },
   {
     filter: "blur(0)",
     opacity: 1,
+  },
+]
+
+export const focusIn = [
+  {
+    filter: "blur(12px)",
+    opacity: 0,
+  },
+  {
+    filter: "blur(0)",
+    opacity: 1,
+    visibility: "visible",
+  },
+]
+
+export const rotateCenter = [
+  {
+    "-webkit-transform": "rotate(0)",
+    transform: "rotate(0)",
+  },
+  {
+    "-webkit-transform": "rotate(360deg)",
+    transform: "rotate(360deg)",
   },
 ]

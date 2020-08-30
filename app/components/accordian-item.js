@@ -1,5 +1,5 @@
 import { AddLine, TimesLine } from "@mithril-icons/clarity/cjs"
-import { Animate, fadeInDown, shutterInTop, shutterOutTop } from "Styles"
+import { Animate, shutterInTop, shutterOutTop } from "Styles"
 import { log } from "Utils"
 
 export const AccordianItem = () => {

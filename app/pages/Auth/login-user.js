@@ -2,6 +2,7 @@ import { log, hyphenize, getMyLocationTask } from "Utils"
 import { validateLoginTask } from "./Validations.js"
 import { HTTP, loginTask, getUserProfileTask, setUserToken } from "Http"
 import { map } from "ramda"
+import { IsLoading } from "Components"
 
 const loginUser = (mdl) => (data) => {
   const onError = (errs) => {

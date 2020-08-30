@@ -10,7 +10,7 @@ const Routes = [
     children: [],
     options: [],
     onmatch: (mdl, args, path, fullroute) => {},
-    component: (mdl) => m(AuthLayout, m(Login, { mdl })),
+    component: (mdl) => m(AuthLayout, { mdl }, m(Login, { mdl })),
   },
   {
     id: "register",
@@ -21,7 +21,7 @@ const Routes = [
     children: [],
     options: [],
     onmatch: (mdl, args, path, fullroute) => {},
-    component: (mdl) => m(AuthLayout, m(Register, { mdl })),
+    component: (mdl) => m(AuthLayout, { mdl }, m(Register, { mdl })),
   },
 ]
 
