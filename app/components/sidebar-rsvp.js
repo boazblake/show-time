@@ -1,5 +1,6 @@
 import { EmptyState, InviteRSVP } from "Components"
 import { getTimeFormat, getTheme, hyphenize } from "Utils"
+import { InfoStandardLine } from "@mithril-icons/clarity/cjs"
 
 const navToInvite = (mdl) => (invite) => {
   mdl.Events.currentEventId(invite.eventId)
@@ -17,9 +18,7 @@ export const SidebarRSVP = () => {
           ? mdl.Invites.needRSVP().map((invite) => {
               return m(
                 `.sidebar-invites-${getTheme(mdl)}`,
-                {
-                  onclick: (e) => navToInvite(mdl)(invite),
-                },
+
                 m(".frow mb-10", [
                   m(".col-xs-1-2 text-ellipsis", `${invite.title}`),
                   m(".col-xs-1-2", `On: ${invite.start.format("MM-DD-YYYY")}`),
@@ -32,6 +31,12 @@ export const SidebarRSVP = () => {
                     `To: ${invite.end.format(getTimeFormat(mdl))}`
                   ),
                 ]),
+
+                m(InfoStandardLine, {
+                  class: "clickable",
+                  onclick: (e) => navToInvite(mdl)(invite),
+                }),
+
                 m(InviteRSVP, {
                   mdl,
                   guest: invite,
