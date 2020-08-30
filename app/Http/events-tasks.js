@@ -12,7 +12,7 @@ import {
 } from "Http"
 
 import { traverse, head, map, propEq } from "ramda"
-import { getHour, getMin, getTimeFormat } from "Utils"
+import { log, getHour, getMin, getTimeFormat } from "Utils"
 
 const toEventviewModel = (mdl) => ({
   hostId,

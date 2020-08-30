@@ -22,8 +22,8 @@ const Header = () => {
 
 export const Layout = () => {
   return {
-    view: ({ children, attrs: { mdl } }) =>
-      m(".lt-grid-container", [
+    view: ({ children, attrs: { mdl } }) => {
+      return m(".lt-grid-container", [
         m(
           ".lt-header.navbar",
           m(".frow row", [
@@ -43,6 +43,7 @@ export const Layout = () => {
             })
           : [m(".lt-body", children)],
         m(".lt-footer", "FOOTER"),
-      ]),
+      ])
+    },
   }
 }

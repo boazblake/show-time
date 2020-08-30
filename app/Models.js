@@ -50,6 +50,7 @@ const Events = {
   createNewEvent: Stream(false),
   updateEvent: Stream(false),
   fetch: Stream(false),
+  isMember: Stream(false),
 }
 
 const Invites = {

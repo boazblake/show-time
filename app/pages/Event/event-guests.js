@@ -3,30 +3,31 @@ import { getTheme } from "Utils"
 import { propEq, compose, not, head } from "ramda"
 export const EventGuests = ({ attrs: { sendInvite } }) => {
   return {
-    view: ({ attrs: { mdl, data, state } }) =>
+    view: ({ attrs: { mdl, data, state, isMember } }) =>
       m(
         ".event-guests",
         m(".guests-container", [
-          m(
-            ".event-forms",
-            m(".frow row event-input-group", [
-              m("input.col-xs-4-5 pb-20", {
-                placeholder: "email",
-                type: "email",
-                value: state.guests.email,
-                oninput: (e) => (state.guests.email = e.target.value.trim()),
-              }),
+          isMember &&
+            m(
+              ".event-forms",
+              m(".frow row event-input-group", [
+                m("input.col-xs-4-5 pb-20", {
+                  placeholder: "email",
+                  type: "email",
+                  value: state.guests.email,
+                  oninput: (e) => (state.guests.email = e.target.value.trim()),
+                }),
 
-              m(
-                `button.btn-${getTheme(mdl)}.col-xs-1-5.button-none`,
-                { onclick: (e) => sendInvite(mdl) },
-                "Invite"
-              ),
+                m(
+                  `button.btn-${getTheme(mdl)}.col-xs-1-5.button-none`,
+                  { onclick: (e) => sendInvite(mdl) },
+                  "Invite"
+                ),
 
-              state.guests.error() &&
-                m("code.error-field", state.guests.error()),
-            ])
-          ),
+                state.guests.error() &&
+                  m("code.error-field", state.guests.error()),
+              ])
+            ),
 
           m(".frow row-start mb-20 pl-5", [
             m(".col-xs-1-2", mdl.User.name),

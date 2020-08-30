@@ -11,40 +11,41 @@ const getUserFromId = (id) => (guests) =>
   pluck("name", guests.filter(propEq("guestId", id)))
 
 export const EventItems = ({
-  attrs: { validate, addItem, updateItem, deleteItem },
+  attrs: { validate, addItem, updateItem, deleteItem, isMember },
 }) => {
   return {
     view: ({ attrs: { mdl, data, state } }) =>
       m(".event-items-section", [
-        m(".frow row event-input-group", [
-          m("input.col-xs-1-2", {
-            placeholder: "name",
-            value: state.items.name,
-            oncreate: autoFocus,
-            oninput: (e) => (state.items.name = e.target.value),
-            onchange: (e) => (state.items.name = state.items.name.trim()),
-            onblur: (e) => validate("items")(state.items),
-            type: "text",
-          }),
-          m("input.col-xs-1-4", {
-            placeholder: "quantity",
-            value: state.items.quantity,
-            oninput: (e) => (state.items.quantity = e.target.value.trim()),
-            onblur: (e) => validate("items")(state.items),
-            type: "number",
-            inputMode: "number",
-            pattern: "[0-9]*",
-          }),
-          m(
-            `button.btn-${getTheme(mdl)}.col-xs-1-5.button-none`,
-            { onclick: (e) => addItem(mdl) },
-            "Add"
-          ),
-          state.items.error() &&
-            m("code.error-field", state.items.error().name),
-          state.items.error() &&
-            m("code.error-field", state.items.error().quantity),
-        ]),
+        isMember &&
+          m("form.frow row event-input-group", [
+            m("input.col-xs-1-2", {
+              placeholder: "name",
+              value: state.items.name,
+              oncreate: autoFocus,
+              oninput: (e) => (state.items.name = e.target.value),
+              onchange: (e) => (state.items.name = state.items.name.trim()),
+              onblur: (e) => validate("items")(state.items),
+              type: "text",
+            }),
+            m("input.col-xs-1-4", {
+              placeholder: "quantity",
+              value: state.items.quantity,
+              oninput: (e) => (state.items.quantity = e.target.value.trim()),
+              onblur: (e) => validate("items")(state.items),
+              type: "number",
+              inputMode: "number",
+              pattern: "[0-9]*",
+            }),
+            m(
+              `button.btn-${getTheme(mdl)}.col-xs-1-5.button-none`,
+              { onclick: (e) => addItem(mdl) },
+              "Add"
+            ),
+            state.items.error() &&
+              m("code.error-field", state.items.error().name),
+            state.items.error() &&
+              m("code.error-field", state.items.error().quantity),
+          ]),
 
         m(
           ".event-items",

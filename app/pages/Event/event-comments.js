@@ -1,13 +1,11 @@
 import { getTimeFormat, getTheme, autoFocus } from "Utils"
 import { TimesCircleLine } from "@mithril-icons/clarity/cjs"
-import { Animate, slideInRight, slideOutLeft } from "Styles"
 
 const scrollToBottom = (dom) => dom.scrollTo(0, dom.scrollHeight, "smooth")
 
 export const EventComments = ({
-  attrs: { data, validate, sendMessage, deleteComment },
+  attrs: { data, validate, sendMessage, deleteComment, isMember },
 }) => {
-  let l = data.comments.length
   let _dom
   return {
     view: ({ attrs: { mdl, data, state } }) =>
@@ -17,30 +15,33 @@ export const EventComments = ({
           m(".frow width-100", [
             m(
               ".event-comment-textbox-container",
-              m(".frow items-end", [
-                m(
-                  ".col-xs-4-5",
-                  m("textarea.comments-message-container", {
-                    row: 20,
-                    cols: 50,
-                    placeholder: "Say hi...",
-                    value: state.comments.message,
-                    oncreate: autoFocus,
-                    oninput: (e) => (state.comments.message = e.target.value),
-                    onchange: (e) =>
-                      (state.comments.message = state.comments.message.trim()),
-                    onblur: (e) => validate("comments")(state.comments),
-                  })
-                ),
-                m(
-                  ".col-xs-1-5",
+              isMember &&
+                m("form.frow items-end", [
                   m(
-                    `button.button-none.comments-message-btn-${getTheme(mdl)}`,
-                    { onclick: (e) => sendMessage(mdl) },
-                    "Send"
-                  )
-                ),
-              ])
+                    ".col-xs-4-5",
+                    m("textarea.comments-message-container", {
+                      row: 20,
+                      cols: 50,
+                      placeholder: "Say hi...",
+                      value: state.comments.message,
+                      oncreate: autoFocus,
+                      oninput: (e) => (state.comments.message = e.target.value),
+                      onchange: (e) =>
+                        (state.comments.message = state.comments.message.trim()),
+                      onblur: (e) => validate("comments")(state.comments),
+                    })
+                  ),
+                  m(
+                    ".col-xs-1-5",
+                    m(
+                      `button.button-none.comments-message-btn-${getTheme(
+                        mdl
+                      )}`,
+                      { onclick: (e) => sendMessage(mdl) },
+                      "Send"
+                    )
+                  ),
+                ])
             ),
             state.comments.error() &&
               m("code.error-field", state.comments.error().name),
@@ -60,16 +61,6 @@ export const EventComments = ({
                   ? data.comments.map((comment, idx) =>
                       m(
                         ".frow column-center width-100 mb-40",
-                        {
-                          oncreate: ({ dom }) => {
-                            l < data.comments.length &&
-                              Animate(slideInRight)({ dom })
-                          },
-                          onbeforeremove: ({ dom }) => {
-                            l--
-                            return Animate(slideOutLeft)({ dom })
-                          },
-                        },
                         m(
                           `.event-comments-message-container ${
                             mdl.User.objectId == comment.guestId

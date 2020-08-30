@@ -1,5 +1,5 @@
 import { jsonCopy, hyphenize, getTheme } from "Utils"
-import { without, propEq, set, lensProp, traverse, find } from "ramda"
+import { without, propEq, set, lensProp, traverse, find, pluck } from "ramda"
 import mapboxgl from "mapbox-gl/dist/mapbox-gl.js"
 import {
   HTTP,
@@ -109,6 +109,10 @@ export const Event = ({ attrs: { mdl } }) => {
     state.status = "success"
     state.modal.isShowing(null)
     state.modal.newHost(null)
+
+    guests
+      .filter(propEq("guestId", mdl.User.objectId))
+      .map(({ updated, status }) => mdl.Events.isMember(updated || status == 1))
   }
 
   const load = ({ attrs: { mdl } }) => {
@@ -630,18 +634,26 @@ export const Event = ({ attrs: { mdl } }) => {
                 m(EventInfo, {
                   mdl,
                   data,
+                  isMember: mdl.Events.isMember(),
                   state,
                   setupMap,
                   otherGuests,
                 }),
 
               state.guests.isShowing() &&
-                m(EventGuests, { mdl, data, state, sendInvite }),
+                m(EventGuests, {
+                  mdl,
+                  data,
+                  state,
+                  sendInvite,
+                  isMember: mdl.Events.isMember(),
+                }),
 
               state.items.isShowing() &&
                 m(EventItems, {
                   mdl,
                   data,
+                  isMember: mdl.Events.isMember(),
                   state,
                   validate,
                   addItem,
@@ -653,6 +665,7 @@ export const Event = ({ attrs: { mdl } }) => {
                 m(EventComments, {
                   mdl,
                   data,
+                  isMember: mdl.Events.isMember(),
                   state,
                   validate,
                   sendMessage,

@@ -2,22 +2,9 @@ import { Layout } from "Components"
 import { Home, Event } from "Pages"
 
 const AuthenticatedRoutes = [
-  // {
-  //   id: "profile",
-  //   name: "Profile",
-  //   // icon: Icons.logo,
-  //   route: "/profile/:name",
-  //   position: ["toolbar"],
-  //   group: ["authenticated"],
-  //   children: [],
-  //   options: [],
-  //   onmatch: (mdl, args, path, fullroute, isAnchor) => {},
-  //   component: (mdl) => m(Layout, { mdl }, m(Profile, { mdl })),
-  // },
   {
     id: "day-planner",
     name: "Day Planner",
-    // icon: Icons.logo,
     route: "/:username/:date",
     position: ["toolbar"],
     group: ["authenticated"],
@@ -32,27 +19,17 @@ const AuthenticatedRoutes = [
   {
     id: "event",
     name: "Event",
-    // icon: Icons.logo,
-    // route: "/:username/:date/:hour/:min",
     route: "/:username/events/:title/",
     position: ["toolbar"],
     group: ["authenticated"],
     children: [],
     options: [],
-    onmatch: (mdl, args, path, fullroute, isAnchor) => {
-      // if (
-      //   m.route.param().username == mdl.User.name &&
-      //   !mdl.Events.currentEventId()
-      // ) {
-      //   mdl.Events.currentEventId(localStorage.getItem("eventId"))
-      // }
-    },
+    onmatch: (mdl, args, path, fullroute, isAnchor) => {},
     component: (mdl) => m(Layout, { mdl }, m(Event, { mdl })),
   },
   {
     id: "logout",
     name: "",
-    // icon: Icons.users,
     route: "/logout",
     position: [],
     group: ["authenticated", "admin"],

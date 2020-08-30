@@ -1,5 +1,13 @@
 import { EmptyState, InviteRSVP } from "Components"
-import { getTimeFormat, getTheme } from "Utils"
+import { getTimeFormat, getTheme, hyphenize } from "Utils"
+
+const navToInvite = (mdl) => (invite) => {
+  mdl.Events.currentEventId(invite.eventId)
+  mdl.Events.currentEventStart(invite.start)
+  localStorage.setItem("shindigit-eventId", invite.eventId)
+  localStorage.setItem("shindigit-eventStart", invite.start)
+  m.route.set(`/${hyphenize(mdl.User.name)}/events/${hyphenize(invite.title)}`)
+}
 
 export const SidebarRSVP = () => {
   return {
@@ -8,7 +16,10 @@ export const SidebarRSVP = () => {
         mdl.Invites.needRSVP().length
           ? mdl.Invites.needRSVP().map((invite) => {
               return m(
-                `..sidebar-invites-${getTheme(mdl)}`,
+                `.sidebar-invites-${getTheme(mdl)}`,
+                {
+                  onclick: (e) => navToInvite(mdl)(invite),
+                },
                 m(".frow mb-10", [
                   m(".col-xs-1-2 text-ellipsis", `${invite.title}`),
                   m(".col-xs-1-2", `On: ${invite.start.format("MM-DD-YYYY")}`),

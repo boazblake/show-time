@@ -19,7 +19,7 @@ export const EventToolbar = () => {
             )
           },
         },
-        "Back"
+        mdl.Events.isMember() ? "Back" : "Home"
       ),
     ],
   }

@@ -1,6 +1,6 @@
 import { propEq, prop } from "ramda"
 
-export const EventInfo = ({ attrs: { setupMap, otherGuests } }) => {
+export const EventInfo = ({ attrs: { setupMap, otherGuests, isMember } }) => {
   const invitedGuests = (guests) => otherGuests(guests).length
   const acceptedGuests = (guests) =>
     otherGuests(guests).filter(propEq("status", 1)).length
@@ -35,11 +35,12 @@ export const EventInfo = ({ attrs: { setupMap, otherGuests } }) => {
           ),
           m("h3.heading", `Notes: ${data.event.notes}`),
 
-          m(
-            "button.required-field",
-            { onclick: (e) => state.modal.isShowing("settings") },
-            "Event Settings"
-          ),
+          isMember &&
+            m(
+              "button.required-field",
+              { onclick: (e) => state.modal.isShowing("settings") },
+              "Event Settings"
+            ),
         ])
       ),
   }
