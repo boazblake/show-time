@@ -1,16 +1,14 @@
-import { log, hyphenize, getMyLocationTask } from "Utils"
+import { log, hyphenize, getMyLocationTask, setSessionsTask } from "Utils"
 import { validateLoginTask } from "./Validations.js"
-import { HTTP, loginTask, getUserProfileTask, setUserToken } from "Http"
-import { map } from "ramda"
-import { IsLoading } from "Components"
+import { HTTP, loginTask, getUserProfileTask } from "Http"
 
 const loginUser = (mdl) => (data) => {
-  const onError = (errs) => {
-    if (errs) {
-      state.errors = errs
-      state.errorMsg(errs.message)
+  const onError = ({ error }) => {
+    if (error) {
+      state.errors = error
+      state.errorMsg(error)
       state.showErrorMsg(true)
-      console.log("failed - state", state)
+      console.log("failed - state", state.errors)
     } else {
       state.errorMsg("Issue with logging in. Have you registered?")
       state.showErrorMsg(true)
@@ -20,28 +18,23 @@ const loginUser = (mdl) => (data) => {
 
   const onSuccess = (mdl) => (s) => {
     state.errors = {}
-    m.route.set(`/${hyphenize(mdl.User.name)}/${M().format("YYYY-MM-DD")}`)
+    console.log(`/${hyphenize(mdl.User.name)}/${M().format("YYYY-MM-DD")}`)
+    return m.route.set(
+      `/${hyphenize(mdl.User.name)}/${M().format("YYYY-MM-DD")}`
+    )
   }
 
   state.isSubmitted = true
 
   validateLoginTask(data)
-    .chain(loginTask(HTTP)(mdl))
-    .chain((user) => {
-      mdl.User = user
-      return getUserProfileTask(HTTP)(mdl)(mdl.User.objectId)
-    })
-    .map(
-      map((profile) => {
-        mdl.User.profile = profile
-        mdl.Calendar.state.start(profile.startWeekOnDay)
-        setUserToken(mdl)(mdl.User)
-      })
+    .chain((_) =>
+      loginTask(HTTP)(mdl)({
+        email: data.email,
+        password: data.password,
+      }).chain(() => getUserProfileTask(HTTP)(mdl)(mdl.User.objectId))
     )
-    .chain((account) => {
-      mdl.User.account = account
-      return getMyLocationTask(mdl)
-    })
+    .chain((_) => getMyLocationTask(mdl))
+    .chain((_) => setSessionsTask(mdl))
     .fork(onError, onSuccess(mdl))
 }
 

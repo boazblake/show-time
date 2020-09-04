@@ -1,18 +1,22 @@
-export const setUserToken = (mdl) => (user) => {
-  sessionStorage.setItem("shindigit-user", JSON.stringify(user))
-  sessionStorage.setItem("shindigit-user-token", user["user-token"])
-  mdl.State.isAuth(true)
+import { prop, map } from "ramda"
+
+const setUser = (mdl) => (user) => {
   mdl.User = user
-  return user
+  return mdl
+}
+
+const setProfile = (mdl) => (profile) => {
+  mdl.User.profile = profile
+  return mdl
 }
 
 export const loginTask = (http) => (mdl) => ({ email, password }) =>
-  http.backEnd
-    .postTask(mdl)("users/login")({
-      login: email,
+  http.back4App
+    .postTask(mdl)("login")({
+      username: email,
       password: password,
     })
-    .map(setUserToken(mdl))
+    .map(setUser(mdl))
 
 export const registerTask = (http) => (mdl) => ({
   name,
@@ -20,56 +24,62 @@ export const registerTask = (http) => (mdl) => ({
   password,
   isAdmin,
 }) =>
-  http.backEnd.postTask(mdl)("users/register")({
+  http.back4App.postTask(mdl)("users")({
+    username: email,
     name,
     email,
     password,
     isAdmin,
   })
 
-export const createProfileTask = (http) => (mdl) =>
-  http.backEnd.postTask(mdl)("data/Profiles")({
-    userId: mdl.User.objectId,
-    name: mdl.User.name,
-    email: mdl.User.email,
+export const createProfileTask = (http) => (mdl) => ({ name, email }) => ({
+  objectId,
+}) =>
+  http.back4App.postTask(mdl)("classes/Profile")({
+    userId: objectId,
+    name,
+    email,
     startWeekOnDay: 1,
-    use24Hrs: true,
+    is24Hrs: true,
     isDarkTheme: true,
     language: "en",
     searchRadius: 20,
   })
 
 export const getUserProfileTask = (http) => (mdl) => (id) =>
-  http.backEnd.getTask(mdl)(`data/Profiles?where=userId%3D'${id}'`)
+  http.back4App
+    .getTask(mdl)(`classes/Profile?where=${JSON.stringify({ userId: id })}`)
+    .map(prop("results"))
+    .map(map(setProfile(mdl)))
 
 export const updateUserProfile = (http) => (mdl) => (profile) =>
-  http.backEnd.putTask(mdl)(`data/Profiles/${mdl.User.profile.objectId}`)(
+  http.back4App.putTask(mdl)(`classes/Profiles/${mdl.User.profile.objectId}`)(
     profile
   )
 
 export const findUserByEmailTask = (http) => (mdl) => (email) =>
-  http.backEnd.getTask(mdl)(`data/Users?where=email%3D'${email}'`)
+  http.back4App.getTask(mdl)(`data/Users?where=email%3D'${email}'`)
 
 export const relateItemsToUserTask = (http) => (mdl) => (userId) => (itemIds) =>
-  http.backEnd.putTask(mdl)(`data/Users/${userId}/items`)(itemIds)
+  http.back4App.putTask(mdl)(`data/Users/${userId}/items`)(itemIds)
 
 export const unRelateItemToUserTask = (http) => (mdl) => (userId) => (itemId) =>
-  http.backEnd.deleteTask(mdl)(
+  http.back4App.deleteTask(mdl)(
     `data/Users/${userId}/items?whereClause=objectId%3D'${itemId}'`
   )
 
 export const relateInvitesToUserTask = (http) => (mdl) => (userId) => (
   inviteIds
-) => http.backEnd.putTask(mdl)(`data/Users/${userId}/invites`)(inviteIds)
+) => http.back4App.putTask(mdl)(`data/Users/${userId}/invites`)(inviteIds)
 
 // export const unRelateInvitesToUserTask = (http) => (mdl) => (userId) => (
 //   inviteIds
-// ) => http.backEnd.deleteTask(mdl)(`data/Users/${userId}/invites`)(inviteIds)
+// ) => http.back4App.deleteTask(mdl)(`data/Users/${userId}/invites`)(inviteIds)
 
 export const relateProfileToUserTask = (http) => (mdl) => (userId) => (
   profileId
-) => http.backEnd.putTask(mdl)(`data/Users/${userId}/profile`)([profileId])
+) => http.back4App.putTask(mdl)(`data/Users/${userId}/profile`)([profileId])
 
 // export const unRelateProfileToUserTask = (http) => (mdl) => (userId) => (
 //   profileId
-// ) => http.backEnd.deleteTask(mdl)(`data/Users/${userId}/profile`)([profileId])
+// ) => http.back4App.deleteTask(mdl)(`data/Users/${userId}/profile`)([profileId])

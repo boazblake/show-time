@@ -1,6 +1,5 @@
 import { props, prop } from "ramda"
 import Task from "data.task"
-import { log } from "Utils"
 
 const toBoundsUrlString = ({ lat_min, lon_min, lat_max, lon_max }) =>
   encodeURIComponent(`${lon_min},${lat_min},${lon_max},${lat_max}`)

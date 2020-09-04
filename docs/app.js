@@ -1,5 +1,7744 @@
-!function(){"use strict";var e="undefined"==typeof global?self:global;if("function"!=typeof e.require){var t={},n={},r={},o={}.hasOwnProperty,a=/^\.\.?(\/|$)/,i=function(e,t){for(var n,r=[],o=(a.test(t)?e+"/"+t:t).split("/"),i=0,u=o.length;i<u;i++)n=o[i],".."===n?r.pop():"."!==n&&""!==n&&r.push(n);return r.join("/")},u=function(e){return e.split("/").slice(0,-1).join("/")},s=function(t){return function(n){var r=i(u(t),n);return e.require(r,t)}},c=function(e,t){var r=g&&g.createHot(e),o={id:e,exports:{},hot:r};return n[e]=o,t(o.exports,s(e),o),o.exports},l=function(e){var t=r[e];return t&&e!==t?l(t):e},f=function(e,t){return l(i(u(e),t))},d=function(e,r){null==r&&(r="/");var a=l(e);if(o.call(n,a))return n[a].exports;if(o.call(t,a))return c(a,t[a]);throw new Error("Cannot find module '"+e+"' from '"+r+"'")};d.alias=function(e,t){r[t]=e};var m=/\.[^.\/]+$/,v=/\/index(\.[^\/]+)?$/,p=function(e){if(m.test(e)){var t=e.replace(m,"");o.call(r,t)&&r[t].replace(m,"")!==t+"/index"||(r[t]=e)}if(v.test(e)){var n=e.replace(v,"");o.call(r,n)||(r[n]=e)}};d.register=d.define=function(e,r){if(e&&"object"==typeof e)for(var a in e)o.call(e,a)&&d.register(a,e[a]);else t[e]=r,delete n[e],p(e)},d.list=function(){var e=[];for(var n in t)o.call(t,n)&&e.push(n);return e};var g=e._hmr&&new e._hmr(f,d,t,n);d._cache=n,d.hmr=g&&g.wrap,d.brunch=!0,e.require=d}}(),function(){var e;"undefined"==typeof window?this:window;require.register(".secrets.js",function(e,t,n){"use strict";Object.defineProperty(e,"__esModule",{value:!0}),e.Back4App=e.OpenCage=e.BackEnd=void 0;var r=function(){return sessionStorage.getItem("shindigit-user-token")?sessionStorage.getItem("shindigit-user-token"):""},o={key:"c36ea23c619f436cba0eab3f939e6ed6",baseUrl:"https://api.opencagedata.com/geocode/v1/json",headers:function(){return{}}};e.OpenCage=o;var a={baseUrl:"https://shindigitdb.back4app.io",appId:"1blVmKMuIVf6T7jvjiFGAXta1iL8kdwehGKg83LM",apiKey:"CkrPBEbEOd3pxHblGCQv97kerTQENyVFVSek5yHc",headers:function(e){var t=e.appId,n=e.apiKey;return{"X-Parse-Application-Id":t,"X-Parse-REST-API-Key":n,"Content-Type":"application/json","X-Parse-Revocable-Session":1}}};e.Back4App=a;var i={API_KEY:"3E894DDB-58BB-4F18-9E1D-809BBF807C1C",APP_ID:"854DB087-FA48-0CF1-FFEE-7660CF37E100",baseUrl:"https://api.backendless.com",headers:function(){return{"user-token":r()}}};e.BackEnd=i}),require.register("App.js",function(e,t,n){"use strict";function r(e){return e&&e.__esModule?e:{"default":e}}Object.defineProperty(e,"__esModule",{value:!0}),e["default"]=void 0;var o=r(t("./Routes/index")),a=function(e){return function(t,n){return t[n.route]={onmatch:function(t,r,o){n.group.includes("authenticated")&&!e.State.isAuth()&&m.route.set(m.route.get()),e.State.route=n,e.State.anchor=r.split("#")[1],e.Sidebar.isShowing(!1),n.onmatch(e,t,r,o)},render:function(){return n.component(e)}},t}},i=function(e){return o["default"].reduce(a(e),{})},u=i;e["default"]=u}),require.register("Components/OLD_invites-toast.js",function(e,t,n){"use strict";Object.defineProperty(e,"__esModule",{value:!0}),e.InvitesToast=void 0;var r=t("@mithril-icons/clarity/cjs"),o=t("Components"),a=function(){return{view:function(e){var t=e.attrs,n=t.mdl,a=t.style,i=t.invites;return m(".invite-alerts-container frow reverse",i.map(function(e,t){return m(".invite-alert mb-10",a(t),m(".frow mb-10",[m(".col-xs-1-2 text-ellipsis","".concat(e.title)),m(".col-xs-1-2","On: ".concat(e.start.format("MM-DD-YYYY"))),m(".col-xs-1-2","From: ".concat(e.start.format("HH:mm"))),m(".col-xs-1-2","To: ".concat(e.end.format("HH:mm")))]),m(o.InviteRSVP,{mdl:n,guest:e,updateFn:function(t){return console.log("update this item",e)}}),m(r.TimesCircleLine,{onclick:function(r){n.State.invitesToast().removeAt(t),n.State.notifications.map(function(t){return t.invites.push(e)}),n.Home.fetch(!0)},"class":"invite-alert-remove"}))}))}}};e.InvitesToast=a}),require.register("Components/accordian-item.js",function(e,t,n){"use strict";Object.defineProperty(e,"__esModule",{value:!0}),e.AccordianItem=void 0;var r=t("@mithril-icons/clarity/cjs"),o=t("Styles"),a=(t("Utils"),function(){return{view:function(e){var t=e.children,n=e.attrs,a=n.state,i=n.part,u=n.title,s=n.pills,c=void 0===s?[]:s;return m(".accordian-item.full-width",{id:i,oncreate:(0,o.Animate)(o.shutterInTop),onbeforeremove:(0,o.Animate)(o.shutterOutTop)},[m(".accordian-item-title".concat(a[i].show()?"-open":"-closed"),m(".frow",{onclick:function(e){a[i].show()?a.selected(null):a.selected(i),a[i].show(!a[i].show())}},m(".col-xs-1-3",m("h4",u)),m(".col-xs-1-3",c),m(".frow row-end col-xs-1-3",m(".accordian-item-btn",a[i].show()?m(r.TimesLine,{"class":"clickable"}):m(r.AddLine,{"class":"clickable"}))))),a[i].show()&&m(".accordian-item-body",{oncreate:(0,o.Animate)(o.shutterInTop),onbeforeremove:(0,o.Animate)(o.shutterOutTop)},[t])])}}});e.AccordianItem=a}),require.register("Components/auth-layout.js",function(e,t,n){"use strict";function r(e,t){var n=Object.keys(e);if(Object.getOwnPropertySymbols){var r=Object.getOwnPropertySymbols(e);t&&(r=r.filter(function(t){return Object.getOwnPropertyDescriptor(e,t).enumerable})),n.push.apply(n,r)}return n}function o(e){for(var t=1;t<arguments.length;t++){var n=null!=arguments[t]?arguments[t]:{};t%2?r(Object(n),!0).forEach(function(t){a(e,t,n[t])}):Object.getOwnPropertyDescriptors?Object.defineProperties(e,Object.getOwnPropertyDescriptors(n)):r(Object(n)).forEach(function(t){Object.defineProperty(e,t,Object.getOwnPropertyDescriptor(n,t))})}return e}function a(e,t,n){return t in e?Object.defineProperty(e,t,{value:n,enumerable:!0,configurable:!0,writable:!0}):e[t]=n,e}Object.defineProperty(e,"__esModule",{value:!0}),e.AuthLayout=void 0;var i=t("Styles"),u={"animation-name":"rotate-center","animation-duration":"1s","animation-timing-function":"ease","animation-delay":"0s","animation-iteration-count":"infinite","animation-direction":"normal","animation-fill-mode":"none"},s={view:function(e){var t=e.attrs.mdl;return m("img.logo",{src:"images/logo.svg",style:o(o({},t.State.isLoading()&&u),{},{paddingTop:"50px",height:"200px",width:"200px",margin:"0 auto"})})}},c={view:function(e){var t=e.attrs.mdl;return m(".heading-logo",m("span.frow column-center",[m("h2",m("span.frow mt-30 items-center justify-center height-100.p-30",{oncreate:(0,i.Animate)(i.focusInContract,{duration:500})},m("span.heading-title-q.p-30","Having a ShinDig ?"))),m("h1.p-30.heading-title-a",{oncreate:(0,i.Animate)(i.focusIn,{delay:1e3})},"ShinDigIt!"),m(s,{mdl:t})]))}},l={view:function(e){var t=e.attrs.mdl,n=e.children;return m(".frow",[m(c,{mdl:t}),n])}};e.AuthLayout=l}),require.register("Components/calendar/calendar-model.js",function(e,t,n){"use strict";Object.defineProperty(e,"__esModule",{value:!0}),e.calendarDayStyle=e.calendarModel=e.createCalendar=e.createCalendarDayViewModel=e.isNotCalenderDay=e.isCalenderDay=void 0;var r=t("date-fns"),o=t("Utils"),a=(t("moment"),function(e,t){return{day:t,dir:0,invites:e}});e.isCalenderDay=a;var i=function(e,t,n){return{day:t,dir:t.isBefore(n)?-1:t.isAfter(n)?1:0,invites:e}};e.isNotCalenderDay=i;var u=function(e){return function(t){return t.filter(function(t){return(0,o.datesAreSame)(t.start)(e)("YYYY-MM-DD")})}},s=function(e,t,n,r){var o=r.isSameMonth;return o?a(u(t)(e),M(t)):i(u(t)(e),M(t),n)};e.createCalendarDayViewModel=s;var c=function(e,t,n){var o=(0,r.parseISO)(n.clone().startOf("month").toISOString()),a=(0,r.parseISO)(n.clone().endOf("month").toISOString()),i=(0,r.eachWeekOfInterval)({start:o,end:a},{weekStartsOn:1});return i.map(function(o){return(0,r.eachDayOfInterval)({start:(0,r.startOfWeek)(o,{weekStartsOn:e.Calendar.state.start()}),end:(0,r.endOfWeek)(o,{weekStartsOn:e.Calendar.state.start()})}).map(function(e){return s(t,e,n,{isSameMonth:n.isSame(e,"month")})})})};e.createCalendar=c;var l=function(e){var t=(e.mdl,e.invites),n=e.date,r=M(),o=M(n),a={invites:t,startDate:o,selected:{year:o.year(),month:o.month()+1,day:o.day()},today:{year:r.year(),month:r.month(),day:r.day()},daysInMonth:o.daysInMonth()};return a};e.calendarModel=l;var f=function(e,t,n){var r=M();return 0!==n?"cal-day notThisMonth":r.isSame(t,"day")&&r.isSame(t,"month")&&r.isSame(t,"year")&&e.isSame(t,"date")?"selectedDay isToday":r.isSame(t,"day")&&r.isSame(t,"month")&&r.isSame(t,"year")?"cal-day isToday":e.isSame(t,"date")?"cal-day selectedDay":"cal-day"};e.calendarDayStyle=f}),require.register("Components/calendar/calendar.js",function(e,t,n){"use strict";Object.defineProperty(e,"__esModule",{value:!0}),e.Calendar=void 0;var r=t("./calendar-model"),o=t("Utils"),a=t("@mithril-icons/clarity/cjs"),i=function(){return{view:function(e){var t=e.attrs,n=t.mdl,r=t.date;return m(".width-100 cal-navbar-".concat((0,o.getTheme)(n)),m(".frow ",[m(".frow width-100 row-between",[m(m.route.Link,{selector:"button.btn-".concat((0,o.getTheme)(n)),href:"/".concat((0,o.hyphenize)(n.User.name),"/").concat(r.clone().subtract(1,"month").format("YYYY-MM-DD"))},m("h4",r.clone().subtract(1,"month").format("MMM"))),m(".centerMonthGroup",[m("h2.currentMonth",r.format("MMMM")),m("h3.currentYear.text-center",r.format("YYYY"))]),m(m.route.Link,{selector:"button.btn-".concat((0,o.getTheme)(n)),href:"/".concat((0,o.hyphenize)(n.User.name),"/").concat(r.clone().add(1,"month").format("YYYY-MM-DD"))},m("h4",r.clone().add(1,"month").format("MMM")))]),m(".frow width-100 row-between m-10",[m(m.route.Link,{selector:"button.btn-".concat((0,o.getTheme)(n)),href:"/".concat((0,o.hyphenize)(n.User.name),"/").concat(r.clone().subtract(1,"year").format("YYYY-MM-DD"))},r.clone().subtract(1,"year").format("YYYY")),m(m.route.Link,{selector:"button.btn-".concat((0,o.getTheme)(n)),href:"/".concat((0,o.hyphenize)(n.User.name),"/").concat(r.clone().add(1,"year").format("YYYY-MM-DD"))},r.clone().add(1,"year").format("YYYY"))])]))}}},u=function(){var e=function(e){return function(t){var n=e.Calendar.state.start(),r=n+t>6?0:n+t<0?6:n+t;e.Calendar.state.start(r)}};return{view:function(t){var n=t.attrs.mdl;return m(".frow width-100 row-between mt-10",[m(a.AngleLine,{onclick:function(t){return e(n)(1)},"class":"cal-day-prev"}),(0,o.daysOfTheWeekFrom)(n.Calendar.state.start()).map(function(e){return m(".col-xs-1-7 text-center",m("span.width-auto.text-strong",e[0].toUpperCase()))}),m(a.AngleLine,{onclick:function(t){return e(n)(-1)},"class":"cal-day-next"})])}}},s=function(){return{view:function(e){var t=e.attrs,n=t.mdl,a=t.invites,i=t.day,u=t.dir;return m(".col-xs-1-7 text-center",m(m.route.Link,{href:"/".concat((0,o.hyphenize)(n.User.name),"/").concat(i.format("YYYY-MM-DD")),"class":"cal-day-link",onclick:function(e){return n.State.toAnchor((0,o.firstInviteHour)(a)||M().format("HH"))}},m(".".concat((0,r.calendarDayStyle)(n.selectedDate(),i,u)),[m("span.cal-date",i.format("D")),a.any()&&m(".cal-invites-item",a.length)])))}}},c=function(){return{view:function(e){var t=e.attrs,n=t.mdl,o=t.date,a=t.invites,c=(0,r.createCalendar)(n,a,o);return m(".calendar",m(".frow",[m(i,{mdl:n,date:o}),m(u,{mdl:n}),m(".frow centered-column width-100 row-between mt-10 ",c.map(function(e){return m(".frow width-100",e.map(function(e){var t=e.invites,r=e.day,o=e.dir;return m(s,{mdl:n,invites:t,day:r,dir:o})}))}))]))}}};e.Calendar=c}),require.register("Components/component.js",function(e,t,n){"use strict";Object.defineProperty(e,"__esModule",{value:!0}),e.Component=void 0;var r=function(){return{view:function(){return m(".")}}};e.Component=r}),require.register("Components/day.js",function(e,t,n){"use strict";Object.defineProperty(e,"__esModule",{value:!0}),e.Day=e.HourView=void 0;var r=t("Components"),o=t("Utils"),a=function(e){return function(t){e.Events.currentEventId(t.eventId),e.Events.currentEventStart(t.start),localStorage.setItem("shindigit-eventId",t.eventId),localStorage.setItem("shindigit-eventStart",t.start),m.route.set("/".concat((0,o.hyphenize)(e.User.name),"/events/").concat((0,o.hyphenize)(t.title)))}},i=function(){return{view:function(e){var t=e.attrs,n=t.mdl,r=t.invite,i=t.col;return m(".col-xs-1-".concat(i+2),m(".invite-list-item-".concat((0,o.getTheme)(n)),{onclick:function(e){return a(n)(r)},style:{"background-color":(0,o.getInviteStatusColor)(r.status),top:"".concat(r.start.format("mm"),"px"),height:"".concat(2*r.end.diff(r.start,"minutes"),"px")}},r.title))}}},u=function(e,t){var n=(0,o.firstInviteHour)(t),r=e.State.toAnchor()?e.State.toAnchor():n?n:M().format("h"),a=document.getElementById("".concat(r,":00"));a&&a.scrollIntoView({top:0,left:0,behavior:"smooth"})},s=function(){return{view:function(e){var t=e.attrs,n=t.mdl,r=t.hour,o=t.events;return m(".frow ",m(".hour ",[m("p.hour-time",{id:r},r),m(".invite-list frow",o.map(function(e,t){return m(i,{mdl:n,invite:e,col:o.length,key:t})}))]))}}};e.HourView=s;var c=function(){return{view:function(e){var t=e.attrs,n=t.mdl,r=t.invites;return r.map(function(e){return m(".invite-list-item-container",m(".frow-container",m(".invite-list-".concat(o.inviteOptions[e.status],"-").concat((0,o.getTheme)(n)),{onclick:function(t){return a(n)(e)}},[m("h3",e.title),m(".frow row-start",[m("label.col-xs-1-1","".concat(e.start.format((0,o.getTimeFormat)(n))," - ").concat(e.end.format((0,o.getTimeFormat)(n))))])])))})}}},l=function(e){e.attrs.mdl;return{oncreate:function(e){var t=e.attrs,n=t.mdl,r=t.invites;return u(n,r)},onupdate:function(e){var t=e.attrs,n=t.mdl,r=t.invites;return n.State.toAnchor()&&u(n,r)},view:function(e){var t=e.attrs,n=t.mdl,a=t.day,i=t.invites;return m(".day",[m(".day-container-".concat((0,o.getTheme)(n)),[i.any()?n.Day.listView()?m(c,{mdl:n,invites:i}):(0,o.getHoursInDay)().map(function(e,t){return m(s,{mdl:n,invites:a[e],hour:e,events:a[e]})}):m(r.EmptyState,{text:"You have no events scheduled for today - why not create one!"})])])}}};e.Day=l}),require.register("Components/editor/editor.js",function(e,t,n){"use strict";Object.defineProperty(e,"__esModule",{value:!0}),e.Editor=void 0;var r=t("./event-form"),o=t("Http"),a=t("./validations"),i=t("Styles"),u=function(e){var t=e.attrs,n=t.mdl,u=t.event,s=function(e){var t=e?{shortDate:M(u.start).format("YYYY-MM-DD"),allDay:u.allDay,inPerson:u.inPerson,location:u.location,latlong:u.latlong,startTime:M(u.start).format("HH:mm"),endTime:M(u.end).format("HH:mm"),title:u.title,notes:u.notes}:{shortDate:M(n.selectedDate()).format("YYYY-MM-DD"),allDay:!1,inPerson:!0,location:"",latlong:"",startTime:"",endTime:"",title:"",notes:""};return t},c={status:"loading",errors:null,isSubmitted:!1,isValid:!1,queryResults:[],querySelected:"",locationWarning:Stream(null)},l=function(e){e={status:"loading",errors:null,isSubmitted:!1,isValid:!1,queryResults:[],querySelected:"",locationWarning:Stream(null)}},f=function(e,t){var n=function(t){e.errors=t,e.isValid=!1},r=function(t){e.errors=null,e.isValid=!0};(0,a.validateTask)(t).fork(n,r)},d=function(e){var t=e.mdl,n=e.data,r=e.state,i=function(e){r.errors=e,r.status="failed"},u=function(){t.Invites.fetch(!0),t.Events.createNewEvent(!1)};r.isSubmitted=!0,(0,a.validateTask)(n).chain((0,o.createEventTask)(o.HTTP)(t)).fork(i,u)},v=function(e){var t=e.mdl,n=e.data,r=e.state,i=function(e){r.errors=e,r.status="failed"},u=function(){t.Invites.fetch(!0),t.Events.fetch(!0),t.Events.createNewEvent(!1),t.Events.updateEvent(!1)};r.isSubmitted=!0,(0,a.validateTask)(n).chain((0,o.updateEventTask)(o.HTTP)(t)(t.Events.currentEventId())).fork(i,u)};return{view:function(e){var t=e.attrs,n=t.mdl,o=t.id;return m(r.EventForm,{oncreate:(0,i.Animate)(i.slideInDown,{delay:2}),onbeforeremove:(0,i.Animate)(i.slideOutUp,{delay:2}),mdl:n,data:s(o),state:c,validate:f,resetState:l,submit:d,update:v,isEdit:o})}}};e.Editor=u}),require.register("Components/editor/event-form.js",function(e,t,n){"use strict";Object.defineProperty(e,"__esModule",{value:!0}),e.EventForm=void 0;var r=t("Http"),o=t("Utils"),a=t("Styles"),i=function(e){return function(t){return function(n){var o=function(e){console.log("err q",e),t.locationWarning("Exact address not found. You may continue with this address or try again"),t.status="failure"},a=function(e){t.queryResults=e,t.status="success",t.locationWarning(null)};(0,r.locateQueryTask)(r.HTTP)(e)(n).fork(o,a)}}},u=function(e){var t=e.attrs,n=t.data,r=t.update,u=t.validate,s=t.submit,c=function(e){e.allDay=!e.allDay,e.allDay?(e.startTime="00:00",e.endTime="23:59"):(e.startTime="",e.endTime="")};return{onbeforeremove:(0,a.Animate)(a.shutterOutTop),view:function(e){var t=e.attrs,a=t.state,l=t.resetState,f=t.mdl,d=t.isEdit;return m("form.event-form",m(".frow column-centered",[m(".full-width",m("label.frow row row-evenly ",[m("input.col-xs-2-3 ",{onchange:function(e){return d?n.shortDate=e.target.value:m.route.set("/".concat((0,o.hyphenize)(f.User.name),"/").concat(e.target.value.trim()))},type:"date",value:M(f.selectedDate()).format("YYYY-MM-DD")}),m("label.pl-30.col-xs-1-3","All Day",m("input",{type:"checkbox",checked:n.allDay,oninput:function(e){return a.isSubmitted&&u(a,n)},onclick:function(e){return c(n)}}))])),m(".full-width",[m(".frow row row-evenly gutters",[m("label.col-xs-1-2",[m("input.",{oninput:function(e){return n.startTime=e.target.value.trim()},value:n.startTime,type:"time",disabled:n.allDay,onblur:function(e){return a.isSubmitted&&u(a,n)}}),m(".frow row-start",["Start Time",m("span.required-field","*")]),a.errors&&m("code.error-field",a.errors.startTime)]),m("label.col-xs-1-2",[m("input",{oninput:function(e){return n.endTime=e.target.value.trim()},value:n.endTime,type:"time",disabled:n.allDay,onblur:function(e){return a.isSubmitted&&u(a,n)}}),m(".frow row-start",["End Time",m("span.required-field","*")]),a.errors&&m("code.error-field",a.errors.endTime)])])]),m(".full-width",m(".frow row row-evenly gutters",[m("label.col-xs-1-5","In Person",m("input",{type:"checkbox",checked:n.inPerson,onclick:function(e){return n.inPerson=!n.inPerson}})),n.inPerson?m("label.col-xs-4-5",m("input",{type:"address",value:n.location,oninput:function(e){return n.location=e.target.value},onchange:function(e){return i(f)(a)(e.target.value.trim())},onkeyup:function(e){return a.isSubmitted&&u(a,n)},onblur:function(e){return n.location=n.location.trim()}}),m(".frow row-start",["Address",m("span.required-field","*")])):m("label.col-xs-4-5",m("input",{type:"url",value:n.url,oninput:function(e){return n.location=e.target.value.trim()},onblur:function(e){return n.location=n.location.trim()},onkeyup:function(e){return a.isSubmitted&&u(a,n)}}),m(".frow row-start",["URL link",m("span.required-field","*")])),a.locationWarning()&&m("p.location-info-text",a.locationWarning()),a.queryResults.any()&&m("ul.event-form-query-container",a.queryResults.map(function(e){var t=e.address,r=e.latlong;return m("li",m("code.form-event-query-result",{onclick:function(e){n.location=t,n.latlong=r,l(a)}},t))})),a.errors&&m("code.error-field",a.errors.location)])),m("label",m("input",{type:"text",value:n.title,oninput:function(e){return n.title=e.target.value},onkeyup:function(e){return a.isSubmitted&&u(a,n)},onblur:function(e){return n.title=n.title.trim()}}),m(".frow row-start",["Title",m("span.required-field","*")]),a.errors&&m("code.error-field",a.errors.title)),m("label",m("textarea",{value:n.notes,oninput:function(e){return n.notes=e.target.value},onkeyup:function(e){return a.isSubmitted&&u(a,n)},onblur:function(e){return n.notes=n.notes.trim()}}),"Notes"),m("button.full-width",{onclick:function(e){e.preventDefault(),d?r({mdl:f,data:n,state:a}):s({mdl:f,data:n,state:a})}},"Submit")]))}}};e.EventForm=u}),require.register("Components/editor/validations.js",function(e,t,n){"use strict";Object.defineProperty(e,"__esModule",{value:!0}),e.validateTask=void 0;var r=t("ramda"),o=t("data.validation"),a=t("Utils"),i=(0,o.Success)((0,r.curryN)(5,r.identity)),u=(0,r.lensProp)("shortDate"),s=(0,r.lensProp)("startTime"),c=(0,r.lensProp)("endTime"),l=(0,r.lensProp)("location"),f=((0,r.lensProp)("latlong"),(0,r.lensProp)("title")),d=function(e){return"".concat(e," is required")},m="End time must be after Start time",v=function(e){return function(t){return e&&t&&M().hours((0,a.getHour)(e)).minutes((0,a.getMin)(e)).isBefore(M().hours((0,a.getHour)(t)).minutes((0,a.getMin)(t)))}},p=function(e){return(0,o.Success)(e).apLeft((0,a.validate)(a.isRequired,u,d("Date"),e))},g=function(e){return(0,o.Success)(e).apLeft((0,a.validate)(a.isRequired,s,d("Start Time"),e))},y=function(e){return(0,o.Success)(e).apLeft((0,a.validate)(a.isRequired,c,d("End Time"),e)).apLeft((0,a.validate)(v(e.startTime),c,m,e))},h=function(e){return(0,o.Success)(e).apLeft((0,a.validate)(a.isRequired,l,d("Location"),e))},b=function(e){return(0,o.Success)(e).apLeft((0,a.validate)(a.isRequired,f,d("Title"),e))},k=function(e){return i.ap(p(e)).ap(g(e)).ap(y(e)).ap(h(e)).ap(b(e)).failureMap(r.mergeAll).toTask()};e.validateTask=k}),require.register("Components/empty-state.js",function(e,t,n){"use strict";Object.defineProperty(e,"__esModule",{value:!0}),e.EmptyState=void 0;var r=t("Components"),o=function(){return{view:function(e){var t=e.attrs.text;return m(".empty-state frow centered-column justify-between",m(".logo-placeholder",[m("h3.text-center.mt-50",t),m(".logo",r.Logo)]))}}};e.EmptyState=o}),require.register("Components/event-toolbar.js",function(e,t,n){"use strict";Object.defineProperty(e,"__esModule",{value:!0}),e.EventToolbar=void 0;var r=t("Utils"),o=function(){return{view:function(e){var t=e.attrs.mdl;return[m("button.col-xs-1-1.btn-".concat((0,r.getTheme)(t)),{disabled:t.Sidebar.isShowing(),onclick:function(e){localStorage.removeItem("shindigit-eventId"),localStorage.removeItem("shindigit-eventStart"),t.Invites.fetch(!0),t.State.toAnchor(M(t.Events.currentEventStart()).format("HH")),m.route.set("/".concat((0,r.hyphenize)(t.User.name),"/").concat(M(t.selectedDate()).format("YYYY-MM-DD")))}},t.Events.isMember()?"Back":"Home")]}}};e.EventToolbar=o}),require.register("Components/hamburger.js",function(e,t,n){"use strict";Object.defineProperty(e,"__esModule",{value:!0}),e.Hamburger=void 0;var r=t("@mithril-icons/clarity/cjs"),o=t("Http"),a=t("Styles"),i=function(){var e=function(e){var t=e.attrs.mdl,n=function(e){t.Invites.state.error=e,t.Invites.state.status="failed"},r=function(e){t.Invites.fetch(!1),t.Invites.state.error=null;var n=function(e){return!e.updated&&2==e.status},r=function(e){return e.updated||2!==e.status};t.Invites.needRSVP(e.filter(n)),t.Invites.withRSVP(e.filter(r)),t.Invites.state.status="success"};(0,o.getInvitesByGuestIdTask)(o.HTTP)(t)(t.User.objectId).fork(n,r)};return{oninit:e,onupdate:function(t){var n=t.attrs.mdl;return n.Invites.fetch()&&e({attrs:{mdl:n}})},view:function(e){var t=e.attrs.mdl;return[m("button.col-xs-1-5.button-none.frow",{onclick:function(e){t.Invites.fetch(!0),t.Sidebar.isShowing(!t.Sidebar.isShowing())}},t.Sidebar.isShowing()?m(r.CloseLine,{oncreate:(0,a.Animate)(a.focusInContract)}):[t.Invites.needRSVP().length>0&&m(".notifier",[m(r.BellLine,{oncreate:(0,a.Animate)(a.shake,{delay:100,iterations:1,fill:"backwards"})}),m(".notif-count",{oncreate:(0,a.Animate)(a.puffOutCenter,{iterations:1.2,fill:"backwards"})},t.Invites.needRSVP().length)]),m(r.BarsLine,{oncreate:(0,a.Animate)(a.focusInContract,{delay:200})})])]}}};e.Hamburger=i}),require.register("Components/home-toolbar.js",function(e,t,n){"use strict";Object.defineProperty(e,"__esModule",{value:!0}),e.HomeToolbar=void 0;var r=t("Utils"),o=function(e){var t=e.attrs.mdl,n=function(e){return m.route.set("/".concat((0,r.hyphenize)(t.User.name),"/").concat(M(e).format("YYYY-MM-DD")))},o=function(e){return M(e).format("YYYY-MM-DD")};return{view:function(e){var t=e.attrs.mdl;return[m("input.col-xs-1-2",{onchange:function(e){return n(e.target.value)},type:"date",value:o(t.selectedDate())}),m(m.route.Link,{disabled:t.Sidebar.isShowing(),"class":"col-xs-1-2",selector:"button.btn-".concat((0,r.getTheme)(t)),href:"/".concat((0,r.hyphenize)(t.User.name),"/").concat(M().format("YYYY-MM-DD"))},"Today")]}}};e.HomeToolbar=o}),require.register("Components/index.js",function(e,t,n){"use strict";Object.defineProperty(e,"__esModule",{value:!0});var r=t("./home-toolbar.js");Object.keys(r).forEach(function(t){"default"!==t&&"__esModule"!==t&&Object.defineProperty(e,t,{enumerable:!0,get:function(){return r[t]}})});var o=t("./event-toolbar.js");Object.keys(o).forEach(function(t){"default"!==t&&"__esModule"!==t&&Object.defineProperty(e,t,{enumerable:!0,get:function(){return o[t]}})});var a=t("./calendar/calendar.js");Object.keys(a).forEach(function(t){"default"!==t&&"__esModule"!==t&&Object.defineProperty(e,t,{enumerable:!0,get:function(){return a[t]}})});var i=t("./day.js");Object.keys(i).forEach(function(t){"default"!==t&&"__esModule"!==t&&Object.defineProperty(e,t,{enumerable:!0,get:function(){return i[t]}})});var u=t("./modal.js");Object.keys(u).forEach(function(t){"default"!==t&&"__esModule"!==t&&Object.defineProperty(e,t,{enumerable:!0,get:function(){return u[t]}})});var s=t("./editor/editor.js");Object.keys(s).forEach(function(t){"default"!==t&&"__esModule"!==t&&Object.defineProperty(e,t,{enumerable:!0,get:function(){return s[t]}})});var c=t("./nav-link.js");Object.keys(c).forEach(function(t){"default"!==t&&"__esModule"!==t&&Object.defineProperty(e,t,{enumerable:!0,get:function(){return c[t]}})});var l=t("./editor/event-form.js");Object.keys(l).forEach(function(t){"default"!==t&&"__esModule"!==t&&Object.defineProperty(e,t,{enumerable:!0,get:function(){return l[t]}})});var f=t("./layout.js");Object.keys(f).forEach(function(t){"default"!==t&&"__esModule"!==t&&Object.defineProperty(e,t,{enumerable:!0,get:function(){return f[t]}})});var d=t("./auth-layout.js");Object.keys(d).forEach(function(t){"default"!==t&&"__esModule"!==t&&Object.defineProperty(e,t,{enumerable:!0,get:function(){return d[t]}})});var m=t("./sidebar.js");Object.keys(m).forEach(function(t){"default"!==t&&"__esModule"!==t&&Object.defineProperty(e,t,{enumerable:!0,get:function(){return m[t]}})});var v=t("./accordian-item.js");Object.keys(v).forEach(function(t){"default"!==t&&"__esModule"!==t&&Object.defineProperty(e,t,{enumerable:!0,get:function(){return v[t]}})});var p=t("./invite-rsvp.js");Object.keys(p).forEach(function(t){"default"!==t&&"__esModule"!==t&&Object.defineProperty(e,t,{enumerable:!0,get:function(){return p[t]}})});var g=t("./sidebar-rsvp.js");Object.keys(g).forEach(function(t){"default"!==t&&"__esModule"!==t&&Object.defineProperty(e,t,{enumerable:!0,get:function(){return g[t]}})});var y=t("./invites-toast.js");Object.keys(y).forEach(function(t){"default"!==t&&"__esModule"!==t&&Object.defineProperty(e,t,{enumerable:!0,get:function(){return y[t]}})});var h=t("./profile");Object.keys(h).forEach(function(t){"default"!==t&&"__esModule"!==t&&Object.defineProperty(e,t,{enumerable:!0,get:function(){return h[t]}})});var b=t("./logo");Object.keys(b).forEach(function(t){"default"!==t&&"__esModule"!==t&&Object.defineProperty(e,t,{enumerable:!0,get:function(){return b[t]}})});var k=t("./hamburger");Object.keys(k).forEach(function(t){"default"!==t&&"__esModule"!==t&&Object.defineProperty(e,t,{enumerable:!0,get:function(){return k[t]}})});var w=t("./empty-state");Object.keys(w).forEach(function(t){"default"!==t&&"__esModule"!==t&&Object.defineProperty(e,t,{enumerable:!0,get:function(){return w[t]}})});var j=t("./progress-bar");Object.keys(j).forEach(function(t){"default"!==t&&"__esModule"!==t&&Object.defineProperty(e,t,{enumerable:!0,get:function(){return j[t]}})});var T=t("./indi-pb");Object.keys(T).forEach(function(t){"default"!==t&&"__esModule"!==t&&Object.defineProperty(e,t,{enumerable:!0,get:function(){return T[t]}})});var I=t("./is-loading.js");Object.keys(I).forEach(function(t){"default"!==t&&"__esModule"!==t&&Object.defineProperty(e,t,{enumerable:!0,get:function(){return I[t]}})})}),require.register("Components/indi-pb.js",function(e,t,n){"use strict";Object.defineProperty(e,"__esModule",{value:!0}),e.IndiPb=void 0;var r=function(){return{view:function(){return m(".progress-line")}}};e.IndiPb=r}),require.register("Components/invite-rsvp.js",function(e,t,n){"use strict";Object.defineProperty(e,"__esModule",{value:!0}),e.InviteRSVP=void 0;var r=t("Utils"),o=t("@mithril-icons/clarity/cjs"),a=t("Http"),i=function(e){return function(t){return function(n){var r=function(e){state.error=jsonCopy(e),state.status="failed",console.log("invite update failed",state,t)},o=function(e){n&&n()};(0,a.updateInviteTask)(a.HTTP)(e)(t.objectId)(t).fork(r,o)}}},u=function(){return[o.SadFaceLine,o.HappyFaceLine,o.NeutralFaceLine]},s=[o.SadFaceSolid,o.HappyFaceSolid,o.NeutralFaceSolid],c=function(e){var t=e.status,n=u();return n.removeAt(t),n.insertAt(t,s[t]),n},l=function(){return{view:function(e){var t=e.attrs,n=t.mdl,o=t.guest,a=t.reload,u=t.isOther;return m(".frow justify-evenly",c(o).map(function(e,t){return m(e,{"class":o.guestId==n.User.objectId?"clickable":"",fill:"var(--".concat(r.inviteOptions[t],"-invite)"),"fill-opacity":u?.8:1,filter:!u&&"drop-shadow( 3px 3px 2px rgba(0, 0, 0, .7))",onclick:function(e){o.guestId==n.User.objectId&&(o.status=t,i(n)(o)(a))}})}))}}};e.InviteRSVP=l}),require.register("Components/invites-toast.js",function(e,t,n){"use strict";Object.defineProperty(e,"__esModule",{value:!0}),e.InvitesToast=void 0;var r=t("@mithril-icons/clarity/cjs"),o=function(){var e=function(e){return 1==e?"is 1 invite":"are ".concat(e," invites")},t=function(){return"true"==localStorage.getItem("shindigit-showNotifications")},n=function(e){return localStorage.setItem("shindigit-showNotifications",e)};return{view:function(o){var a=o.attrs,i=(a.mdl,a.invites);a.locale;return m(".invite-alerts-container frow",m(".invite-alert mb-10 justify-between",[m("p","There ".concat(e(i)," waiting your attention.")),m("label.text-right",m("input",{type:"checkbox",checked:t(),onclick:function(e){return n(t())}}),"Close and do not show again")]),m(r.TimesCircleLine,{onclick:function(e){return n(!1)},"class":"invite-alert-remove"}))}}};e.InvitesToast=o}),require.register("Components/is-loading.js",function(e,t,n){"use strict";Object.defineProperty(e,"__esModule",{value:!0}),e.IsLoading=void 0;var r=function(){return{view:function(){return m("img.logo.rotateCenter",{src:"images/logo.svg",style:{position:"absolute",height:"200px",width:"200px",zIndex:1e3,bottom:"-10%",right:"35%"}})}}};e.IsLoading=r}),require.register("Components/layout.js",function(e,t,n){"use strict";Object.defineProperty(e,"__esModule",{value:!0}),e.Layout=void 0;var r=t("Components"),o=t("Styles"),a=function(){var e=function(e){return e.State.route.id};return{view:function(t){var n=t.attrs.mdl;return m(".col-xs-4-5.frow row row-start",["day-planner"==e(n)&&m(r.HomeToolbar,{mdl:n}),"event"==e(n)&&m(r.EventToolbar,{mdl:n})])}}},i=function(){return{view:function(e){var t=e.children,n=e.attrs.mdl;return m(".lt-grid-container",[m(".lt-header.navbar",m(".frow row",[n.State.isLoading()&&m(r.IndiPb),m(a,{mdl:n}),m(r.Hamburger,{mdl:n})])),n.Sidebar.isShowing()?m(r.Sidebar,{oncreate:function(e){var t=e.dom;return(0,o.Animate)((0,o.createKeyframeAnimation)(!0)({dom:t}))({dom:t})},onbeforeremove:function(e){var t=e.dom;return(0,o.Animate)((0,o.createKeyframeAnimation)(!1)({dom:t}))({dom:t})},mdl:n}):[m(".lt-body",t)],m(".lt-footer","FOOTER")])}}};e.Layout=i}),require.register("Components/logo.js",function(e,t,n){"use strict";Object.defineProperty(e,"__esModule",{value:!0}),e.Logo=void 0;var r=m("svg",{xmlns:"http://www.w3.org/2000/svg","xmlns:xlink":"http://www.w3.org/1999/xlink","xml:space":"preserve",version:"1.1",viewBox:"0 0 2.049 2.355",x:"0px",y:"0px","fill-rule":"evenodd","clip-rule":"evenodd",style:{"shape-rendering":"geometricPrecision","text-rendering":"geometricPrecision","image-rendering":"optimizeQuality"}},[m("defs",m("style",{type:"text/css"}," .logo-placeholder")),m("g",m("path",{"class":"logo-placeholder",d:"M0.033 0l1.983 0c0.018,0 0.033,0.015 0.033,0.033l0 1.818c0,0.018 -0.015,0.033 -0.033,0.033l-1.983 0c-0.018,0 -0.033,-0.015 -0.033,-0.033l0 -1.818c0,-0.018 0.015,-0.033 0.033,-0.033zm1.686 1.19l0 0.33c0,0.019 -0.015,0.033 -0.033,0.033l-0.331 0 -0.33 0 0 0 -0.331 0 -0.33 0c-0.019,0 -0.033,-0.014 -0.033,-0.033l0 -0.33 0 -0.331c0,-0.018 0.014,-0.033 0.033,-0.033l0.33 0 0.331 0 0 0 0.33 0 0.331 0c0.018,0 0.033,0.015 0.033,0.033l0 0.331zm-0.331 0.297l0.265 0 0 -0.264 -0.265 0 0 0.264zm-0.33 -0.264l0 0.264 0.264 0 0 -0.264 -0.264 0zm-0.331 0.264l0.265 0 0 -0.264 -0.265 0 0 0.264zm-0.33 -0.264l0 0.264 0.264 0 0 -0.264 -0.264 0zm1.256 -0.331l-0.265 0 0 0.265 0.265 0 0 -0.265zm-0.331 0l-0.264 0 0 0.265 0.264 0 0 -0.265zm-0.33 0l-0.265 0 0 0.265 0.265 0 0 -0.265zm-0.331 0l-0.264 0 0 0.265 0.264 0 0 -0.265zm0.71 -0.727c0.032,0 0.061,0.013 0.082,0.034 0.02,0.021 0.033,0.05 0.033,0.082 0,0.032 -0.013,0.061 -0.034,0.082 -0.02,0.021 -0.049,0.034 -0.081,0.034 -0.032,0 -0.061,-0.013 -0.082,-0.034 -0.021,-0.021 -0.034,-0.05 -0.034,-0.082 0,-0.032 0.013,-0.061 0.034,-0.082 0.021,-0.021 0.05,-0.034 0.082,-0.034zm0 0.066c-0.014,0 -0.026,0.006 -0.035,0.015 -0.009,0.009 -0.015,0.021 -0.015,0.035 0,0.014 0.006,0.026 0.015,0.035 0.009,0.009 0.021,0.014 0.035,0.014 0.013,0 0.026,-0.005 0.035,-0.014 0.009,-0.009 0.014,-0.021 0.014,-0.035 0,-0.014 -0.005,-0.026 -0.014,-0.035 -0.009,-0.009 -0.022,-0.015 -0.035,-0.015zm-0.693 -0.066c0.032,0 0.061,0.013 0.082,0.034 0.021,0.021 0.034,0.05 0.034,0.082 0,0.032 -0.013,0.061 -0.034,0.082 -0.021,0.021 -0.05,0.034 -0.082,0.034 -0.031,0 -0.06,-0.013 -0.081,-0.034 -0.021,-0.021 -0.034,-0.05 -0.034,-0.082 0,-0.032 0.013,-0.061 0.034,-0.082 0.021,-0.021 0.05,-0.034 0.081,-0.034zm0 0.066c-0.013,0 -0.026,0.006 -0.035,0.015 -0.009,0.009 -0.014,0.021 -0.014,0.035 0,0.014 0.005,0.026 0.014,0.035 0.009,0.009 0.022,0.014 0.035,0.014 0.014,0 0.026,-0.005 0.035,-0.014 0.009,-0.009 0.015,-0.021 0.015,-0.035 0,-0.014 -0.006,-0.026 -0.015,-0.035 -0.009,-0.009 -0.021,-0.015 -0.035,-0.015zm1.305 0.331l-1.917 0 0 1.256 1.917 0 0 -1.256zm-1.917 -0.066l1.917 0 0 -0.43 -1.917 0 0 0.43z"
-}))]);e.Logo=r}),require.register("Components/modal.js",function(e,t,n){"use strict";Object.defineProperty(e,"__esModule",{value:!0}),e.Modal=void 0;var r=function(){return{view:function(e){var t=e.children;return m(".modal",t.map(function(e){var t=e.header,n=e.body,r=e.footer;return m(".modal-container",[m(".modal-header",t),m(".modal-body",n),m(".modal-footer",r)])}))}}};e.Modal=r}),require.register("Components/nav-link.js",function(e,t,n){"use strict";function r(e,t){var n=Object.keys(e);if(Object.getOwnPropertySymbols){var r=Object.getOwnPropertySymbols(e);t&&(r=r.filter(function(t){return Object.getOwnPropertyDescriptor(e,t).enumerable})),n.push.apply(n,r)}return n}function o(e){for(var t=1;t<arguments.length;t++){var n=null!=arguments[t]?arguments[t]:{};t%2?r(Object(n),!0).forEach(function(t){u(e,t,n[t])}):Object.getOwnPropertyDescriptors?Object.defineProperties(e,Object.getOwnPropertyDescriptors(n)):r(Object(n)).forEach(function(t){Object.defineProperty(e,t,Object.getOwnPropertyDescriptor(n,t))})}return e}function a(e,t){if(null==e)return{};var n,r,o=i(e,t);if(Object.getOwnPropertySymbols){var a=Object.getOwnPropertySymbols(e);for(r=0;r<a.length;r++)n=a[r],t.indexOf(n)>=0||Object.prototype.propertyIsEnumerable.call(e,n)&&(o[n]=e[n])}return o}function i(e,t){if(null==e)return{};var n,r,o={},a=Object.keys(e);for(r=0;r<a.length;r++)n=a[r],t.indexOf(n)>=0||(o[n]=e[n]);return o}function u(e,t,n){return t in e?Object.defineProperty(e,t,{value:n,enumerable:!0,configurable:!0,writable:!0}):e[t]=n,e}Object.defineProperty(e,"__esModule",{value:!0}),e.NavLink=void 0;var s=function(e,t){return e.reduce(function(e,n){return Object.assign(e,u({},n,t))},{})},c=function(){return{view:function(e){var t=e.attrs,n=t.mdl,r=t.href,i=t.link,u=t.classList,c=a(t,["mdl","href","link","classList"]);return m(m.route.Link,o(o({},s(["onclick","onmouseover","onmouseout"],function(e){return console.log(e.type)})),{},{href:r,"class":"nav-link ".concat(u," ").concat(n.state.navSelected()==i&&"shadow")},c),i)}}};e.NavLink=c}),require.register("Components/profile.js",function(e,t,n){"use strict";Object.defineProperty(e,"__esModule",{value:!0}),e.Profile=void 0;var r=t("Http"),o=t("Utils"),a=function(){var e={errors:null,status:"loading"},t=function(t){var n=function(t){e.error=t,e.status="failed"},o=function(n){t.User.profile=n,e.error=null,e.status="success",(0,r.setUserToken)(t)(t.User)};(0,r.updateUserProfile)(r.HTTP)(t)(t.User.profile).fork(n,o)};return{view:function(e){var n=e.attrs.mdl;return m(".profile-section",[m("label","Dark Theme",m("input",{type:"checkbox",checked:n.User.profile.isDarkTheme,onclick:function(e){n.User.profile.isDarkTheme=!n.User.profile.isDarkTheme,t(n)}})),m("hr"),m("label","Use 24 Hrs",m("input",{type:"checkbox",checked:n.User.profile.is24Hrs,onclick:function(e){n.User.profile.is24Hrs=!n.User.profile.is24Hrs,t(n)}})),m("hr"),m("label","Start Week on Day:",m(".frow row-between",o.daysOfTheWeek.map(function(e,r){return m("label.col-xs-1-7",m("span",{key:r},e.slice(0,3)),m("input",{key:r,id:r,name:"startDay-".concat(r),type:"radio",value:n.User.profile.startWeekOnDay,checked:n.User.profile.startWeekOnDay==r,onchange:function(e){console.log(n.User),n.User.profile.startWeekOnDay=r,n.Calendar.state.start(r),t(n)}}))}))),m("hr"),m("label","Search Range Radius: ".concat(n.User.profile.searchRadius),m("input",{type:"range",value:n.User.profile.searchRadius,min:0,max:100,onchange:function(e){n.User.profile.searchRadius=parseInt(e.target.value),n.Map.bounds((0,o.getBoundsFromLatLong)(n)(n.Map.locale())),console.log(JSON.stringify(n.Map)),t(n)}}))])}}};e.Profile=a}),require.register("Components/progress-bar.js",function(e,t,n){"use strict";Object.defineProperty(e,"__esModule",{value:!0}),e.ProgressBar=void 0;var r=function(e){var t=e.attrs.mdl;return{view:function(e){var n=e.attrs.mdl.State.loadingProgress,r=n.value,o=n.max;return t.State.isLoading()&&m(".progressBar",m("progress.progress",{max:o,value:r}))}}};e.ProgressBar=r}),require.register("Components/sidebar-rsvp.js",function(e,t,n){"use strict";Object.defineProperty(e,"__esModule",{value:!0}),e.SidebarRSVP=void 0;var r=t("Components"),o=t("Utils"),a=t("@mithril-icons/clarity/cjs"),i=function(e){return function(t){e.Events.currentEventId(t.eventId),e.Events.currentEventStart(t.start),localStorage.setItem("shindigit-eventId",t.eventId),localStorage.setItem("shindigit-eventStart",t.start),m.route.set("/".concat((0,o.hyphenize)(e.User.name),"/events/").concat((0,o.hyphenize)(t.title)))}},u=function(){return{view:function(e){var t=e.attrs.mdl;return m(".sidebar-rsvp mb-50",[t.Invites.needRSVP().length?t.Invites.needRSVP().map(function(e){return m(".sidebar-invites-".concat((0,o.getTheme)(t)),m(".frow mb-10",[m(".col-xs-1-2 text-ellipsis","".concat(e.title)),m(".col-xs-1-2","On: ".concat(e.start.format("MM-DD-YYYY"))),m(".col-xs-1-2","From: ".concat(e.start.format((0,o.getTimeFormat)(t)))),m(".col-xs-1-2","To: ".concat(e.end.format((0,o.getTimeFormat)(t))))]),m(a.InfoStandardLine,{"class":"clickable",onclick:function(n){return i(t)(e)}}),m(r.InviteRSVP,{mdl:t,guest:e}))}):m(r.EmptyState,{text:"You have no outstanding invites"})])}}};e.SidebarRSVP=u}),require.register("Components/sidebar.js",function(e,t,n){"use strict";Object.defineProperty(e,"__esModule",{value:!0}),e.Sidebar=void 0;var r=t("Components"),o=t("Utils"),a=function(){var e={load:{error:Stream(null),isShowing:Stream(!1),status:Stream("loading")},Invites:{isShowing:Stream(!0),status:Stream("loading"),data:Stream([])},Profile:{isShowing:Stream(!1),is24Hrs:Stream(!1)}},t=function(t){var n=Object.keys(e);return n.map(function(n){return n==t?e[n].isShowing(!0):e[n].isShowing(!1)})};return{view:function(n){var a=n.attrs.mdl;return m(".sidebar-page",[m(".navbar-tab-section-".concat((0,o.getTheme)(a)),m(".frow row ",[m("button.navbar-tab-".concat((0,o.getTheme)(a),".col-xs-1-3"),{"class":e.Invites.isShowing()?"navbar-tab-selected":"",onclick:function(e){return t("Invites")}},"New Invites"),m("button.navbar-tab-".concat((0,o.getTheme)(a),".col-xs-1-3"),{"class":e.Profile.isShowing()?"navbar-tab-selected":"",onclick:function(e){return t("Profile")}},"Profile"),m("button.navbar-tab-".concat((0,o.getTheme)(a),".col-xs-1-3"),m(m.route.Link,{id:"scale-me",href:"/logout","class":"required-field"},"Logout"))])),e.Invites.isShowing()&&m(".sidebar-section",[m(".frow column-center height-100",[m(".sidebar-article frow height-100",m(r.SidebarRSVP,{mdl:a}))])]),e.Profile.isShowing()&&m(".sidebar-section",m(".frow column-center",[m(".sidebar-article",m(r.Profile,{mdl:a}))]))])}}};e.Sidebar=a}),require.register("Fp/all.js",function(e,t,n){"use strict";Object.defineProperty(e,"__esModule",{value:!0}),e.All=void 0;var r=function o(e){return{val:e,concat:function(t){var n=t.val;return o(e&&n)}}};e.All=r,r.empty=r(!0)}),require.register("Fp/any.js",function(e,t,n){"use strict";Object.defineProperty(e,"__esModule",{value:!0}),e.Any=void 0;var r=function o(e){return{val:e,concat:function(t){var n=t.val;return o(e||n)}}};e.Any=r,r.empty=r(!1)}),require.register("Fp/array.js",function(e,t,n){"use strict";Object.defineProperty(e,"__esModule",{value:!0}),e.ArrayFP=void 0;var r=t("./util"),o=function(e){return e.reduce(function(e,t){return e.concat(t)},[])},a=function(e){var t=function(e){var t=this;return t.map(function(t){return e(t)})};Object.defineProperty(Array.prototype,"fmap",(0,r.value)(t));var n=function(e){return[]};Object.defineProperty(Array.prototype,"empty",(0,r.value)(n));var a=function(e){return o(this.fmap(e))};Object.defineProperty(Array.prototype,"chain",(0,r.value)(a));var i=function(e){return[e]};Object.defineProperty(Array.prototype,"of",(0,r.value)(i));var u=function(e){return o(this.map(function(t){return e.map(function(e){return t(e)})}))};Object.defineProperty(Array.prototype,"ap",(0,r.value)(u));var s=function(e,t){var n=function(t,n){return e(n).map(function(e){return function(t){return t.concat(e)}}).ap(t)};return this.reduce(n,t([]))};Object.defineProperty(Array.prototype,"traverse",(0,r.value)(s));var c=function(){return this.length>0};Object.defineProperty(Array.prototype,"any",(0,r.value)(c));var l=function(e,t){return this.splice(e,0,t)};Object.defineProperty(Array.prototype,"insertAt",(0,r.value)(l));var f=function(e){return this.splice(e,1)};Object.defineProperty(Array.prototype,"removeAt",(0,r.value)(f));var d=function(){return this[this.length-1]};Object.defineProperty(Array.prototype,"last",(0,r.value)(d));var m=function(e){for(var t=0;t<this.length;t++)if(e(this[t]))return!0;return!1};Object.defineProperty(Array.prototype,"in",(0,r.value)(m));var v=function(e,t){this["in"](t)||this.push(e)};Object.defineProperty(Array.prototype,"pushIfNotExist",(0,r.value)(v));var p=function(e,t){var n=this,r=function o(r){return n.any()?t(r,n.shift()).chain(o):e(r)};return r};Object.defineProperty(Array.prototype,"foldM",(0,r.value)(p))},i={configure:a};e.ArrayFP=i}),require.register("Fp/coyoneda.js",function(e,t,n){"use strict";Object.defineProperty(e,"__esModule",{value:!0}),e.Coyoneda=void 0;var r=t("daggy"),o=t("ramda"),a=(0,r.tagged)("x","f");e.Coyoneda=a,a.prototype.map=function(e){return a(this.x,(0,o.compose)(e,this.f))},a.prototype.lower=function(){return this.x.map(this.f)},a.lift=function(e){return a(e,o.identity)}}),require.register("Fp/index.js",function(e,t,n){"use strict";Object.defineProperty(e,"__esModule",{value:!0});var r={Fp:!0,Coyoneda:!0};Object.defineProperty(e,"Coyoneda",{enumerable:!0,get:function(){return u.Coyoneda}}),e.Fp=void 0;var o=t("./all");Object.keys(o).forEach(function(t){"default"!==t&&"__esModule"!==t&&(Object.prototype.hasOwnProperty.call(r,t)||Object.defineProperty(e,t,{enumerable:!0,get:function(){return o[t]}}))});var a=t("./any");Object.keys(a).forEach(function(t){"default"!==t&&"__esModule"!==t&&(Object.prototype.hasOwnProperty.call(r,t)||Object.defineProperty(e,t,{enumerable:!0,get:function(){return a[t]}}))});var i=t("./tuple");Object.keys(i).forEach(function(t){"default"!==t&&"__esModule"!==t&&(Object.prototype.hasOwnProperty.call(r,t)||Object.defineProperty(e,t,{enumerable:!0,get:function(){return i[t]}}))});var u=t("./coyoneda"),s=t("./pointfree");Object.keys(s).forEach(function(t){"default"!==t&&"__esModule"!==t&&(Object.prototype.hasOwnProperty.call(r,t)||Object.defineProperty(e,t,{enumerable:!0,get:function(){return s[t]}}))});var c=t("./sum");Object.keys(c).forEach(function(t){"default"!==t&&"__esModule"!==t&&(Object.prototype.hasOwnProperty.call(r,t)||Object.defineProperty(e,t,{enumerable:!0,get:function(){return c[t]}}))});var l=t("./list");Object.keys(l).forEach(function(t){"default"!==t&&"__esModule"!==t&&(Object.prototype.hasOwnProperty.call(r,t)||Object.defineProperty(e,t,{enumerable:!0,get:function(){return l[t]}}))});var f=t("./intersection");Object.keys(f).forEach(function(t){"default"!==t&&"__esModule"!==t&&(Object.prototype.hasOwnProperty.call(r,t)||Object.defineProperty(e,t,{enumerable:!0,get:function(){return f[t]}}))});var d=t("./array"),m=t("./task"),v=t("./maybe"),p=t("./validation"),g=function(){d.ArrayFP.configure(),m.Task.configure(),v.Maybe.configure(),p.Validation.configure()},y={configure:g};e.Fp=y}),require.register("Fp/intersection.js",function(e,t,n){"use strict";Object.defineProperty(e,"__esModule",{value:!0}),e.Intersection=void 0;var r=function o(e){return{xs:e,concat:function(t){var n=t.xs;return o(e.filter(function(e){return n.some(function(t){return t.equals(e)})}))},inspect:"Intersection(".concat(e,")")}};e.Intersection=r}),require.register("Fp/list.js",function(e,t,n){"use strict";function r(e,t){if(!(e instanceof t))throw new TypeError("Cannot call a class as a function")}Object.defineProperty(e,"__esModule",{value:!0}),e.List=void 0;var o=t("data.maybe"),a=t("ramda"),i=function R(){r(this,R),this.head=void 0,this.tail=void 0,this.isNil=!0,this.isCons=!1},u=function F(e,t){r(this,F),this.head=e,this.tail=t,this.isNil=!1,this.isCons=!0},s=function(e){return function(t){return function(n){return e(t,n)}}},c=function(e){return function(t,n){return e(t)(n)}},l=function(e,t){return function(n){return e(t(n))}},f=function(e){return e},d=function(e){return function(t,n){return e(n,t)}},m=function(e,t){return new u(e,t)},v=function(e,t){return new u(t,e)},p=s(m),g=function(){return new i},y=function B(e){var B=e.head;return B},h=function z(e){var z=e.tail;return z},b=function(e){return function(t){return w(m)(t)(e)}},k=function(e){var t=function n(t){return function(r){var o=r.isNil,a=r.head,i=r.tail;return o?t:n(e(t,a))(i)}};return t},w=function(e){return function(t){var n=function r(e){return function(t){var n=t.isNil,o=t.head,a=t.tail;return n?e:r(m(o,e))(a)}};return l(k(d(e))(t),n(g()))}},j=function(e){return k(function(t,n){return(t||e(n).empty()).concat(e(n))})(null)},T=function(e){return function(t){var n=function r(n){return function(o){var a=o.isNil,i=o.head,u=o.tail;return a?e(n):t(n,i).chain(function(e){return r(e)(u)})}};return n}},I=function V(e){return function(t){var n=t.isNil,r=t.head,o=t.tail;return n?g():m(e(r),V(e)(o))}},O=function G(e){var t=e.isNil,n=e.head,r=e.tail;return function(e){return t?g():b(I(n)(e))(G(r)(e))}},E=function(e){return m(e,g())},S=function W(e){var t=e.isNil,n=e.head,r=e.tail;return function(e){return t?g():b(e(n))(W(r)(e))}},P=w(c(b))(g()),_=function(e,t){var n=function(e,n){return t(e).map(p).ap(n)};return w(n)(e(g()))},M=function(e){return _(e,f)},D=function(e){var t=function n(e){return function(t){var r=t.isCons,o=t.tail;return r?n(e+1)(o):e}};return t(0)(e)},A=function(e){return function(t){var n=function r(t){return function(n){var a=n.isNil,i=n.head,u=n.tail;return a?(0,o.Nothing)():e(i)?(0,o.Just)(t):r(t+1)(u)}};return n(0)(t)}},x=function(e){return function(t){var n=function r(t){return function(n){var a=n.isNil,i=n.head,u=n.tail;return a?(0,o.Nothing)():t===e?(0,o.Just)(i):r(t+1)(u)}};return n(0)(t)}},C=function(e){var t=function n(e){return function(t){var r=t.isNil,o=t.head,a=t.tail;return r?e:n(m(o,e))(a)}};return t(g())(e)},U=function(e){return function(t){return A((0,a.equals)(t))(e).isJust}},q=l(C,k(function(e,t){return U(e)(t)?e:m(t,e)})(g())),H=k(function(e,t){return e.concat([t])})([]),L=function(e){return e.reduceRight(function(e,t){return m(t,e)},g())},Y=function(){for(var e=arguments.length,t=new Array(e),n=0;n<e;n++)t[n]=arguments[n];return L(t)},N={list:Y,cons:m,snoc:v,nil:g,head:y,tail:h,foldl:k,foldr:w,foldMap:j,foldM:T,concat:b,map:I,ap:O,pure:E,join:P,chain:S,traverse:_,sequenceA:M,findIndex:A,index:x,length:D,reverse:C,contains:U,unique:q,toArray:H,toList:L};e.List=N}),require.register("Fp/maybe.js",function(e,t,n){"use strict";function r(e){return e&&e.__esModule?e:{"default":e}}Object.defineProperty(e,"__esModule",{value:!0}),e.Maybe=void 0;var o=r(t("data.maybe")),a=r(t("data.task")),i=t("./util"),u=function(e){var t=function(e){var t={Nothing:function(t){return a["default"].of(e)},Just:function(e){return a["default"].of(e)}};return this.cata(t)};Object.defineProperty(o["default"].prototype,"toTask",(0,i.value)(t))},s={configure:u};e.Maybe=s}),require.register("Fp/pointfree.js",function(e,t,n){"use strict";function r(e){return e&&e.__esModule?e:{"default":e}}function o(e){"@babel/helpers - typeof";return(o="function"==typeof Symbol&&"symbol"==typeof Symbol.iterator?function(e){return typeof e}:function(e){return e&&"function"==typeof Symbol&&e.constructor===Symbol&&e!==Symbol.prototype?"symbol":typeof e})(e)}function a(e,t){if(!(e instanceof t))throw new TypeError("Cannot call a class as a function")}function i(e,t){if("function"!=typeof t&&null!==t)throw new TypeError("Super expression must either be null or a function");e.prototype=Object.create(t&&t.prototype,{constructor:{value:e,writable:!0,configurable:!0}}),t&&v(e,t)}function u(e){var t=d();return function(){var n,r=p(e);if(t){var o=p(this).constructor;n=Reflect.construct(r,arguments,o)}else n=r.apply(this,arguments);return s(this,n)}}function s(e,t){return!t||"object"!==o(t)&&"function"!=typeof t?c(e):t}function c(e){if(void 0===e)throw new ReferenceError("this hasn't been initialised - super() hasn't been called");return e}function l(e){var t="function"==typeof Map?new Map:void 0;return(l=function(e){function n(){return f(e,arguments,p(this).constructor)}if(null===e||!m(e))return e;if("function"!=typeof e)throw new TypeError("Super expression must either be null or a function");if("undefined"!=typeof t){if(t.has(e))return t.get(e);t.set(e,n)}return n.prototype=Object.create(e.prototype,{constructor:{value:n,enumerable:!1,writable:!0,configurable:!0}}),v(n,e)})(e)}function f(e,t,n){return f=d()?Reflect.construct:function(e,t,n){var r=[null];r.push.apply(r,t);var o=Function.bind.apply(e,r),a=new o;return n&&v(a,n.prototype),a},f.apply(null,arguments)}function d(){if("undefined"==typeof Reflect||!Reflect.construct)return!1;if(Reflect.construct.sham)return!1;if("function"==typeof Proxy)return!0;try{return Date.prototype.toString.call(Reflect.construct(Date,[],function(){})),!0}catch(e){return!1}}function m(e){return Function.toString.call(e).indexOf("[native code]")!==-1}function v(e,t){return(v=Object.setPrototypeOf||function(e,t){return e.__proto__=t,e})(e,t)}function p(e){return(p=Object.setPrototypeOf?Object.getPrototypeOf:function(e){return e.__proto__||Object.getPrototypeOf(e)})(e)}Object.defineProperty(e,"__esModule",{value:!0}),e.parse=e.taskToPromise=e.promiseToTask=e.eitherToTask=e.toList=e.fold=e.foldMap=e.traverse=e.of=e.sequenceA=e.mconcat=e.mjoin=e.ParseError=void 0;var g=t("ramda"),y=r(t("data.either")),h=r(t("data.task")),b=function(e){function t(){return a(this,t),n.apply(this,arguments)}i(t,e);var n=u(t);return t}(l(Error));e.ParseError=b;var k=function(e){return e},w=(0,g.curry)(function(e,t){return t.length?[t.slice(0,e)].concat(w(e,t.slice(e,length))):[]}),j=function(e){return e.mjoin?e.mjoin():(0,g.chain)(k,e)};e.mjoin=j;var T=(0,g.curry)(function(e,t){return e.length?e.reduce(g.concat):t()});e.mconcat=T;var I=(0,g.curry)(function(e,t){return t.traverse(k,e)});e.sequenceA=I;var O=function(e){return e.of};e.of=O;var E=(0,g.curry)(function(e,t,n){return(0,g.compose)(I(t),(0,g.map)(e))(n)});e.traverse=E;var S=(0,g.curry)(function(e,t){return t.reduce(function(t,n){var r=e(n);return t=t||r.empty(),t.concat(r)},null)});e.foldMap=S;var P=(0,g.curry)(function(e,t,n){return n.fold(e,t)});e.fold=P;var _=function(e){return e.reduce(function(e,t){return[t].concat(e)},[])};e.toList=_;var M=function(e){return e.cata({Left:function(e){return h["default"].rejected(new b(e))},Right:function(e){return h["default"].of(e)}})};e.eitherToTask=M;var D=function(e){return new h["default"](function(t,n){return e.then(n,t)})};e.promiseToTask=D;var A=function(e){return new Promise(function(t,n){return e.fork(n,t)})};e.taskToPromise=A;var x=y["default"]["try"]((0,g.compose)(JSON.parse,(0,g.prop)("response")));e.parse=x}),require.register("Fp/sum.js",function(e,t,n){"use strict";Object.defineProperty(e,"__esModule",{value:!0}),e.Sum=void 0;var r=function(e){return{x:e,concat:function(t){var n=t.x;return e+n},inspect:"Sum(".concat(e,")")}};e.Sum=r}),require.register("Fp/task.js",function(e,t,n){"use strict";function r(e){return e&&e.__esModule?e:{"default":e}}Object.defineProperty(e,"__esModule",{value:!0}),e.Task=void 0;var o=r(t("data.task")),a=t("./util"),i=function(){var e=function(){var e=this;return new o["default"](function(t,n){return e.fork(t,function(e){return e.fork(t,n)})})};Object.defineProperty(o["default"].prototype,"mjoin",(0,a.value)(e))},u={configure:i};e.Task=u}),require.register("Fp/tuple.js",function(e,t,n){"use strict";Object.defineProperty(e,"__esModule",{value:!0}),e.uncurry5=e.uncurry4=e.uncurry3=e.uncurry2=e.curry5=e.curry4=e.curry3=e.curry2=e.tuple5=e.tuple4=e.tuple3=e.tuple2=e.Tuple5=e.Tuple4=e.Tuple3=e.Tuple2=e.Tuple=void 0;var r=t("daggy"),o=(0,r.tagged)("_1","_2");e.Tuple=o;var a=o;e.Tuple2=a;var i=(0,r.tagged)("_1","_2","_3");e.Tuple3=i;var u=(0,r.tagged)("_1","_2","_3","_4");e.Tuple4=u;var s=(0,r.tagged)("_1","_2","_3","_4","_5");e.Tuple5=s,a.prototype.concat=function(e){return a(this._1.concat(e._1),this._2.concat(e._2))},i.prototype.concat=function(e){return i(this._1.concat(e._1),this._2.concat(e._2),this._3.concat(e._3))},u.prototype.concat=function(e){return u(this._1.concat(e._1),this._2.concat(e._2),this._3.concat(e._3),this._4.concat(e._4))},s.prototype.concat=function(e){return s(this._1.concat(e._1),this._2.concat(e._2),this._3.concat(e._3),this._4.concat(e._4),this._5.concat(e._5))},o.prototype.dimap=function(e,t){return o(e(this._1),t(this._2))},o.prototype.map=function(e){return o(this._1,e(this._2))},o.prototype.curry=function(e){return e(this)},o.prototype.uncurry=function(e){return e(this._1,this._2)},o.prototype.extend=function(e){return o(this._1,e(this))},o.prototype.extract=function(){return this._2},o.prototype.foldl=function(e,t){return e(this._2,t)},o.prototype.foldr=function(e,t){return e(t,this._2)},o.prototype.foldMap=function(e,t){return e(this._2)};var c=o;e.tuple2=c;var l=function(e,t,n){return o(c(e,t),n)};e.tuple3=l;var f=function(e,t,n,r){return o(l(e,t,n),r)};e.tuple4=f;var d=function(e,t,n,r,a){return o(f(e,t,n,r),a)};e.tuple5=d;var m=function(e,t,n){return e(c(t,n))};e.curry2=m;var v=function(e,t,n,r){return e(l(t,n,r))};e.curry3=v;var p=function(e,t,n,r,o){return e(f(t,n,r,o))};e.curry4=p;var g=function(e,t,n,r,o,a){return e(d(t,n,r,o,a))};e.curry5=g;var y=function(e,t){return e(t._1,t._2)};e.uncurry2=y;var h=function(e,t){return e(t._1._1,t._1._2,t._2)};e.uncurry3=h;var b=function(e,t){return e(t._1._1._1,t._1._1._2,t._1._2,t._2)};e.uncurry4=b;var k=function(e,t){return e(t._1._1._1._1,t._1._1._1._2,t._1._1._2,t._1._2,t._2)};e.uncurry5=k}),require.register("Fp/util.js",function(e,t,n){"use strict";Object.defineProperty(e,"__esModule",{value:!0}),e.value=void 0;var r=function(e){var t={value:e,writable:!0,configurable:!0,enumerable:!1};return t};e.value=r}),require.register("Fp/validation.js",function(e,t,n){"use strict";function r(e){return e&&e.__esModule?e:{"default":e}}Object.defineProperty(e,"__esModule",{value:!0}),e.Validation=void 0;var o=r(t("data.validation")),a=r(t("data.task")),i=t("./util"),u=function(e){return function(){return e}},s=function(e){return e},c=function(){var e=function(e){return this.map(u).ap(e)};Object.defineProperty(o["default"].prototype,"apLeft",(0,i.value)(e));var t=function(e){return this.map(u(s)).ap(e)};Object.defineProperty(o["default"].prototype,"apRight",(0,i.value)(t));var n=function(){var e={Failure:function(e){return a["default"].rejected(e)},Success:function(e){return a["default"].of(e)}};return this.cata(e)};Object.defineProperty(o["default"].prototype,"toTask",(0,i.value)(n))},l={configure:c};e.Validation=l}),require.register("Http/comments-tasks.js",function(e,t,n){"use strict";function r(e){return e&&e.__esModule?e:{"default":e}}Object.defineProperty(e,"__esModule",{value:!0}),e.updateCommentTask=e.deleteCommentTask=e.deleteBulkCommentsTask=e.getCommentsByguestIdTask=e.getCommentsByEventIdTask=e.addCommentTask=void 0;var o=r(t("data.task")),a=function(e){return function(t){return function(n){return e.backEnd.postTask(t)("data/Comments")(n).chain(function(n){var r=n.objectId,a=r;return o["default"].of(function(e){return function(t){return{user:e,event:t}}}).ap(e.backEnd.postTask(t)("data/Users/".concat(t.User.objectId,"/comments%3AComments%3An"))([a])).ap(e.backEnd.postTask(t)("data/Events/".concat(t.Events.currentEventId(),"/comments%3AComments%3An"))([a]))})}}};e.addCommentTask=a;var i=function(e){return function(t){return function(n){return e.backEnd.getTask(t)("data/Comments?pageSize=100&where=eventId%3D'".concat(n,"'&sortBy=created%20asc"))}}};e.getCommentsByEventIdTask=i;var u=function(e){return function(t){return function(n){return e.backEnd.getTask(t)("data/Comments?pageSize=100&where=guestId%3D'".concat(n,"'&sortBy=created%20asc"))}}};e.getCommentsByguestIdTask=u;var s=function(e){return function(t){return function(n){return e.backEnd.deleteTask(t)("data/Comments?where=guestId%3D'".concat(n,"'"))}}};e.deleteBulkCommentsTask=s;var c=function(e){return function(t){return function(n){return e.backEnd.deleteTask(t)("data/Comments/".concat(n))}}};e.deleteCommentTask=c;var l=function(e){return function(t){return function(n){return e.backEnd.putTask(t)("data/Comments/".concat(n.objectId))(n)}}};e.updateCommentTask=l}),require.register("Http/events-tasks.js",function(e,t,n){"use strict";function r(e){return e&&e.__esModule?e:{"default":e}}function o(e,t){var n=Object.keys(e);if(Object.getOwnPropertySymbols){var r=Object.getOwnPropertySymbols(e);t&&(r=r.filter(function(t){return Object.getOwnPropertyDescriptor(e,t).enumerable})),n.push.apply(n,r)}return n}function a(e){for(var t=1;t<arguments.length;t++){var n=null!=arguments[t]?arguments[t]:{};t%2?o(Object(n),!0).forEach(function(t){i(e,t,n[t])}):Object.getOwnPropertyDescriptors?Object.defineProperties(e,Object.getOwnPropertyDescriptors(n)):o(Object(n)).forEach(function(t){Object.defineProperty(e,t,Object.getOwnPropertyDescriptor(n,t))})}return e}function i(e,t,n){return t in e?Object.defineProperty(e,t,{value:n,enumerable:!0,configurable:!0,writable:!0}):e[t]=n,e}Object.defineProperty(e,"__esModule",{value:!0}),e.updateEventTask=e.updateEventHostTask=e.relateInvitesToEventTask=e.relateCommentsToEventTask=e.relateItemsToEventTask=e.updateItemToGuestTask=e.addItemToEventTask=e.createEventTask=e.deleteEventTask=e.loadEventTask=e.getEventByIdTask=void 0;var u=r(t("data.task")),s=t("Http"),c=t("ramda"),l=t("Utils"),f=function(e){return function(t){var n=t.hostId,r=t.objectId,o=t.start,a=t.end,i=t.title,u=t.notes,s=t.allDay,c=t.location,f=t.inPerson,d=t.latlong;return{eventId:r,date:M(o).format("MM-DD-YYYY"),title:i.toUpperCase(),start:o,end:a,startTime:M(o).format((0,l.getTimeFormat)(e)),endTime:M(a).format((0,l.getTimeFormat)(e)),notes:u,allDay:s,location:c,inPerson:f,latlong:d,hostId:n}}},d=function(e){var t=e.message,n=e.name,r=e.guestId,o=e.eventId,a=e.created,i=e.objectId;return{message:t,name:n,guestId:r,eventId:o,created:a,objectId:i}},m=function(e){return function(t){var n=t.name,r=t.email;return a(a({},e),{},{name:n,email:r})}},v=function(e){return function(t){return function(n){return(0,s.getUserProfileTask)(e)(t)(n.guestId).map(c.head).map(m(n))}}},p=function(e){return function(t){return function(n){return(0,s.getInvitesTaskByEventId)(e)(t)(n).chain((0,c.traverse)(u["default"].of,v(e)(t)))}}},g=function(e){return function(t){return function(n){return e.backEnd.getTask(t)("data/Events/".concat(n)).map(f(t))}}};e.getEventByIdTask=g;var y=function(e){return function(t){var n=t.filter((0,c.propEq)("guestId",e.hostId))[0];return e.hostId=n,e}},h=function(e){return function(t){return function(n){return u["default"].of(function(e){return function(t){return function(n){return function(r){return{event:y(e)(r),guests:r,comments:n,items:t}}}}}).ap(g(e)(t)(n)).ap((0,s.getItemsByEventIdTask)(e)(t)(n)).ap((0,s.getCommentsByEventIdTask)(e)(t)(n).map((0,c.map)(d))).ap(p(e)(t)(n))}}};e.loadEventTask=h;var b=function(e){return function(t){return function(n){return e.backEnd.deleteTask(t)("data/Events/".concat(n)).chain(function(){return e.backEnd.deleteTask(t)("data/bulk/Invites?where=eventId%3D'".concat(n,"'"))}).chain(function(){return e.backEnd.deleteTask(t)("data/bulk/Items?where=eventId%3D'".concat(n,"'"))}).chain(function(){return e.backEnd.deleteTask(t)("data/bulk/Comments?where=eventId%3D'".concat(n,"'"))})}}};e.deleteEventTask=b;var k=function(e){return function(t){return function(n){var r=n.allDay,o=n.startTime,a=n.endTime,i=n.title,c=n.notes,f=n.inPerson,d=n.location,m=n.latlong,v=M(t.selectedDate()).hour((0,l.getHour)(a)).minute((0,l.getMin)(a)),p=M(t.selectedDate()).hour((0,l.getHour)(o)).minute((0,l.getMin)(o));return e.backEnd.postTask(t)("data/Events")({end:v,start:p,notes:c,title:i,allDay:r,inPerson:f,location:d,latlong:m,hostId:t.User.objectId}).chain(function(n){var o=n.objectId,a=n.hostId,i=n.end,c=n.start,l=n.title,v=o,p=1;return(0,s.createInviteTask)(e)(t)({eventId:v,hostId:a,guestId:a,status:p,end:i,start:c,title:l,allDay:r,inPerson:f,location:d,latlong:m}).chain(function(n){var r=n.objectId,o=r;return u["default"].of(function(e){return function(t){return{user:e,event:t}}}).ap(e.backEnd.postTask(t)("data/Users/".concat(t.User.objectId,"/invites"))([o])).ap(O(e)(t)(v)([o]))})})}}};e.createEventTask=k;var w=function(e){return function(t){return function(n){return function(r){return(0,s.addItemTask)(e)(t)(r).chain(function(r){var o=r.objectId;return T(e)(t)(n)([o])})}}}};e.addItemToEventTask=w;var j=function(e){return function(t){return function(n){return n.guestId?(0,s.relateItemsToUserTask)(e)(t)(n.guestId)([n.objectId]):(0,s.unRelateItemToUserTask)(e)(t)(t.User.objectId)(n.objectId)}}};e.updateItemToGuestTask=j;var T=function(e){return function(t){return function(n){return function(r){return e.backEnd.putTask(t)("data/Events/".concat(n,"/items"))(r)}}}};e.relateItemsToEventTask=T;var I=function(e){return function(t){return function(n){return function(r){return e.backEnd.putTask(t)("data/Events/".concat(n,"/comments"))(r)}}}};e.relateCommentsToEventTask=I;var O=function(e){return function(t){return function(n){return function(r){return e.backEnd.putTask(t)("data/Events/".concat(n,"/invites"))(r)}}}};e.relateInvitesToEventTask=O;var E=function(e){return function(t){return function(n){return function(r){return e.backEnd.putTask(t)("data/Events/".concat(n))({hostId:r})}}}};e.updateEventHostTask=E;var S=function(e){return function(t){return function(n){return function(r){var o=r.shortDate,a=r.endTime,i=r.startTime,u=r.allDay,c=r.inPerson,f=r.latlong,d=r.location,m=r.notes,v=r.title,p={end:M(o).hour((0,l.getHour)(a)).minute((0,l.getMin)(a)),start:M(o).hour((0,l.getHour)(i)).minute((0,l.getMin)(i)),allDay:u,inPerson:c,latlong:f,location:d,notes:m,title:v};return e.backEnd.putTask(t)("data/Events/".concat(n))(p).chain(function(n){var r=n.end,o=n.start,a=n.title,i=n.allDay,u=n.inPerson,c=n.location,l=n.latlong;return(0,s.updateBulkInvites)(e)(t)("eventId='".concat(t.Events.currentEventId(),"'"))({end:r,start:o,title:a,allDay:i,inPerson:u,location:c,latlong:l})})}}}};e.updateEventTask=S}),require.register("Http/http.js",function(e,t,n){"use strict";function r(e){return e&&e.__esModule?e:{"default":e}}function o(e,t){var n=Object.keys(e);if(Object.getOwnPropertySymbols){var r=Object.getOwnPropertySymbols(e);t&&(r=r.filter(function(t){return Object.getOwnPropertyDescriptor(e,t).enumerable})),n.push.apply(n,r)}return n}function a(e){for(var t=1;t<arguments.length;t++){var n=null!=arguments[t]?arguments[t]:{};t%2?o(Object(n),!0).forEach(function(t){i(e,t,n[t])}):Object.getOwnPropertyDescriptors?Object.defineProperties(e,Object.getOwnPropertyDescriptors(n)):o(Object(n)).forEach(function(t){Object.defineProperty(e,t,Object.getOwnPropertyDescriptor(n,t))})}return e}function i(e,t,n){return t in e?Object.defineProperty(e,t,{value:n,enumerable:!0,configurable:!0,writable:!0}):e[t]=n,e}function u(){return!1}Object.defineProperty(e,"__esModule",{value:!0}),e.HTTP=e.parseHttpSuccess=e.parseHttpError=void 0;var s=r(t("data.task")),c=t("../.secrets.js"),l=function(e){return function(t){t.lengthComputable&&(e.State.loadingProgress.max=t.total,e.State.loadingProgress.value=t.loaded,m.redraw())}},f=function(e){return function(t){return e.State.isLoading(!0),!1}},d=function(e){return function(t){return e.State.isLoading(!1),e.State.loadingProgress.max=0,e.State.loadingProgress.value=0,!1}},v=function(e){return{config:function(t){t.onprogress=l(e),t.onload=u,t.onloadstart=f(e),t.onloadend=d(e)}}},p=function(e){return function(t){return function(n){return e.State.isLoading(!1),console.error(n),n.response&&3064==n.response.code&&m.route.set("/logout"),t(n.response)}}};e.parseHttpError=p;var g=function(e){return function(t){return function(n){return e.State.isLoading(!1),t(n)}}};e.parseHttpSuccess=g;var y=function(e){return function(t){return function(n){
-return function(r){return function(o){return new s["default"](function(i,u){return m.request(a({method:t,url:r,headers:a({},e),body:o,withCredentials:!1},v(n))).then(g(n)(u),p(n)(i))})}}}}},h="".concat(c.BackEnd.baseUrl,"/").concat(c.BackEnd.APP_ID,"/").concat(c.BackEnd.API_KEY,"/"),b="".concat(c.OpenCage.baseUrl,"?key=").concat(c.OpenCage.key,"&q="),k={getLocationTask:function(e){return function(t){return y(c.OpenCage.headers())("GET")(e)(b+t+"&pretty=1&json&language=".concat(e.User.profile.language,"&bounds=").concat(e.Map.bounds()))(null)}}},w={getTask:function(e){return function(t){return y(c.BackEnd.headers())("GET")(e)(h+t)(null)}},postTask:function(e){return function(t){return function(n){return y(c.BackEnd.headers())("POST")(e)(h+t)(n)}}},putTask:function(e){return function(t){return function(n){return y(c.BackEnd.headers())("PUT")(e)(h+t)(n)}}},deleteTask:function(e){return function(t){return y(c.BackEnd.headers())("DELETE")(e)(h+t)(null)}}},j={openCage:k,backEnd:w,HttpTask:y};e.HTTP=j}),require.register("Http/index.js",function(e,t,n){"use strict";Object.defineProperty(e,"__esModule",{value:!0});var r=t("./http.js");Object.keys(r).forEach(function(t){"default"!==t&&"__esModule"!==t&&Object.defineProperty(e,t,{enumerable:!0,get:function(){return r[t]}})});var o=t("./invites-tasks.js");Object.keys(o).forEach(function(t){"default"!==t&&"__esModule"!==t&&Object.defineProperty(e,t,{enumerable:!0,get:function(){return o[t]}})});var a=t("./events-tasks.js");Object.keys(a).forEach(function(t){"default"!==t&&"__esModule"!==t&&Object.defineProperty(e,t,{enumerable:!0,get:function(){return a[t]}})});var i=t("./comments-tasks.js");Object.keys(i).forEach(function(t){"default"!==t&&"__esModule"!==t&&Object.defineProperty(e,t,{enumerable:!0,get:function(){return i[t]}})});var u=t("./items-tasks.js");Object.keys(u).forEach(function(t){"default"!==t&&"__esModule"!==t&&Object.defineProperty(e,t,{enumerable:!0,get:function(){return u[t]}})});var s=t("./user-tasks.js");Object.keys(s).forEach(function(t){"default"!==t&&"__esModule"!==t&&Object.defineProperty(e,t,{enumerable:!0,get:function(){return s[t]}})});var c=t("./open-cage.js");Object.keys(c).forEach(function(t){"default"!==t&&"__esModule"!==t&&Object.defineProperty(e,t,{enumerable:!0,get:function(){return c[t]}})})}),require.register("Http/invites-tasks.js",function(e,t,n){"use strict";function r(e){return e&&e.__esModule?e:{"default":e}}Object.defineProperty(e,"__esModule",{value:!0}),e.deleteInviteTask=e.createInviteTask=e.sendInviteTask=e.getInvitesTaskByEventId=e.getInvitesByGuestIdTask=e.updateInviteTask=e.updateBulkInvites=e.toInviteViewModel=void 0;var o=t("ramda"),a=t("Http"),i=r(t("data.task")),u=function(e){var t=e.start,n=e.end,r=e.title,o=e.objectId,a=e.eventId,i=e.status,u=e.hostId,s=e.guestId,c=e.updated;return{start:M(t),end:M(n),objectId:o,eventId:a,title:r,status:i,hostId:u,guestId:s,updated:c}};e.toInviteViewModel=u;var s=function(e){var t=e.start,n=e.end,r=e.title,o=e.eventId,a=e.status,i=e.guestId,u=e.hostId;return{start:t,end:n,eventId:o,title:r,status:a,guestId:i,hostId:u}},c=function(e){return function(t){return function(n){return function(r){return e.backEnd.putTask(t)("data/bulk/Invites?where=".concat(encodeURIComponent(n)))(r)}}}};e.updateBulkInvites=c;var l=function(e){return function(t){return function(n){return function(r){return e.backEnd.putTask(t)("data/Invites/".concat(n))(s(r)).map(u)}}}};e.updateInviteTask=l;var f=function(e){return function(t){return function(n){return e.backEnd.getTask(t)("data/Invites?pageSize=100&where=guestId%3D'".concat(n,"'&sortBy=start%20asc")).map((0,o.map)(u))}}};e.getInvitesByGuestIdTask=f;var d=function(e){return function(t){return function(n){return e.backEnd.getTask(t)("data/Invites?pageSize=100&where=eventId%3D'".concat(n,"'&sortBy=start%20asc")).map((0,o.map)(u))}}};e.getInvitesTaskByEventId=d;var m=function(e){return function(t){return function(n,r){var o=r.hostId,u=r.eventId,s=r.start,c=r.end,l=r.title,f=r.allDay,d=r.inPerson,m=r.location,p=r.latlong;return(0,a.findUserByEmailTask)(e)(t)(n).chain(function(n){return n.any()?v(e)(t)({eventId:u,guestId:n[0].objectId,hostId:o,status:2,end:c,start:s,title:l,allDay:f,inPerson:d,location:m,latlong:p}).chain(function(r){var o=r.objectId;return i["default"].of(function(e){return function(e){}}).ap((0,a.relateInvitesToUserTask)(e)(t)(n[0].objectId)([o])).ap((0,a.relateInvitesToEventTask)(e)(t)(u)([o]))}):i["default"].rejected("No User with that email")})}}};e.sendInviteTask=m;var v=function(e){return function(t){return function(n){var r=n.eventId,o=n.guestId,a=n.hostId,i=n.status,u=n.end,s=n.start,c=n.title,l=n.allDay,f=n.inPerson,d=n.location,m=n.latlong;return e.backEnd.postTask(t)("data/Invites")({eventId:r,guestId:o,hostId:a,status:i,end:u,start:s,title:c,allDay:l,inPerson:f,location:d,latlong:m})}}};e.createInviteTask=v;var p=function(e){return function(t){return function(n){return e.backEnd.deleteTask(t)("data/Invites/".concat(n))}}};e.deleteInviteTask=p}),require.register("Http/items-tasks.js",function(e,t,n){"use strict";Object.defineProperty(e,"__esModule",{value:!0}),e.updateItemTask=e.deleteItemTask=e.deleteBulkItemsTask=e.getItemsByGuestIdTask=e.getItemsByEventIdTask=e.addItemTask=void 0;var r=function(e){return function(t){return function(n){return e.backEnd.postTask(t)("data/Items")(n)}}};e.addItemTask=r;var o=function(e){return function(t){return function(n){return e.backEnd.getTask(t)("data/Items?pageSize=100&where=eventId%3D'".concat(n,"'&sortBy=name%20asc"))}}};e.getItemsByEventIdTask=o;var a=function(e){return function(t){return function(n){return e.backEnd.getTask(t)("data/Items?pageSize=100&where=guestId%3D'".concat(n,"'&sortBy=name%20asc"))}}};e.getItemsByGuestIdTask=a;var i=function(e){return function(t){return function(n){return e.backEnd.deleteTask(t)("data/Items?where=guestId%3D'".concat(n,"'"))}}};e.deleteBulkItemsTask=i;var u=function(e){return function(t){return function(n){return e.backEnd.deleteTask(t)("data/Items/".concat(n))}}};e.deleteItemTask=u;var s=function(e){return function(t){return function(n){return e.backEnd.putTask(t)("data/Items/".concat(n.objectId))(n)}}};e.updateItemTask=s}),require.register("Http/open-cage.js",function(e,t,n){"use strict";function r(e,t){return s(e)||u(e,t)||a(e,t)||o()}function o(){throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method.")}function a(e,t){if(e){if("string"==typeof e)return i(e,t);var n=Object.prototype.toString.call(e).slice(8,-1);return"Object"===n&&e.constructor&&(n=e.constructor.name),"Map"===n||"Set"===n?Array.from(e):"Arguments"===n||/^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)?i(e,t):void 0}}function i(e,t){(null==t||t>e.length)&&(t=e.length);for(var n=0,r=new Array(t);n<t;n++)r[n]=e[n];return r}function u(e,t){if("undefined"!=typeof Symbol&&Symbol.iterator in Object(e)){var n=[],r=!0,o=!1,a=void 0;try{for(var i,u=e[Symbol.iterator]();!(r=(i=u.next()).done)&&(n.push(i.value),!t||n.length!==t);r=!0);}catch(s){o=!0,a=s}finally{try{r||null==u["return"]||u["return"]()}finally{if(o)throw a}}return n}}function s(e){if(Array.isArray(e))return e}Object.defineProperty(e,"__esModule",{value:!0}),e.getBoundsTask=e.locateQueryTask=void 0;var c=t("ramda"),l=(t("Utils"),function(e){return"string"==typeof e?encodeURIComponent(e):encodeURIComponent("".concat(e[0],",").concat(e[1]))}),f=function(e){var t=r(e,2),n=t[0],o=t[1];return{address:n,latlong:JSON.stringify(o)}},d=function(e){return function(t){return function(n){return e.openCage.getLocationTask(t)(l(n)).map((0,c.prop)("results")).map((0,c.map)((0,c.paths)([["formatted"],["geometry"]]))).map((0,c.map)(f))}}};e.locateQueryTask=d;var m=function(e){return function(t){return function(n){return e.openCage.getLocationTask(t)(l(n)).map((0,c.path)(["results",0,"bounds"])).map(function(e){var t=e.southwest,n=e.northeast;return encodeURIComponent("".concat(t.lng,",").concat(t.lat,",").concat(n.lng,",").concat(n.lat))})}}};e.getBoundsTask=m}),require.register("Http/user-tasks.js",function(e,t,n){"use strict";Object.defineProperty(e,"__esModule",{value:!0}),e.relateProfileToUserTask=e.relateInvitesToUserTask=e.unRelateItemToUserTask=e.relateItemsToUserTask=e.findUserByEmailTask=e.updateUserProfile=e.getUserProfileTask=e.createProfileTask=e.registerTask=e.loginTask=e.setUserToken=void 0;var r=function(e){return function(t){return sessionStorage.setItem("shindigit-user",JSON.stringify(t)),sessionStorage.setItem("shindigit-user-token",t["user-token"]),e.State.isAuth(!0),e.User=t,t}};e.setUserToken=r;var o=function(e){return function(t){return function(n){var o=n.email,a=n.password;return e.backEnd.postTask(t)("users/login")({login:o,password:a}).map(r(t))}}};e.loginTask=o;var a=function(e){return function(t){return function(n){var r=n.name,o=n.email,a=n.password,i=n.isAdmin;return e.backEnd.postTask(t)("users/register")({name:r,email:o,password:a,isAdmin:i})}}};e.registerTask=a;var i=function(e){return function(t){return e.backEnd.postTask(t)("data/Profiles")({userId:t.User.objectId,name:t.User.name,email:t.User.email,startWeekOnDay:1,use24Hrs:!0,isDarkTheme:!0,language:"en",searchRadius:20})}};e.createProfileTask=i;var u=function(e){return function(t){return function(n){return e.backEnd.getTask(t)("data/Profiles?where=userId%3D'".concat(n,"'"))}}};e.getUserProfileTask=u;var s=function(e){return function(t){return function(n){return e.backEnd.putTask(t)("data/Profiles/".concat(t.User.profile.objectId))(n)}}};e.updateUserProfile=s;var c=function(e){return function(t){return function(n){return e.backEnd.getTask(t)("data/Users?where=email%3D'".concat(n,"'"))}}};e.findUserByEmailTask=c;var l=function(e){return function(t){return function(n){return function(r){return e.backEnd.putTask(t)("data/Users/".concat(n,"/items"))(r)}}}};e.relateItemsToUserTask=l;var f=function(e){return function(t){return function(n){return function(r){return e.backEnd.deleteTask(t)("data/Users/".concat(n,"/items?whereClause=objectId%3D'").concat(r,"'"))}}}};e.unRelateItemToUserTask=f;var d=function(e){return function(t){return function(n){return function(r){return e.backEnd.putTask(t)("data/Users/".concat(n,"/invites"))(r)}}}};e.relateInvitesToUserTask=d;var m=function(e){return function(t){return function(n){return function(r){return e.backEnd.putTask(t)("data/Users/".concat(n,"/profile"))([r])}}}};e.relateProfileToUserTask=m}),require.register("Models.js",function(e,t,n){"use strict";Object.defineProperty(e,"__esModule",{value:!0}),e["default"]=e.dayModel=void 0;var r=t("Utils"),o=t("Components/calendar/calendar-model"),a={locale:Stream(null),bounds:Stream(encodeURIComponent("-125.5957, 24.36711, -65.39063, 48.944")),defaultBounds:encodeURIComponent("-125.5957, 24.36711, -65.39063, 48.944")},i={isAuth:Stream(!1),modal:Stream(!1),isLoading:Stream(!1),loadingProgress:{max:0,value:0},isLoggedIn:function(){return sessionStorage.getItem("token")},is24Hrs:Stream(!0),toAnchor:Stream(!1),slug:""},u=function(e){return(0,r.getHoursInDay)().reduce(function(e,t){return e[t]=[],e},{})};e.dayModel=u;var s={currentEventId:Stream(null),currentEventStart:Stream(null),createNewEvent:Stream(!1),updateEvent:Stream(!1),fetch:Stream(!1),isMember:Stream(!1)},c={state:{error:null,status:Stream("loading")},withRSVP:Stream([]),needRSVP:Stream([]),fetch:Stream(!1)},l={updateItemAndGuest:Stream(!1)},f={data:u({State:i}),update:Stream(!1),listView:Stream(!0)},d={},m={profile:"",inspector:""},v={data:(0,o.calendarModel)({mdl:y,invites:[],date:M()}),state:{start:Stream(0)}},p={},g={isShowing:Stream(!1)},y={selectedDate:Stream(""),todayDate:Stream(M()),Calendar:v,Day:f,Events:s,Invites:c,State:i,Settings:m,User:p,Home:d,Sidebar:g,Map:a,Items:l},h=y;e["default"]=h}),require.register("Pages/Auth/Validations.js",function(e,t,n){"use strict";Object.defineProperty(e,"__esModule",{value:!0}),e.validateLoginTask=e.validateUserRegistrationTask=void 0;var r=t("ramda"),o=t("data.validation"),a=t("Utils"),i=(0,o.Success)((0,r.curryN)(3,r.identity)),u=(0,o.Success)((0,r.curryN)(2,r.identity)),s=(0,r.lensProp)("name"),c=(0,r.lensProp)("password"),l=(0,r.lensProp)("confirmPassword"),f=(0,r.lensProp)("email"),d=(0,r.lensProp)("confirmEmail"),m="A Name is required",v="A Password is required",p="An Email is required",g="Emails do not match",y="Email must be a valid format",h="Passwords do not match",b=function(e){return(0,o.Success)(e).apLeft((0,a.validate)(a.isRequired,s,m,e))},k=function(e){return(0,o.Success)(e).apLeft((0,a.validate)(a.isRequired,f,p,e)).apLeft((0,a.validate)(a.isRequired,d,p,e)).apLeft((0,a.validate)((0,r.equals)((0,r.prop)("email",e)),d,g,e)).apLeft((0,a.validate)(a.emailFormat,d,y,e)).apLeft((0,a.validate)(a.emailFormat,f,y,e)).apLeft((0,a.validate)((0,r.equals)((0,r.prop)("confirmEmail",e)),f,g,e))},w=function(e){return(0,o.Success)(e).apLeft((0,a.validate)(a.isRequired,f,p,e)).apLeft((0,a.validate)(a.emailFormat,f,y,e))},j=function(e){return(0,o.Success)(e).apLeft((0,a.validate)(a.isRequired,c,v,e)).apLeft((0,a.validate)(a.isRequired,l,v,e)).apLeft((0,a.validate)((0,r.equals)(e.password),l,h,e)).apLeft((0,a.validate)((0,r.equals)(e.confirmPassword),c,h,e))},T=function(e){return(0,o.Success)(e).apLeft((0,a.validate)(a.isRequired,c,v,e))},I=function(e){return i.ap(b(e)).ap(k(e)).ap(j(e)).failureMap(r.mergeAll).toTask()};e.validateUserRegistrationTask=I;var O=function(e){return u.ap(w(e)).ap(T(e)).failureMap(r.mergeAll).toTask()};e.validateLoginTask=O}),require.register("Pages/Auth/login-user.js",function(e,t,n){"use strict";Object.defineProperty(e,"__esModule",{value:!0}),e["default"]=e.Login=void 0;var r=t("Utils"),o=t("./Validations.js"),a=t("Http"),i=t("ramda"),u=(t("Components"),function(e){return function(t){var n=function(e){e?(c.errors=e,c.errorMsg(e.message),c.showErrorMsg(!0),console.log("failed - state",c)):(c.errorMsg("Issue with logging in. Have you registered?"),c.showErrorMsg(!0),console.log("failed - other?",c))},u=function(e){return function(t){c.errors={},m.route.set("/".concat((0,r.hyphenize)(e.User.name),"/").concat(M().format("YYYY-MM-DD")))}};c.isSubmitted=!0,(0,o.validateLoginTask)(t).chain((0,a.loginTask)(a.HTTP)(e)).chain(function(t){return e.User=t,(0,a.getUserProfileTask)(a.HTTP)(e)(e.User.objectId)}).map((0,i.map)(function(t){e.User.profile=t,e.Calendar.state.start(t.startWeekOnDay),(0,a.setUserToken)(e)(e.User)})).chain(function(t){return e.User.account=t,(0,r.getMyLocationTask)(e)}).fork(n,u(e))}}),s={name:"",email:"",password:""},c={isSubmitted:!1,errors:{},httpError:void 0,showErrorMsg:Stream(!1),errorMsg:Stream("")},l=function(){c={isSubmitted:!1,errors:{},httpError:void 0,showErrorMsg:Stream(!1),errorMsg:Stream("")},s={name:"",email:"",password:""}},f=function(){var e=function(e){c.errors=null},t=function(e){c.errors=e};c.isSubmitted&&(0,o.validateLoginTask)(s).fork(t,e)},d=function(){return{onremove:function(){return l()},view:function(e){var t=e.attrs.mdl;return m(".login-pag.full-width",[c.showErrorMsg()&&m("code.warning",c.errorMsg()),m("form.frow-container",{role:"form",id:"Login-form",onsubmit:function(e){return e.preventDefault()}},[m("input",{"class":c.isSubmitted?c.errors.email?"has-error":"has-success":"",id:"reg-email",type:"email",placeholder:"Email",onblur:function(e){return f()},oninput:function(e){return s.email=e.target.value.trim()},value:s.email}),c.errors.email&&m("span.error-field",c.errors.email),m("input",{"class":c.isSubmitted?c.errors.password?"has-error":"has-success":"",id:"reg-pass",type:"password",placeholder:"Password",onblur:function(e){return f()},oninput:function(e){return s.password=e.target.value.trim()},value:s.password}),c.errors.password&&m("span.error-field",c.errors.password)]),c.httpError&&m(".error-field",c.httpError)],m(m.route.Link,{selector:"button",form:"login-form",onclick:function(e){e.preventDefault(),u(t)(s)},"class":"max-width mt-20"},m("p.text-centered","Login")),m(m.route.Link,{href:"/register","class":"max-width"},"Need to  register ?"))}}};e.Login=d;var v=d;e["default"]=v}),require.register("Pages/Auth/register-user.js",function(e,t,n){"use strict";Object.defineProperty(e,"__esModule",{value:!0}),e["default"]=e.Register=e.registerUser=void 0;var r=t("Utils"),o=t("./Validations"),a=t("Http"),i={name:"",email:"",password:"",confirmEmail:"",confirmPassword:""},u={isSubmitted:!1,errors:{},httpError:void 0,showErrorMsg:Stream(!1),errorMsg:Stream("")},s=function(){u.errors={},u.httpError=void 0,u.isSubmitted=!1,u.showErrorMsg(!1),u.errorMsg("")},c=function(){var e=function(e){u.errors=null},t=function(e){u.errors=e};u.isSubmitted&&(0,o.validateUserRegistrationTask)(i).fork(t,e)},l=function(e){return function(t){var n=function(e){e?(u.errors=e,u.errorMsg(e.message),u.showErrorMsg(!0),console.log("failed - state",u,e)):(u.errorMsg("There seems to be a problem please contact web support"),u.showErrorMsg(!0),console.log("failed - state",u))},i=function(e){return function(t){u.errors=null,sessionStorage.setItem("shindigit-user-token",e.User["user-token"]),sessionStorage.setItem("shindigit-user",JSON.stringify(e.User)),m.route.set("/".concat((0,r.hyphenize)(e.User.name),"/").concat(M().format("YYYY-MM-DD")))}};u.isSubmitted=!0,(0,o.validateUserRegistrationTask)(t).chain((0,a.registerTask)(a.HTTP)(e)).chain(function(n){return(0,a.loginTask)(a.HTTP)(e)({email:t.email,password:t.password}).chain(function(t){return(0,a.createProfileTask)(a.HTTP)(e)}).chain(function(t){return e.User.profile=t,(0,a.relateProfileToUserTask)(a.HTTP)(e)(e.User.objectId)(t.objectId)}).chain(function(t){return(0,r.getMyLocationTask)(e)})}).fork(n,i(e))}};e.registerUser=l;var f=function(){return{view:function(e){var t=e.attrs,n=t.data,r=t.errors;t.isSubmitted;return[m("input",{id:"reg-name",type:"text",placeholder:"Full Name",onblur:function(e){return c()},oninput:function(e){return n.name=e.target.value.trim()},value:n.name}),u.errors&&r.name&&m("span.error-field",r.name),m("input",{id:"reg-email",type:"email",placeholder:"Email",onblur:function(e){return c()},oninput:function(e){return n.email=e.target.value.trim()},value:n.email}),u.errors&&r.email&&m("span.error-field",r.email),m("input",{id:"confirmEmail",type:"email",placeholder:"Confirm Email",onblur:function(e){return c()},oninput:function(e){return n.confirmEmail=e.target.value.trim()},value:n.confirmEmail}),u.errors&&r.confirmEmail&&m("span.error-field",r.confirmEmail),m("input",{id:"reg-pass",type:"password",placeholder:"Password",onblur:function(e){return c()},oninput:function(e){return n.password=e.target.value.trim()},value:n.password}),u.errors&&r.password&&m("span.error-field",r.password),m("input",{id:"pass-confirm",type:"password",placeholder:"Confirm Password",onblur:function(e){return c()},oninput:function(e){return n.confirmPassword=e.target.value.trim()},value:n.confirmPassword}),u.errors&&r.confirmPassword&&m("span.error-field",r.confirmPassword)]}}},d=function(){return{onremove:function(){return s()},view:function(e){var t=e.attrs.mdl;return[m(".register-page.full-width",u.showErrorMsg()&&m("code.warning",u.errorMsg()),m("form.frow-container",{role:"form",id:"Register-form",onsubmit:function(e){return e.preventDefault()}},[m(f,{data:i,errors:u.errors,isSubmitted:u.isSubmitted})]),m(m.route.Link,{selector:"button",form:"register-form",onclick:function(e){e.preventDefault(),l(t)(i)},"class":"max-width mt-20"},m("p","Register")),m(m.route.Link,{href:"/login","class":"max-width"},"Need to  login ?")),u.httpError&&m(".toast toast-error",u.httpError)]}}};e.Register=d;var v=d;e["default"]=v}),require.register("Pages/Event/components.js",function(e,t,n){"use strict";Object.defineProperty(e,"__esModule",{value:!0});var r=t("./event-comments.js");Object.keys(r).forEach(function(t){"default"!==t&&"__esModule"!==t&&Object.defineProperty(e,t,{enumerable:!0,get:function(){return r[t]}})});var o=t("./event-items.js");Object.keys(o).forEach(function(t){"default"!==t&&"__esModule"!==t&&Object.defineProperty(e,t,{enumerable:!0,get:function(){return o[t]}})});var a=t("./event-guests.js");Object.keys(a).forEach(function(t){"default"!==t&&"__esModule"!==t&&Object.defineProperty(e,t,{enumerable:!0,get:function(){return a[t]}})});var i=t("./event-info.js");Object.keys(i).forEach(function(t){"default"!==t&&"__esModule"!==t&&Object.defineProperty(e,t,{enumerable:!0,get:function(){return i[t]}})})}),require.register("Pages/Event/event-comments.js",function(e,t,n){"use strict";Object.defineProperty(e,"__esModule",{value:!0}),e.EventComments=void 0;var r=t("Utils"),o=t("@mithril-icons/clarity/cjs"),a=function(e){return e.scrollTo(0,e.scrollHeight,"smooth")},i=function(e){var t,n=e.attrs,i=(n.data,n.validate),u=n.sendMessage,s=n.deleteComment,c=n.isMember;return{view:function(e){var n=e.attrs,l=n.mdl,f=n.data,d=n.state;return m(".comments-items",m(".frow row-start",[m(".frow width-100",[m(".event-comment-textbox-container",c&&m("form.frow items-end",[m(".col-xs-4-5",m("textarea.comments-message-container",{row:20,cols:50,placeholder:"Say hi...",value:d.comments.message,oncreate:r.autoFocus,oninput:function(e){return d.comments.message=e.target.value},onchange:function(e){return d.comments.message=d.comments.message.trim()},onblur:function(e){return i("comments")(d.comments)}})),m(".col-xs-1-5",m("button.button-none.comments-message-btn-".concat((0,r.getTheme)(l)),{onclick:function(e){return u(l)}},"Send"))])),d.comments.error()&&m("code.error-field",d.comments.error().name),m(".width-100 justify-end",m(".events-messages-container ",{oncreate:function(e){var n=e.dom;t=n,a(n)},onupdate:function(){return a(t)}},f.comments.any()?f.comments.map(function(e,t){return m(".frow column-center width-100 mb-40",m(".event-comments-message-container ".concat(l.User.objectId==e.guestId?"me":"other"),m(".event-comments-message",[m(".speech-bubble",[m(".frow.text-left.pt-10",e.message),l.User.objectId==e.guestId&&m(o.TimesCircleLine,{onclick:function(t){return s(l)(e.objectId)},"class":"event-comments-message-remove smaller"})]),m("label.event-comment-name",m(".frow row-between",[m("span",e.name),m("span",M(e.created).format((0,r.getTimeFormat)(l)))]))])))}):m(".events-messages-container-empty","Start a conversation")))])]))}}};e.EventComments=i}),require.register("Pages/Event/event-guests.js",function(e,t,n){"use strict";Object.defineProperty(e,"__esModule",{value:!0}),e.EventGuests=void 0;var r=t("Components"),o=t("Utils"),a=t("ramda"),i=function(e){var t=e.attrs.sendInvite;return{view:function(e){var n=e.attrs,i=n.mdl,u=n.data,s=n.state,c=n.isMember;return m(".event-guests",m(".guests-container",[c&&m(".event-forms",m(".frow row event-input-group",[m("input.col-xs-4-5 pb-20",{placeholder:"email",type:"email",value:s.guests.email,oninput:function(e){return s.guests.email=e.target.value.trim()}}),m("button.btn-".concat((0,o.getTheme)(i),".col-xs-1-5.button-none"),{onclick:function(e){return t(i)}},"Invite"),s.guests.error()&&m("code.error-field",s.guests.error())])),m(".frow row-start mb-20 pl-5",[m(".col-xs-1-2",i.User.name),m(".col-xs-1-2",m(r.InviteRSVP,{mdl:i,reload:function(){return i.Invites.fetch(!0)},guest:(0,a.head)(u.guests.filter((0,a.propEq)("guestId",i.User.objectId)))}))]),m("hr"),u.guests.filter((0,a.compose)(a.not,(0,a.propEq)("guestId",i.User.objectId))).map(function(e){return m(".frow row-start mb-20 pl-5",[m(".col-xs-1-2",e.name),m(".col-xs-1-2",m(r.InviteRSVP,{mdl:i,guest:e,isOther:!0}))])})]))}}};e.EventGuests=i}),require.register("Pages/Event/event-info.js",function(e,t,n){"use strict";Object.defineProperty(e,"__esModule",{value:!0}),e.EventInfo=void 0;var r=t("ramda"),o=function(e){var t=e.attrs,n=t.setupMap,o=t.otherGuests,a=t.isMember,i=function(e){return o(e).length},u=function(e){return o(e).filter((0,r.propEq)("status",1)).length},s=function(e){return e.filter((0,r.prop)("guestId")).length};return{view:function(e){var t=e.attrs,r=t.data,o=t.state;return m(".event-info",m(".frow column-start height-100 justify-evenly",[m("h3.heading","Hosted by: ".concat(r.event.hostId.name)),m(".events-map-container",{style:{width:"100%",height:"250px"},oncreate:n,onupdate:n}),m("label","".concat(r.event.location)),m("h3.heading","Guests: Invited ".concat(i(r.guests)," , Accepted  ").concat(u(r.guests)," , Total: ").concat(r.guests.length)),m("h3.heading","Items: Total ".concat(r.items.length,", selected: ").concat(s(r.items))),m("h3.heading","Notes: ".concat(r.event.notes)),a&&m("button.required-field",{onclick:function(e){return o.modal.isShowing("settings")}},"Event Settings")]))}}};e.EventInfo=o}),require.register("Pages/Event/event-items.js",function(e,t,n){"use strict";Object.defineProperty(e,"__esModule",{value:!0}),e.EventItems=void 0;var r=t("Utils"),o=t("@mithril-icons/clarity/cjs"),a=t("ramda"),i=function(e){return function(t){return e.User.objectId==t.guestId}},u=function(e){return function(t){return(0,a.pluck)("name",t.filter((0,a.propEq)("guestId",e)))}},s=function(e){var t=e.attrs,n=t.validate,a=t.addItem,s=t.updateItem,c=t.deleteItem,l=t.isMember;return{view:function(e){var t=e.attrs,f=t.mdl,d=t.data,v=t.state;return m(".event-items-section",[l&&m("form.frow row event-input-group",[m("input.col-xs-1-2",{placeholder:"name",value:v.items.name,oncreate:r.autoFocus,oninput:function(e){return v.items.name=e.target.value},onchange:function(e){return v.items.name=v.items.name.trim()},onblur:function(e){return n("items")(v.items)},type:"text"}),m("input.col-xs-1-4",{placeholder:"quantity",value:v.items.quantity,oninput:function(e){return v.items.quantity=e.target.value.trim()},onblur:function(e){return n("items")(v.items)},type:"number",inputMode:"number",pattern:"[0-9]*"}),m("button.btn-".concat((0,r.getTheme)(f),".col-xs-1-5.button-none"),{onclick:function(e){return a(f)}},"Add"),v.items.error()&&m("code.error-field",v.items.error().name),v.items.error()&&m("code.error-field",v.items.error().quantity)]),m(".event-items",d.items.map(function(e){return m(".event-items-item",m(".frow items-start",[m(".frow col-xs-2-3",m("h3.frow col-xs-1-1",e.name),m("label.frow col-xs-1-1",e.guestId?[m("span.clickable.frow row-start pt-10",i(f)(e)&&m(o.MinusCircleLine,{onclick:function(t){e.guestId=null,v.items.updateGuest(!0),s(f)(e)},"class":"smaller"}),u(e.guestId)(d.guests))]:m("i.clickable pt-10",{onclick:function(t){e.guestId=f.User.objectId,v.items.updateGuest(!0),s(f)(e)}},"click to select item"))),m(".col-xs-1-3 frow items-center",[i(f)(e)&&m(".events-remove-item",m("span.clickable",m(o.RemoveLine,{"class":"smaller",onclick:function(t){return c(f)(e.objectId)}}))),m("h3.col-xs-1-3",e.quantity),m(".col-xs-1-3 ",[i(f)(e)&&[m(".col-xs-1-3",m("span.clickable",m(o.AngleLine,{"class":"smaller",onclick:function(t){e.quantity++,s(f)(e)}}))),m(".col-xs-1-3",m("span.clickable.smaller",m(o.AngleLine,{"class":"decrement",onclick:function(t){e.quantity>0&&e.quantity--,s(f)(e)}})))]])])]))}))])}}};e.EventItems=s}),require.register("Pages/Event/event-page.js",function(e,t,n){"use strict";function r(e){return e&&e.__esModule?e:{"default":e}}Object.defineProperty(e,"__esModule",{value:!0}),e.Event=void 0;var o=t("Utils"),a=t("ramda"),i=r(t("mapbox-gl/dist/mapbox-gl.js")),u=t("Http"),s=t("Components"),c=t("@mithril-icons/clarity/cjs"),l=r(t("data.task")),f=t("./validations"),d=t("./components"),v=function(e){var t=e.attrs.mdl,n={error:{},status:"loading",selected:Stream(null),settings:{show:Stream(!1)},modal:{isShowing:Stream(!1),newHost:Stream(null)},info:{show:Stream(!1),isShowing:Stream(!0),map:{status:Stream(!1)}},guests:{name:"",show:Stream(!1),isShowing:Stream(!1),status:Stream("success"),isSubmitted:Stream(!1),error:Stream(null)},items:{name:"",quantity:"",show:Stream(!1),isShowing:Stream(!1),error:Stream(null),status:Stream("success"),isSubmitted:Stream(!1),updateGuest:Stream(!1)},comments:{message:"",show:Stream(!1),isShowing:Stream(!1),error:Stream(null),status:Stream("success"),isSubmitted:Stream(!1)}},r={event:{},guests:[],items:[],comments:[]},v=function(e){n.info.isShowing(!1),n.guests.isShowing(!1),n.comments.isShowing(!1),n.items.isShowing(!1),n[e].isShowing(!0),"info"==e&&t.Events.fetch(!0)},p=function(e){return function(t){var o=function(t){n[e].status("success"),n[e].error(null)},a=function(t){n[e].status("failed"),n[e].error(t)},i={items:f.validateItemTask};n[e].isSubmitted()&&i[e](t)(r).fork(a,o)}},g=function(e){var o=e.event,i=e.guests,u=e.items,s=e.comments;r.event=o,r.guests=i,r.comments=s,r.items=u,n.error={},n.status="success",n.modal.isShowing(null),n.modal.newHost(null),i.filter((0,a.propEq)("guestId",t.User.objectId)).map(function(e){var n=e.updated,r=e.status;return t.Events.isMember(n||1==r)})},y=function(e){var t=e.attrs.mdl;t.Events.fetch(!1);var a=function(e){n.error=(0,o.jsonCopy)(e),n.status="failed",console.log("load error",n,r,e)};(0,u.loadEventTask)(u.HTTP)(t)(t.Events.currentEventId()).fork(a,g)},h=function(e){var a=function(e){n.error=(0,o.jsonCopy)(e),n.status="failed",console.log("delete event failed",e)},i=function(){n.error={},n.status="success";var e=(0,o.hyphenize)(t.User.name);t.Invites.fetch(!0);var a=M(r.event.start).format("YYYY-MM-DD");m.route.set("/".concat(e,"/").concat(a))};(0,u.deleteEventTask)(u.HTTP)(t)(e.eventId).fork(a,i)},b=function(e){var i=function(e){n.error=(0,o.jsonCopy)(e),n.status="failed",console.log("delete event failed",e)},s=function(){n.error={},n.status="success";var e=(0,o.hyphenize)(t.User.name);t.Invites.fetch(!0);var a=M(r.event.start).format("YYYY-MM-DD");m.route.set("/".concat(e,"/").concat(a))};r.items.filter((0,a.propEq)("guestId",t.User.objectId)).map((0,a.set)((0,a.lensProp)("guestId"),null)).traverse((0,u.updateItemTask)(u.HTTP)(t),l["default"].of).chain((0,a.traverse)(l["default"].of,(0,u.updateItemToGuestTask)(u.HTTP)(t))).chain(function(){return(0,u.deleteInviteTask)(u.HTTP)(t)(e.objectId)}).fork(i,s)},k=function(){var e=function(e){n.error=(0,o.jsonCopy)(e),n.status="failed",console.log("assign new host failed",e)},a=n.modal.newHost();(0,u.updateEventHostTask)(u.HTTP)(t)(r.event.eventId)(a).chain(function(){return r.guests.traverse(function(e){return(0,u.updateInviteTask)(u.HTTP)(t)(e.objectId)({hostId:a})},l["default"].of)}).chain(function(e){return(0,u.loadEventTask)(u.HTTP)(t)(t.Events.currentEventId())}).fork(e,g)},w=function(){var e=function(e){n.error=(0,o.jsonCopy)(e),n.status="failed",console.log("delete event failed",e)},i=function(){b((0,a.find)((0,a.propEq)("guestId",t.User.objectId),r.guests))},s=n.modal.newHost();(0,u.updateEventHostTask)(u.HTTP)(t)(r.event.eventId)(s).chain(function(){return r.guests.traverse(function(e){return(0,u.updateInviteTask)(u.HTTP)(t)(e.objectId)({hostId:s})},l["default"].of)}).fork(e,i)},j=function(e){return(0,a.without)(e.filter((0,a.propEq)("guestId",t.User.objectId)),e)},T=function(e){return e.filter((0,a.propEq)("hostId",t.User.objectId)).any()},I=function(e){return!j(e).filter((0,a.propEq)("status",1)).any()},O=function(e){return(0,a.find)((0,a.propEq)("guestId",t.User.objectId),e)},E=function(e){I(r.guests)?n.modal.isShowing("isLast"):T(r.guests)?n.modal.isShowing("isHost"):b(O(r.guests))},S=function(e){return function(t){var r=function(e){n.items.error((0,o.jsonCopy)(e)),n.items.status("failed"),console.log("update item failed",e)},a=function(e){n.items.name="",n.items.quantity="",n.items.updateGuest(!1),g(e),n.items.isSubmitted(!1)};n.items.isSubmitted(!0),(0,u.updateItemTask)(u.HTTP)(e)(t).chain(function(t){return n.items.updateGuest()?(0,u.updateItemToGuestTask)(u.HTTP)(e)(t):l["default"].of(t)}).chain(function(t){return(0,u.loadEventTask)(u.HTTP)(e)(e.Events.currentEventId())}).fork(r,a)}},P=function(e){return function(t){var r=function(e){n.error=(0,o.jsonCopy)(e),n.status="failed",console.log("delete item failed",e)};(0,u.deleteItemTask)(u.HTTP)(e)(t).chain(function(t){return(0,u.loadEventTask)(u.HTTP)(e)(e.Events.currentEventId())}).fork(r,g)}},_=function(e){return function(t){var r=function(e){n.error=(0,o.jsonCopy)(e),n.status="failed",console.log("delete comment failed",e);
-};(0,u.deleteCommentTask)(u.HTTP)(e)(t).chain(function(t){return(0,u.loadEventTask)(u.HTTP)(e)(e.Events.currentEventId())}).fork(r,g)}},D=function(e){var t=function(e){n.items.error((0,o.jsonCopy)(e)),console.log("add item failed",e),n.items.status("failed")},a=function(e){n.items.name="",n.items.quantity="",n.items.error(null),n.items.isSubmitted(!1),g(e)},i={eventId:e.Events.currentEventId(),name:n.items.name,quantity:parseInt(n.items.quantity)};n.items.isSubmitted(!0),(0,f.validateItemTask)(i)(r).chain((0,u.addItemToEventTask)(u.HTTP)(e)(e.Events.currentEventId())).chain(function(t){return(0,u.loadEventTask)(u.HTTP)(e)(e.Events.currentEventId())}).fork(t,a)},A=function(e){var t=function(e){n.comments.error((0,o.jsonCopy)(e)),console.log("add item failed",e),n.comments.status("failed")},r=function(e){n.comments.message="",n.comments.error(null),n.comments.isSubmitted(!1),g(e)},a={message:n.comments.message,name:e.User.name,guestId:e.User.objectId,eventId:e.Events.currentEventId()};n.comments.isSubmitted(!0),a.message&&(0,f.validateCommentTask)(a).chain((0,u.addCommentTask)(u.HTTP)(e)).chain(function(t){return(0,u.loadEventTask)(u.HTTP)(e)(e.Events.currentEventId())}).fork(t,r)},x=function(e){var t=function(e){n.guests.error(e),n.guests.status("failed")},o=function(e){n.guests.email="",n.guests.error(null),g(e)},i=r.guests.filter((0,a.propEq)("email",n.guests.email));return i.any()?(n.guests.error("Guest Has Already Been Invited"),n.guests.status("failed")):(n.guests.error(null),void(0,u.sendInviteTask)(u.HTTP)(e)(n.guests.email,r.event).chain(function(t){return(0,u.loadEventTask)(u.HTTP)(e)(e.Events.currentEventId())}).fork(t,o))},C=function(e){var t=e.dom;i["default"].accessToken="pk.eyJ1IjoiYm9hemJsYWtlIiwiYSI6ImNqdWJ4OGk4YzBpYXU0ZG5wNDI1OGM0eTIifQ.5UV0HkEGPiKUzFdbgdr5ww";try{var o=JSON.parse(r.event.latlong),a=function(){return(new i["default"].Marker).setLngLat(o).addTo(u)},u=new i["default"].Map({container:t,center:o,zoom:15,style:"mapbox://styles/mapbox/streets-v11?optimize=true"});n.info.map.status(!0),a()}catch(s){return void n.info.map.status(!1)}};return{oninit:y,onupdate:function(e){var t=e.attrs.mdl;return t.Events.fetch()&&y({attrs:{mdl:t}})},view:function(){return m(".event-page",["loading"==n.status&&m(".","Fetching Event..."),"failed"==n.status&&m(".code",n.error.message),"success"==n.status&&m(".width-100",[m(".event-page-heading width-100",["isLast"==n.modal.isShowing()&&m(s.Modal,{mdl:t},[{header:m("h2.frow.text-center","Your The Last to Leave! Click Delete if you are sure you want to Delete this Event!"),body:m(c.WarningStandardLine),footer:m(".frow",[m("button.col-xs-1-2.required-field",{onclick:function(e){return h(r.guests[0])}},"Delete"),m("button.col-xs-1-2",{onclick:function(e){return n.modal.isShowing(null)}},"go back to event")])}]),"isHost"==n.modal.isShowing()&&m(s.Modal,{mdl:t},[{header:m("h2.frow.text-center","Your the Host! to leave this event you need to assign a new host"),body:m("ul.frow direction-column",j(r.guests).filter((0,a.propEq)("status",1)).map(function(e){var t=e.name,r=e.guestId;return m(".frow row justify-start",m(".col-xs-1-2",t),m("span.col-xs-1-2",m("input",{id:r,type:"radio",name:"find-host",oninput:function(e){return n.modal.newHost(e.target.id)}})))})),footer:m(".frow ",[m("button.col-xs-1-2",{disabled:!n.modal.newHost(),onclick:function(e){return w()}},"Assign new Host and leave Event"),m("button.col-xs-1-2",{onclick:function(e){return n.modal.isShowing(null)}},"Cancel and return to event")])}]),"newHost"==n.modal.isShowing()&&m(s.Modal,{mdl:t},[{header:m("h2.frow.text-center","Select the new host"),body:m("ul.frow direction-column",j(r.guests).filter((0,a.propEq)("status",1)).map(function(e){var t=e.name,r=e.guestId;return m(".frow row justify-start mb-10",m(".col-xs-1-2",t),m("span.col-xs-1-2",m("input",{id:r,type:"radio",name:"find-host",oninput:function(e){return n.modal.newHost(e.target.id)}})))})),footer:m(".frow ",[m("button.col-xs-1-2",{disabled:!n.modal.newHost(),onclick:function(e){return k()}},"Assign new Host"),m("button.col-xs-1-2",{onclick:function(e){return n.modal.isShowing(null)}},"Cancel and return to event")])}]),"settings"==n.modal.isShowing()&&m(s.Modal,{mdl:t},[{header:m("h2.frow.text-center","Event Settings"),body:m(".frow row-start",[m("button.btn-".concat((0,o.getTheme)(t)),{onclick:function(e){return E(t)}},1==r.guests.length?"Delete Event":"Leave Event"),T(r.guests)&&[m("button.btn-".concat((0,o.getTheme)(t)),{disabled:I(r.guests),onclick:function(e){return n.modal.isShowing("newHost")}},"Change Host"),m("button.btn-".concat((0,o.getTheme)(t)),{onclick:function(e){t.Events.updateEvent(!0),n.modal.isShowing("editEvent")}},"Edit")]]),footer:[m("button.btn-".concat((0,o.getTheme)(t)),{onclick:function(e){n.modal.isShowing(null)}},"Back To Event")]}]),"editEvent"==n.modal.isShowing()&&t.Events.updateEvent()&&m(s.Modal,{mdl:t},[{header:m("h2.frow.text-center","Edit Event"),body:m(s.Editor,{mdl:t,id:r.event.eventId,event:r.event,invites:r.guests}),footer:[m("button.btn-".concat((0,o.getTheme)(t)),{onclick:function(e){n.modal.isShowing("settings"),t.Events.updateEvent(!1)}},"Back To Settings"),m("button.btn-".concat((0,o.getTheme)(t)),{onclick:function(e){t.Events.updateEvent(!1),n.modal.isShowing(null)}},"Back To Event")]}]),m("h1.event-page-title.text-center",r.event.title),m(".frow row width-100",m("h3.event-page-subheading.col-xs-1-2","".concat(M(r.event.start).format("ddd MM-DD-YYYY"))),m("h3.event-page-subheading.col-xs-1-2","".concat(r.event.startTime," - ").concat(r.event.endTime))),m("nav.navbar-tab-section-".concat((0,o.getTheme)(t)),m(".frow row width-100",["info","guests","comments","items"].map(function(e){return m("button.navbar-tab-".concat((0,o.getTheme)(t),".col-xs-1-4"),{"class":n[e].isShowing()?"navbar-tab-selected":"",onclick:function(t){return v(e)}},e)})))]),m("section.event-view-section",[n.info.isShowing()&&m(d.EventInfo,{mdl:t,data:r,isMember:t.Events.isMember(),state:n,setupMap:C,otherGuests:j}),n.guests.isShowing()&&m(d.EventGuests,{mdl:t,data:r,state:n,sendInvite:x,isMember:t.Events.isMember()}),n.items.isShowing()&&m(d.EventItems,{mdl:t,data:r,isMember:t.Events.isMember(),state:n,validate:p,addItem:D,updateItem:S,deleteItem:P}),n.comments.isShowing()&&m(d.EventComments,{mdl:t,data:r,isMember:t.Events.isMember(),state:n,validate:p,sendMessage:A,deleteComment:_})])])])}}};e.Event=v}),require.register("Pages/Event/validations.js",function(e,t,n){"use strict";Object.defineProperty(e,"__esModule",{value:!0}),e.validateCommentTask=e.validateItemTask=void 0;var r=t("ramda"),o=t("data.validation"),a=t("Utils"),i=(0,o.Success)((0,r.curryN)(2,r.identity)),u=((0,o.Success)((0,r.curryN)(2,r.identity)),(0,o.Success)((0,r.curryN)(1,r.identity))),s=(0,r.lensProp)("quantity"),c=(0,r.lensProp)("name"),l=((0,r.lensProp)("email"),(0,r.lensProp)("message")),f="A Name is required",d="This item has been added already",m="A Quantity is required",v="Quantity must be greater than 0",p="An Email is required",g=function(e){return(0,o.Success)(e).apLeft((0,a.validate)((0,a.maxLength)(250),l,p,e))},y=function(e){return function(t){return(0,o.Success)(e).apLeft((0,a.validate)(a.isRequired,c,f,e)).apLeft((0,a.validate)((0,a.isUniq)((0,r.pluck)("name",t)),c,d,e))}},h=function(e){return(0,o.Success)(e).apLeft((0,a.validate)(a.isRequired,s,m,e)).apLeft((0,a.validate)((0,r.max)(0),s,v,e))},b=function(e){return function(t){return i.ap(y(e)(t.items)).ap(h(e)).failureMap(r.mergeAll).toTask()}};e.validateItemTask=b;var k=function(e){return u.ap(g(e)).failureMap(r.mergeAll).toTask()};e.validateCommentTask=k}),require.register("Pages/home.js",function(e,t,n){"use strict";Object.defineProperty(e,"__esModule",{value:!0}),e.Home=void 0;var r=t("Components"),o=t("Models"),a=t("Utils"),i=t("Styles"),u=function(e,t){return e["".concat(t.start.format("HH"),":00")].push(t),e},s=function(e){return function(t){return t.reduce(u,(0,o.dayModel)(e,e.selectedDate()))}},c=function(e){return function(t){return t.filter(function(t){return(0,a.datesAreSame)(t.start)(e.selectedDate())("YYYY-MM-DD")})}},l=function(){return{view:function(e){var t=e.attrs.mdl;return m(".home-page",("loading"==t.Invites.state.status&&m("p.full-width","FETCHING EVENTS..."),"failed"==t.Invites.state.status&&m("p.full-width","FAILED TO FETCH EVENTS"),"success"==t.Invites.state.status&&[m(r.Calendar,{mdl:t,date:t.selectedDate(),invites:t.Invites.withRSVP()}),m(".frow.max-width",[m("".concat(t.Events.createNewEvent()?".col-xs-1-1":".col-xs-2-3"),m("button.btn-".concat((0,a.getTheme)(t),".max-width.height-100"),{onclick:function(e){return t.Events.createNewEvent(!t.Events.createNewEvent())}},t.Events.createNewEvent()?m("",{oncreate:(0,i.Animate)(i.shutterInLeft),onbeforeremove:(0,i.Animate)(i.shutterOutLeft)},"Cancel"):m("",{oncreate:(0,i.Animate)(i.shutterInLeft),onbeforeremove:(0,i.Animate)(i.shutterOutLeft)},"Create New Event"))),!t.Events.createNewEvent()&&m("col-xs-1-3",m("button.btn-".concat((0,a.getTheme)(t),".max-width.height-100"),{oncreate:(0,i.Animate)(i.shutterInRight),onbeforeremove:(0,i.Animate)(i.shutterOutRight),onclick:function(e){return t.Day.listView(!t.Day.listView())}},t.Day.listView()?"Hour View":"List View"))]),t.Events.createNewEvent()?m(r.Editor,{oncreate:(0,i.AnimatePage)(i.shutterInTop,{delay:1}),onbeforeremove:(0,i.AnimatePage)(i.shutterOutTop,{delay:2}),mdl:t}):[m(r.Day,{oncreate:(0,i.AnimatePage)(i.fadeInUp),onbeforeremove:(0,i.AnimatePage)(i.shutterOutDown,{delay:2}),mdl:t,day:s(t)(c(t)(t.Invites.withRSVP())),invites:c(t)(t.Invites.withRSVP())})]]))}}};e.Home=l}),require.register("Pages/index.js",function(e,t,n){"use strict";Object.defineProperty(e,"__esModule",{value:!0});var r=t("./home.js");Object.keys(r).forEach(function(t){"default"!==t&&"__esModule"!==t&&Object.defineProperty(e,t,{enumerable:!0,get:function(){return r[t]}})});var o=t("./Event/event-page");Object.keys(o).forEach(function(t){"default"!==t&&"__esModule"!==t&&Object.defineProperty(e,t,{enumerable:!0,get:function(){return o[t]}})});var a=t("./Auth/login-user");Object.keys(a).forEach(function(t){"default"!==t&&"__esModule"!==t&&Object.defineProperty(e,t,{enumerable:!0,get:function(){return a[t]}})});var i=t("./Auth/register-user");Object.keys(i).forEach(function(t){"default"!==t&&"__esModule"!==t&&Object.defineProperty(e,t,{enumerable:!0,get:function(){return i[t]}})})}),require.register("Routes/authenticated-routes.js",function(e,t,n){"use strict";Object.defineProperty(e,"__esModule",{value:!0}),e["default"]=void 0;var r=t("Components"),o=t("Pages"),a=[{id:"day-planner",name:"Day Planner",route:"/:username/:date",position:["toolbar"],group:["authenticated"],children:[],options:[],onmatch:function(e,t,n,r,o){var a=M(t.date).clone();e.selectedDate(a)},component:function(e){return m(r.Layout,{mdl:e},m(o.Home,{mdl:e}))}},{id:"event",name:"Event",route:"/:username/events/:title/",position:["toolbar"],group:["authenticated"],children:[],options:[],onmatch:function(e,t,n,r,o){},component:function(e){return m(r.Layout,{mdl:e},m(o.Event,{mdl:e}))}},{id:"logout",name:"",route:"/logout",position:[],group:["authenticated","admin"],children:[],options:[],onmatch:function(e,t,n,r,o){localStorage.clear(),sessionStorage.clear(),e.state.isAuth(!1),e.user={},m.route.set(m.route.get()),console.log("loggout",e)},component:function(e){return m(o.Home,{mdl:e})}}],i=a;e["default"]=i}),require.register("Routes/index.js",function(e,t,n){"use strict";function r(e){return e&&e.__esModule?e:{"default":e}}Object.defineProperty(e,"__esModule",{value:!0}),e["default"]=void 0;var o=r(t("./authenticated-routes.js")),a=r(t("./main-routes.js")),i=t("ramda"),u=(0,i.flatten)([a["default"],o["default"]]),s=u;e["default"]=s}),require.register("Routes/main-routes.js",function(e,t,n){"use strict";Object.defineProperty(e,"__esModule",{value:!0}),e["default"]=void 0;var r=t("Pages"),o=t("Components"),a=[{id:"login",name:"Account Login",route:"/login",isNav:!1,group:[],children:[],options:[],onmatch:function(e,t,n,r){},component:function(e){return m(o.AuthLayout,{mdl:e},m(r.Login,{mdl:e}))}},{id:"register",name:"Register Account",route:"/register",isNav:!1,group:[],children:[],options:[],onmatch:function(e,t,n,r){},component:function(e){return m(o.AuthLayout,{mdl:e},m(r.Register,{mdl:e}))}}],i=a;e["default"]=i}),require.register("Styles/animations.js",function(e,t,n){"use strict";Object.defineProperty(e,"__esModule",{value:!0}),e.rotateCenter=e.focusIn=e.focusInContract=e.shutterOutRight=e.shutterInRight=e.shutterOutLeft=e.shutterInLeft=e.shutterInBottom=e.shutterOutBottom=e.shutterOutTop=e.shutterInTop=e.puffOutCenter=e.shake=e.slideInDown=e.slideOutUp=e.slideOutRight=e.slideOutLeft=e.slideInLeft=e.slideInRight=e.fadeOutDown=e.fadeOutUp=e.fadeInDown=e.fadeInUp=e.fadeOut=e.fadeIn=e.popIn=void 0;var r=[{transform:"scale(0)",opacity:1},{transform:"scale(1)",opacity:1},{transform:"scale(0.8)",opacity:1},{transform:"scale(1)",opacity:1}];e.popIn=r;var o=[{opacity:0},{opacity:1}];e.fadeIn=o;var a=[{opacity:1},{opacity:0}];e.fadeOut=a;var i=[{opacity:0,transform:"translate3d(0, 40%, 0)"},{opacity:1,transform:"translate3d(0, 0, 0)"}];e.fadeInUp=i;var u=[{opacity:0,transform:"translate3d(0, 0, 0)"},{opacity:1,transform:"translate3d(0, 10px, 0)"}];e.fadeInDown=u;var s=[{opacity:1,transform:"translate3d(0, 0, 0)"},{opacity:0,transform:"translate3d(0, -40%, 0)"}];e.fadeOutUp=s;var c=[{opacity:1,transform:"translate3d(0, -10px, 0)"},{opacity:0,transform:"translate3d(0, 0, 0)"}];e.fadeOutDown=c;var l=[{transform:"translate3d(-50%, 0, 0)"},{transform:"translate3d(0, 0, 0)",visibility:"visible"}];e.slideInRight=l;var f=[{transform:"translate3d(80%, 0, 0)",visibility:"visible"},{transform:"translate3d(0, 0, 0)"}];e.slideInLeft=f;var d=[{transform:"translate3d(0, 0, 0)"},{visibility:"hidden",transform:"translate3d(100%, 0, 0)"}];e.slideOutLeft=d;var m=[{transform:"translate3d(0, 0, 0)"},{visibility:"hidden",transform:"translate3d(100%, 0, 0)"}];e.slideOutRight=m;var v=[{transform:"translate3d(0, 0, 0)"},{visibility:"hidden",transform:"translate3d(0, 10%, 0)"}];e.slideOutUp=v;var p=[{transform:"translate3d(0, -10%, 0)"},{transform:"translate3d(0, 0, 0)",visibility:"visible"}];e.slideInDown=p;var g=[{"-webkit-transform":"rotate(-15deg)",offset:0,transform:"rotate(-15deg)"},{"-webkit-transform":"rotate(15deg)",offset:.2,transform:"rotate(15deg)"},{"-webkit-transform":"rotate(-18deg)",offset:.4,transform:"rotate(-18deg)"},{"-webkit-transform":"rotate(18deg)",offset:.6,transform:"rotate(18deg)"},{"-webkit-transform":"rotate(-22deg)",offset:.8,transform:"rotate(-22deg)"}];e.shake=g;var y=[{"-webkit-transform":"scale(1)",transform:"scale(1)",filter:"blur(0)",opacity:1},{"-webkit-transform":"scale(2)",transform:"scale(2)",filter:"blur(4px)",opacity:0}];e.puffOutCenter=y;var h=[{"-webkit-transform":"rotateX(-100deg)",transform:" rotateX(-100deg)","-webkit-transform-origin":"top","transform-origin":"top",opacity:0},{"-webkit-transform":" rotateX(0deg)",transform:" rotateX(0deg)","-webkit-transform-origin":"top","transform-origin":"top",opacity:1}];e.shutterInTop=h;var b=[{"-webkit-transform":"rotateX(0deg)",transform:" rotateX(0deg)","-webkit-transform-origin":"top","transform-origin":"top",opacity:1},{"-webkit-transform":" rotateX(70deg)",transform:" rotateX(70deg)","-webkit-transform-origin":"top","transform-origin":"top",opacity:0}];e.shutterOutTop=b;var k=[{"-webkit-transform":"rotateX(0deg)",transform:" rotateX(0deg)","-webkit-transform-origin":"bottom","transform-origin":"bottom",opacity:1},{"-webkit-transform":" rotateX(-70deg)",transform:" rotateX(-70deg)","-webkit-transform-origin":"bottom","transform-origin":"bottom",opacity:0}];e.shutterOutBottom=k;var w=[{"-webkit-transform":"rotateX(100deg)",transform:" rotateX(100deg)","-webkit-transform-origin":"bottom","transform-origin":"bottom",opacity:0},{"-webkit-transform":" rotateX(0deg)",transform:" rotateX(0deg)","-webkit-transform-origin":"bottom","transform-origin":"bottom",opacity:1}];e.shutterInBottom=w;var j=[{"-webkit-transform":"rotateY(100deg)",transform:" rotateY(100deg)","-webkit-transform-origin":"left","transform-origin":"left",opacity:0},{"-webkit-transform":" rotateY(0deg)",transform:" rotateY(0deg)","-webkit-transform-origin":"left","transform-origin":"left",opacity:1}];e.shutterInLeft=j;var T=[{"-webkit-transform":"rotateY(0deg)",transform:" rotateY(0deg)","-webkit-transform-origin":"left","transform-origin":"left",opacity:1},{"-webkit-transform":" rotateY(-70deg)",transform:" rotateY(-70deg)","-webkit-transform-origin":"left","transform-origin":"left",opacity:0}];e.shutterOutLeft=T;var I=[{"-webkit-transform":"rotateY(-100deg)",transform:" rotateY(-100deg)","-webkit-transform-origin":"right","transform-origin":"right",opacity:0},{"-webkit-transform":" rotateY(0deg)",transform:" rotateY(0deg)","-webkit-transform-origin":"right","transform-origin":"right",opacity:1}];e.shutterInRight=I;var O=[{"-webkit-transform":"rotateY(0deg)",transform:" rotateY(0deg)","-webkit-transform-origin":"right","transform-origin":"right",opacity:1},{"-webkit-transform":" rotateY(70deg)",transform:" rotateY(70deg)","-webkit-transform-origin":"right","transform-origin":"right",opacity:0}];e.shutterOutRight=O;var E=[{letterSpacing:"1em",filter:"blur(12px)",opacity:0},{filter:"blur(0)",opacity:1}];e.focusInContract=E;var S=[{filter:"blur(12px)",opacity:0},{filter:"blur(0)",opacity:1,visibility:"visible"}];e.focusIn=S;var P=[{"-webkit-transform":"rotate(0)",transform:"rotate(0)"},{"-webkit-transform":"rotate(360deg)",transform:"rotate(360deg)"}];e.rotateCenter=P}),require.register("Styles/animo.js",function(e,t,n){"use strict";function r(e,t){var n=Object.keys(e);if(Object.getOwnPropertySymbols){var r=Object.getOwnPropertySymbols(e);t&&(r=r.filter(function(t){return Object.getOwnPropertyDescriptor(e,t).enumerable})),n.push.apply(n,r)}return n}function o(e){for(var t=1;t<arguments.length;t++){var n=null!=arguments[t]?arguments[t]:{};t%2?r(Object(n),!0).forEach(function(t){a(e,t,n[t])}):Object.getOwnPropertyDescriptors?Object.defineProperties(e,Object.getOwnPropertyDescriptors(n)):r(Object(n)).forEach(function(t){Object.defineProperty(e,t,Object.getOwnPropertyDescriptor(n,t))})}return e}function a(e,t,n){return t in e?Object.defineProperty(e,t,{value:n,enumerable:!0,configurable:!0,writable:!0}):e[t]=n,e}Object.defineProperty(e,"__esModule",{value:!0}),e["default"]=e.animate=void 0;var i=["mozTransform","msTransform","oTransform","transform","webkitTransform"],u=["mozTransition","msTransition","oTransition","transition","webkitTransition"],s={animation:{animationEnd:"animationend",transitionEnd:"transitionend"},OAnimation:{animationEnd:"oAnimationEnd",transitionEnd:"oTransitionEnd"},MozAnimation:{animationEnd:"animationend",transitionEnd:"transitionend"},WebkitAnimation:{animationEnd:"webkitAnimationEnd",transitionEnd:"webkitTransitionEnd"}},c=function(){var e=document.createElement("fakeelement");for(var t in s)return void 0!==e.style[t]?s[t]:s.animation},l=function(e){var t=arguments.length>1&&void 0!==arguments[1]?arguments[1]:{},n={iteration:0},r={iterate:1,isAnimation:!1,onComplete:function(){},onIteration:function(){},onMount:function(){}};return new Promise(function(a,s){if(!e)return s("could not find element");var l=o({},e.style),f=Object.freeze(o(o({},r),t)),d=c(),m={css:function(t){e.setAttribute("style",JSON.stringify(t))},reset:function(){e.setAttribute("style",JSON.stringify(l))},transform:function(t){i.forEach(function(n){e.style[n]=t})},transition:function(t){u.forEach(function(n){e.style[n]=t})}},v=function(){return new Promise(function(t,n){f.onMount(o(o({},m),{},{raw:e})),setTimeout(function(){t()},1)})},p=function g(t){return e.removeEventListener(d.transitionEnd,g),n.iteration===f.iterate?(f.onComplete(o(o({},m),{},{raw:e})),void setTimeout(function(){a(e)},1)):(f.onIteration(o(o({},m),{},{raw:e})),e.addEventListener(d.transitionEnd,g),void n.iteration++)};f.isAnimation?e.addEventListener(d.animationEnd,function(){f.onComplete(o(o({},m),{},{raw:e})),setTimeout(function(){a(e)},1)}):e.addEventListener(d.transitionEnd,p),v().then(p)})},f=function(e,t){var n={classNames:["animated"],keep:!1},r=o(o({},n),t);return Array.isArray(r.classNames)||(r.classNames=[r.classNames]),new l(e,{isAnimation:!0,onComplete:function(t){r.keep||r.classNames.forEach(function(t){e.classList.remove(t)})},onIteration:function(t){r.classNames.forEach(function(t){e.classList.add(t)})}})};e.animate=f;var d=Animo;e["default"]=d}),require.register("Styles/index.js",function(e,t,n){"use strict";function r(e){return u(e)||i(e)||a(e)||o()}function o(){throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method.")}function a(e,t){if(e){if("string"==typeof e)return s(e,t);var n=Object.prototype.toString.call(e).slice(8,-1);return"Object"===n&&e.constructor&&(n=e.constructor.name),"Map"===n||"Set"===n?Array.from(e):"Arguments"===n||/^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)?s(e,t):void 0}}function i(e){if("undefined"!=typeof Symbol&&Symbol.iterator in Object(e))return Array.from(e)}function u(e){if(Array.isArray(e))return s(e)}function s(e,t){(null==t||t>e.length)&&(t=e.length);for(var n=0,r=new Array(t);n<t;n++)r[n]=e[n];return r}function c(e,t){var n=Object.keys(e);if(Object.getOwnPropertySymbols){var r=Object.getOwnPropertySymbols(e);t&&(r=r.filter(function(t){return Object.getOwnPropertyDescriptor(e,t).enumerable})),n.push.apply(n,r)}return n}function l(e){for(var t=1;t<arguments.length;t++){var n=null!=arguments[t]?arguments[t]:{};t%2?c(Object(n),!0).forEach(function(t){f(e,t,n[t])}):Object.getOwnPropertyDescriptors?Object.defineProperties(e,Object.getOwnPropertyDescriptors(n)):c(Object(n)).forEach(function(t){Object.defineProperty(e,t,Object.getOwnPropertyDescriptor(n,t))})}return e}function f(e,t,n){return t in e?Object.defineProperty(e,t,{value:n,enumerable:!0,configurable:!0,writable:!0}):e[t]=n,e}function d(e){var t=function n(t){t.target===e&&e.removeEventListener("transitionend",n)};return new Promise(function(){return e.addEventListener("transitionend",t)})}function m(e){var t=arguments.length>1&&void 0!==arguments[1]?arguments[1]:4;return 1-Math.pow(1-e,t)}function v(e){var t=document.getElementById("scale-me").getBoundingClientRect(),n=e.getBoundingClientRect();return{x:t.width/n.width,y:t.height/n.height}}Object.defineProperty(e,"__esModule",{value:!0});var p={AnimatePage:!0,Animate:!0,AnimateChildren:!0,createKeyframeAnimation:!0};e.createKeyframeAnimation=e.AnimateChildren=e.Animate=e.AnimatePage=void 0;var g=t("./animations.js");Object.keys(g).forEach(function(t){"default"!==t&&"__esModule"!==t&&(Object.prototype.hasOwnProperty.call(p,t)||Object.defineProperty(e,t,{enumerable:!0,get:function(){return g[t]}}))});var y={duration:700,easing:"ease-in-out",fill:"forwards"},h=function(e,t){return function(n){var r=n.dom;b(e,t)({dom:r})}};e.AnimatePage=h;var b=function(e,t){return function(n){var r=n.dom;return r.animate(e,l(l({},y),t)).finished.then(d(r))}};e.Animate=b;var k=function(e,t){return function(n){var o=n.dom,a=r(o.children);a.map(function(n,r){n.style.opacity=0,setTimeout(function(){n.style.opacity=1,b(e)({dom:n})},t())})}};e.AnimateChildren=k;var w=function(e){return function(t){for(var n=t.dom,r=[],o=[],a=v(n),i=a.x,u=a.y,s=0;s<=100;s++){var c=m(s/100),l=i+(1-i)*c,f=u+(1-u)*c;r.push({transform:"scale(".concat(l,", ").concat(f,")")});var d=1/l,p=1/f;o.push({transform:"scale(".concat(d,", ").concat(p,")")})}return e?r:o}};e.createKeyframeAnimation=w}),require.register("Utils/geolocation.js",function(e,t,n){"use strict";function r(e){return e&&e.__esModule?e:{"default":e}}function o(e,t){return c(e)||s(e,t)||i(e,t)||a()}function a(){throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method.")}function i(e,t){if(e){if("string"==typeof e)return u(e,t);var n=Object.prototype.toString.call(e).slice(8,-1);return"Object"===n&&e.constructor&&(n=e.constructor.name),"Map"===n||"Set"===n?Array.from(e):"Arguments"===n||/^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)?u(e,t):void 0}}function u(e,t){(null==t||t>e.length)&&(t=e.length);for(var n=0,r=new Array(t);n<t;n++)r[n]=e[n];return r}function s(e,t){if("undefined"!=typeof Symbol&&Symbol.iterator in Object(e)){var n=[],r=!0,o=!1,a=void 0;try{for(var i,u=e[Symbol.iterator]();!(r=(i=u.next()).done)&&(n.push(i.value),!t||n.length!==t);r=!0);}catch(s){o=!0,a=s}finally{try{r||null==u["return"]||u["return"]()}finally{if(o)throw a}}return n}}function c(e){if(Array.isArray(e))return e}Object.defineProperty(e,"__esModule",{value:!0}),e.getMyLocationTask=e.getBoundsFromLatLong=void 0;var l=t("ramda"),f=r(t("data.task")),d=(t("Utils"),function(e){var t=e.lat_min,n=e.lon_min,r=e.lat_max,o=e.lon_max;return encodeURIComponent("".concat(n,",").concat(t,",").concat(o,",").concat(r))}),m=function(e){return function(t){var n=o(t,2),r=n[0],a=n[1],i=e.User.profile.searchRadius/111||20/111,u=Math.abs(Math.cos(r*(Math.PI/180)));return d({lat_min:r-i,lon_min:a-u,lat_max:r+i,lon_max:a+u})}};e.getBoundsFromLatLong=m;var v=function(e){return new f["default"](function(t,n){return navigator.permissions?navigator.permissions.query({name:"geolocation"}).then(function(e){return"granted"===e.state?navigator.geolocation.getCurrentPosition(function(e){return n(e.coords)}):n(null)}):n(e.Map.defaultBounds)}).map((0,l.props)(["latitude","longitude"])).map(function(t){return e.Map.locale(t),m(e)(t)}).map(e.Map.bounds)};e.getMyLocationTask=v}),require.register("Utils/index.js",function(e,t,n){"use strict";function r(e){return u(e)||i(e)||a(e)||o()}function o(){throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method.")}function a(e,t){if(e){if("string"==typeof e)return s(e,t);var n=Object.prototype.toString.call(e).slice(8,-1);return"Object"===n&&e.constructor&&(n=e.constructor.name),"Map"===n||"Set"===n?Array.from(e):"Arguments"===n||/^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)?s(e,t):void 0}}function i(e){if("undefined"!=typeof Symbol&&Symbol.iterator in Object(e))return Array.from(e)}function u(e){if(Array.isArray(e))return s(e)}function s(e,t){(null==t||t>e.length)&&(t=e.length);for(var n=0,r=new Array(t);n<t;n++)r[n]=e[n];return r}Object.defineProperty(e,"__esModule",{value:!0});var c={log:!0,autoFocus:!0,getTheme:!0,stackInvites:!0,debounce:!0,inviteOptions:!0,getInviteStatusColor:!0,hyphenize:!0,rand:!0,randomPause:!0,Pause:!0,NoOp:!0,nameFromRoute:!0,jsonCopy:!0,isSideBarActive:!0,range:!0,isEqual:!0};e.isEqual=e.range=e.isSideBarActive=e.jsonCopy=e.nameFromRoute=e.NoOp=e.Pause=e.randomPause=e.rand=e.hyphenize=e.getInviteStatusColor=e.inviteOptions=e.debounce=e.stackInvites=e.getTheme=e.autoFocus=e.log=void 0;var l=t("./local-storage.js");Object.keys(l).forEach(function(t){"default"!==t&&"__esModule"!==t&&(Object.prototype.hasOwnProperty.call(c,t)||Object.defineProperty(e,t,{enumerable:!0,get:function(){return l[t]}}))});var f=t("./geolocation.js");Object.keys(f).forEach(function(t){"default"!==t&&"__esModule"!==t&&(Object.prototype.hasOwnProperty.call(c,t)||Object.defineProperty(e,t,{enumerable:!0,get:function(){return f[t]}}))});var d=t("./validations");Object.keys(d).forEach(function(t){"default"!==t&&"__esModule"!==t&&(Object.prototype.hasOwnProperty.call(c,t)||Object.defineProperty(e,t,{enumerable:!0,get:function(){return d[t]}}))});var m=t("./time-fns.js");Object.keys(m).forEach(function(t){"default"!==t&&"__esModule"!==t&&(Object.prototype.hasOwnProperty.call(c,t)||Object.defineProperty(e,t,{enumerable:!0,get:function(){return m[t]}}))});var v=function(e){return function(t){return console.log(e,t),t}};e.log=v;var p=function(e){var t=e.dom;return t.focus()};e.autoFocus=p;var g=function(e){return e.User.profile.isDarkTheme?"dark":"light"};e.getTheme=g;var y=function(e){var t=140,n=-5,r=140*e+t,o=3*e+n;return{style:{left:"".concat(o,"px"),bottom:"".concat(r,"px")}}};e.stackInvites=y;var h=function(e){return function(t,n){console.log(e);var r;return function(){var o=this,a=arguments,i=function(){r=null,n||t.apply(o,a)},u=n&&!r;clearTimeout(r),r=setTimeout(i,e),u&&t.apply(o,a)}}};e.debounce=h;var b=["decline","accept","maybe"];e.inviteOptions=b;var k=function(e){return getComputedStyle(document.body).getPropertyValue("--".concat(b[e],"-invite"))};e.getInviteStatusColor=k;var w=function(e){return e.replace(/\s/g,"-")};e.hyphenize=w;var j=function(e,t){return Math.floor(Math.random()*(t-e)+e)};e.rand=j;var T=function(){return 1e3*Math.random()};e.randomPause=T;var I=function(e){return function(){return 1e3*e}};e.Pause=I;var O=function(){};e.NoOp=O;var E=function(e){return e.split("/")[1].toUpperCase()};e.nameFromRoute=E;var S=function(e){return JSON.parse(JSON.stringify(e))};e.jsonCopy=S;var P=function(e){return"desktop"!==e.settings.profile&&e.status.sidebar};e.isSideBarActive=P;var _=function(e){return r(Array(e).keys())};e.range=_;var M=function(e,t){return JSON.stringify(e)==JSON.stringify(t)};e.isEqual=M}),require.register("Utils/local-storage.js",function(e,t,n){"use strict";function r(e){return e&&e.__esModule?e:{"default":e}}Object.defineProperty(e,"__esModule",{value:!0}),e.locals=void 0;var o=r(t("data.task")),a=function(e){return new o["default"](function(t,n){return e.then(t,n)})},i={getTask:function(e){return a(new Promise(function(t,n){return n(localStorage.getItem(e)?JSON.parse(localStorage.getItem(e)):null)}))},setTask:function(e){return function(t){return a(new Promise(function(n){return n(localStorage.setItem(e,t))}))}}};e.locals=i}),require.register("Utils/time-fns.js",function(e,t,n){"use strict";Object.defineProperty(e,"__esModule",{value:!0}),e.firstInviteHour=e.shortDateString=e.toHourViewModel=e.getFullDate=e.fromFullDate=e.monthsOfTheYear=e.daysOfTheWeekFrom=e.daysOfTheWeek=e.isToday=e.datesAreSame=e.getHoursInDay=e.getTimeFormat=e.getMin=e.getHour=e.pad0Left=e.pad00Min=e.padding=void 0;var r=t("./index"),o=t("ramda"),a=function(e){return 1==e.toString().length?u(e):e};e.padding=a;var i=function(e){return"".concat(e,":00")};e.pad00Min=i;var u=function(e){return"0".concat(e)};e.pad0Left=u;var s=function(e){return e.split(":")[0]};e.getHour=s;var c=function(e){return e.split(":")[1]};e.getMin=c;var l=function(e){return e.User.profile.is24Hrs?"HH:mm":"h:mm a"};e.getTimeFormat=l;var f=function(e){return(0,r.range)(24).map(function(e){return M().hour(e).format("HH")}).map(i)};e.getHoursInDay=f;var d=function(e){return function(t){return function(n){var r=M(e).format(n),o=M(t).format(n);return M(r).isSame(M(o))}}};e.datesAreSame=d;var m=function(e){var t=new Date,n=new Date(e.toString());return n.getDate()==t.getDate()&&n.getMonth()==t.getMonth()&&n.getFullYear()==t.getFullYear()};e.isToday=m;var v=["Sunday","Monday","Teusday","Wednesday","Thursday","Friday","Saturday"];e.daysOfTheWeek=v;var p=function(e,t){return t[e]},g=function(e,t){var n=e[e.length-1],r=t.indexOf(n)+1>6?0:t.indexOf(n)+1<0?6:t.indexOf(n)+1;return t[r]},y=function(e,t){return function(n,r){return 7==n.length?n:(n.length>0?n.push(g(n,t)):n.push(p(e,t)),n)}},h=function(e){return v.reduce(y(e,v),[])};e.daysOfTheWeekFrom=h;var b=["January","Febuary","March","April","May","June","July","August","September","October","November","December"];e.monthsOfTheYear=b;var k=function(e){var t=new Date(e);return{day:a(t.getDate()),month:a(t.getMonth()+1),year:t.getFullYear(),hour:a(t.getHours()),min:a(t.getMinutes())}};e.fromFullDate=k;var w=function(e,t,n){var r=e.year,o=e.month,a=e.day;return console.log("getFullDate",new Date(r,o-1,a,t,n)),new Date(r,o-1,a,t,n)};e.getFullDate=w;var j=function(e){return function(t,n){return t[e][n]||(t[e][n]={}),t}};e.toHourViewModel=j;var T=function(e){var t=e.year,n=e.month,r=e.day;return"".concat(t,"-").concat(a(n),"-").concat(a(r))};e.shortDateString=T;var I=(0,o.compose)(o.head,(0,
-o.sort)(function(e,t){return e-t}),(0,o.map)(function(e){return e&&parseInt(e.format("HH"))}),(0,o.pluck)("start"));e.firstInviteHour=I}),require.register("Utils/validations.js",function(e,t,n){"use strict";Object.defineProperty(e,"__esModule",{value:!0}),e.isUniq=e.isEqual=e.isNilOrEmptyOrAtom=e.allCaps=e.onlyNumeric=e.urlFormat=e.phoneFormat=e.onlyAlphaNumericSpaceSpecial=e.onlyAlphaNumericSpaceUnderscore=e.onlyAlphaNumericSpace=e.onlyAlphaNumericUnderscore=e.onlyAlphaNumeric=e.onlyAlpha=e.emailFormat=e.maxSize=e.maxLength=e.isNullOrEmpty=e.isNotNullOrEmpty=e.IsNotNilOrZero=e.IsNotNil=e.isRequired=e.validate=e.getOrElse=void 0;var r=t("ramda"),o=t("data.validation"),a=function(e){return function(t){return t.getOrElse(e)}};e.getOrElse=a;var i=(0,r.curry)(function(e,t,n,a){return e((0,r.view)(t,a))?(0,o.Success)(a):(0,o.Failure)([(0,r.set)(t,n,{})])});e.validate=i;var u=(0,r.compose)(r.not,r.isEmpty);e.isRequired=u;var s=(0,r.compose)(r.not,r.isNil);e.IsNotNil=s;var c=function(e){return s(e)||0==e};e.IsNotNilOrZero=c;var l=function(e){return!f(e)};e.isNotNullOrEmpty=l;var f=function(e){return(0,r.isNil)(e)||(0,r.isEmpty)(e)};e.isNullOrEmpty=f;var d=function(e){return(0,r.compose)((0,r.gte)(e),r.length)};e.maxLength=d;var m=(0,r.curry)(function(e,t){return(0,r.gte)(e,t)});e.maxSize=m;var v=(0,r.test)(/@/);e.emailFormat=v;var p=(0,r.test)(/^[a-zA-Z]*$/);e.onlyAlpha=p;var g=(0,r.test)(/^[a-zA-Z0-9]*$/);e.onlyAlphaNumeric=g;var y=(0,r.test)(/^[a-zA-Z0-9_]*$/);e.onlyAlphaNumericUnderscore=y;var h=(0,r.test)(/^[a-zA-Z0-9\s]*$/);e.onlyAlphaNumericSpace=h;var b=(0,r.test)(/^[a-zA-Z0-9_\s]*$/);e.onlyAlphaNumericSpaceUnderscore=b;var k=(0,r.test)(/^[a-zA-Z0-9_.~!*''();:@&=+$,/?#[%-\]+\s]*$/);e.onlyAlphaNumericSpaceSpecial=k;var w=(0,r.test)(/^[0-9]{3}-[0-9]{3}-[0-9]{4}$/);e.phoneFormat=w;var j=(0,r.test)(/^[a-zA-Z0-9_.~!*''();:@&=+$,/?#[%-\]+]*$/);e.urlFormat=j;var T=(0,r.test)(/^[0-9]*$/);e.onlyNumeric=T;var I=function(e){return e.toUpperCase()===e};e.allCaps=I;var O=function(e){return(0,r.isNil)(e)||(0,r.isEmpty)(e)||"{$type:atom}"===e};e.isNilOrEmptyOrAtom=O;var E=function(e){return function(t){return t===e}};e.isEqual=E;var S=function(e){return function(t){return(0,r.not)(e.includes(t))}};e.isUniq=S}),require.register("index.js",function(e,t,n){"use strict";function r(e){return e&&e.__esModule?e:{"default":e}}var o=t("Utils"),a=r(t("./App.js")),i=r(t("Models")),u=t("Fp");u.Fp.configure();var s=document.body,c=window.innerWidth;n.hot&&n.hot.accept(),"serviceWorker"in navigator&&window.addEventListener("load",function(){navigator.serviceWorker.register("./service-worker.js").then(function(e){console.log("⚙️ SW registered: ",e)})["catch"](function(e){console.log("🧟 SW registration failed: ",e)})});var l=function(e){return e<668?"phone":e<920?"tablet":"desktop"},f=function d(e){var t=window.innerWidth;if(e!==t){e=t;var n=i["default"].Settings.profile;i["default"].Settings.profile=l(t),n!=i["default"].Settings.profile&&m.redraw()}return requestAnimationFrame(d)};i["default"].Settings.profile=l(c),f(c),sessionStorage.getItem("shindigit-user")?(i["default"].User=JSON.parse(sessionStorage.getItem("shindigit-user")),i["default"].State.isAuth(!0),i["default"].User.profile&&i["default"].State.is24Hrs(i["default"].User.profile.is24Hrs),(0,o.getMyLocationTask)(i["default"]).fork((0,o.log)("location err"),(0,o.log)("location: ")),localStorage.getItem("shindigit-eventId")&&(i["default"].Events.currentEventId(localStorage.getItem("shindigit-eventId")),i["default"].Events.currentEventStart(localStorage.getItem("shindigit-eventStart")),i["default"].selectedDate(localStorage.getItem("shindigit-eventStart")))):m.route.set("/logout"),m.route(s,"/login",(0,a["default"])(i["default"]))}),require.register("initialize.js",function(e,t,n){"use strict";document.addEventListener("DOMContentLoaded",function(){return t("./index.js")})}),require.alias("process/browser.js","process"),e=require("process"),require.register("___globals___",function(e,t,n){window.m=t("mithril"),window.Stream=t("mithril-stream"),window.M=t("moment")})}(),require("___globals___"),require("initialize");
+(function() {
+  'use strict';
+
+  var globals = typeof global === 'undefined' ? self : global;
+  if (typeof globals.require === 'function') return;
+
+  var modules = {};
+  var cache = {};
+  var aliases = {};
+  var has = {}.hasOwnProperty;
+
+  var expRe = /^\.\.?(\/|$)/;
+  var expand = function(root, name) {
+    var results = [], part;
+    var parts = (expRe.test(name) ? root + '/' + name : name).split('/');
+    for (var i = 0, length = parts.length; i < length; i++) {
+      part = parts[i];
+      if (part === '..') {
+        results.pop();
+      } else if (part !== '.' && part !== '') {
+        results.push(part);
+      }
+    }
+    return results.join('/');
+  };
+
+  var dirname = function(path) {
+    return path.split('/').slice(0, -1).join('/');
+  };
+
+  var localRequire = function(path) {
+    return function expanded(name) {
+      var absolute = expand(dirname(path), name);
+      return globals.require(absolute, path);
+    };
+  };
+
+  var initModule = function(name, definition) {
+    var hot = hmr && hmr.createHot(name);
+    var module = {id: name, exports: {}, hot: hot};
+    cache[name] = module;
+    definition(module.exports, localRequire(name), module);
+    return module.exports;
+  };
+
+  var expandAlias = function(name) {
+    var val = aliases[name];
+    return (val && name !== val) ? expandAlias(val) : name;
+  };
+
+  var _resolve = function(name, dep) {
+    return expandAlias(expand(dirname(name), dep));
+  };
+
+  var require = function(name, loaderPath) {
+    if (loaderPath == null) loaderPath = '/';
+    var path = expandAlias(name);
+
+    if (has.call(cache, path)) return cache[path].exports;
+    if (has.call(modules, path)) return initModule(path, modules[path]);
+
+    throw new Error("Cannot find module '" + name + "' from '" + loaderPath + "'");
+  };
+
+  require.alias = function(from, to) {
+    aliases[to] = from;
+  };
+
+  var extRe = /\.[^.\/]+$/;
+  var indexRe = /\/index(\.[^\/]+)?$/;
+  var addExtensions = function(bundle) {
+    if (extRe.test(bundle)) {
+      var alias = bundle.replace(extRe, '');
+      if (!has.call(aliases, alias) || aliases[alias].replace(extRe, '') === alias + '/index') {
+        aliases[alias] = bundle;
+      }
+    }
+
+    if (indexRe.test(bundle)) {
+      var iAlias = bundle.replace(indexRe, '');
+      if (!has.call(aliases, iAlias)) {
+        aliases[iAlias] = bundle;
+      }
+    }
+  };
+
+  require.register = require.define = function(bundle, fn) {
+    if (bundle && typeof bundle === 'object') {
+      for (var key in bundle) {
+        if (has.call(bundle, key)) {
+          require.register(key, bundle[key]);
+        }
+      }
+    } else {
+      modules[bundle] = fn;
+      delete cache[bundle];
+      addExtensions(bundle);
+    }
+  };
+
+  require.list = function() {
+    var list = [];
+    for (var item in modules) {
+      if (has.call(modules, item)) {
+        list.push(item);
+      }
+    }
+    return list;
+  };
+
+  var hmr = globals._hmr && new globals._hmr(_resolve, require, modules, cache);
+  require._cache = cache;
+  require.hmr = hmr && hmr.wrap;
+  require.brunch = true;
+  globals.require = require;
+})();
+
+(function() {
+var global = typeof window === 'undefined' ? this : window;
+var process;
+var __makeRelativeRequire = function(require, mappings, pref) {
+  var none = {};
+  var tryReq = function(name, pref) {
+    var val;
+    try {
+      val = require(pref + '/node_modules/' + name);
+      return val;
+    } catch (e) {
+      if (e.toString().indexOf('Cannot find module') === -1) {
+        throw e;
+      }
+
+      if (pref.indexOf('node_modules') !== -1) {
+        var s = pref.split('/');
+        var i = s.lastIndexOf('node_modules');
+        var newPref = s.slice(0, i).join('/');
+        return tryReq(name, newPref);
+      }
+    }
+    return none;
+  };
+  return function(name) {
+    if (name in mappings) name = mappings[name];
+    if (!name) return;
+    if (name[0] !== '.' && pref) {
+      var val = tryReq(name, pref);
+      if (val !== none) return val;
+    }
+    return require(name);
+  }
+};
+require.register(".secrets.js", function(exports, require, module) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.Back4App = exports.OpenCage = exports.BackEnd = void 0;
+
+//NEED TO MOVE THESE TO ENVIRONMENT/GITLAB IN PRODUCTION for manifest
+var getUserToken = function getUserToken() {
+  return sessionStorage.getItem("shindigit-user-token") ? sessionStorage.getItem("shindigit-user-token") : "";
+};
+
+var OpenCage = {
+  key: "c36ea23c619f436cba0eab3f939e6ed6",
+  baseUrl: "https://api.opencagedata.com/geocode/v1/json",
+  headers: function headers() {
+    return {// "access-control-allow-origin": "*"
+    };
+  }
+};
+exports.OpenCage = OpenCage;
+var Back4App = {
+  baseUrl: "https://shindigitdb.back4app.io",
+  appId: "1blVmKMuIVf6T7jvjiFGAXta1iL8kdwehGKg83LM",
+  apiKey: "CkrPBEbEOd3pxHblGCQv97kerTQENyVFVSek5yHc",
+  headers: function headers(_ref) {
+    var appId = _ref.appId,
+        apiKey = _ref.apiKey;
+    return {
+      "X-Parse-Application-Id": appId,
+      "X-Parse-REST-API-Key": apiKey,
+      "Content-Type": "application/json",
+      "X-Parse-Revocable-Session": 1
+    };
+  }
+};
+exports.Back4App = Back4App;
+var BackEnd = {
+  API_KEY: "3E894DDB-58BB-4F18-9E1D-809BBF807C1C",
+  APP_ID: "854DB087-FA48-0CF1-FFEE-7660CF37E100",
+  baseUrl: "https://api.backendless.com",
+  headers: function headers() {
+    return {
+      "user-token": getUserToken()
+    };
+  }
+};
+exports.BackEnd = BackEnd;
+});
+
+;require.register("App.js", function(exports, require, module) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+
+var _index = _interopRequireDefault(require("./Routes/index"));
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var toRoutes = function toRoutes(mdl) {
+  return function (acc, route) {
+    acc[route.route] = {
+      onmatch: function onmatch(args, path, fullroute) {
+        if (route.group.includes("authenticated") && !mdl.State.isAuth()) {
+          m.route.set(m.route.get());
+        }
+
+        mdl.State.route = route;
+        mdl.State.anchor = path.split("#")[1];
+        mdl.Sidebar.isShowing(false);
+        route.onmatch(mdl, args, path, fullroute);
+      },
+      render: function render() {
+        return route.component(mdl);
+      }
+    };
+    return acc;
+  };
+};
+
+var App = function App(mdl) {
+  return _index.default.reduce(toRoutes(mdl), {});
+};
+
+var _default = App;
+exports.default = _default;
+});
+
+;require.register("Components/OLD_invites-toast.js", function(exports, require, module) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.InvitesToast = void 0;
+
+var _cjs = require("@mithril-icons/clarity/cjs");
+
+var _Components = require("Components");
+
+var InvitesToast = function InvitesToast() {
+  return {
+    view: function view(_ref) {
+      var _ref$attrs = _ref.attrs,
+          mdl = _ref$attrs.mdl,
+          style = _ref$attrs.style,
+          invites = _ref$attrs.invites;
+      return m(".invite-alerts-container frow reverse", invites.map(function (invite, idx) {
+        return m(".invite-alert mb-10", style(idx), m(".frow mb-10", [m(".col-xs-1-2 text-ellipsis", "".concat(invite.title)), m(".col-xs-1-2", "On: ".concat(invite.start.format("MM-DD-YYYY"))), m(".col-xs-1-2", "From: ".concat(invite.start.format("HH:mm"))), m(".col-xs-1-2", "To: ".concat(invite.end.format("HH:mm")))]), m(_Components.InviteRSVP, {
+          mdl: mdl,
+          guest: invite,
+          updateFn: function updateFn(x) {
+            return console.log("update this item", invite);
+          }
+        }), m(_cjs.TimesCircleLine, {
+          onclick: function onclick(e) {
+            mdl.State.invitesToast().removeAt(idx);
+            mdl.State.notifications.map(function (state) {
+              return state.invites.push(invite);
+            });
+            mdl.Home.fetch(true);
+          },
+          class: "invite-alert-remove"
+        }));
+      }));
+    }
+  };
+};
+
+exports.InvitesToast = InvitesToast;
+});
+
+;require.register("Components/accordian-item.js", function(exports, require, module) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.AccordianItem = void 0;
+
+var _cjs = require("@mithril-icons/clarity/cjs");
+
+var _Styles = require("Styles");
+
+var _Utils = require("Utils");
+
+var AccordianItem = function AccordianItem() {
+  return {
+    view: function view(_ref) {
+      var children = _ref.children,
+          _ref$attrs = _ref.attrs,
+          state = _ref$attrs.state,
+          part = _ref$attrs.part,
+          title = _ref$attrs.title,
+          _ref$attrs$pills = _ref$attrs.pills,
+          pills = _ref$attrs$pills === void 0 ? [] : _ref$attrs$pills;
+      return m(".accordian-item.full-width", {
+        id: part,
+        oncreate: (0, _Styles.Animate)(_Styles.shutterInTop),
+        onbeforeremove: (0, _Styles.Animate)(_Styles.shutterOutTop)
+      }, [m(".accordian-item-title".concat(state[part].show() ? "-open" : "-closed"), m(".frow", {
+        onclick: function onclick(e) {
+          if (state[part].show()) {
+            state.selected(null);
+          } else {
+            state.selected(part);
+          }
+
+          state[part].show(!state[part].show());
+        }
+      }, m(".col-xs-1-3", m("h4", title)), m(".col-xs-1-3", pills), m(".frow row-end col-xs-1-3", m(".accordian-item-btn", state[part].show() ? m(_cjs.TimesLine, {
+        class: "clickable"
+      }) : m(_cjs.AddLine, {
+        class: "clickable"
+      }))))), state[part].show() && m(".accordian-item-body", {
+        oncreate: (0, _Styles.Animate)(_Styles.shutterInTop),
+        onbeforeremove: (0, _Styles.Animate)(_Styles.shutterOutTop)
+      }, [children])]);
+    }
+  };
+};
+
+exports.AccordianItem = AccordianItem;
+});
+
+;require.register("Components/auth-layout.js", function(exports, require, module) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.AuthLayout = void 0;
+
+var _Styles = require("Styles");
+
+function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
+
+function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(Object(source), true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
+
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
+var rotateCenter = {
+  "animation-name": "rotate-center",
+  "animation-duration": "1s",
+  "animation-timing-function": "ease",
+  "animation-delay": "0s",
+  "animation-iteration-count": "infinite",
+  "animation-direction": "normal",
+  "animation-fill-mode": "none"
+};
+var Logo = {
+  view: function view(_ref) {
+    var mdl = _ref.attrs.mdl;
+    return m("img.logo", {
+      src: "images/logo.svg",
+      style: _objectSpread(_objectSpread({}, mdl.State.isLoading() && rotateCenter), {}, {
+        paddingTop: "50px",
+        height: "200px",
+        width: "200px",
+        margin: "0 auto"
+      })
+    });
+  }
+};
+var Heading = {
+  view: function view(_ref2) {
+    var mdl = _ref2.attrs.mdl;
+    return m(".heading-logo", m("span.frow column-center", [m("h2", m("span.frow mt-30 items-center justify-center height-100.p-30", {
+      oncreate: (0, _Styles.Animate)(_Styles.focusInContract, {
+        duration: 500
+      })
+    }, m("span.heading-title-q.p-30", "Having a ShinDig ?"))), m("h1.p-30.heading-title-a", {
+      oncreate: (0, _Styles.Animate)(_Styles.focusIn, {
+        delay: 1000
+      })
+    }, "ShinDigIt!"), m(Logo, {
+      mdl: mdl
+    })]));
+  }
+};
+var AuthLayout = {
+  view: function view(_ref3) {
+    var mdl = _ref3.attrs.mdl,
+        children = _ref3.children;
+    return m(".frow", [m(Heading, {
+      mdl: mdl
+    }), children]);
+  }
+};
+exports.AuthLayout = AuthLayout;
+});
+
+;require.register("Components/calendar/calendar-model.js", function(exports, require, module) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.calendarDayStyle = exports.calendarModel = exports.createCalendar = exports.createCalendarDayViewModel = exports.isNotCalenderDay = exports.isCalenderDay = void 0;
+
+var _dateFns = require("date-fns");
+
+var _Utils = require("Utils");
+
+var _moment = require("moment");
+
+var isCalenderDay = function isCalenderDay(invites, day) {
+  return {
+    day: day,
+    dir: 0,
+    invites: invites
+  };
+};
+
+exports.isCalenderDay = isCalenderDay;
+
+var isNotCalenderDay = function isNotCalenderDay(invites, day, date) {
+  return {
+    day: day,
+    dir: day.isBefore(date) ? -1 : day.isAfter(date) ? 1 : 0,
+    invites: invites
+  };
+};
+
+exports.isNotCalenderDay = isNotCalenderDay;
+
+var filterBy = function filterBy(day) {
+  return function (invites) {
+    return invites.filter(function (i) {
+      return (0, _Utils.datesAreSame)(i.start)(day)("YYYY-MM-DD");
+    });
+  };
+};
+
+var createCalendarDayViewModel = function createCalendarDayViewModel(invites, day, date, _ref) {
+  var isSameMonth = _ref.isSameMonth;
+  return isSameMonth ? isCalenderDay(filterBy(day)(invites), M(day)) : isNotCalenderDay(filterBy(day)(invites), M(day), date);
+};
+
+exports.createCalendarDayViewModel = createCalendarDayViewModel;
+
+var createCalendar = function createCalendar(mdl, invites, date) {
+  var start = (0, _dateFns.parseISO)(date.clone().startOf("month").toISOString());
+  var end = (0, _dateFns.parseISO)(date.clone().endOf("month").toISOString());
+  var matrix = (0, _dateFns.eachWeekOfInterval)({
+    start: start,
+    end: end
+  }, {
+    weekStartsOn: 1
+  });
+  return matrix.map(function (weekDay) {
+    // console.log(
+    //   "each day of int start",
+    //   weekDay
+    //   // eachDayOfInterval({
+    //   //   start: startOfISOWeek(weekDay),
+    //   //   end: endOfISOWeek(weekDay),
+    //   // })
+    // )
+    return (0, _dateFns.eachDayOfInterval)({
+      start: (0, _dateFns.startOfWeek)(weekDay, {
+        weekStartsOn: mdl.Calendar.state.start()
+      }),
+      end: (0, _dateFns.endOfWeek)(weekDay, {
+        weekStartsOn: mdl.Calendar.state.start()
+      })
+    }).map(function (day) {
+      return createCalendarDayViewModel(invites, day, date, {
+        isSameMonth: date.isSame(day, "month")
+      });
+    });
+  });
+};
+
+exports.createCalendar = createCalendar;
+
+var calendarModel = function calendarModel(_ref2) {
+  var mdl = _ref2.mdl,
+      invites = _ref2.invites,
+      date = _ref2.date;
+  var today = M();
+
+  var _date = M(date);
+
+  var dto = {
+    invites: invites,
+    startDate: _date,
+    selected: {
+      year: _date.year(),
+      month: _date.month() + 1,
+      day: _date.day()
+    },
+    today: {
+      year: today.year(),
+      month: today.month(),
+      day: today.day()
+    },
+    daysInMonth: _date.daysInMonth()
+  };
+  return dto;
+};
+
+exports.calendarModel = calendarModel;
+
+var calendarDayStyle = function calendarDayStyle(selectedDate, current, dir) {
+  var today = M();
+
+  if (dir !== 0) {
+    return "cal-day notThisMonth";
+  }
+
+  if (today.isSame(current, "day") && today.isSame(current, "month") && today.isSame(current, "year") && selectedDate.isSame(current, "date")) {
+    return "selectedDay isToday";
+  }
+
+  if (today.isSame(current, "day") && today.isSame(current, "month") && today.isSame(current, "year")) {
+    return "cal-day isToday";
+  }
+
+  if (selectedDate.isSame(current, "date")) {
+    return "cal-day selectedDay";
+  } else return "cal-day";
+};
+
+exports.calendarDayStyle = calendarDayStyle;
+});
+
+;require.register("Components/calendar/calendar.js", function(exports, require, module) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.Calendar = void 0;
+
+var _calendarModel = require("./calendar-model");
+
+var _Utils = require("Utils");
+
+var _cjs = require("@mithril-icons/clarity/cjs");
+
+var Navbar = function Navbar() {
+  return {
+    view: function view(_ref) {
+      var _ref$attrs = _ref.attrs,
+          mdl = _ref$attrs.mdl,
+          date = _ref$attrs.date;
+      return m(".width-100 cal-navbar-".concat((0, _Utils.getTheme)(mdl)), m(".frow ", [m(".frow width-100 row-between", [m(m.route.Link, {
+        selector: "button.btn-".concat((0, _Utils.getTheme)(mdl)),
+        href: "/".concat((0, _Utils.hyphenize)(mdl.User.name), "/").concat(date.clone().subtract(1, "month").format("YYYY-MM-DD"))
+      }, m("h4", date.clone().subtract(1, "month").format("MMM"))), m(".centerMonthGroup", [m("h2.currentMonth", date.format("MMMM")), m("h3.currentYear.text-center", date.format("YYYY"))]), m(m.route.Link, {
+        selector: "button.btn-".concat((0, _Utils.getTheme)(mdl)),
+        href: "/".concat((0, _Utils.hyphenize)(mdl.User.name), "/").concat(date.clone().add(1, "month").format("YYYY-MM-DD"))
+      }, m("h4", date.clone().add(1, "month").format("MMM")))]), m(".frow width-100 row-between m-10", [m(m.route.Link, {
+        selector: "button.btn-".concat((0, _Utils.getTheme)(mdl)),
+        href: "/".concat((0, _Utils.hyphenize)(mdl.User.name), "/").concat(date.clone().subtract(1, "year").format("YYYY-MM-DD"))
+      }, date.clone().subtract(1, "year").format("YYYY")), m(m.route.Link, {
+        selector: "button.btn-".concat((0, _Utils.getTheme)(mdl)),
+        href: "/".concat((0, _Utils.hyphenize)(mdl.User.name), "/").concat(date.clone().add(1, "year").format("YYYY-MM-DD"))
+      }, date.clone().add(1, "year").format("YYYY"))])]));
+    }
+  };
+};
+
+var DaysOfWeek = function DaysOfWeek() {
+  var updateStartOfWeek = function updateStartOfWeek(mdl) {
+    return function (dir) {
+      var prev = mdl.Calendar.state.start();
+      var next = prev + dir > 6 ? 0 : prev + dir < 0 ? 6 : prev + dir;
+      mdl.Calendar.state.start(next);
+    };
+  };
+
+  return {
+    view: function view(_ref2) {
+      var mdl = _ref2.attrs.mdl;
+      return m(".frow width-100 row-between mt-10", [m(_cjs.AngleLine, {
+        onclick: function onclick(e) {
+          return updateStartOfWeek(mdl)(1);
+        },
+        class: "cal-day-prev"
+      }), (0, _Utils.daysOfTheWeekFrom)(mdl.Calendar.state.start()).map(function (day) {
+        return m(".col-xs-1-7 text-center", m("span.width-auto.text-strong", day[0].toUpperCase()));
+      }), m(_cjs.AngleLine, {
+        onclick: function onclick(e) {
+          return updateStartOfWeek(mdl)(-1);
+        },
+        class: "cal-day-next"
+      })]);
+    }
+  };
+};
+
+var CalendarDay = function CalendarDay() {
+  return {
+    view: function view(_ref3) {
+      var _ref3$attrs = _ref3.attrs,
+          mdl = _ref3$attrs.mdl,
+          invites = _ref3$attrs.invites,
+          day = _ref3$attrs.day,
+          dir = _ref3$attrs.dir;
+      return m(".col-xs-1-7 text-center", m(m.route.Link, {
+        href: "/".concat((0, _Utils.hyphenize)(mdl.User.name), "/").concat(day.format("YYYY-MM-DD")),
+        class: "cal-day-link",
+        onclick: function onclick(e) {
+          return mdl.State.toAnchor((0, _Utils.firstInviteHour)(invites) || M().format("HH"));
+        }
+      }, m(".".concat((0, _calendarModel.calendarDayStyle)(mdl.selectedDate(), day, dir)), [m("span.cal-date", day.format("D")), invites.any() && m(".cal-invites-item", invites.length)])));
+    }
+  };
+}; // const CalendarBody = () => {
+//   return {
+//     view: ({ attrs: { mdl, date, invites } }) => {},
+//   }
+// }
+
+
+var Calendar = function Calendar() {
+  return {
+    view: function view(_ref4) {
+      var _ref4$attrs = _ref4.attrs,
+          mdl = _ref4$attrs.mdl,
+          date = _ref4$attrs.date,
+          invites = _ref4$attrs.invites;
+      var matrix = (0, _calendarModel.createCalendar)(mdl, invites, date);
+      return m(".calendar", m(".frow", [m(Navbar, {
+        mdl: mdl,
+        date: date
+      }), m(DaysOfWeek, {
+        mdl: mdl
+      }), m(".frow centered-column width-100 row-between mt-10 ", matrix.map(function (week) {
+        return m(".frow width-100", week.map(function (_ref5) {
+          var invites = _ref5.invites,
+              day = _ref5.day,
+              dir = _ref5.dir;
+          return m(CalendarDay, {
+            mdl: mdl,
+            invites: invites,
+            day: day,
+            dir: dir
+          });
+        }));
+      }))]));
+    }
+  };
+};
+
+exports.Calendar = Calendar;
+});
+
+;require.register("Components/component.js", function(exports, require, module) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.Component = void 0;
+
+var Component = function Component() {
+  return {
+    view: function view() {
+      return m(".");
+    }
+  };
+};
+
+exports.Component = Component;
+});
+
+;require.register("Components/day.js", function(exports, require, module) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.Day = exports.HourView = void 0;
+
+var _Components = require("Components");
+
+var _Utils = require("Utils");
+
+var navToInvite = function navToInvite(mdl) {
+  return function (invite) {
+    mdl.Events.currentEventId(invite.eventId);
+    mdl.Events.currentEventStart(invite.start);
+    localStorage.setItem("shindigit-eventId", invite.eventId);
+    localStorage.setItem("shindigit-eventStart", invite.start);
+    m.route.set("/".concat((0, _Utils.hyphenize)(mdl.User.name), "/events/").concat((0, _Utils.hyphenize)(invite.title)));
+  };
+};
+
+var HourInvite = function HourInvite() {
+  return {
+    view: function view(_ref) {
+      var _ref$attrs = _ref.attrs,
+          mdl = _ref$attrs.mdl,
+          invite = _ref$attrs.invite,
+          col = _ref$attrs.col;
+      return m(".col-xs-1-".concat(col + 2), m(".invite-list-item-".concat((0, _Utils.getTheme)(mdl)), {
+        onclick: function onclick(e) {
+          return navToInvite(mdl)(invite);
+        },
+        style: {
+          "background-color": (0, _Utils.getInviteStatusColor)(invite.status),
+          top: "".concat(invite.start.format("mm"), "px"),
+          height: "".concat(invite.end.diff(invite.start, "minutes") * 2, "px")
+        }
+      }, invite.title));
+    }
+  };
+};
+
+var scrollToCurrentTimeOrInvite = function scrollToCurrentTimeOrInvite(mdl, invites) {
+  var first = (0, _Utils.firstInviteHour)(invites);
+  var hour = mdl.State.toAnchor() ? mdl.State.toAnchor() : first ? first : M().format("h");
+  var el = document.getElementById("".concat(hour, ":00"));
+  el && el.scrollIntoView({
+    top: 0,
+    left: 0,
+    behavior: "smooth"
+  });
+};
+
+var HourView = function HourView() {
+  return {
+    view: function view(_ref2) {
+      var _ref2$attrs = _ref2.attrs,
+          mdl = _ref2$attrs.mdl,
+          hour = _ref2$attrs.hour,
+          events = _ref2$attrs.events;
+      return m(".frow ", m(".hour ", [m("p.hour-time", {
+        id: hour
+      }, hour), m(".invite-list frow", events.map(function (invite, idx) {
+        return m(HourInvite, {
+          mdl: mdl,
+          invite: invite,
+          col: events.length,
+          key: idx
+        });
+      }))]));
+    }
+  };
+};
+
+exports.HourView = HourView;
+
+var ListView = function ListView() {
+  return {
+    view: function view(_ref3) {
+      var _ref3$attrs = _ref3.attrs,
+          mdl = _ref3$attrs.mdl,
+          invites = _ref3$attrs.invites;
+      return invites.map(function (invite) {
+        return m(".invite-list-item-container", m(".frow-container", m(".invite-list-".concat(_Utils.inviteOptions[invite.status], "-").concat((0, _Utils.getTheme)(mdl)), {
+          onclick: function onclick(e) {
+            return navToInvite(mdl)(invite);
+          }
+        }, [m("h3", invite.title), m(".frow row-start", [m("label.col-xs-1-1", "".concat(invite.start.format((0, _Utils.getTimeFormat)(mdl)), " - ").concat(invite.end.format((0, _Utils.getTimeFormat)(mdl))))])])));
+      });
+    }
+  };
+};
+
+var Day = function Day(_ref4) {
+  var mdl = _ref4.attrs.mdl;
+  return {
+    oncreate: function oncreate(_ref5) {
+      var _ref5$attrs = _ref5.attrs,
+          mdl = _ref5$attrs.mdl,
+          invites = _ref5$attrs.invites;
+      return scrollToCurrentTimeOrInvite(mdl, invites);
+    },
+    onupdate: function onupdate(_ref6) {
+      var _ref6$attrs = _ref6.attrs,
+          mdl = _ref6$attrs.mdl,
+          invites = _ref6$attrs.invites;
+      return mdl.State.toAnchor() && scrollToCurrentTimeOrInvite(mdl, invites);
+    },
+    view: function view(_ref7) {
+      var _ref7$attrs = _ref7.attrs,
+          mdl = _ref7$attrs.mdl,
+          day = _ref7$attrs.day,
+          invites = _ref7$attrs.invites;
+      return m(".day", [m(".day-container-".concat((0, _Utils.getTheme)(mdl)), [invites.any() ? mdl.Day.listView() ? m(ListView, {
+        mdl: mdl,
+        invites: invites
+      }) : (0, _Utils.getHoursInDay)().map(function (hour, idx) {
+        return m(HourView, {
+          mdl: mdl,
+          invites: day[hour],
+          hour: hour,
+          events: day[hour]
+        });
+      }) : m(_Components.EmptyState, {
+        text: "You have no events scheduled for today - why not create one!"
+      })])]);
+    }
+  };
+};
+
+exports.Day = Day;
+});
+
+;require.register("Components/editor/editor.js", function(exports, require, module) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.Editor = void 0;
+
+var _eventForm = require("./event-form");
+
+var _Http = require("Http");
+
+var _validations = require("./validations");
+
+var _Styles = require("Styles");
+
+var Editor = function Editor(_ref) {
+  var _ref$attrs = _ref.attrs,
+      mdl = _ref$attrs.mdl,
+      event = _ref$attrs.event;
+
+  var getData = function getData(id) {
+    var res = id ? {
+      shortDate: M(event.start).format("YYYY-MM-DD"),
+      allDay: event.allDay,
+      inPerson: event.inPerson,
+      location: event.location,
+      latlong: event.latlong,
+      startTime: M(event.start).format("HH:mm"),
+      endTime: M(event.end).format("HH:mm"),
+      title: event.title,
+      notes: event.notes
+    } : {
+      shortDate: M(mdl.selectedDate()).format("YYYY-MM-DD"),
+      allDay: false,
+      inPerson: true,
+      location: "",
+      latlong: "",
+      startTime: "",
+      endTime: "",
+      title: "",
+      notes: ""
+    };
+    return res;
+  };
+
+  var state = {
+    status: "loading",
+    errors: null,
+    isSubmitted: false,
+    isValid: false,
+    queryResults: [],
+    querySelected: "",
+    locationWarning: Stream(null)
+  };
+
+  var resetState = function resetState(state) {
+    state = {
+      status: "loading",
+      errors: null,
+      isSubmitted: false,
+      isValid: false,
+      queryResults: [],
+      querySelected: "",
+      locationWarning: Stream(null)
+    };
+  };
+
+  var validate = function validate(state, data) {
+    var onError = function onError(errors) {
+      state.errors = errors;
+      state.isValid = false; // console.log("v err", state, errors)
+    };
+
+    var onSuccess = function onSuccess(data) {
+      // console.log("v succ", data)
+      state.errors = null;
+      state.isValid = true;
+    };
+
+    (0, _validations.validateTask)(data).fork(onError, onSuccess);
+  };
+
+  var addNewEvent = function addNewEvent(_ref2) {
+    var mdl = _ref2.mdl,
+        data = _ref2.data,
+        state = _ref2.state;
+
+    var onError = function onError(errors) {
+      state.errors = errors;
+      state.status = "failed";
+    };
+
+    var onSuccess = function onSuccess() {
+      mdl.Invites.fetch(true);
+      mdl.Events.createNewEvent(false);
+    };
+
+    state.isSubmitted = true;
+    (0, _validations.validateTask)(data).chain((0, _Http.createEventTask)(_Http.HTTP)(mdl)).fork(onError, onSuccess);
+  };
+
+  var updateEvent = function updateEvent(_ref3) {
+    var mdl = _ref3.mdl,
+        data = _ref3.data,
+        state = _ref3.state;
+
+    var onError = function onError(errors) {
+      state.errors = errors;
+      state.status = "failed";
+    };
+
+    var onSuccess = function onSuccess() {
+      mdl.Invites.fetch(true);
+      mdl.Events.fetch(true);
+      mdl.Events.createNewEvent(false);
+      mdl.Events.updateEvent(false);
+    };
+
+    state.isSubmitted = true;
+    (0, _validations.validateTask)(data).chain((0, _Http.updateEventTask)(_Http.HTTP)(mdl)(mdl.Events.currentEventId())).fork(onError, onSuccess);
+  };
+
+  return {
+    view: function view(_ref4) {
+      var _ref4$attrs = _ref4.attrs,
+          mdl = _ref4$attrs.mdl,
+          id = _ref4$attrs.id;
+      return m(_eventForm.EventForm, {
+        oncreate: (0, _Styles.Animate)(_Styles.slideInDown, {
+          delay: 2
+        }),
+        onbeforeremove: (0, _Styles.Animate)(_Styles.slideOutUp, {
+          delay: 2
+        }),
+        mdl: mdl,
+        data: getData(id),
+        state: state,
+        validate: validate,
+        resetState: resetState,
+        submit: addNewEvent,
+        update: updateEvent,
+        isEdit: id
+      });
+    }
+  };
+};
+
+exports.Editor = Editor;
+});
+
+;require.register("Components/editor/event-form.js", function(exports, require, module) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.EventForm = void 0;
+
+var _Http = require("Http");
+
+var _Utils = require("Utils");
+
+var _Styles = require("Styles");
+
+var locateQuery = function locateQuery(mdl) {
+  return function (state) {
+    return function (query) {
+      var onError = function onError(err) {
+        console.log("err q", err);
+        state.locationWarning("Exact address not found. You may continue with this address or try again");
+        state.status = "failure";
+      };
+
+      var onSuccess = function onSuccess(data) {
+        state.queryResults = data;
+        state.status = "success";
+        state.locationWarning(null);
+      };
+
+      (0, _Http.locateQueryTask)(_Http.HTTP)(mdl)(query).fork(onError, onSuccess);
+    };
+  };
+};
+
+var EventForm = function EventForm(_ref) {
+  var _ref$attrs = _ref.attrs,
+      data = _ref$attrs.data,
+      update = _ref$attrs.update,
+      validate = _ref$attrs.validate,
+      submit = _ref$attrs.submit;
+
+  var setAllDay = function setAllDay(data) {
+    data.allDay = !data.allDay;
+
+    if (data.allDay) {
+      data.startTime = "00:00";
+      data.endTime = "23:59";
+    } else {
+      data.startTime = "";
+      data.endTime = "";
+    }
+  };
+
+  return {
+    onbeforeremove: (0, _Styles.Animate)(_Styles.shutterOutTop),
+    view: function view(_ref2) {
+      var _ref2$attrs = _ref2.attrs,
+          state = _ref2$attrs.state,
+          resetState = _ref2$attrs.resetState,
+          mdl = _ref2$attrs.mdl,
+          isEdit = _ref2$attrs.isEdit;
+      return m("form.event-form", m(".frow column-centered", [m(".full-width", m("label.frow row row-evenly ", [m("input.col-xs-2-3 ", {
+        onchange: function onchange(e) {
+          return isEdit ? data.shortDate = e.target.value : m.route.set("/".concat((0, _Utils.hyphenize)(mdl.User.name), "/").concat(e.target.value.trim()));
+        },
+        type: "date",
+        value: M(mdl.selectedDate()).format("YYYY-MM-DD")
+      }), m("label.pl-30.col-xs-1-3", "All Day", m("input", {
+        type: "checkbox",
+        checked: data.allDay,
+        oninput: function oninput(e) {
+          return state.isSubmitted && validate(state, data);
+        },
+        onclick: function onclick(e) {
+          return setAllDay(data);
+        }
+      }))])), m(".full-width", [m(".frow row row-evenly gutters", [m("label.col-xs-1-2", [m("input.", {
+        oninput: function oninput(e) {
+          return data.startTime = e.target.value.trim();
+        },
+        value: data.startTime,
+        type: "time",
+        disabled: data.allDay,
+        onblur: function onblur(e) {
+          return state.isSubmitted && validate(state, data);
+        }
+      }), m(".frow row-start", ["Start Time", m("span.required-field", "*")]), state.errors && m("code.error-field", state.errors.startTime)]), m("label.col-xs-1-2", [m("input", {
+        oninput: function oninput(e) {
+          return data.endTime = e.target.value.trim();
+        },
+        value: data.endTime,
+        type: "time",
+        disabled: data.allDay,
+        onblur: function onblur(e) {
+          return state.isSubmitted && validate(state, data);
+        }
+      }), m(".frow row-start", ["End Time", m("span.required-field", "*")]), state.errors && m("code.error-field", state.errors.endTime)])])]), m(".full-width", m(".frow row row-evenly gutters", [m("label.col-xs-1-5", "In Person", m("input", {
+        type: "checkbox",
+        checked: data.inPerson,
+        onclick: function onclick(e) {
+          return data.inPerson = !data.inPerson;
+        }
+      })), data.inPerson ? m("label.col-xs-4-5", m("input", {
+        type: "address",
+        value: data.location,
+        oninput: function oninput(e) {
+          return data.location = e.target.value;
+        },
+        onchange: function onchange(e) {
+          return locateQuery(mdl)(state)(e.target.value.trim());
+        },
+        onkeyup: function onkeyup(e) {
+          return state.isSubmitted && validate(state, data);
+        },
+        onblur: function onblur(e) {
+          return data.location = data.location.trim();
+        }
+      }), m(".frow row-start", ["Address", m("span.required-field", "*")])) : m("label.col-xs-4-5", m("input", {
+        type: "url",
+        value: data.url,
+        oninput: function oninput(e) {
+          return data.location = e.target.value.trim();
+        },
+        onblur: function onblur(e) {
+          return data.location = data.location.trim();
+        },
+        onkeyup: function onkeyup(e) {
+          return state.isSubmitted && validate(state, data);
+        }
+      }), m(".frow row-start", ["URL link", m("span.required-field", "*")])), state.locationWarning() && m("p.location-info-text", state.locationWarning()), state.queryResults.any() && m("ul.event-form-query-container", state.queryResults.map(function (_ref3) {
+        var address = _ref3.address,
+            latlong = _ref3.latlong;
+        return m("li", m("code.form-event-query-result", {
+          onclick: function onclick(e) {
+            data.location = address;
+            data.latlong = latlong;
+            resetState(state);
+          }
+        }, address));
+      })), state.errors && m("code.error-field", state.errors.location)])), m("label", m("input", {
+        type: "text",
+        value: data.title,
+        oninput: function oninput(e) {
+          return data.title = e.target.value;
+        },
+        onkeyup: function onkeyup(e) {
+          return state.isSubmitted && validate(state, data);
+        },
+        onblur: function onblur(e) {
+          return data.title = data.title.trim();
+        }
+      }), m(".frow row-start", ["Title", m("span.required-field", "*")]), state.errors && m("code.error-field", state.errors.title)), m("label", m("textarea", {
+        value: data.notes,
+        oninput: function oninput(e) {
+          return data.notes = e.target.value;
+        },
+        onkeyup: function onkeyup(e) {
+          return state.isSubmitted && validate(state, data);
+        },
+        onblur: function onblur(e) {
+          return data.notes = data.notes.trim();
+        }
+      }), "Notes"), m("button.full-width", {
+        onclick: function onclick(e) {
+          e.preventDefault();
+          isEdit ? update({
+            mdl: mdl,
+            data: data,
+            state: state
+          }) : submit({
+            mdl: mdl,
+            data: data,
+            state: state
+          });
+        }
+      }, "Submit")]));
+    }
+  };
+};
+
+exports.EventForm = EventForm;
+});
+
+;require.register("Components/editor/validations.js", function(exports, require, module) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.validateTask = void 0;
+
+var _ramda = require("ramda");
+
+var _data = require("data.validation");
+
+var _Utils = require("Utils");
+
+var Validate = (0, _data.Success)((0, _ramda.curryN)(5, _ramda.identity));
+var dateLense = (0, _ramda.lensProp)("shortDate");
+var startTimeLense = (0, _ramda.lensProp)("startTime");
+var endTimeLense = (0, _ramda.lensProp)("endTime");
+var locationLense = (0, _ramda.lensProp)("location");
+var latLongLense = (0, _ramda.lensProp)("latlong");
+var titleLense = (0, _ramda.lensProp)("title");
+
+var FIELD_REQUIRED_MSG = function FIELD_REQUIRED_MSG(field) {
+  return "".concat(field, " is required");
+};
+
+var INVALID_END_DATE_MSG = "End time must be after Start time";
+
+var isChronological = function isChronological(startTime) {
+  return function (endTime) {
+    return startTime && endTime && M().hours((0, _Utils.getHour)(startTime)).minutes((0, _Utils.getMin)(startTime)).isBefore(M().hours((0, _Utils.getHour)(endTime)).minutes((0, _Utils.getMin)(endTime)));
+  };
+};
+
+var validateDate = function validateDate(data) {
+  return (0, _data.Success)(data).apLeft((0, _Utils.validate)(_Utils.isRequired, dateLense, FIELD_REQUIRED_MSG("Date"), data));
+};
+
+var validateStartTime = function validateStartTime(data) {
+  return (0, _data.Success)(data).apLeft((0, _Utils.validate)(_Utils.isRequired, startTimeLense, FIELD_REQUIRED_MSG("Start Time"), data));
+};
+
+var validateEndTime = function validateEndTime(data) {
+  return (0, _data.Success)(data).apLeft((0, _Utils.validate)(_Utils.isRequired, endTimeLense, FIELD_REQUIRED_MSG("End Time"), data)).apLeft((0, _Utils.validate)(isChronological(data.startTime), endTimeLense, INVALID_END_DATE_MSG, data));
+};
+
+var validateAddress = function validateAddress(data) {
+  return (0, _data.Success)(data).apLeft((0, _Utils.validate)(_Utils.isRequired, locationLense, FIELD_REQUIRED_MSG("Location"), data));
+};
+
+var validateTitle = function validateTitle(data) {
+  return (0, _data.Success)(data).apLeft((0, _Utils.validate)(_Utils.isRequired, titleLense, FIELD_REQUIRED_MSG("Title"), data));
+};
+
+var validateTask = function validateTask(data) {
+  return Validate.ap(validateDate(data)).ap(validateStartTime(data)).ap(validateEndTime(data)).ap(validateAddress(data)).ap(validateTitle(data)).failureMap(_ramda.mergeAll).toTask();
+};
+
+exports.validateTask = validateTask;
+});
+
+;require.register("Components/empty-state.js", function(exports, require, module) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.EmptyState = void 0;
+
+var _Components = require("Components");
+
+var EmptyState = function EmptyState() {
+  return {
+    view: function view(_ref) {
+      var text = _ref.attrs.text;
+      return m(".empty-state frow centered-column justify-between", m(".logo-placeholder", [m("h3.text-center.mt-50", text), m(".logo", _Components.Logo)]));
+    }
+  };
+};
+
+exports.EmptyState = EmptyState;
+});
+
+;require.register("Components/event-toolbar.js", function(exports, require, module) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.EventToolbar = void 0;
+
+var _Utils = require("Utils");
+
+var EventToolbar = function EventToolbar() {
+  return {
+    view: function view(_ref) {
+      var mdl = _ref.attrs.mdl;
+      return [m("button.col-xs-1-1.btn-".concat((0, _Utils.getTheme)(mdl)), {
+        disabled: mdl.Sidebar.isShowing(),
+        onclick: function onclick(e) {
+          localStorage.removeItem("shindigit-eventId");
+          localStorage.removeItem("shindigit-eventStart");
+          mdl.Invites.fetch(true);
+          mdl.State.toAnchor(M(mdl.Events.currentEventStart()).format("HH"));
+          m.route.set("/".concat((0, _Utils.hyphenize)(mdl.User.name), "/").concat(M(mdl.selectedDate()).format("YYYY-MM-DD")));
+        }
+      }, mdl.Events.isMember() ? "Back" : "Home")];
+    }
+  };
+};
+
+exports.EventToolbar = EventToolbar;
+});
+
+;require.register("Components/hamburger.js", function(exports, require, module) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.Hamburger = void 0;
+
+var _cjs = require("@mithril-icons/clarity/cjs");
+
+var _Http = require("Http");
+
+var _Styles = require("Styles");
+
+var Hamburger = function Hamburger() {
+  var load = function load(_ref) {
+    var mdl = _ref.attrs.mdl;
+
+    var onError = function onError(err) {
+      mdl.Invites.state.error = err;
+      mdl.Invites.state.status = "failed";
+    };
+
+    var onSuccess = function onSuccess(invites) {
+      console.log(invites);
+      mdl.Invites.fetch(false);
+      mdl.Invites.state.error = null;
+
+      var forNewInvite = function forNewInvite(i) {
+        return !i.updated && i.status == 2;
+      };
+
+      var forRsvpInvites = function forRsvpInvites(i) {
+        return i.updated || i.status !== 2;
+      };
+
+      mdl.Invites.needRSVP(invites.filter(forNewInvite));
+      mdl.Invites.withRSVP(invites.filter(forRsvpInvites));
+      mdl.Invites.state.status = "success";
+    };
+
+    (0, _Http.getInvitesByGuestIdTask)(_Http.HTTP)(mdl)(mdl.User.objectId).fork(onError, onSuccess);
+  };
+
+  return {
+    oninit: load,
+    onupdate: function onupdate(_ref2) {
+      var mdl = _ref2.attrs.mdl;
+      return mdl.Invites.fetch() && load({
+        attrs: {
+          mdl: mdl
+        }
+      });
+    },
+    view: function view(_ref3) {
+      var mdl = _ref3.attrs.mdl;
+      return [m("button.col-xs-1-5.button-none.frow", {
+        onclick: function onclick(e) {
+          mdl.Invites.fetch(true);
+          mdl.Sidebar.isShowing(!mdl.Sidebar.isShowing());
+        }
+      }, mdl.Sidebar.isShowing() ? m(_cjs.CloseLine, {
+        oncreate: (0, _Styles.Animate)(_Styles.focusInContract)
+      }) : [mdl.Invites.needRSVP().length > 0 && m(".notifier", [m(_cjs.BellLine, {
+        oncreate: (0, _Styles.Animate)(_Styles.shake, {
+          delay: 100,
+          iterations: 1,
+          fill: "backwards"
+        })
+      }), m(".notif-count", {
+        oncreate: (0, _Styles.Animate)(_Styles.puffOutCenter, {
+          iterations: 1.2,
+          fill: "backwards"
+        })
+      }, mdl.Invites.needRSVP().length)]), m(_cjs.BarsLine, {
+        oncreate: (0, _Styles.Animate)(_Styles.focusInContract, {
+          delay: 200
+        })
+      })])];
+    }
+  };
+};
+
+exports.Hamburger = Hamburger;
+});
+
+;require.register("Components/home-toolbar.js", function(exports, require, module) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.HomeToolbar = void 0;
+
+var _Utils = require("Utils");
+
+var HomeToolbar = function HomeToolbar(_ref) {
+  var mdl = _ref.attrs.mdl;
+
+  var updateDate = function updateDate(date) {
+    return m.route.set("/".concat((0, _Utils.hyphenize)(mdl.User.name), "/").concat(M(date).format("YYYY-MM-DD")));
+  };
+
+  var getValue = function getValue(date) {
+    return M(date).format("YYYY-MM-DD");
+  };
+
+  return {
+    view: function view(_ref2) {
+      var mdl = _ref2.attrs.mdl;
+      return [m("input.col-xs-1-2", {
+        onchange: function onchange(e) {
+          return updateDate(e.target.value);
+        },
+        type: "date",
+        value: getValue(mdl.selectedDate())
+      }), m(m.route.Link, {
+        disabled: mdl.Sidebar.isShowing(),
+        class: "col-xs-1-2",
+        selector: "button.btn-".concat((0, _Utils.getTheme)(mdl)),
+        href: "/".concat((0, _Utils.hyphenize)(mdl.User.name), "/").concat(M().format("YYYY-MM-DD"))
+      }, "Today")];
+    }
+  };
+};
+
+exports.HomeToolbar = HomeToolbar;
+});
+
+;require.register("Components/index.js", function(exports, require, module) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _homeToolbar = require("./home-toolbar.js");
+
+Object.keys(_homeToolbar).forEach(function (key) {
+  if (key === "default" || key === "__esModule") return;
+  Object.defineProperty(exports, key, {
+    enumerable: true,
+    get: function get() {
+      return _homeToolbar[key];
+    }
+  });
+});
+
+var _eventToolbar = require("./event-toolbar.js");
+
+Object.keys(_eventToolbar).forEach(function (key) {
+  if (key === "default" || key === "__esModule") return;
+  Object.defineProperty(exports, key, {
+    enumerable: true,
+    get: function get() {
+      return _eventToolbar[key];
+    }
+  });
+});
+
+var _calendar = require("./calendar/calendar.js");
+
+Object.keys(_calendar).forEach(function (key) {
+  if (key === "default" || key === "__esModule") return;
+  Object.defineProperty(exports, key, {
+    enumerable: true,
+    get: function get() {
+      return _calendar[key];
+    }
+  });
+});
+
+var _day = require("./day.js");
+
+Object.keys(_day).forEach(function (key) {
+  if (key === "default" || key === "__esModule") return;
+  Object.defineProperty(exports, key, {
+    enumerable: true,
+    get: function get() {
+      return _day[key];
+    }
+  });
+});
+
+var _modal = require("./modal.js");
+
+Object.keys(_modal).forEach(function (key) {
+  if (key === "default" || key === "__esModule") return;
+  Object.defineProperty(exports, key, {
+    enumerable: true,
+    get: function get() {
+      return _modal[key];
+    }
+  });
+});
+
+var _editor = require("./editor/editor.js");
+
+Object.keys(_editor).forEach(function (key) {
+  if (key === "default" || key === "__esModule") return;
+  Object.defineProperty(exports, key, {
+    enumerable: true,
+    get: function get() {
+      return _editor[key];
+    }
+  });
+});
+
+var _navLink = require("./nav-link.js");
+
+Object.keys(_navLink).forEach(function (key) {
+  if (key === "default" || key === "__esModule") return;
+  Object.defineProperty(exports, key, {
+    enumerable: true,
+    get: function get() {
+      return _navLink[key];
+    }
+  });
+});
+
+var _eventForm = require("./editor/event-form.js");
+
+Object.keys(_eventForm).forEach(function (key) {
+  if (key === "default" || key === "__esModule") return;
+  Object.defineProperty(exports, key, {
+    enumerable: true,
+    get: function get() {
+      return _eventForm[key];
+    }
+  });
+});
+
+var _layout = require("./layout.js");
+
+Object.keys(_layout).forEach(function (key) {
+  if (key === "default" || key === "__esModule") return;
+  Object.defineProperty(exports, key, {
+    enumerable: true,
+    get: function get() {
+      return _layout[key];
+    }
+  });
+});
+
+var _authLayout = require("./auth-layout.js");
+
+Object.keys(_authLayout).forEach(function (key) {
+  if (key === "default" || key === "__esModule") return;
+  Object.defineProperty(exports, key, {
+    enumerable: true,
+    get: function get() {
+      return _authLayout[key];
+    }
+  });
+});
+
+var _sidebar = require("./sidebar.js");
+
+Object.keys(_sidebar).forEach(function (key) {
+  if (key === "default" || key === "__esModule") return;
+  Object.defineProperty(exports, key, {
+    enumerable: true,
+    get: function get() {
+      return _sidebar[key];
+    }
+  });
+});
+
+var _accordianItem = require("./accordian-item.js");
+
+Object.keys(_accordianItem).forEach(function (key) {
+  if (key === "default" || key === "__esModule") return;
+  Object.defineProperty(exports, key, {
+    enumerable: true,
+    get: function get() {
+      return _accordianItem[key];
+    }
+  });
+});
+
+var _inviteRsvp = require("./invite-rsvp.js");
+
+Object.keys(_inviteRsvp).forEach(function (key) {
+  if (key === "default" || key === "__esModule") return;
+  Object.defineProperty(exports, key, {
+    enumerable: true,
+    get: function get() {
+      return _inviteRsvp[key];
+    }
+  });
+});
+
+var _sidebarRsvp = require("./sidebar-rsvp.js");
+
+Object.keys(_sidebarRsvp).forEach(function (key) {
+  if (key === "default" || key === "__esModule") return;
+  Object.defineProperty(exports, key, {
+    enumerable: true,
+    get: function get() {
+      return _sidebarRsvp[key];
+    }
+  });
+});
+
+var _invitesToast = require("./invites-toast.js");
+
+Object.keys(_invitesToast).forEach(function (key) {
+  if (key === "default" || key === "__esModule") return;
+  Object.defineProperty(exports, key, {
+    enumerable: true,
+    get: function get() {
+      return _invitesToast[key];
+    }
+  });
+});
+
+var _profile = require("./profile");
+
+Object.keys(_profile).forEach(function (key) {
+  if (key === "default" || key === "__esModule") return;
+  Object.defineProperty(exports, key, {
+    enumerable: true,
+    get: function get() {
+      return _profile[key];
+    }
+  });
+});
+
+var _logo = require("./logo");
+
+Object.keys(_logo).forEach(function (key) {
+  if (key === "default" || key === "__esModule") return;
+  Object.defineProperty(exports, key, {
+    enumerable: true,
+    get: function get() {
+      return _logo[key];
+    }
+  });
+});
+
+var _hamburger = require("./hamburger");
+
+Object.keys(_hamburger).forEach(function (key) {
+  if (key === "default" || key === "__esModule") return;
+  Object.defineProperty(exports, key, {
+    enumerable: true,
+    get: function get() {
+      return _hamburger[key];
+    }
+  });
+});
+
+var _emptyState = require("./empty-state");
+
+Object.keys(_emptyState).forEach(function (key) {
+  if (key === "default" || key === "__esModule") return;
+  Object.defineProperty(exports, key, {
+    enumerable: true,
+    get: function get() {
+      return _emptyState[key];
+    }
+  });
+});
+
+var _progressBar = require("./progress-bar");
+
+Object.keys(_progressBar).forEach(function (key) {
+  if (key === "default" || key === "__esModule") return;
+  Object.defineProperty(exports, key, {
+    enumerable: true,
+    get: function get() {
+      return _progressBar[key];
+    }
+  });
+});
+
+var _indiPb = require("./indi-pb");
+
+Object.keys(_indiPb).forEach(function (key) {
+  if (key === "default" || key === "__esModule") return;
+  Object.defineProperty(exports, key, {
+    enumerable: true,
+    get: function get() {
+      return _indiPb[key];
+    }
+  });
+});
+
+var _isLoading = require("./is-loading.js");
+
+Object.keys(_isLoading).forEach(function (key) {
+  if (key === "default" || key === "__esModule") return;
+  Object.defineProperty(exports, key, {
+    enumerable: true,
+    get: function get() {
+      return _isLoading[key];
+    }
+  });
+});
+});
+
+;require.register("Components/indi-pb.js", function(exports, require, module) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.IndiPb = void 0;
+
+var IndiPb = function IndiPb() {
+  return {
+    view: function view() {
+      return m(".progress-line");
+    }
+  };
+};
+
+exports.IndiPb = IndiPb;
+});
+
+;require.register("Components/invite-rsvp.js", function(exports, require, module) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.InviteRSVP = void 0;
+
+var _Utils = require("Utils");
+
+var _cjs = require("@mithril-icons/clarity/cjs");
+
+var _Http = require("Http");
+
+var updateInvite = function updateInvite(mdl) {
+  return function (update) {
+    return function (reload) {
+      var onError = function onError(error) {
+        state.error = jsonCopy(error);
+        state.status = "failed";
+        console.log("invite update failed", state, update);
+      };
+
+      var onSuccess = function onSuccess(dto) {
+        if (reload) {
+          reload();
+        }
+      };
+
+      (0, _Http.updateInviteTask)(_Http.HTTP)(mdl)(update.objectId)(update).fork(onError, onSuccess);
+    };
+  };
+};
+
+var responses = function responses() {
+  return [_cjs.SadFaceLine, _cjs.HappyFaceLine, _cjs.NeutralFaceLine];
+};
+
+var selectedResponses = [_cjs.SadFaceSolid, _cjs.HappyFaceSolid, _cjs.NeutralFaceSolid];
+
+var getResponse = function getResponse(_ref) {
+  var status = _ref.status;
+  var rs = responses();
+  rs.removeAt(status);
+  rs.insertAt(status, selectedResponses[status]);
+  return rs;
+};
+
+var InviteRSVP = function InviteRSVP() {
+  return {
+    view: function view(_ref2) {
+      var _ref2$attrs = _ref2.attrs,
+          mdl = _ref2$attrs.mdl,
+          guest = _ref2$attrs.guest,
+          reload = _ref2$attrs.reload,
+          isOther = _ref2$attrs.isOther;
+      // console.log("guest", guest)
+      return m(".frow justify-evenly", getResponse(guest).map(function (response, idx) {
+        return m(response, {
+          class: guest.guestId == mdl.User.objectId ? "clickable" : "",
+          fill: "var(--".concat(_Utils.inviteOptions[idx], "-invite)"),
+          "fill-opacity": isOther ? 0.8 : 1,
+          // `-webkit-filter`: `drop-shadow( 3px 3px 2px rgba(0, 0, 0, .7))`,
+          filter: !isOther && "drop-shadow( 3px 3px 2px rgba(0, 0, 0, .7))",
+          onclick: function onclick(e) {
+            if (guest.guestId == mdl.User.objectId) {
+              guest.status = idx;
+              updateInvite(mdl)(guest)(reload);
+            }
+          }
+        });
+      }));
+    }
+  };
+};
+
+exports.InviteRSVP = InviteRSVP;
+});
+
+;require.register("Components/invites-toast.js", function(exports, require, module) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.InvitesToast = void 0;
+
+var _cjs = require("@mithril-icons/clarity/cjs");
+
+var InvitesToast = function InvitesToast() {
+  var inviteMsg = function inviteMsg(count) {
+    return count == 1 ? "is 1 invite" : "are ".concat(count, " invites");
+  };
+
+  var notificationStatus = function notificationStatus() {
+    return localStorage.getItem("shindigit-showNotifications") == "true";
+  };
+
+  var setNotificationStatus = function setNotificationStatus(val) {
+    return localStorage.setItem("shindigit-showNotifications", val);
+  };
+
+  return {
+    view: function view(_ref) {
+      var _ref$attrs = _ref.attrs,
+          mdl = _ref$attrs.mdl,
+          invites = _ref$attrs.invites,
+          locale = _ref$attrs.locale;
+      return m(".invite-alerts-container frow", m(".invite-alert mb-10 justify-between", [m("p", "There ".concat(inviteMsg(invites), " waiting your attention.")), m("label.text-right", m("input", {
+        type: "checkbox",
+        checked: notificationStatus(),
+        onclick: function onclick(e) {
+          return setNotificationStatus(notificationStatus());
+        }
+      }), "Close and do not show again")]), m(_cjs.TimesCircleLine, {
+        onclick: function onclick(e) {
+          return setNotificationStatus(false);
+        },
+        class: "invite-alert-remove"
+      }));
+    }
+  };
+};
+
+exports.InvitesToast = InvitesToast;
+});
+
+;require.register("Components/is-loading.js", function(exports, require, module) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.IsLoading = void 0;
+
+var IsLoading = function IsLoading() {
+  return {
+    view: function view() {
+      return m("img.logo.rotateCenter", {
+        src: "images/logo.svg",
+        style: {
+          position: "absolute",
+          height: "200px",
+          width: "200px",
+          zIndex: 1000,
+          bottom: "-10%",
+          right: "35%"
+        }
+      });
+    }
+  };
+};
+
+exports.IsLoading = IsLoading;
+});
+
+;require.register("Components/layout.js", function(exports, require, module) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.Layout = void 0;
+
+var _Components = require("Components");
+
+var _Styles = require("Styles");
+
+var Header = function Header() {
+  var getRoute = function getRoute(mdl) {
+    return mdl.State.route.id;
+  };
+
+  return {
+    view: function view(_ref) {
+      var mdl = _ref.attrs.mdl;
+      return m(".col-xs-4-5.frow row row-start", [getRoute(mdl) == "day-planner" && m(_Components.HomeToolbar, {
+        mdl: mdl
+      }), getRoute(mdl) == "event" && m(_Components.EventToolbar, {
+        mdl: mdl
+      })]);
+    }
+  };
+};
+
+var Layout = function Layout() {
+  return {
+    view: function view(_ref2) {
+      var children = _ref2.children,
+          mdl = _ref2.attrs.mdl;
+      return m(".lt-grid-container", [m(".lt-header.navbar", m(".frow row", [mdl.State.isLoading() && m(_Components.IndiPb), // m(ProgressBar, { mdl }),
+      m(Header, {
+        mdl: mdl
+      }), m(_Components.Hamburger, {
+        mdl: mdl
+      })])), mdl.Sidebar.isShowing() ? m(_Components.Sidebar, {
+        oncreate: function oncreate(_ref3) {
+          var dom = _ref3.dom;
+          return (0, _Styles.Animate)((0, _Styles.createKeyframeAnimation)(true)({
+            dom: dom
+          }))({
+            dom: dom
+          });
+        },
+        onbeforeremove: function onbeforeremove(_ref4) {
+          var dom = _ref4.dom;
+          return (0, _Styles.Animate)((0, _Styles.createKeyframeAnimation)(false)({
+            dom: dom
+          }))({
+            dom: dom
+          });
+        },
+        mdl: mdl
+      }) : [m(".lt-body", children)], m(".lt-footer", "FOOTER")]);
+    }
+  };
+};
+
+exports.Layout = Layout;
+});
+
+;require.register("Components/logo.js", function(exports, require, module) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.Logo = void 0;
+var Logo = m("svg", {
+  xmlns: "http://www.w3.org/2000/svg",
+  "xmlns:xlink": "http://www.w3.org/1999/xlink",
+  "xml:space": "preserve",
+  version: "1.1",
+  viewBox: "0 0 2.049 2.355",
+  x: "0px",
+  y: "0px",
+  "fill-rule": "evenodd",
+  "clip-rule": "evenodd",
+  style: {
+    "shape-rendering": "geometricPrecision",
+    "text-rendering": "geometricPrecision",
+    "image-rendering": "optimizeQuality"
+  }
+}, [m("defs", m("style", {
+  type: "text/css"
+}, " .logo-placeholder")), m("g", m("path", {
+  class: "logo-placeholder",
+  d: "M0.033 0l1.983 0c0.018,0 0.033,0.015 0.033,0.033l0 1.818c0,0.018 -0.015,0.033 -0.033,0.033l-1.983 0c-0.018,0 -0.033,-0.015 -0.033,-0.033l0 -1.818c0,-0.018 0.015,-0.033 0.033,-0.033zm1.686 1.19l0 0.33c0,0.019 -0.015,0.033 -0.033,0.033l-0.331 0 -0.33 0 0 0 -0.331 0 -0.33 0c-0.019,0 -0.033,-0.014 -0.033,-0.033l0 -0.33 0 -0.331c0,-0.018 0.014,-0.033 0.033,-0.033l0.33 0 0.331 0 0 0 0.33 0 0.331 0c0.018,0 0.033,0.015 0.033,0.033l0 0.331zm-0.331 0.297l0.265 0 0 -0.264 -0.265 0 0 0.264zm-0.33 -0.264l0 0.264 0.264 0 0 -0.264 -0.264 0zm-0.331 0.264l0.265 0 0 -0.264 -0.265 0 0 0.264zm-0.33 -0.264l0 0.264 0.264 0 0 -0.264 -0.264 0zm1.256 -0.331l-0.265 0 0 0.265 0.265 0 0 -0.265zm-0.331 0l-0.264 0 0 0.265 0.264 0 0 -0.265zm-0.33 0l-0.265 0 0 0.265 0.265 0 0 -0.265zm-0.331 0l-0.264 0 0 0.265 0.264 0 0 -0.265zm0.71 -0.727c0.032,0 0.061,0.013 0.082,0.034 0.02,0.021 0.033,0.05 0.033,0.082 0,0.032 -0.013,0.061 -0.034,0.082 -0.02,0.021 -0.049,0.034 -0.081,0.034 -0.032,0 -0.061,-0.013 -0.082,-0.034 -0.021,-0.021 -0.034,-0.05 -0.034,-0.082 0,-0.032 0.013,-0.061 0.034,-0.082 0.021,-0.021 0.05,-0.034 0.082,-0.034zm0 0.066c-0.014,0 -0.026,0.006 -0.035,0.015 -0.009,0.009 -0.015,0.021 -0.015,0.035 0,0.014 0.006,0.026 0.015,0.035 0.009,0.009 0.021,0.014 0.035,0.014 0.013,0 0.026,-0.005 0.035,-0.014 0.009,-0.009 0.014,-0.021 0.014,-0.035 0,-0.014 -0.005,-0.026 -0.014,-0.035 -0.009,-0.009 -0.022,-0.015 -0.035,-0.015zm-0.693 -0.066c0.032,0 0.061,0.013 0.082,0.034 0.021,0.021 0.034,0.05 0.034,0.082 0,0.032 -0.013,0.061 -0.034,0.082 -0.021,0.021 -0.05,0.034 -0.082,0.034 -0.031,0 -0.06,-0.013 -0.081,-0.034 -0.021,-0.021 -0.034,-0.05 -0.034,-0.082 0,-0.032 0.013,-0.061 0.034,-0.082 0.021,-0.021 0.05,-0.034 0.081,-0.034zm0 0.066c-0.013,0 -0.026,0.006 -0.035,0.015 -0.009,0.009 -0.014,0.021 -0.014,0.035 0,0.014 0.005,0.026 0.014,0.035 0.009,0.009 0.022,0.014 0.035,0.014 0.014,0 0.026,-0.005 0.035,-0.014 0.009,-0.009 0.015,-0.021 0.015,-0.035 0,-0.014 -0.006,-0.026 -0.015,-0.035 -0.009,-0.009 -0.021,-0.015 -0.035,-0.015zm1.305 0.331l-1.917 0 0 1.256 1.917 0 0 -1.256zm-1.917 -0.066l1.917 0 0 -0.43 -1.917 0 0 0.43z"
+}))]);
+exports.Logo = Logo;
+});
+
+;require.register("Components/modal.js", function(exports, require, module) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.Modal = void 0;
+
+var Modal = function Modal() {
+  return {
+    view: function view(_ref) {
+      var children = _ref.children;
+      return m(".modal", children.map(function (_ref2) {
+        var header = _ref2.header,
+            body = _ref2.body,
+            footer = _ref2.footer;
+        return m(".modal-container", [m(".modal-header", header), m(".modal-body", body), m(".modal-footer", footer)]);
+      }));
+    }
+  };
+};
+
+exports.Modal = Modal;
+});
+
+;require.register("Components/nav-link.js", function(exports, require, module) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.NavLink = void 0;
+
+function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
+
+function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(Object(source), true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
+
+function _objectWithoutProperties(source, excluded) { if (source == null) return {}; var target = _objectWithoutPropertiesLoose(source, excluded); var key, i; if (Object.getOwnPropertySymbols) { var sourceSymbolKeys = Object.getOwnPropertySymbols(source); for (i = 0; i < sourceSymbolKeys.length; i++) { key = sourceSymbolKeys[i]; if (excluded.indexOf(key) >= 0) continue; if (!Object.prototype.propertyIsEnumerable.call(source, key)) continue; target[key] = source[key]; } } return target; }
+
+function _objectWithoutPropertiesLoose(source, excluded) { if (source == null) return {}; var target = {}; var sourceKeys = Object.keys(source); var key, i; for (i = 0; i < sourceKeys.length; i++) { key = sourceKeys[i]; if (excluded.indexOf(key) >= 0) continue; target[key] = source[key]; } return target; }
+
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
+var handlers = function handlers(types, fn) {
+  return types.reduce(function (acc, type) {
+    return Object.assign(acc, _defineProperty({}, type, fn));
+  }, {});
+};
+
+var NavLink = function NavLink() {
+  return {
+    view: function view(_ref) {
+      var _ref$attrs = _ref.attrs,
+          mdl = _ref$attrs.mdl,
+          href = _ref$attrs.href,
+          link = _ref$attrs.link,
+          classList = _ref$attrs.classList,
+          rest = _objectWithoutProperties(_ref$attrs, ["mdl", "href", "link", "classList"]);
+
+      return m(m.route.Link, _objectSpread(_objectSpread({}, handlers(["onclick", "onmouseover", "onmouseout"], function (e) {
+        return console.log(e.type);
+      })), {}, {
+        href: href,
+        class: "nav-link ".concat(classList, " ").concat(mdl.state.navSelected() == link && "shadow")
+      }, rest), link);
+    }
+  };
+};
+
+exports.NavLink = NavLink;
+});
+
+;require.register("Components/profile.js", function(exports, require, module) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.Profile = void 0;
+
+var _Http = require("Http");
+
+var _Utils = require("Utils");
+
+var Profile = function Profile() {
+  var state = {
+    errors: null,
+    status: "loading"
+  };
+
+  var updatePrefs = function updatePrefs(mdl) {
+    var onError = function onError(err) {
+      state.error = err;
+      state.status = "failed";
+    };
+
+    var onSuccess = function onSuccess(profile) {
+      mdl.User.profile = profile;
+      state.error = null;
+      state.status = "success";
+      (0, _Http.setUserToken)(mdl)(mdl.User);
+    };
+
+    (0, _Http.updateUserProfile)(_Http.HTTP)(mdl)(mdl.User.profile).fork(onError, onSuccess);
+  };
+
+  return {
+    view: function view(_ref) {
+      var mdl = _ref.attrs.mdl;
+      // console.log(mdl)
+      return m(".profile-section", [m("label", "Dark Theme", m("input", {
+        type: "checkbox",
+        checked: mdl.User.profile.isDarkTheme,
+        onclick: function onclick(e) {
+          mdl.User.profile.isDarkTheme = !mdl.User.profile.isDarkTheme;
+          updatePrefs(mdl);
+        }
+      })), m("hr"), m("label", "Use 24 Hrs", m("input", {
+        type: "checkbox",
+        checked: mdl.User.profile.is24Hrs,
+        onclick: function onclick(e) {
+          mdl.User.profile.is24Hrs = !mdl.User.profile.is24Hrs;
+          updatePrefs(mdl);
+        }
+      })), m("hr"), m("label", "Start Week on Day:", m(".frow row-between", _Utils.daysOfTheWeek.map(function (day, idx) {
+        return m("label.col-xs-1-7", m("span", {
+          key: idx
+        }, day.slice(0, 3)), m("input", {
+          key: idx,
+          id: idx,
+          name: "startDay-".concat(idx),
+          type: "radio",
+          value: mdl.User.profile.startWeekOnDay,
+          checked: mdl.User.profile.startWeekOnDay == idx,
+          onchange: function onchange(e) {
+            console.log(mdl.User);
+            mdl.User.profile.startWeekOnDay = idx;
+            mdl.Calendar.state.start(idx);
+            updatePrefs(mdl);
+          }
+        }));
+      }))), m("hr"), m("label", "Search Range Radius: ".concat(mdl.User.profile.searchRadius), m("input", {
+        type: "range",
+        value: mdl.User.profile.searchRadius,
+        min: 0,
+        max: 100,
+        onchange: function onchange(e) {
+          mdl.User.profile.searchRadius = parseInt(e.target.value);
+          mdl.Map.bounds((0, _Utils.getBoundsFromLatLong)(mdl)(mdl.Map.locale()));
+          console.log(JSON.stringify(mdl.Map));
+          updatePrefs(mdl);
+        }
+      }))]);
+    }
+  };
+};
+
+exports.Profile = Profile;
+});
+
+;require.register("Components/progress-bar.js", function(exports, require, module) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.ProgressBar = void 0;
+
+var ProgressBar = function ProgressBar(_ref) {
+  var mdl = _ref.attrs.mdl;
+  return {
+    view: function view(_ref2) {
+      var _ref2$attrs$mdl$State = _ref2.attrs.mdl.State.loadingProgress,
+          value = _ref2$attrs$mdl$State.value,
+          max = _ref2$attrs$mdl$State.max;
+      return mdl.State.isLoading() && m(".progressBar", m("progress.progress", {
+        max: max,
+        value: value
+      }));
+    }
+  };
+};
+
+exports.ProgressBar = ProgressBar;
+});
+
+;require.register("Components/sidebar-rsvp.js", function(exports, require, module) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.SidebarRSVP = void 0;
+
+var _Components = require("Components");
+
+var _Utils = require("Utils");
+
+var _cjs = require("@mithril-icons/clarity/cjs");
+
+var navToInvite = function navToInvite(mdl) {
+  return function (invite) {
+    mdl.Events.currentEventId(invite.eventId);
+    mdl.Events.currentEventStart(invite.start);
+    localStorage.setItem("shindigit-eventId", invite.eventId);
+    localStorage.setItem("shindigit-eventStart", invite.start);
+    m.route.set("/".concat((0, _Utils.hyphenize)(mdl.User.name), "/events/").concat((0, _Utils.hyphenize)(invite.title)));
+  };
+};
+
+var SidebarRSVP = function SidebarRSVP() {
+  return {
+    view: function view(_ref) {
+      var mdl = _ref.attrs.mdl;
+      return m(".sidebar-rsvp mb-50", [mdl.Invites.needRSVP().length ? mdl.Invites.needRSVP().map(function (invite) {
+        return m(".sidebar-invites-".concat((0, _Utils.getTheme)(mdl)), m(".frow mb-10", [m(".col-xs-1-2 text-ellipsis", "".concat(invite.title)), m(".col-xs-1-2", "On: ".concat(invite.start.format("MM-DD-YYYY"))), m(".col-xs-1-2", "From: ".concat(invite.start.format((0, _Utils.getTimeFormat)(mdl)))), m(".col-xs-1-2", "To: ".concat(invite.end.format((0, _Utils.getTimeFormat)(mdl))))]), m(_cjs.InfoStandardLine, {
+          class: "clickable",
+          onclick: function onclick(e) {
+            return navToInvite(mdl)(invite);
+          }
+        }), m(_Components.InviteRSVP, {
+          mdl: mdl,
+          guest: invite
+        }));
+      }) : m(_Components.EmptyState, {
+        text: "You have no outstanding invites"
+      })]);
+    }
+  };
+};
+
+exports.SidebarRSVP = SidebarRSVP;
+});
+
+;require.register("Components/sidebar.js", function(exports, require, module) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.Sidebar = void 0;
+
+var _Components = require("Components");
+
+var _Utils = require("Utils");
+
+var Sidebar = function Sidebar() {
+  var state = {
+    load: {
+      error: Stream(null),
+      isShowing: Stream(false),
+      status: Stream("loading")
+    },
+    Invites: {
+      isShowing: Stream(true),
+      status: Stream("loading"),
+      data: Stream([])
+    },
+    Profile: {
+      isShowing: Stream(false),
+      is24Hrs: Stream(false)
+    }
+  };
+
+  var showState = function showState(field) {
+    var keys = Object.keys(state);
+    return keys.map(function (k) {
+      return k == field ? state[k].isShowing(true) : state[k].isShowing(false);
+    });
+  };
+
+  return {
+    view: function view(_ref) {
+      var mdl = _ref.attrs.mdl;
+      return m(".sidebar-page", [m(".navbar-tab-section-".concat((0, _Utils.getTheme)(mdl)), m(".frow row ", [m("button.navbar-tab-".concat((0, _Utils.getTheme)(mdl), ".col-xs-1-3"), {
+        class: state.Invites.isShowing() ? "navbar-tab-selected" : "",
+        onclick: function onclick(e) {
+          return showState("Invites");
+        }
+      }, "New Invites"), m("button.navbar-tab-".concat((0, _Utils.getTheme)(mdl), ".col-xs-1-3"), {
+        class: state.Profile.isShowing() ? "navbar-tab-selected" : "",
+        onclick: function onclick(e) {
+          return showState("Profile");
+        }
+      }, "Profile"), m("button.navbar-tab-".concat((0, _Utils.getTheme)(mdl), ".col-xs-1-3"), m(m.route.Link, {
+        id: "scale-me",
+        href: "/logout",
+        class: "required-field"
+      }, "Logout"))])), state.Invites.isShowing() && m(".sidebar-section", [m(".frow column-center height-100", [m(".sidebar-article frow height-100", m(_Components.SidebarRSVP, {
+        mdl: mdl
+      }))])]), state.Profile.isShowing() && m(".sidebar-section", m(".frow column-center", [m(".sidebar-article", m(_Components.Profile, {
+        mdl: mdl
+      }))]))]);
+    }
+  };
+};
+
+exports.Sidebar = Sidebar;
+});
+
+;require.register("Fp/all.js", function(exports, require, module) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.All = void 0;
+
+var All = function All(x) {
+  return {
+    val: x,
+    concat: function concat(_ref) {
+      var val = _ref.val;
+      return All(x && val);
+    }
+  };
+};
+
+exports.All = All;
+All.empty = All(true);
+});
+
+;require.register("Fp/any.js", function(exports, require, module) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.Any = void 0;
+
+var Any = function Any(x) {
+  return {
+    val: x,
+    concat: function concat(_ref) {
+      var val = _ref.val;
+      return Any(x || val);
+    }
+  };
+};
+
+exports.Any = Any;
+Any.empty = Any(false);
+});
+
+;require.register("Fp/array.js", function(exports, require, module) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.ArrayFP = void 0;
+
+var _util = require("./util");
+
+var _flatten = function _flatten(xs) {
+  return xs.reduce(function (a, b) {
+    return a.concat(b);
+  }, []);
+};
+
+var configure = function configure(_) {
+  var _fmap = function _fmap(f) {
+    var xs = this;
+    return xs.map(function (x) {
+      return f(x);
+    }); //avoid index
+  };
+
+  Object.defineProperty(Array.prototype, "fmap", (0, _util.value)(_fmap));
+
+  var _empty = function _empty(_) {
+    return [];
+  };
+
+  Object.defineProperty(Array.prototype, "empty", (0, _util.value)(_empty));
+
+  var _chain = function _chain(f) {
+    return _flatten(this.fmap(f));
+  };
+
+  Object.defineProperty(Array.prototype, "chain", (0, _util.value)(_chain));
+
+  var _of = function _of(x) {
+    return [x];
+  };
+
+  Object.defineProperty(Array.prototype, "of", (0, _util.value)(_of));
+
+  var _ap = function _ap(a2) {
+    return _flatten(this.map(function (f) {
+      return a2.map(function (a) {
+        return f(a);
+      });
+    }));
+  };
+
+  Object.defineProperty(Array.prototype, "ap", (0, _util.value)(_ap));
+
+  var _traverse = function _traverse(f, point) {
+    var cons_f = function cons_f(ys, x) {
+      return f(x).map(function (x) {
+        return function (y) {
+          return y.concat(x);
+        };
+      }).ap(ys);
+    };
+
+    return this.reduce(cons_f, point([]));
+  };
+
+  Object.defineProperty(Array.prototype, "traverse", (0, _util.value)(_traverse));
+
+  var _any = function _any() {
+    return this.length > 0;
+  };
+
+  Object.defineProperty(Array.prototype, "any", (0, _util.value)(_any));
+
+  var _insertAt = function _insertAt(idx, x) {
+    return this.splice(idx, 0, x);
+  };
+
+  Object.defineProperty(Array.prototype, "insertAt", (0, _util.value)(_insertAt));
+
+  var _removeAt = function _removeAt(idx) {
+    return this.splice(idx, 1);
+  };
+
+  Object.defineProperty(Array.prototype, "removeAt", (0, _util.value)(_removeAt));
+
+  var _last = function _last() {
+    return this[this.length - 1];
+  };
+
+  Object.defineProperty(Array.prototype, "last", (0, _util.value)(_last));
+
+  var _in = function _in(comparer) {
+    for (var i = 0; i < this.length; i++) {
+      if (comparer(this[i])) return true;
+    }
+
+    return false;
+  };
+
+  Object.defineProperty(Array.prototype, "in", (0, _util.value)(_in));
+
+  var _pushIfNotExist = function _pushIfNotExist(element, comparer) {
+    if (!this.in(comparer)) {
+      this.push(element);
+    }
+  };
+
+  Object.defineProperty(Array.prototype, "pushIfNotExist", (0, _util.value)(_pushIfNotExist));
+
+  var _foldM = function _foldM(point, f) {
+    var _this = this;
+
+    var go = function go(a) {
+      return !_this.any() ? point(a) : f(a, _this.shift()).chain(go);
+    };
+
+    return go;
+  };
+
+  Object.defineProperty(Array.prototype, "foldM", (0, _util.value)(_foldM));
+};
+
+var ArrayFP = {
+  configure: configure
+};
+exports.ArrayFP = ArrayFP;
+});
+
+;require.register("Fp/coyoneda.js", function(exports, require, module) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.Coyoneda = void 0;
+
+var _daggy = require("daggy");
+
+var _ramda = require("ramda");
+
+var Coyoneda = (0, _daggy.tagged)('x', 'f');
+exports.Coyoneda = Coyoneda;
+
+Coyoneda.prototype.map = function (f) {
+  return Coyoneda(this.x, (0, _ramda.compose)(f, this.f));
+};
+
+Coyoneda.prototype.lower = function () {
+  return this.x.map(this.f);
+};
+
+Coyoneda.lift = function (x) {
+  return Coyoneda(x, _ramda.identity);
+};
+});
+
+;require.register("Fp/index.js", function(exports, require, module) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+var _exportNames = {
+  Fp: true,
+  Coyoneda: true
+};
+Object.defineProperty(exports, "Coyoneda", {
+  enumerable: true,
+  get: function get() {
+    return _coyoneda.Coyoneda;
+  }
+});
+exports.Fp = void 0;
+
+var _all = require("./all");
+
+Object.keys(_all).forEach(function (key) {
+  if (key === "default" || key === "__esModule") return;
+  if (Object.prototype.hasOwnProperty.call(_exportNames, key)) return;
+  Object.defineProperty(exports, key, {
+    enumerable: true,
+    get: function get() {
+      return _all[key];
+    }
+  });
+});
+
+var _any = require("./any");
+
+Object.keys(_any).forEach(function (key) {
+  if (key === "default" || key === "__esModule") return;
+  if (Object.prototype.hasOwnProperty.call(_exportNames, key)) return;
+  Object.defineProperty(exports, key, {
+    enumerable: true,
+    get: function get() {
+      return _any[key];
+    }
+  });
+});
+
+var _tuple = require("./tuple");
+
+Object.keys(_tuple).forEach(function (key) {
+  if (key === "default" || key === "__esModule") return;
+  if (Object.prototype.hasOwnProperty.call(_exportNames, key)) return;
+  Object.defineProperty(exports, key, {
+    enumerable: true,
+    get: function get() {
+      return _tuple[key];
+    }
+  });
+});
+
+var _coyoneda = require("./coyoneda");
+
+var _pointfree = require("./pointfree");
+
+Object.keys(_pointfree).forEach(function (key) {
+  if (key === "default" || key === "__esModule") return;
+  if (Object.prototype.hasOwnProperty.call(_exportNames, key)) return;
+  Object.defineProperty(exports, key, {
+    enumerable: true,
+    get: function get() {
+      return _pointfree[key];
+    }
+  });
+});
+
+var _sum = require("./sum");
+
+Object.keys(_sum).forEach(function (key) {
+  if (key === "default" || key === "__esModule") return;
+  if (Object.prototype.hasOwnProperty.call(_exportNames, key)) return;
+  Object.defineProperty(exports, key, {
+    enumerable: true,
+    get: function get() {
+      return _sum[key];
+    }
+  });
+});
+
+var _list = require("./list");
+
+Object.keys(_list).forEach(function (key) {
+  if (key === "default" || key === "__esModule") return;
+  if (Object.prototype.hasOwnProperty.call(_exportNames, key)) return;
+  Object.defineProperty(exports, key, {
+    enumerable: true,
+    get: function get() {
+      return _list[key];
+    }
+  });
+});
+
+var _intersection = require("./intersection");
+
+Object.keys(_intersection).forEach(function (key) {
+  if (key === "default" || key === "__esModule") return;
+  if (Object.prototype.hasOwnProperty.call(_exportNames, key)) return;
+  Object.defineProperty(exports, key, {
+    enumerable: true,
+    get: function get() {
+      return _intersection[key];
+    }
+  });
+});
+
+var _array = require("./array");
+
+var _task = require("./task");
+
+var _maybe = require("./maybe");
+
+var _validation = require("./validation");
+
+var configure = function configure() {
+  _array.ArrayFP.configure();
+
+  _task.Task.configure();
+
+  _maybe.Maybe.configure();
+
+  _validation.Validation.configure();
+};
+
+var Fp = {
+  configure: configure
+};
+exports.Fp = Fp;
+});
+
+;require.register("Fp/intersection.js", function(exports, require, module) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.Intersection = void 0;
+
+// Intersection Semigroup.
+//
+// The intersection (based on value equality) of two lists
+// Intersection :: (Eq m) <= m -> Intersection m
+var Intersection = function Intersection(xs) {
+  return {
+    xs: xs,
+    concat: function concat(_ref) {
+      var ys = _ref.xs;
+      return Intersection(xs.filter(function (x) {
+        return ys.some(function (y) {
+          return y.equals(x);
+        });
+      }));
+    },
+    inspect: "Intersection(".concat(xs, ")")
+  };
+};
+
+exports.Intersection = Intersection;
+});
+
+;require.register("Fp/list.js", function(exports, require, module) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.List = void 0;
+
+var _data = require("data.maybe");
+
+var _ramda = require("ramda");
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+var Nil = function Nil() {
+  _classCallCheck(this, Nil);
+
+  this.head = undefined;
+  this.tail = undefined;
+  this.isNil = true;
+  this.isCons = false;
+};
+
+var Cons = function Cons(x, xs) {
+  _classCallCheck(this, Cons);
+
+  this.head = x;
+  this.tail = xs;
+  this.isNil = false;
+  this.isCons = true;
+}; //curry :: (a -> b -> c) -> a -> b -> c
+
+
+var curry = function curry(f) {
+  return function (x) {
+    return function (y) {
+      return f(x, y);
+    };
+  };
+}; //uncurry :: (a -> b -> c) -> (a, b) -> c
+
+
+var uncurry = function uncurry(f) {
+  return function (x, y) {
+    return f(x)(y);
+  };
+}; //o :: ((b -> c), (a -> b)) -> a -> c
+
+
+var o = function o(f, g) {
+  return function (x) {
+    return f(g(x));
+  };
+}; //id :: a -> a
+
+
+var id = function id(x) {
+  return x;
+}; //flip :: (a -> b -> c) -> (b, a) -> c
+
+
+var flip = function flip(f) {
+  return function (x, y) {
+    return f(y, x);
+  };
+}; //cons :: (a, List a) -> List a
+
+
+var cons = function cons(x, xs) {
+  return new Cons(x, xs);
+}; //snoc :: (List a, a) -> List a
+
+
+var snoc = function snoc(xs, x) {
+  return new Cons(x, xs);
+}; //ccons :: a -> List a -> List a
+
+
+var ccons = curry(cons); //csnoc :: List a -> a -> List a
+//const csnoc = curry(snoc)
+//nil :: () => List a
+
+var nil = function nil() {
+  return new Nil();
+}; //head :: List a -> a | undefined
+
+
+var head = function head(_ref) {
+  var head = _ref.head;
+  return head;
+}; //tail :: List a -> List a | undefined
+
+
+var tail = function tail(_ref2) {
+  var tail = _ref2.tail;
+  return tail;
+}; //concat :: List a -> List a -> List a
+
+
+var concat = function concat(xs) {
+  return function (ys) {
+    return foldr(cons)(ys)(xs);
+  };
+}; //foldl :: ((a, b) -> a) -> a -> List b -> a
+
+
+var foldl = function foldl(f) {
+  var go = function go(b) {
+    return function (_ref3) {
+      var isNil = _ref3.isNil,
+          head = _ref3.head,
+          tail = _ref3.tail;
+      return isNil ? b : go(f(b, head))(tail);
+    };
+  };
+
+  return go;
+}; //foldr :: ((a, b) -> a) -> a -> List b -> a
+
+
+var foldr = function foldr(f) {
+  return function (b) {
+    var rev = function rev(acc) {
+      return function (_ref4) {
+        var isNil = _ref4.isNil,
+            head = _ref4.head,
+            tail = _ref4.tail;
+        return isNil ? acc : rev(cons(head, acc))(tail);
+      };
+    };
+
+    return o(foldl(flip(f))(b), rev(nil()));
+  };
+}; //foldMap :: Monoid m => (a -> m) -> List a -> m
+
+
+var foldMap = function foldMap(f) {
+  return foldl(function (acc, x) {
+    return (acc || f(x).empty()).concat(f(x));
+  })(null);
+}; //foldM :: Monad m => (a -> m a) -> (a -> b -> m a) -> a -> List b -> m a
+
+
+var foldM = function foldM(point) {
+  return function (f) {
+    var go = function go(a) {
+      return function (_ref5) {
+        var isNil = _ref5.isNil,
+            head = _ref5.head,
+            tail = _ref5.tail;
+        return isNil ? point(a) : f(a, head).chain(function (x) {
+          return go(x)(tail);
+        });
+      };
+    };
+
+    return go;
+  };
+}; //map :: (a -> b) -> List a -> List b
+
+
+var map = function map(f) {
+  return function (_ref6) {
+    var isNil = _ref6.isNil,
+        head = _ref6.head,
+        tail = _ref6.tail;
+    return isNil ? nil() : cons(f(head), map(f)(tail));
+  };
+}; //ap :: List (a -> b) -> List a -> List b
+
+
+var ap = function ap(_ref7) {
+  var isNil = _ref7.isNil,
+      f = _ref7.head,
+      fs = _ref7.tail;
+  return function (xs) {
+    return isNil ? nil() : concat(map(f)(xs))(ap(fs)(xs));
+  };
+}; //pure :: a -> List a
+
+
+var pure = function pure(a) {
+  return cons(a, nil());
+}; //chain :: (a -> List b) -> List a -> List b
+
+
+var chain = function chain(_ref8) {
+  var isNil = _ref8.isNil,
+      head = _ref8.head,
+      tail = _ref8.tail;
+  return function (f) {
+    return isNil ? nil() : concat(f(head))(chain(tail)(f));
+  };
+}; //join :: List (List a -> List a)
+
+
+var join = foldr(uncurry(concat))(nil()); //traverse :: Applicative f => (a -> f a) -> (a -> f b) -> List a -> f (List b)
+
+var traverse = function traverse(point, f) {
+  var con_f = function con_f(x, ys) {
+    return f(x).map(ccons).ap(ys);
+  };
+
+  return foldr(con_f)(point(nil()));
+}; //sequenceA :: Applicative f => (a -> f a) -> List (f a) -> f (List a)
+
+
+var sequenceA = function sequenceA(point) {
+  return traverse(point, id);
+}; //length :: List a -> Int
+
+
+var length = function length(xs) {
+  var go = function go(b) {
+    return function (_ref9) {
+      var isCons = _ref9.isCons,
+          tail = _ref9.tail;
+      return isCons ? go(b + 1)(tail) : b;
+    };
+  };
+
+  return go(0)(xs);
+}; //findIndex :: (a -> Boolean) -> List a -> Maybe Int
+
+
+var findIndex = function findIndex(f) {
+  return function (xs) {
+    var go = function go(n) {
+      return function (_ref10) {
+        var isNil = _ref10.isNil,
+            head = _ref10.head,
+            tail = _ref10.tail;
+        return isNil ? (0, _data.Nothing)() : f(head) ? (0, _data.Just)(n) : go(n + 1)(tail);
+      };
+    };
+
+    return go(0)(xs);
+  };
+}; //index :: Int -> List a -> Maybe a
+
+
+var index = function index(i) {
+  return function (xs) {
+    var go = function go(n) {
+      return function (_ref11) {
+        var isNil = _ref11.isNil,
+            head = _ref11.head,
+            tail = _ref11.tail;
+        return isNil ? (0, _data.Nothing)() : n === i ? (0, _data.Just)(head) : go(n + 1)(tail);
+      };
+    };
+
+    return go(0)(xs);
+  };
+}; //reverse :: List a -> List a
+
+
+var reverse = function reverse(xs) {
+  var go = function go(acc) {
+    return function (_ref12) {
+      var isNil = _ref12.isNil,
+          head = _ref12.head,
+          tail = _ref12.tail;
+      return isNil ? acc : go(cons(head, acc))(tail);
+    };
+  };
+
+  return go(nil())(xs);
+}; //contains :: Eq a => List a -> a -> Boolean
+
+
+var contains = function contains(xs) {
+  return function (x) {
+    return findIndex((0, _ramda.equals)(x))(xs).isJust;
+  };
+}; //unique :: Eq a => List a -> List a
+
+
+var unique = o(reverse, foldl(function (acc, x) {
+  return contains(acc)(x) ? acc : cons(x, acc);
+})(nil())); //toArray :: List a -> [a]
+
+var toArray = foldl(function (acc, x) {
+  return acc.concat([x]);
+})([]); //toList :: [a] -> List a
+
+var toList = function toList(xs) {
+  return xs.reduceRight(function (acc, x) {
+    return cons(x, acc);
+  }, nil());
+}; //List :: a -> ... -> List a
+
+
+var list = function list() {
+  for (var _len = arguments.length, args = new Array(_len), _key = 0; _key < _len; _key++) {
+    args[_key] = arguments[_key];
+  }
+
+  return toList(args);
+};
+
+var List = {
+  list: list,
+  cons: cons,
+  snoc: snoc,
+  nil: nil,
+  head: head,
+  tail: tail,
+  foldl: foldl,
+  foldr: foldr,
+  foldMap: foldMap,
+  foldM: foldM,
+  concat: concat,
+  map: map,
+  ap: ap,
+  pure: pure,
+  join: join,
+  chain: chain,
+  traverse: traverse,
+  sequenceA: sequenceA,
+  findIndex: findIndex,
+  index: index,
+  length: length,
+  reverse: reverse,
+  contains: contains,
+  unique: unique,
+  toArray: toArray,
+  toList: toList
+};
+exports.List = List;
+});
+
+;require.register("Fp/maybe.js", function(exports, require, module) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.Maybe = void 0;
+
+var _data = _interopRequireDefault(require("data.maybe"));
+
+var _data2 = _interopRequireDefault(require("data.task"));
+
+var _util = require("./util");
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var configure = function configure(_) {
+  var _toTask = function _toTask(nothing) {
+    var cata = {
+      Nothing: function Nothing(_) {
+        return _data2.default.of(nothing);
+      },
+      Just: function Just(x) {
+        return _data2.default.of(x);
+      }
+    };
+    return this.cata(cata);
+  };
+
+  Object.defineProperty(_data.default.prototype, 'toTask', (0, _util.value)(_toTask));
+};
+
+var Maybe = {
+  configure: configure
+};
+exports.Maybe = Maybe;
+});
+
+;require.register("Fp/pointfree.js", function(exports, require, module) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.parse = exports.taskToPromise = exports.promiseToTask = exports.eitherToTask = exports.toList = exports.fold = exports.foldMap = exports.traverse = exports.of = exports.sequenceA = exports.mconcat = exports.mjoin = exports.ParseError = void 0;
+
+var _ramda = require("ramda");
+
+var _data = _interopRequireDefault(require("data.either"));
+
+var _data2 = _interopRequireDefault(require("data.task"));
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); if (superClass) _setPrototypeOf(subClass, superClass); }
+
+function _createSuper(Derived) { var hasNativeReflectConstruct = _isNativeReflectConstruct(); return function _createSuperInternal() { var Super = _getPrototypeOf(Derived), result; if (hasNativeReflectConstruct) { var NewTarget = _getPrototypeOf(this).constructor; result = Reflect.construct(Super, arguments, NewTarget); } else { result = Super.apply(this, arguments); } return _possibleConstructorReturn(this, result); }; }
+
+function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
+
+function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
+
+function _wrapNativeSuper(Class) { var _cache = typeof Map === "function" ? new Map() : undefined; _wrapNativeSuper = function _wrapNativeSuper(Class) { if (Class === null || !_isNativeFunction(Class)) return Class; if (typeof Class !== "function") { throw new TypeError("Super expression must either be null or a function"); } if (typeof _cache !== "undefined") { if (_cache.has(Class)) return _cache.get(Class); _cache.set(Class, Wrapper); } function Wrapper() { return _construct(Class, arguments, _getPrototypeOf(this).constructor); } Wrapper.prototype = Object.create(Class.prototype, { constructor: { value: Wrapper, enumerable: false, writable: true, configurable: true } }); return _setPrototypeOf(Wrapper, Class); }; return _wrapNativeSuper(Class); }
+
+function _construct(Parent, args, Class) { if (_isNativeReflectConstruct()) { _construct = Reflect.construct; } else { _construct = function _construct(Parent, args, Class) { var a = [null]; a.push.apply(a, args); var Constructor = Function.bind.apply(Parent, a); var instance = new Constructor(); if (Class) _setPrototypeOf(instance, Class.prototype); return instance; }; } return _construct.apply(null, arguments); }
+
+function _isNativeReflectConstruct() { if (typeof Reflect === "undefined" || !Reflect.construct) return false; if (Reflect.construct.sham) return false; if (typeof Proxy === "function") return true; try { Date.prototype.toString.call(Reflect.construct(Date, [], function () {})); return true; } catch (e) { return false; } }
+
+function _isNativeFunction(fn) { return Function.toString.call(fn).indexOf("[native code]") !== -1; }
+
+function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
+
+function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
+
+var ParseError = /*#__PURE__*/function (_Error) {
+  _inherits(ParseError, _Error);
+
+  var _super = _createSuper(ParseError);
+
+  function ParseError() {
+    _classCallCheck(this, ParseError);
+
+    return _super.apply(this, arguments);
+  }
+
+  return ParseError;
+}( /*#__PURE__*/_wrapNativeSuper(Error));
+
+exports.ParseError = ParseError;
+
+var id = function id(x) {
+  return x;
+};
+
+var _groupsOf = (0, _ramda.curry)(function (n, xs) {
+  return !xs.length ? [] : [xs.slice(0, n)].concat(_groupsOf(n, xs.slice(n, length)));
+});
+
+var mjoin = function mjoin(mmv) {
+  if (mmv.mjoin) return mmv.mjoin();
+  return (0, _ramda.chain)(id, mmv);
+};
+
+exports.mjoin = mjoin;
+var mconcat = (0, _ramda.curry)(function (xs, empty) {
+  return xs.length ? xs.reduce(_ramda.concat) : empty();
+});
+exports.mconcat = mconcat;
+var sequenceA = (0, _ramda.curry)(function (point, fctr) {
+  return fctr.traverse(id, point);
+});
+exports.sequenceA = sequenceA;
+
+var of = function of(x) {
+  return x.of;
+};
+
+exports.of = of;
+var traverse = (0, _ramda.curry)(function (f, point, fctr) {
+  return (0, _ramda.compose)(sequenceA(point), (0, _ramda.map)(f))(fctr);
+});
+exports.traverse = traverse;
+var foldMap = (0, _ramda.curry)(function (f, fldable) {
+  return fldable.reduce(function (acc, x) {
+    var r = f(x);
+    acc = acc || r.empty();
+    return acc.concat(r);
+  }, null);
+});
+exports.foldMap = foldMap;
+var fold = (0, _ramda.curry)(function (f, g, x) {
+  return x.fold(f, g);
+});
+exports.fold = fold;
+
+var toList = function toList(x) {
+  return x.reduce(function (acc, y) {
+    return [y].concat(acc);
+  }, []);
+};
+
+exports.toList = toList;
+
+var eitherToTask = function eitherToTask(x) {
+  return x.cata({
+    Left: function Left(e) {
+      return _data2.default.rejected(new ParseError(e));
+    },
+    Right: function Right(x) {
+      return _data2.default.of(x);
+    }
+  });
+};
+
+exports.eitherToTask = eitherToTask;
+
+var promiseToTask = function promiseToTask(p) {
+  return new _data2.default(function (rej, res) {
+    return p.then(res, rej);
+  });
+};
+
+exports.promiseToTask = promiseToTask;
+
+var taskToPromise = function taskToPromise(t) {
+  return new Promise(function (res, rej) {
+    return t.fork(rej, res);
+  });
+};
+
+exports.taskToPromise = taskToPromise;
+
+var parse = _data.default.try((0, _ramda.compose)(JSON.parse, (0, _ramda.prop)('response')));
+
+exports.parse = parse;
+});
+
+;require.register("Fp/sum.js", function(exports, require, module) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.Sum = void 0;
+
+var Sum = function Sum(x) {
+  return {
+    x: x,
+    concat: function concat(_ref) {
+      var y = _ref.x;
+      return x + y;
+    },
+    inspect: "Sum(".concat(x, ")")
+  };
+};
+
+exports.Sum = Sum;
+});
+
+;require.register("Fp/task.js", function(exports, require, module) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.Task = void 0;
+
+var _data = _interopRequireDefault(require("data.task"));
+
+var _util = require("./util");
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var configure = function configure() {
+  var _mjoin = function _mjoin() {
+    var _this = this;
+
+    return new _data.default(function (rej, res) {
+      return _this.fork(rej, function (s) {
+        return s.fork(rej, res);
+      });
+    });
+  };
+
+  Object.defineProperty(_data.default.prototype, 'mjoin', (0, _util.value)(_mjoin));
+};
+
+var Task = {
+  configure: configure
+};
+exports.Task = Task;
+});
+
+;require.register("Fp/tuple.js", function(exports, require, module) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.uncurry5 = exports.uncurry4 = exports.uncurry3 = exports.uncurry2 = exports.curry5 = exports.curry4 = exports.curry3 = exports.curry2 = exports.tuple5 = exports.tuple4 = exports.tuple3 = exports.tuple2 = exports.Tuple5 = exports.Tuple4 = exports.Tuple3 = exports.Tuple2 = exports.Tuple = void 0;
+
+var _daggy = require("daggy");
+
+var Tuple = (0, _daggy.tagged)('_1', '_2');
+exports.Tuple = Tuple;
+var Tuple2 = Tuple;
+exports.Tuple2 = Tuple2;
+var Tuple3 = (0, _daggy.tagged)('_1', '_2', '_3');
+exports.Tuple3 = Tuple3;
+var Tuple4 = (0, _daggy.tagged)('_1', '_2', '_3', '_4');
+exports.Tuple4 = Tuple4;
+var Tuple5 = (0, _daggy.tagged)('_1', '_2', '_3', '_4', '_5'); // Methods
+
+exports.Tuple5 = Tuple5;
+
+Tuple2.prototype.concat = function (b) {
+  return Tuple2(this._1.concat(b._1), this._2.concat(b._2));
+};
+
+Tuple3.prototype.concat = function (b) {
+  return Tuple3(this._1.concat(b._1), this._2.concat(b._2), this._3.concat(b._3));
+};
+
+Tuple4.prototype.concat = function (b) {
+  return Tuple4(this._1.concat(b._1), this._2.concat(b._2), this._3.concat(b._3), this._4.concat(b._4));
+};
+
+Tuple5.prototype.concat = function (b) {
+  return Tuple5(this._1.concat(b._1), this._2.concat(b._2), this._3.concat(b._3), this._4.concat(b._4), this._5.concat(b._5));
+}; // Methods
+
+
+Tuple.prototype.dimap = function (f, g) {
+  return Tuple(f(this._1), g(this._2));
+};
+
+Tuple.prototype.map = function (f) {
+  return Tuple(this._1, f(this._2));
+};
+
+Tuple.prototype.curry = function (f) {
+  return f(this);
+};
+
+Tuple.prototype.uncurry = function (f) {
+  return f(this._1, this._2);
+};
+
+Tuple.prototype.extend = function (f) {
+  return Tuple(this._1, f(this));
+};
+
+Tuple.prototype.extract = function () {
+  return this._2;
+};
+
+Tuple.prototype.foldl = function (f, z) {
+  return f(this._2, z);
+};
+
+Tuple.prototype.foldr = function (f, z) {
+  return f(z, this._2);
+};
+
+Tuple.prototype.foldMap = function (f, _) {
+  return f(this._2);
+};
+
+var tuple2 = Tuple;
+exports.tuple2 = tuple2;
+
+var tuple3 = function tuple3(a, b, c) {
+  return Tuple(tuple2(a, b), c);
+};
+
+exports.tuple3 = tuple3;
+
+var tuple4 = function tuple4(a, b, c, d) {
+  return Tuple(tuple3(a, b, c), d);
+};
+
+exports.tuple4 = tuple4;
+
+var tuple5 = function tuple5(a, b, c, d, e) {
+  return Tuple(tuple4(a, b, c, d), e);
+};
+
+exports.tuple5 = tuple5;
+
+var curry2 = function curry2(f, a, b) {
+  return f(tuple2(a, b));
+};
+
+exports.curry2 = curry2;
+
+var curry3 = function curry3(f, a, b, c) {
+  return f(tuple3(a, b, c));
+};
+
+exports.curry3 = curry3;
+
+var curry4 = function curry4(f, a, b, c, d) {
+  return f(tuple4(a, b, c, d));
+};
+
+exports.curry4 = curry4;
+
+var curry5 = function curry5(f, a, b, c, d, e) {
+  return f(tuple5(a, b, c, d, e));
+};
+
+exports.curry5 = curry5;
+
+var uncurry2 = function uncurry2(f, t) {
+  return f(t._1, t._2);
+};
+
+exports.uncurry2 = uncurry2;
+
+var uncurry3 = function uncurry3(f, t) {
+  return f(t._1._1, t._1._2, t._2);
+};
+
+exports.uncurry3 = uncurry3;
+
+var uncurry4 = function uncurry4(f, t) {
+  return f(t._1._1._1, t._1._1._2, t._1._2, t._2);
+};
+
+exports.uncurry4 = uncurry4;
+
+var uncurry5 = function uncurry5(f, t) {
+  return f(t._1._1._1._1, t._1._1._1._2, t._1._1._2, t._1._2, t._2);
+};
+
+exports.uncurry5 = uncurry5;
+});
+
+;require.register("Fp/util.js", function(exports, require, module) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.value = void 0;
+
+var value = function value(f) {
+  var x = {
+    value: f,
+    writable: true,
+    configurable: true,
+    enumerable: false
+  };
+  return x;
+};
+
+exports.value = value;
+});
+
+;require.register("Fp/validation.js", function(exports, require, module) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.Validation = void 0;
+
+var _data = _interopRequireDefault(require("data.validation"));
+
+var _data2 = _interopRequireDefault(require("data.task"));
+
+var _util = require("./util");
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var constant = function constant(x) {
+  return function () {
+    return x;
+  };
+};
+
+var id = function id(x) {
+  return x;
+};
+
+var configure = function configure() {
+  var apLeft = function apLeft(b) {
+    return this.map(constant).ap(b);
+  };
+
+  Object.defineProperty(_data.default.prototype, 'apLeft', (0, _util.value)(apLeft));
+
+  var apRight = function apRight(b) {
+    return this.map(constant(id)).ap(b);
+  };
+
+  Object.defineProperty(_data.default.prototype, 'apRight', (0, _util.value)(apRight));
+
+  var _toTask = function _toTask() {
+    var f = {
+      Failure: function Failure(x) {
+        return _data2.default.rejected(x);
+      },
+      Success: function Success(x) {
+        return _data2.default.of(x);
+      }
+    };
+    return this.cata(f);
+  };
+
+  Object.defineProperty(_data.default.prototype, 'toTask', (0, _util.value)(_toTask));
+};
+
+var Validation = {
+  configure: configure
+};
+exports.Validation = Validation;
+});
+
+;require.register("Http/comments-tasks.js", function(exports, require, module) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.updateCommentTask = exports.deleteCommentTask = exports.deleteBulkCommentsTask = exports.getCommentsByguestIdTask = exports.getCommentsByEventIdTask = exports.addCommentTask = void 0;
+
+var _data = _interopRequireDefault(require("data.task"));
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var addCommentTask = function addCommentTask(http) {
+  return function (mdl) {
+    return function (comment) {
+      return http.backEnd.postTask(mdl)("data/Comments")(comment).chain(function (_ref) {
+        var objectId = _ref.objectId;
+        var commentId = objectId;
+        return _data.default.of(function (user) {
+          return function (event) {
+            return {
+              user: user,
+              event: event
+            };
+          };
+        }).ap(http.backEnd.postTask(mdl)("data/Users/".concat(mdl.User.objectId, "/comments%3AComments%3An"))([commentId])).ap(http.backEnd.postTask(mdl)("data/Events/".concat(mdl.Events.currentEventId(), "/comments%3AComments%3An"))([commentId]));
+      });
+    };
+  };
+};
+
+exports.addCommentTask = addCommentTask;
+
+var getCommentsByEventIdTask = function getCommentsByEventIdTask(http) {
+  return function (mdl) {
+    return function (eventId) {
+      return http.backEnd.getTask(mdl)("data/Comments?pageSize=100&where=eventId%3D'".concat(eventId, "'&sortBy=created%20asc"));
+    };
+  };
+};
+
+exports.getCommentsByEventIdTask = getCommentsByEventIdTask;
+
+var getCommentsByguestIdTask = function getCommentsByguestIdTask(http) {
+  return function (mdl) {
+    return function (guestId) {
+      return http.backEnd.getTask(mdl)("data/Comments?pageSize=100&where=guestId%3D'".concat(guestId, "'&sortBy=created%20asc"));
+    };
+  };
+};
+
+exports.getCommentsByguestIdTask = getCommentsByguestIdTask;
+
+var deleteBulkCommentsTask = function deleteBulkCommentsTask(http) {
+  return function (mdl) {
+    return function (guestId) {
+      return http.backEnd.deleteTask(mdl)("data/Comments?where=guestId%3D'".concat(guestId, "'"));
+    };
+  };
+};
+
+exports.deleteBulkCommentsTask = deleteBulkCommentsTask;
+
+var deleteCommentTask = function deleteCommentTask(http) {
+  return function (mdl) {
+    return function (id) {
+      return http.backEnd.deleteTask(mdl)("data/Comments/".concat(id));
+    };
+  };
+};
+
+exports.deleteCommentTask = deleteCommentTask;
+
+var updateCommentTask = function updateCommentTask(http) {
+  return function (mdl) {
+    return function (comment) {
+      return http.backEnd.putTask(mdl)("data/Comments/".concat(comment.objectId))(comment);
+    };
+  };
+};
+
+exports.updateCommentTask = updateCommentTask;
+});
+
+;require.register("Http/events-tasks.js", function(exports, require, module) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.updateEventTask = exports.updateEventHostTask = exports.relateInvitesToEventTask = exports.relateCommentsToEventTask = exports.relateItemsToEventTask = exports.updateItemToGuestTask = exports.addItemToEventTask = exports.createEventTask = exports.deleteEventTask = exports.loadEventTask = exports.getEventByIdTask = void 0;
+
+var _data = _interopRequireDefault(require("data.task"));
+
+var _Http = require("Http");
+
+var _ramda = require("ramda");
+
+var _Utils = require("Utils");
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
+
+function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(Object(source), true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
+
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
+var toEventviewModel = function toEventviewModel(mdl) {
+  return function (_ref) {
+    var hostId = _ref.hostId,
+        objectId = _ref.objectId,
+        start = _ref.start,
+        end = _ref.end,
+        title = _ref.title,
+        notes = _ref.notes,
+        allDay = _ref.allDay,
+        location = _ref.location,
+        inPerson = _ref.inPerson,
+        latlong = _ref.latlong;
+    return {
+      eventId: objectId,
+      date: M(start).format("MM-DD-YYYY"),
+      title: title.toUpperCase(),
+      start: start,
+      end: end,
+      startTime: M(start).format((0, _Utils.getTimeFormat)(mdl)),
+      endTime: M(end).format((0, _Utils.getTimeFormat)(mdl)),
+      notes: notes,
+      allDay: allDay,
+      location: location,
+      inPerson: inPerson,
+      latlong: latlong,
+      hostId: hostId
+    };
+  };
+};
+
+var toCommentViewModel = function toCommentViewModel(_ref2) {
+  var message = _ref2.message,
+      name = _ref2.name,
+      guestId = _ref2.guestId,
+      eventId = _ref2.eventId,
+      created = _ref2.created,
+      objectId = _ref2.objectId;
+  return {
+    message: message,
+    name: name,
+    guestId: guestId,
+    eventId: eventId,
+    created: created,
+    objectId: objectId
+  };
+};
+
+var toGuestModel = function toGuestModel(invite) {
+  return function (_ref3) {
+    var name = _ref3.name,
+        email = _ref3.email;
+    return _objectSpread(_objectSpread({}, invite), {}, {
+      name: name,
+      email: email
+    });
+  };
+};
+
+var getGuestsTask = function getGuestsTask(http) {
+  return function (mdl) {
+    return function (invite) {
+      return (0, _Http.getUserProfileTask)(http)(mdl)(invite.guestId).map(_ramda.head).map(toGuestModel(invite));
+    };
+  };
+};
+
+var getEventGuestsByEventIdTask = function getEventGuestsByEventIdTask(http) {
+  return function (mdl) {
+    return function (eventId) {
+      return (0, _Http.getInvitesTaskByEventId)(http)(mdl)(eventId).chain((0, _ramda.traverse)(_data.default.of, getGuestsTask(http)(mdl)));
+    };
+  };
+};
+
+var getEventByIdTask = function getEventByIdTask(http) {
+  return function (mdl) {
+    return function (eventId) {
+      return http.backEnd.getTask(mdl)("data/Events/".concat(eventId)).map(toEventviewModel(mdl));
+    };
+  };
+};
+
+exports.getEventByIdTask = getEventByIdTask;
+
+var addHostDataToEvent = function addHostDataToEvent(event) {
+  return function (guests) {
+    var host = guests.filter((0, _ramda.propEq)("guestId", event.hostId))[0];
+    event.hostId = host;
+    return event;
+  };
+};
+
+var loadEventTask = function loadEventTask(http) {
+  return function (mdl) {
+    return function (eventId) {
+      return _data.default.of(function (event) {
+        return function (items) {
+          return function (comments) {
+            return function (guests) {
+              return {
+                event: addHostDataToEvent(event)(guests),
+                guests: guests,
+                comments: comments,
+                items: items
+              };
+            };
+          };
+        };
+      }).ap(getEventByIdTask(http)(mdl)(eventId)).ap((0, _Http.getItemsByEventIdTask)(http)(mdl)(eventId)).ap((0, _Http.getCommentsByEventIdTask)(http)(mdl)(eventId).map((0, _ramda.map)(toCommentViewModel))).ap(getEventGuestsByEventIdTask(http)(mdl)(eventId));
+    };
+  };
+};
+
+exports.loadEventTask = loadEventTask;
+
+var deleteEventTask = function deleteEventTask(http) {
+  return function (mdl) {
+    return function (id) {
+      return http.backEnd.deleteTask(mdl)("data/Events/".concat(id)).chain(function () {
+        return http.backEnd.deleteTask(mdl)("data/bulk/Invites?where=eventId%3D'".concat(id, "'"));
+      }).chain(function () {
+        return http.backEnd.deleteTask(mdl)("data/bulk/Items?where=eventId%3D'".concat(id, "'"));
+      }).chain(function () {
+        return http.backEnd.deleteTask(mdl)("data/bulk/Comments?where=eventId%3D'".concat(id, "'"));
+      });
+    };
+  };
+};
+
+exports.deleteEventTask = deleteEventTask;
+
+var createEventTask = function createEventTask(http) {
+  return function (mdl) {
+    return function (_ref4) {
+      var allDay = _ref4.allDay,
+          startTime = _ref4.startTime,
+          endTime = _ref4.endTime,
+          title = _ref4.title,
+          notes = _ref4.notes,
+          inPerson = _ref4.inPerson,
+          location = _ref4.location,
+          latlong = _ref4.latlong;
+      var end = M(mdl.selectedDate()).hour((0, _Utils.getHour)(endTime)).minute((0, _Utils.getMin)(endTime));
+      var start = M(mdl.selectedDate()).hour((0, _Utils.getHour)(startTime)).minute((0, _Utils.getMin)(startTime));
+      return http.backEnd.postTask(mdl)("data/Events")({
+        end: end,
+        start: start,
+        notes: notes,
+        title: title,
+        allDay: allDay,
+        inPerson: inPerson,
+        location: location,
+        latlong: latlong,
+        hostId: mdl.User.objectId
+      }).chain(function (_ref5) {
+        var objectId = _ref5.objectId,
+            hostId = _ref5.hostId,
+            end = _ref5.end,
+            start = _ref5.start,
+            title = _ref5.title;
+        var eventId = objectId;
+        var status = 1;
+        return (0, _Http.createInviteTask)(http)(mdl)({
+          eventId: eventId,
+          hostId: hostId,
+          guestId: hostId,
+          status: status,
+          end: end,
+          start: start,
+          title: title,
+          allDay: allDay,
+          inPerson: inPerson,
+          location: location,
+          latlong: latlong
+        }).chain(function (_ref6) {
+          var objectId = _ref6.objectId;
+          var inviteId = objectId;
+          return _data.default.of(function (user) {
+            return function (event) {
+              return {
+                user: user,
+                event: event
+              };
+            };
+          }).ap(http.backEnd.postTask(mdl)("data/Users/".concat(mdl.User.objectId, "/invites"))([inviteId])).ap(relateInvitesToEventTask(http)(mdl)(eventId)([inviteId]));
+        });
+      });
+    };
+  };
+};
+
+exports.createEventTask = createEventTask;
+
+var addItemToEventTask = function addItemToEventTask(http) {
+  return function (mdl) {
+    return function (eventId) {
+      return function (item) {
+        return (0, _Http.addItemTask)(http)(mdl)(item).chain(function (_ref7) {
+          var objectId = _ref7.objectId;
+          return relateItemsToEventTask(http)(mdl)(eventId)([objectId]);
+        });
+      };
+    };
+  };
+};
+
+exports.addItemToEventTask = addItemToEventTask;
+
+var updateItemToGuestTask = function updateItemToGuestTask(http) {
+  return function (mdl) {
+    return function (item) {
+      return item.guestId ? (0, _Http.relateItemsToUserTask)(http)(mdl)(item.guestId)([item.objectId]) : (0, _Http.unRelateItemToUserTask)(http)(mdl)(mdl.User.objectId)(item.objectId);
+    };
+  };
+};
+
+exports.updateItemToGuestTask = updateItemToGuestTask;
+
+var relateItemsToEventTask = function relateItemsToEventTask(http) {
+  return function (mdl) {
+    return function (eventId) {
+      return function (itemIds) {
+        return http.backEnd.putTask(mdl)("data/Events/".concat(eventId, "/items"))(itemIds);
+      };
+    };
+  };
+};
+
+exports.relateItemsToEventTask = relateItemsToEventTask;
+
+var relateCommentsToEventTask = function relateCommentsToEventTask(http) {
+  return function (mdl) {
+    return function (eventId) {
+      return function (commentIds) {
+        return http.backEnd.putTask(mdl)("data/Events/".concat(eventId, "/comments"))(commentIds);
+      };
+    };
+  };
+};
+
+exports.relateCommentsToEventTask = relateCommentsToEventTask;
+
+var relateInvitesToEventTask = function relateInvitesToEventTask(http) {
+  return function (mdl) {
+    return function (eventId) {
+      return function (inviteIds) {
+        return http.backEnd.putTask(mdl)("data/Events/".concat(eventId, "/invites"))(inviteIds);
+      };
+    };
+  };
+};
+
+exports.relateInvitesToEventTask = relateInvitesToEventTask;
+
+var updateEventHostTask = function updateEventHostTask(http) {
+  return function (mdl) {
+    return function (eventId) {
+      return function (hostId) {
+        return http.backEnd.putTask(mdl)("data/Events/".concat(eventId))({
+          hostId: hostId
+        });
+      };
+    };
+  };
+};
+
+exports.updateEventHostTask = updateEventHostTask;
+
+var updateEventTask = function updateEventTask(http) {
+  return function (mdl) {
+    return function (eventId) {
+      return function (_ref8) {
+        var shortDate = _ref8.shortDate,
+            endTime = _ref8.endTime,
+            startTime = _ref8.startTime,
+            allDay = _ref8.allDay,
+            inPerson = _ref8.inPerson,
+            latlong = _ref8.latlong,
+            location = _ref8.location,
+            notes = _ref8.notes,
+            title = _ref8.title;
+        var updatedEvent = {
+          end: M(shortDate).hour((0, _Utils.getHour)(endTime)).minute((0, _Utils.getMin)(endTime)),
+          start: M(shortDate).hour((0, _Utils.getHour)(startTime)).minute((0, _Utils.getMin)(startTime)),
+          allDay: allDay,
+          inPerson: inPerson,
+          latlong: latlong,
+          location: location,
+          notes: notes,
+          title: title
+        };
+        return http.backEnd.putTask(mdl)("data/Events/".concat(eventId))(updatedEvent).chain(function (_ref9) {
+          var end = _ref9.end,
+              start = _ref9.start,
+              title = _ref9.title,
+              allDay = _ref9.allDay,
+              inPerson = _ref9.inPerson,
+              location = _ref9.location,
+              latlong = _ref9.latlong;
+          return (0, _Http.updateBulkInvites)(http)(mdl)("eventId='".concat(mdl.Events.currentEventId(), "'"))({
+            end: end,
+            start: start,
+            title: title,
+            allDay: allDay,
+            inPerson: inPerson,
+            location: location,
+            latlong: latlong
+          });
+        });
+      };
+    };
+  };
+};
+
+exports.updateEventTask = updateEventTask;
+});
+
+;require.register("Http/http.js", function(exports, require, module) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.HTTP = exports.parseHttpSuccess = exports.parseHttpError = void 0;
+
+var _data = _interopRequireDefault(require("data.task"));
+
+var _secrets = require("../.secrets.js");
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
+
+function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(Object(source), true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
+
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
+var onProgress = function onProgress(mdl) {
+  return function (e) {
+    if (e.lengthComputable) {
+      mdl.State.loadingProgress.max = e.total;
+      mdl.State.loadingProgress.value = e.loaded;
+      m.redraw();
+    }
+  };
+};
+
+function onLoad() {
+  return false;
+}
+
+var onLoadStart = function onLoadStart(mdl) {
+  return function (e) {
+    mdl.State.isLoading(true);
+    return false;
+  };
+};
+
+var onLoadEnd = function onLoadEnd(mdl) {
+  return function (e) {
+    mdl.State.isLoading(false);
+    mdl.State.loadingProgress.max = 0;
+    mdl.State.loadingProgress.value = 0;
+    return false;
+  };
+};
+
+var xhrProgress = function xhrProgress(mdl) {
+  return {
+    config: function config(xhr) {
+      xhr.onprogress = onProgress(mdl);
+      xhr.onload = onLoad;
+      xhr.onloadstart = onLoadStart(mdl);
+      xhr.onloadend = onLoadEnd(mdl);
+    }
+  };
+};
+
+var parseHttpError = function parseHttpError(mdl) {
+  return function (rej) {
+    return function (e) {
+      mdl.State.isLoading(false);
+      console.error(e);
+      e.response && e.response.code == 3064 && m.route.set("/logout");
+      return rej(e.response);
+    };
+  };
+};
+
+exports.parseHttpError = parseHttpError;
+
+var parseHttpSuccess = function parseHttpSuccess(mdl) {
+  return function (res) {
+    return function (data) {
+      mdl.State.isLoading(false);
+      return res(data);
+    };
+  };
+};
+
+exports.parseHttpSuccess = parseHttpSuccess;
+
+var HttpTask = function HttpTask(_headers) {
+  return function (method) {
+    return function (mdl) {
+      return function (url) {
+        return function (body) {
+          // mdl.State.isLoading(true)
+          return new _data.default(function (rej, res) {
+            return m.request(_objectSpread({
+              method: method,
+              url: url,
+              headers: _objectSpread({}, _headers),
+              body: body,
+              withCredentials: false
+            }, xhrProgress(mdl))).then(parseHttpSuccess(mdl)(res), parseHttpError(mdl)(rej));
+          });
+        };
+      };
+    };
+  };
+};
+
+var Back4AppUrl = "".concat(_secrets.Back4App.baseUrl, "/");
+var BackEndUrl = "".concat(_secrets.BackEnd.baseUrl, "/").concat(_secrets.BackEnd.APP_ID, "/").concat(_secrets.BackEnd.API_KEY, "/");
+var OpenCageUrl = "".concat(_secrets.OpenCage.baseUrl, "?key=").concat(_secrets.OpenCage.key, "&q=");
+var openCage = {
+  getLocationTask: function getLocationTask(mdl) {
+    return function (query) {
+      return HttpTask(_secrets.OpenCage.headers())("GET")(mdl)(OpenCageUrl + query + "&pretty=1&json&language=".concat(mdl.User.profile.language, "&bounds=").concat(mdl.Map.bounds()))(null);
+    };
+  }
+};
+var backEnd = {
+  getTask: function getTask(mdl) {
+    return function (url) {
+      return HttpTask(_secrets.BackEnd.headers())("GET")(mdl)(BackEndUrl + url)(null);
+    };
+  },
+  postTask: function postTask(mdl) {
+    return function (url) {
+      return function (dto) {
+        return HttpTask(_secrets.BackEnd.headers())("POST")(mdl)(BackEndUrl + url)(dto);
+      };
+    };
+  },
+  putTask: function putTask(mdl) {
+    return function (url) {
+      return function (dto) {
+        return HttpTask(_secrets.BackEnd.headers())("PUT")(mdl)(BackEndUrl + url)(dto);
+      };
+    };
+  },
+  deleteTask: function deleteTask(mdl) {
+    return function (url) {
+      return HttpTask(_secrets.BackEnd.headers())("DELETE")(mdl)(BackEndUrl + url)(null);
+    };
+  }
+};
+var back4App = {
+  getTask: function getTask(mdl) {
+    return function (url) {
+      return HttpTask(_secrets.Back4App.headers(_secrets.Back4App))("GET")(mdl)(Back4AppUrl + url)(null);
+    };
+  },
+  postTask: function postTask(mdl) {
+    return function (url) {
+      return function (dto) {
+        return HttpTask(_secrets.Back4App.headers(_secrets.Back4App))("POST")(mdl)(Back4AppUrl + url)(dto);
+      };
+    };
+  },
+  putTask: function putTask(mdl) {
+    return function (url) {
+      return function (dto) {
+        return HttpTask(_secrets.Back4App.headers(_secrets.Back4App))("PUT")(mdl)(Back4AppUrl + url)(dto);
+      };
+    };
+  },
+  deleteTask: function deleteTask(mdl) {
+    return function (url) {
+      return HttpTask(_secrets.Back4App.headers(_secrets.Back4App))("DELETE")(mdl)(Back4AppUrl + url)(null);
+    };
+  }
+};
+var HTTP = {
+  openCage: openCage,
+  backEnd: backEnd,
+  back4App: back4App,
+  HttpTask: HttpTask
+};
+exports.HTTP = HTTP;
+});
+
+;require.register("Http/index.js", function(exports, require, module) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _http = require("./http.js");
+
+Object.keys(_http).forEach(function (key) {
+  if (key === "default" || key === "__esModule") return;
+  Object.defineProperty(exports, key, {
+    enumerable: true,
+    get: function get() {
+      return _http[key];
+    }
+  });
+});
+
+var _invitesTasks = require("./invites-tasks.js");
+
+Object.keys(_invitesTasks).forEach(function (key) {
+  if (key === "default" || key === "__esModule") return;
+  Object.defineProperty(exports, key, {
+    enumerable: true,
+    get: function get() {
+      return _invitesTasks[key];
+    }
+  });
+});
+
+var _eventsTasks = require("./events-tasks.js");
+
+Object.keys(_eventsTasks).forEach(function (key) {
+  if (key === "default" || key === "__esModule") return;
+  Object.defineProperty(exports, key, {
+    enumerable: true,
+    get: function get() {
+      return _eventsTasks[key];
+    }
+  });
+});
+
+var _commentsTasks = require("./comments-tasks.js");
+
+Object.keys(_commentsTasks).forEach(function (key) {
+  if (key === "default" || key === "__esModule") return;
+  Object.defineProperty(exports, key, {
+    enumerable: true,
+    get: function get() {
+      return _commentsTasks[key];
+    }
+  });
+});
+
+var _itemsTasks = require("./items-tasks.js");
+
+Object.keys(_itemsTasks).forEach(function (key) {
+  if (key === "default" || key === "__esModule") return;
+  Object.defineProperty(exports, key, {
+    enumerable: true,
+    get: function get() {
+      return _itemsTasks[key];
+    }
+  });
+});
+
+var _userTasks = require("./user-tasks.js");
+
+Object.keys(_userTasks).forEach(function (key) {
+  if (key === "default" || key === "__esModule") return;
+  Object.defineProperty(exports, key, {
+    enumerable: true,
+    get: function get() {
+      return _userTasks[key];
+    }
+  });
+});
+
+var _openCage = require("./open-cage.js");
+
+Object.keys(_openCage).forEach(function (key) {
+  if (key === "default" || key === "__esModule") return;
+  Object.defineProperty(exports, key, {
+    enumerable: true,
+    get: function get() {
+      return _openCage[key];
+    }
+  });
+});
+});
+
+;require.register("Http/invites-tasks.js", function(exports, require, module) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.deleteInviteTask = exports.createInviteTask = exports.sendInviteTask = exports.getInvitesTaskByEventId = exports.getInvitesByGuestIdTask = exports.updateInviteTask = exports.updateBulkInvites = exports.toInviteViewModel = void 0;
+
+var _ramda = require("ramda");
+
+var _Http = require("Http");
+
+var _data = _interopRequireDefault(require("data.task"));
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var toInviteViewModel = function toInviteViewModel(_ref) {
+  var start = _ref.start,
+      end = _ref.end,
+      title = _ref.title,
+      objectId = _ref.objectId,
+      eventId = _ref.eventId,
+      status = _ref.status,
+      hostId = _ref.hostId,
+      guestId = _ref.guestId,
+      updated = _ref.updated;
+  return {
+    start: M(start),
+    end: M(end),
+    objectId: objectId,
+    eventId: eventId,
+    title: title,
+    status: status,
+    hostId: hostId,
+    guestId: guestId,
+    updated: updated
+  };
+};
+
+exports.toInviteViewModel = toInviteViewModel;
+
+var toInviteDto = function toInviteDto(_ref2) {
+  var start = _ref2.start,
+      end = _ref2.end,
+      title = _ref2.title,
+      eventId = _ref2.eventId,
+      status = _ref2.status,
+      guestId = _ref2.guestId,
+      hostId = _ref2.hostId;
+  return {
+    start: start,
+    end: end,
+    eventId: eventId,
+    title: title,
+    status: status,
+    guestId: guestId,
+    hostId: hostId
+  };
+};
+
+var updateBulkInvites = function updateBulkInvites(http) {
+  return function (mdl) {
+    return function (cond) {
+      return function (update) {
+        return http.back4App.putTask(mdl)("data/bulk/Invites?where=".concat(encodeURIComponent(cond)))(update);
+      };
+    };
+  };
+};
+
+exports.updateBulkInvites = updateBulkInvites;
+
+var updateInviteTask = function updateInviteTask(http) {
+  return function (mdl) {
+    return function (inviteId) {
+      return function (invite) {
+        return http.back4App.putTask(mdl)("data/Invites/".concat(inviteId))(toInviteDto(invite)).map(toInviteViewModel);
+      };
+    };
+  };
+};
+
+exports.updateInviteTask = updateInviteTask;
+
+var getInvitesByGuestIdTask = function getInvitesByGuestIdTask(http) {
+  return function (mdl) {
+    return function (guestId) {
+      return http.back4App.getTask(mdl)("classes/Invites?where=".concat(JSON.stringify({
+        guestId: guestId
+      }))).map((0, _ramda.prop)("results")).map((0, _ramda.map)(toInviteViewModel));
+    };
+  };
+};
+
+exports.getInvitesByGuestIdTask = getInvitesByGuestIdTask;
+
+var getInvitesTaskByEventId = function getInvitesTaskByEventId(http) {
+  return function (mdl) {
+    return function (eventId) {
+      return http.back4App.getTask(mdl)("data/Invites?pageSize=100&where=eventId%3D'".concat(eventId, "'&sortBy=start%20asc")).map((0, _ramda.map)(toInviteViewModel));
+    };
+  };
+};
+
+exports.getInvitesTaskByEventId = getInvitesTaskByEventId;
+
+var sendInviteTask = function sendInviteTask(http) {
+  return function (mdl) {
+    return function (guestEmail, _ref3) {
+      var hostId = _ref3.hostId,
+          eventId = _ref3.eventId,
+          start = _ref3.start,
+          end = _ref3.end,
+          title = _ref3.title,
+          allDay = _ref3.allDay,
+          inPerson = _ref3.inPerson,
+          location = _ref3.location,
+          latlong = _ref3.latlong;
+      return (0, _Http.findUserByEmailTask)(http)(mdl)(guestEmail).chain(function (users) {
+        return users.any() ? createInviteTask(http)(mdl)({
+          eventId: eventId,
+          guestId: users[0].objectId,
+          hostId: hostId,
+          status: 2,
+          end: end,
+          start: start,
+          title: title,
+          allDay: allDay,
+          inPerson: inPerson,
+          location: location,
+          latlong: latlong
+        }).chain(function (_ref4) {
+          var objectId = _ref4.objectId;
+          return _data.default.of(function (event) {
+            return function (user) {
+              event, user;
+            };
+          }).ap((0, _Http.relateInvitesToUserTask)(http)(mdl)(users[0].objectId)([objectId])).ap((0, _Http.relateInvitesToEventTask)(http)(mdl)(eventId)([objectId]));
+        }) : _data.default.rejected("No User with that email");
+      });
+    };
+  };
+};
+
+exports.sendInviteTask = sendInviteTask;
+
+var createInviteTask = function createInviteTask(http) {
+  return function (mdl) {
+    return function (_ref5) {
+      var eventId = _ref5.eventId,
+          guestId = _ref5.guestId,
+          hostId = _ref5.hostId,
+          status = _ref5.status,
+          end = _ref5.end,
+          start = _ref5.start,
+          title = _ref5.title,
+          allDay = _ref5.allDay,
+          inPerson = _ref5.inPerson,
+          location = _ref5.location,
+          latlong = _ref5.latlong;
+      return http.back4App.postTask(mdl)("data/Invites")({
+        eventId: eventId,
+        guestId: guestId,
+        hostId: hostId,
+        status: status,
+        end: end,
+        start: start,
+        title: title,
+        allDay: allDay,
+        inPerson: inPerson,
+        location: location,
+        latlong: latlong
+      });
+    };
+  };
+};
+
+exports.createInviteTask = createInviteTask;
+
+var deleteInviteTask = function deleteInviteTask(http) {
+  return function (mdl) {
+    return function (id) {
+      return http.back4App.deleteTask(mdl)("data/Invites/".concat(id));
+    };
+  };
+};
+
+exports.deleteInviteTask = deleteInviteTask;
+});
+
+;require.register("Http/items-tasks.js", function(exports, require, module) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.updateItemTask = exports.deleteItemTask = exports.deleteBulkItemsTask = exports.getItemsByGuestIdTask = exports.getItemsByEventIdTask = exports.addItemTask = void 0;
+
+var addItemTask = function addItemTask(http) {
+  return function (mdl) {
+    return function (item) {
+      return http.backEnd.postTask(mdl)("data/Items")(item);
+    };
+  };
+};
+
+exports.addItemTask = addItemTask;
+
+var getItemsByEventIdTask = function getItemsByEventIdTask(http) {
+  return function (mdl) {
+    return function (eventId) {
+      return http.backEnd.getTask(mdl)("data/Items?pageSize=100&where=eventId%3D'".concat(eventId, "'&sortBy=name%20asc"));
+    };
+  };
+};
+
+exports.getItemsByEventIdTask = getItemsByEventIdTask;
+
+var getItemsByGuestIdTask = function getItemsByGuestIdTask(http) {
+  return function (mdl) {
+    return function (guestId) {
+      return http.backEnd.getTask(mdl)("data/Items?pageSize=100&where=guestId%3D'".concat(guestId, "'&sortBy=name%20asc"));
+    };
+  };
+};
+
+exports.getItemsByGuestIdTask = getItemsByGuestIdTask;
+
+var deleteBulkItemsTask = function deleteBulkItemsTask(http) {
+  return function (mdl) {
+    return function (guestId) {
+      return http.backEnd.deleteTask(mdl)("data/Items?where=guestId%3D'".concat(guestId, "'"));
+    };
+  };
+};
+
+exports.deleteBulkItemsTask = deleteBulkItemsTask;
+
+var deleteItemTask = function deleteItemTask(http) {
+  return function (mdl) {
+    return function (itemId) {
+      return http.backEnd.deleteTask(mdl)("data/Items/".concat(itemId));
+    };
+  };
+};
+
+exports.deleteItemTask = deleteItemTask;
+
+var updateItemTask = function updateItemTask(http) {
+  return function (mdl) {
+    return function (item) {
+      return http.backEnd.putTask(mdl)("data/Items/".concat(item.objectId))(item);
+    };
+  };
+};
+
+exports.updateItemTask = updateItemTask;
+});
+
+;require.register("Http/open-cage.js", function(exports, require, module) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.getBoundsTask = exports.locateQueryTask = void 0;
+
+var _ramda = require("ramda");
+
+var _Utils = require("Utils");
+
+function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _unsupportedIterableToArray(arr, i) || _nonIterableRest(); }
+
+function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
+
+function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
+
+function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
+
+function _iterableToArrayLimit(arr, i) { if (typeof Symbol === "undefined" || !(Symbol.iterator in Object(arr))) return; var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"] != null) _i["return"](); } finally { if (_d) throw _e; } } return _arr; }
+
+function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
+
+var toOpenCageFormat = function toOpenCageFormat(q) {
+  return typeof q == "string" ? encodeURIComponent(q) : encodeURIComponent("".concat(q[0], ",").concat(q[1]));
+};
+
+var toLocationViewModel = function toLocationViewModel(_ref) {
+  var _ref2 = _slicedToArray(_ref, 2),
+      address = _ref2[0],
+      ll = _ref2[1];
+
+  return {
+    address: address,
+    latlong: JSON.stringify(ll)
+  };
+};
+
+var locateQueryTask = function locateQueryTask(http) {
+  return function (mdl) {
+    return function (query) {
+      return http.openCage.getLocationTask(mdl)(toOpenCageFormat(query)).map((0, _ramda.prop)("results")).map((0, _ramda.map)((0, _ramda.paths)([["formatted"], ["geometry"]]))).map((0, _ramda.map)(toLocationViewModel));
+    };
+  };
+};
+
+exports.locateQueryTask = locateQueryTask;
+
+var getBoundsTask = function getBoundsTask(http) {
+  return function (mdl) {
+    return function (coords) {
+      return http.openCage.getLocationTask(mdl)(toOpenCageFormat(coords)).map((0, _ramda.path)(["results", 0, "bounds"])).map(function (_ref3) {
+        var southwest = _ref3.southwest,
+            northeast = _ref3.northeast;
+        return encodeURIComponent("".concat(southwest.lng, ",").concat(southwest.lat, ",").concat(northeast.lng, ",").concat(northeast.lat));
+      });
+    };
+  };
+};
+
+exports.getBoundsTask = getBoundsTask;
+});
+
+;require.register("Http/user-tasks.js", function(exports, require, module) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.relateProfileToUserTask = exports.relateInvitesToUserTask = exports.unRelateItemToUserTask = exports.relateItemsToUserTask = exports.findUserByEmailTask = exports.updateUserProfile = exports.getUserProfileTask = exports.createProfileTask = exports.registerTask = exports.loginTask = void 0;
+
+var _ramda = require("ramda");
+
+var setUser = function setUser(mdl) {
+  return function (user) {
+    mdl.User = user;
+    return mdl;
+  };
+};
+
+var setProfile = function setProfile(mdl) {
+  return function (profile) {
+    mdl.User.profile = profile;
+    return mdl;
+  };
+};
+
+var loginTask = function loginTask(http) {
+  return function (mdl) {
+    return function (_ref) {
+      var email = _ref.email,
+          password = _ref.password;
+      return http.back4App.postTask(mdl)("login")({
+        username: email,
+        password: password
+      }).map(setUser(mdl));
+    };
+  };
+};
+
+exports.loginTask = loginTask;
+
+var registerTask = function registerTask(http) {
+  return function (mdl) {
+    return function (_ref2) {
+      var name = _ref2.name,
+          email = _ref2.email,
+          password = _ref2.password,
+          isAdmin = _ref2.isAdmin;
+      return http.back4App.postTask(mdl)("users")({
+        username: email,
+        name: name,
+        email: email,
+        password: password,
+        isAdmin: isAdmin
+      });
+    };
+  };
+};
+
+exports.registerTask = registerTask;
+
+var createProfileTask = function createProfileTask(http) {
+  return function (mdl) {
+    return function (_ref3) {
+      var name = _ref3.name,
+          email = _ref3.email;
+      return function (_ref4) {
+        var objectId = _ref4.objectId;
+        return http.back4App.postTask(mdl)("classes/Profile")({
+          userId: objectId,
+          name: name,
+          email: email,
+          startWeekOnDay: 1,
+          is24Hrs: true,
+          isDarkTheme: true,
+          language: "en",
+          searchRadius: 20
+        });
+      };
+    };
+  };
+};
+
+exports.createProfileTask = createProfileTask;
+
+var getUserProfileTask = function getUserProfileTask(http) {
+  return function (mdl) {
+    return function (id) {
+      return http.back4App.getTask(mdl)("classes/Profile?where=".concat(JSON.stringify({
+        userId: id
+      }))).map((0, _ramda.prop)("results")).map((0, _ramda.map)(setProfile(mdl)));
+    };
+  };
+};
+
+exports.getUserProfileTask = getUserProfileTask;
+
+var updateUserProfile = function updateUserProfile(http) {
+  return function (mdl) {
+    return function (profile) {
+      return http.back4App.putTask(mdl)("classes/Profiles/".concat(mdl.User.profile.objectId))(profile);
+    };
+  };
+};
+
+exports.updateUserProfile = updateUserProfile;
+
+var findUserByEmailTask = function findUserByEmailTask(http) {
+  return function (mdl) {
+    return function (email) {
+      return http.back4App.getTask(mdl)("data/Users?where=email%3D'".concat(email, "'"));
+    };
+  };
+};
+
+exports.findUserByEmailTask = findUserByEmailTask;
+
+var relateItemsToUserTask = function relateItemsToUserTask(http) {
+  return function (mdl) {
+    return function (userId) {
+      return function (itemIds) {
+        return http.back4App.putTask(mdl)("data/Users/".concat(userId, "/items"))(itemIds);
+      };
+    };
+  };
+};
+
+exports.relateItemsToUserTask = relateItemsToUserTask;
+
+var unRelateItemToUserTask = function unRelateItemToUserTask(http) {
+  return function (mdl) {
+    return function (userId) {
+      return function (itemId) {
+        return http.back4App.deleteTask(mdl)("data/Users/".concat(userId, "/items?whereClause=objectId%3D'").concat(itemId, "'"));
+      };
+    };
+  };
+};
+
+exports.unRelateItemToUserTask = unRelateItemToUserTask;
+
+var relateInvitesToUserTask = function relateInvitesToUserTask(http) {
+  return function (mdl) {
+    return function (userId) {
+      return function (inviteIds) {
+        return http.back4App.putTask(mdl)("data/Users/".concat(userId, "/invites"))(inviteIds);
+      };
+    };
+  };
+}; // export const unRelateInvitesToUserTask = (http) => (mdl) => (userId) => (
+//   inviteIds
+// ) => http.back4App.deleteTask(mdl)(`data/Users/${userId}/invites`)(inviteIds)
+
+
+exports.relateInvitesToUserTask = relateInvitesToUserTask;
+
+var relateProfileToUserTask = function relateProfileToUserTask(http) {
+  return function (mdl) {
+    return function (userId) {
+      return function (profileId) {
+        return http.back4App.putTask(mdl)("data/Users/".concat(userId, "/profile"))([profileId]);
+      };
+    };
+  };
+}; // export const unRelateProfileToUserTask = (http) => (mdl) => (userId) => (
+//   profileId
+// ) => http.back4App.deleteTask(mdl)(`data/Users/${userId}/profile`)([profileId])
+
+
+exports.relateProfileToUserTask = relateProfileToUserTask;
+});
+
+;require.register("Models.js", function(exports, require, module) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = exports.dayModel = void 0;
+
+var _Utils = require("Utils");
+
+var _calendarModel = require("Components/calendar/calendar-model");
+
+// const Notifications = () => {
+//   let state = {
+//     invites: Stream([]),
+//     items: Stream([]),
+//     guests: Stream([]),
+//   }
+//   return {
+//     invites: state.invites,
+//     items: state.items,
+//     guests: state.guests,
+//     count: Stream.combine(
+//       (invites, items, guests) =>
+//         invites().length + items().length + guests().length,z,xnbkzjb/sNV/LZFNG
+//       [state.invites, state.items, state.guests]
+//     ),
+//   }
+// }
+var Map = {
+  locale: Stream(null),
+  bounds: Stream(encodeURIComponent("-125.5957, 24.36711, -65.39063, 48.944")),
+  defaultBounds: encodeURIComponent("-125.5957, 24.36711, -65.39063, 48.944")
+};
+var State = {
+  isAuth: Stream(false),
+  modal: Stream(false),
+  isLoading: Stream(false),
+  loadingProgress: {
+    max: 0,
+    value: 0
+  },
+  isLoggedIn: function isLoggedIn() {
+    return sessionStorage.getItem("token");
+  },
+  is24Hrs: Stream(true),
+  toAnchor: Stream(false),
+  slug: ""
+};
+
+var dayModel = function dayModel(mdl) {
+  return (0, _Utils.getHoursInDay)().reduce(function (day, hour) {
+    day[hour] = []; // console.log(day, hour)
+
+    return day;
+  }, {});
+};
+
+exports.dayModel = dayModel;
+var Events = {
+  currentEventId: Stream(null),
+  currentEventStart: Stream(null),
+  createNewEvent: Stream(false),
+  updateEvent: Stream(false),
+  fetch: Stream(false),
+  isMember: Stream(false)
+};
+var Invites = {
+  state: {
+    error: null,
+    status: Stream("loading")
+  },
+  withRSVP: Stream([]),
+  needRSVP: Stream([]),
+  fetch: Stream(false)
+};
+var Items = {
+  updateItemAndGuest: Stream(false)
+};
+var Day = {
+  data: dayModel({
+    State: State
+  }),
+  update: Stream(false),
+  listView: Stream(true)
+};
+var Home = {};
+var Settings = {
+  profile: "",
+  inspector: ""
+};
+var Calendar = {
+  data: (0, _calendarModel.calendarModel)({
+    mdl: Model,
+    invites: [],
+    date: M()
+  }),
+  state: {
+    start: Stream(0)
+  }
+};
+var User = {};
+var Sidebar = {
+  isShowing: Stream(false)
+};
+var Model = {
+  selectedDate: Stream(""),
+  todayDate: Stream(M()),
+  Calendar: Calendar,
+  Day: Day,
+  Events: Events,
+  Invites: Invites,
+  State: State,
+  Settings: Settings,
+  User: User,
+  Home: Home,
+  Sidebar: Sidebar,
+  Map: Map,
+  Items: Items
+};
+var _default = Model;
+exports.default = _default;
+});
+
+;require.register("Pages/Auth/Validations.js", function(exports, require, module) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.validateLoginTask = exports.validateUserRegistrationTask = void 0;
+
+var _ramda = require("ramda");
+
+var _data = require("data.validation");
+
+var _Utils = require("Utils");
+
+var ValidateRegistration = (0, _data.Success)((0, _ramda.curryN)(3, _ramda.identity));
+var ValidateLogin = (0, _data.Success)((0, _ramda.curryN)(2, _ramda.identity));
+var nameLense = (0, _ramda.lensProp)("name");
+var passwordLense = (0, _ramda.lensProp)("password");
+var passwordConfirmLense = (0, _ramda.lensProp)("confirmPassword");
+var emailLense = (0, _ramda.lensProp)("email");
+var emailConfirmLense = (0, _ramda.lensProp)("confirmEmail");
+var NAME_REQUIRED_MSG = "A Name is required";
+var PASSWORD_REQUIRED_MSG = "A Password is required";
+var EMAIL_REQUIRED_MSG = "An Email is required";
+var EMAILS_MUST_MATCH = "Emails do not match";
+var INVALID_EMAIL_FORMAT = "Email must be a valid format";
+var PASSWORDS_MUST_MATCH = "Passwords do not match";
+
+var validateName = function validateName(data) {
+  return (0, _data.Success)(data).apLeft((0, _Utils.validate)(_Utils.isRequired, nameLense, NAME_REQUIRED_MSG, data));
+};
+
+var validateEmails = function validateEmails(data) {
+  return (0, _data.Success)(data).apLeft((0, _Utils.validate)(_Utils.isRequired, emailLense, EMAIL_REQUIRED_MSG, data)).apLeft((0, _Utils.validate)(_Utils.isRequired, emailConfirmLense, EMAIL_REQUIRED_MSG, data)).apLeft((0, _Utils.validate)((0, _ramda.equals)((0, _ramda.prop)("email", data)), emailConfirmLense, EMAILS_MUST_MATCH, data)).apLeft((0, _Utils.validate)(_Utils.emailFormat, emailConfirmLense, INVALID_EMAIL_FORMAT, data)).apLeft((0, _Utils.validate)(_Utils.emailFormat, emailLense, INVALID_EMAIL_FORMAT, data)).apLeft((0, _Utils.validate)((0, _ramda.equals)((0, _ramda.prop)("confirmEmail", data)), emailLense, EMAILS_MUST_MATCH, data));
+};
+
+var validateEmail = function validateEmail(data) {
+  return (0, _data.Success)(data).apLeft((0, _Utils.validate)(_Utils.isRequired, emailLense, EMAIL_REQUIRED_MSG, data)).apLeft((0, _Utils.validate)(_Utils.emailFormat, emailLense, INVALID_EMAIL_FORMAT, data));
+};
+
+var validatePasswords = function validatePasswords(data) {
+  return (0, _data.Success)(data).apLeft((0, _Utils.validate)(_Utils.isRequired, passwordLense, PASSWORD_REQUIRED_MSG, data)).apLeft((0, _Utils.validate)(_Utils.isRequired, passwordConfirmLense, PASSWORD_REQUIRED_MSG, data)).apLeft((0, _Utils.validate)((0, _ramda.equals)(data.password), passwordConfirmLense, PASSWORDS_MUST_MATCH, data)).apLeft((0, _Utils.validate)((0, _ramda.equals)(data.confirmPassword), passwordLense, PASSWORDS_MUST_MATCH, data));
+};
+
+var validatePassword = function validatePassword(data) {
+  return (0, _data.Success)(data).apLeft((0, _Utils.validate)(_Utils.isRequired, passwordLense, PASSWORD_REQUIRED_MSG, data));
+};
+
+var validateUserRegistrationTask = function validateUserRegistrationTask(data) {
+  return ValidateRegistration.ap(validateName(data)).ap(validateEmails(data)).ap(validatePasswords(data)).failureMap(_ramda.mergeAll).toTask();
+};
+
+exports.validateUserRegistrationTask = validateUserRegistrationTask;
+
+var validateLoginTask = function validateLoginTask(data) {
+  return ValidateLogin.ap(validateEmail(data)).ap(validatePassword(data)).failureMap(_ramda.mergeAll).toTask();
+};
+
+exports.validateLoginTask = validateLoginTask;
+});
+
+;require.register("Pages/Auth/login-user.js", function(exports, require, module) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = exports.Login = void 0;
+
+var _Utils = require("Utils");
+
+var _Validations = require("./Validations.js");
+
+var _Http = require("Http");
+
+var loginUser = function loginUser(mdl) {
+  return function (data) {
+    var onError = function onError(_ref) {
+      var error = _ref.error;
+
+      if (error) {
+        state.errors = error;
+        state.errorMsg(error);
+        state.showErrorMsg(true);
+        console.log("failed - state", state.errors);
+      } else {
+        state.errorMsg("Issue with logging in. Have you registered?");
+        state.showErrorMsg(true);
+        console.log("failed - other?", state);
+      }
+    };
+
+    var onSuccess = function onSuccess(mdl) {
+      return function (s) {
+        state.errors = {};
+        console.log("/".concat((0, _Utils.hyphenize)(mdl.User.name), "/").concat(M().format("YYYY-MM-DD")));
+        return m.route.set("/".concat((0, _Utils.hyphenize)(mdl.User.name), "/").concat(M().format("YYYY-MM-DD")));
+      };
+    };
+
+    state.isSubmitted = true;
+    (0, _Validations.validateLoginTask)(data).chain(function (_) {
+      return (0, _Http.loginTask)(_Http.HTTP)(mdl)({
+        email: data.email,
+        password: data.password
+      }).chain(function () {
+        return (0, _Http.getUserProfileTask)(_Http.HTTP)(mdl)(mdl.User.objectId);
+      });
+    }).chain(function (_) {
+      return (0, _Utils.getMyLocationTask)(mdl);
+    }).chain(function (_) {
+      return (0, _Utils.setSessionsTask)(mdl);
+    }).fork(onError, onSuccess(mdl));
+  };
+};
+
+var data = {
+  name: "",
+  email: "",
+  password: ""
+};
+var state = {
+  isSubmitted: false,
+  errors: {},
+  httpError: undefined,
+  showErrorMsg: Stream(false),
+  errorMsg: Stream("")
+};
+
+var reset = function reset() {
+  state = {
+    isSubmitted: false,
+    errors: {},
+    httpError: undefined,
+    showErrorMsg: Stream(false),
+    errorMsg: Stream("")
+  };
+  data = {
+    name: "",
+    email: "",
+    password: ""
+  };
+};
+
+var validate = function validate() {
+  var onSuccess = function onSuccess(_) {
+    state.errors = null;
+  };
+
+  var onError = function onError(error) {
+    state.errors = error;
+  };
+
+  state.isSubmitted && (0, _Validations.validateLoginTask)(data).fork(onError, onSuccess);
+};
+
+var Login = function Login() {
+  return {
+    onremove: function onremove() {
+      return reset();
+    },
+    view: function view(_ref2) {
+      var mdl = _ref2.attrs.mdl;
+      return m(".login-pag.full-width", [state.showErrorMsg() && m("code.warning", state.errorMsg()), m("form.frow-container", {
+        role: "form",
+        id: "Login-form",
+        onsubmit: function onsubmit(e) {
+          return e.preventDefault();
+        }
+      }, [m("input", {
+        class: state.isSubmitted ? state.errors.email ? "has-error" : "has-success" : "",
+        id: "reg-email",
+        type: "email",
+        placeholder: "Email",
+        onblur: function onblur(e) {
+          return validate();
+        },
+        oninput: function oninput(e) {
+          return data.email = e.target.value.trim();
+        },
+        value: data.email
+      }), state.errors.email && m("span.error-field", state.errors.email), m("input", {
+        class: state.isSubmitted ? state.errors.password ? "has-error" : "has-success" : "",
+        id: "reg-pass",
+        type: "password",
+        placeholder: "Password",
+        onblur: function onblur(e) {
+          return validate();
+        },
+        oninput: function oninput(e) {
+          return data.password = e.target.value.trim();
+        },
+        value: data.password
+      }), state.errors.password && m("span.error-field", state.errors.password)]), state.httpError && m(".error-field", state.httpError)], m(m.route.Link, {
+        // type: "submit",
+        selector: "button",
+        form: "login-form",
+        onclick: function onclick(e) {
+          e.preventDefault();
+          loginUser(mdl)(data);
+        },
+        class: "max-width mt-20"
+      }, m("p.text-centered", "Login")), m(m.route.Link, {
+        href: "/register",
+        class: "max-width"
+      }, "Need to  register ?"));
+    }
+  };
+};
+
+exports.Login = Login;
+var _default = Login;
+exports.default = _default;
+});
+
+;require.register("Pages/Auth/register-user.js", function(exports, require, module) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = exports.Register = exports.registerUser = void 0;
+
+var _Utils = require("Utils");
+
+var _Validations = require("./Validations");
+
+var _Http = require("Http");
+
+var Data = function Data() {
+  return {
+    name: "",
+    email: "",
+    password: "",
+    confirmEmail: "",
+    confirmPassword: ""
+  };
+};
+
+var data = Data();
+var state = {
+  isSubmitted: false,
+  errors: {},
+  httpError: undefined,
+  showErrorMsg: Stream(false),
+  errorMsg: Stream("")
+};
+
+var resetState = function resetState() {
+  data = Data();
+  state.errors = {};
+  state.httpError = undefined;
+  state.isSubmitted = false;
+  state.showErrorMsg(false);
+  state.errorMsg("");
+};
+
+var validate = function validate() {
+  var onSuccess = function onSuccess(_) {
+    state.errors = null;
+  };
+
+  var onError = function onError(error) {
+    state.errors = error;
+  };
+
+  state.isSubmitted && (0, _Validations.validateUserRegistrationTask)(data).fork(onError, onSuccess);
+};
+
+var registerUser = function registerUser(mdl) {
+  return function (data) {
+    var onError = function onError(_ref) {
+      var error = _ref.error;
+      console.log("hiuh", error);
+
+      if (error) {
+        state.errors = JSON.stringify(error);
+        state.errorMsg(error);
+        console.log("failed - state", state.errors);
+      } else {
+        state.errorMsg("There seems to be a problem please contact web support");
+        console.log("failed - state", JSON.stringify(state));
+      }
+
+      state.showErrorMsg(true);
+    };
+
+    var onSuccess = function onSuccess(mdl) {
+      return function (data) {
+        state.errors = null;
+        console.log(data);
+        return m.route.set("/".concat((0, _Utils.hyphenize)(mdl.User.name), "/").concat(M().format("YYYY-MM-DD")));
+      };
+    };
+
+    state.isSubmitted = true;
+    (0, _Validations.validateUserRegistrationTask)(data).chain((0, _Http.registerTask)(_Http.HTTP)(mdl)).chain((0, _Http.createProfileTask)(_Http.HTTP)(mdl)(data)).chain(function (_) {
+      return (0, _Http.loginTask)(_Http.HTTP)(mdl)({
+        email: data.email,
+        password: data.password
+      }).chain(function () {
+        return (0, _Http.getUserProfileTask)(_Http.HTTP)(mdl)(mdl.User.objectId);
+      });
+    }).chain(function (_) {
+      return (0, _Utils.getMyLocationTask)(mdl);
+    }).chain(function (_) {
+      return (0, _Utils.setSessionsTask)(mdl);
+    }).fork(onError, onSuccess(mdl));
+  };
+};
+
+exports.registerUser = registerUser;
+
+var RegisterUser = function RegisterUser() {
+  return {
+    view: function view(_ref2) {
+      var _ref2$attrs = _ref2.attrs,
+          data = _ref2$attrs.data,
+          errors = _ref2$attrs.errors,
+          isSubmitted = _ref2$attrs.isSubmitted;
+      return [m("input", {
+        id: "reg-name",
+        type: "text",
+        placeholder: "Full Name",
+        onchange: function onchange(e) {
+          return validate();
+        },
+        oninput: function oninput(e) {
+          return data.name = e.target.value;
+        },
+        onblur: function onblur(e) {
+          return data.name = data.name.trim();
+        },
+        value: data.name
+      }), state.errors && errors.name && m("span.error-field", errors.name), m("input", {
+        id: "reg-email",
+        type: "email",
+        placeholder: "Email",
+        onchange: function onchange(e) {
+          return validate();
+        },
+        oninput: function oninput(e) {
+          return data.email = e.target.value;
+        },
+        onblur: function onblur(e) {
+          return data.email = data.email.trim();
+        },
+        value: data.email
+      }), state.errors && errors.email && m("span.error-field", errors.email), m("input", {
+        id: "confirmEmail",
+        type: "email",
+        placeholder: "Confirm Email",
+        onchange: function onchange(e) {
+          return validate();
+        },
+        oninput: function oninput(e) {
+          return data.confirmEmail = e.target.value;
+        },
+        onblur: function onblur(e) {
+          return data.confirmEmail = data.confirmEmail.trim();
+        },
+        value: data.confirmEmail
+      }), state.errors && errors.confirmEmail && m("span.error-field", errors.confirmEmail), m("input", {
+        id: "reg-pass",
+        type: "password",
+        placeholder: "Password",
+        onchange: function onchange(e) {
+          return validate();
+        },
+        oninput: function oninput(e) {
+          return data.password = e.target.value;
+        },
+        onblur: function onblur(e) {
+          return data.password = data.password.trim();
+        },
+        value: data.password
+      }), state.errors && errors.password && m("span.error-field", errors.password), m("input", {
+        id: "pass-confirm",
+        type: "password",
+        placeholder: "Confirm Password",
+        onchange: function onchange(e) {
+          return validate();
+        },
+        oninput: function oninput(e) {
+          return data.confirmPassword = e.target.value;
+        },
+        onblur: function onblur(e) {
+          return data.confirmPassword = data.confirmPassword.trim();
+        },
+        value: data.confirmPassword
+      }), state.errors && errors.confirmPassword && m("span.error-field", errors.confirmPassword)];
+    }
+  };
+};
+
+var Register = function Register() {
+  return {
+    onremove: function onremove() {
+      return resetState();
+    },
+    view: function view(_ref3) {
+      var mdl = _ref3.attrs.mdl;
+      return [m(".register-page.full-width", state.showErrorMsg() && m("code.warning", state.errorMsg()), m("form.frow-container", {
+        role: "form",
+        id: "Register-form",
+        onsubmit: function onsubmit(e) {
+          return e.preventDefault();
+        }
+      }, [m(RegisterUser, {
+        data: data,
+        errors: state.errors,
+        isSubmitted: state.isSubmitted
+      })]), m(m.route.Link, {
+        selector: "button",
+        form: "register-form",
+        onclick: function onclick(e) {
+          e.preventDefault();
+          registerUser(mdl)(data);
+        },
+        class: "max-width mt-20"
+      }, m("p", "Register")), m(m.route.Link, {
+        href: "/login",
+        class: "max-width"
+      }, "Need to  login ?")), state.httpError && m(".toast toast-error", state.httpError)];
+    }
+  };
+};
+
+exports.Register = Register;
+var _default = Register;
+exports.default = _default;
+});
+
+;require.register("Pages/Event/components.js", function(exports, require, module) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _eventComments = require("./event-comments.js");
+
+Object.keys(_eventComments).forEach(function (key) {
+  if (key === "default" || key === "__esModule") return;
+  Object.defineProperty(exports, key, {
+    enumerable: true,
+    get: function get() {
+      return _eventComments[key];
+    }
+  });
+});
+
+var _eventItems = require("./event-items.js");
+
+Object.keys(_eventItems).forEach(function (key) {
+  if (key === "default" || key === "__esModule") return;
+  Object.defineProperty(exports, key, {
+    enumerable: true,
+    get: function get() {
+      return _eventItems[key];
+    }
+  });
+});
+
+var _eventGuests = require("./event-guests.js");
+
+Object.keys(_eventGuests).forEach(function (key) {
+  if (key === "default" || key === "__esModule") return;
+  Object.defineProperty(exports, key, {
+    enumerable: true,
+    get: function get() {
+      return _eventGuests[key];
+    }
+  });
+});
+
+var _eventInfo = require("./event-info.js");
+
+Object.keys(_eventInfo).forEach(function (key) {
+  if (key === "default" || key === "__esModule") return;
+  Object.defineProperty(exports, key, {
+    enumerable: true,
+    get: function get() {
+      return _eventInfo[key];
+    }
+  });
+});
+});
+
+;require.register("Pages/Event/event-comments.js", function(exports, require, module) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.EventComments = void 0;
+
+var _Utils = require("Utils");
+
+var _cjs = require("@mithril-icons/clarity/cjs");
+
+var scrollToBottom = function scrollToBottom(dom) {
+  return dom.scrollTo(0, dom.scrollHeight, "smooth");
+};
+
+var EventComments = function EventComments(_ref) {
+  var _ref$attrs = _ref.attrs,
+      data = _ref$attrs.data,
+      validate = _ref$attrs.validate,
+      sendMessage = _ref$attrs.sendMessage,
+      deleteComment = _ref$attrs.deleteComment,
+      isMember = _ref$attrs.isMember;
+
+  var _dom;
+
+  return {
+    view: function view(_ref2) {
+      var _ref2$attrs = _ref2.attrs,
+          mdl = _ref2$attrs.mdl,
+          data = _ref2$attrs.data,
+          state = _ref2$attrs.state;
+      return m(".comments-items", m(".frow row-start", [m(".frow width-100", [m(".event-comment-textbox-container", isMember && m("form.frow items-end", [m(".col-xs-4-5", m("textarea.comments-message-container", {
+        row: 20,
+        cols: 50,
+        placeholder: "Say hi...",
+        value: state.comments.message,
+        oncreate: _Utils.autoFocus,
+        oninput: function oninput(e) {
+          return state.comments.message = e.target.value;
+        },
+        onchange: function onchange(e) {
+          return state.comments.message = state.comments.message.trim();
+        },
+        onblur: function onblur(e) {
+          return validate("comments")(state.comments);
+        }
+      })), m(".col-xs-1-5", m("button.button-none.comments-message-btn-".concat((0, _Utils.getTheme)(mdl)), {
+        onclick: function onclick(e) {
+          return sendMessage(mdl);
+        }
+      }, "Send"))])), state.comments.error() && m("code.error-field", state.comments.error().name), m(".width-100 justify-end", m(".events-messages-container ", {
+        oncreate: function oncreate(_ref3) {
+          var dom = _ref3.dom;
+          _dom = dom;
+          scrollToBottom(dom);
+        },
+        onupdate: function onupdate() {
+          return scrollToBottom(_dom);
+        }
+      }, data.comments.any() ? data.comments.map(function (comment, idx) {
+        return m(".frow column-center width-100 mb-40", m(".event-comments-message-container ".concat(mdl.User.objectId == comment.guestId ? "me" : "other"), m(".event-comments-message", [m(".speech-bubble", [m(".frow.text-left.pt-10", comment.message), mdl.User.objectId == comment.guestId && m(_cjs.TimesCircleLine, {
+          onclick: function onclick(e) {
+            return deleteComment(mdl)(comment.objectId);
+          },
+          class: "event-comments-message-remove smaller"
+        })]), m("label.event-comment-name", m(".frow row-between", [m("span", comment.name), m("span", M(comment.created).format((0, _Utils.getTimeFormat)(mdl)))]))])));
+      }) : m(".events-messages-container-empty", "Start a conversation")))])]));
+    }
+  };
+};
+
+exports.EventComments = EventComments;
+});
+
+;require.register("Pages/Event/event-guests.js", function(exports, require, module) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.EventGuests = void 0;
+
+var _Components = require("Components");
+
+var _Utils = require("Utils");
+
+var _ramda = require("ramda");
+
+var EventGuests = function EventGuests(_ref) {
+  var sendInvite = _ref.attrs.sendInvite;
+  return {
+    view: function view(_ref2) {
+      var _ref2$attrs = _ref2.attrs,
+          mdl = _ref2$attrs.mdl,
+          data = _ref2$attrs.data,
+          state = _ref2$attrs.state,
+          isMember = _ref2$attrs.isMember;
+      return m(".event-guests", m(".guests-container", [isMember && m(".event-forms", m(".frow row event-input-group", [m("input.col-xs-4-5 pb-20", {
+        placeholder: "email",
+        type: "email",
+        value: state.guests.email,
+        oninput: function oninput(e) {
+          return state.guests.email = e.target.value.trim();
+        }
+      }), m("button.btn-".concat((0, _Utils.getTheme)(mdl), ".col-xs-1-5.button-none"), {
+        onclick: function onclick(e) {
+          return sendInvite(mdl);
+        }
+      }, "Invite"), state.guests.error() && m("code.error-field", state.guests.error())])), m(".frow row-start mb-20 pl-5", [m(".col-xs-1-2", mdl.User.name), m(".col-xs-1-2", m(_Components.InviteRSVP, {
+        mdl: mdl,
+        reload: function reload() {
+          return mdl.Invites.fetch(true);
+        },
+        guest: (0, _ramda.head)(data.guests.filter((0, _ramda.propEq)("guestId", mdl.User.objectId)))
+      }))]), m("hr"), data.guests.filter((0, _ramda.compose)(_ramda.not, (0, _ramda.propEq)("guestId", mdl.User.objectId))).map(function (guest) {
+        return m(".frow row-start mb-20 pl-5", [m(".col-xs-1-2", guest.name), m(".col-xs-1-2", m(_Components.InviteRSVP, {
+          mdl: mdl,
+          guest: guest,
+          isOther: true
+        }))]);
+      })]));
+    }
+  };
+};
+
+exports.EventGuests = EventGuests;
+});
+
+;require.register("Pages/Event/event-info.js", function(exports, require, module) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.EventInfo = void 0;
+
+var _ramda = require("ramda");
+
+var EventInfo = function EventInfo(_ref) {
+  var _ref$attrs = _ref.attrs,
+      setupMap = _ref$attrs.setupMap,
+      otherGuests = _ref$attrs.otherGuests,
+      isMember = _ref$attrs.isMember;
+
+  var invitedGuests = function invitedGuests(guests) {
+    return otherGuests(guests).length;
+  };
+
+  var acceptedGuests = function acceptedGuests(guests) {
+    return otherGuests(guests).filter((0, _ramda.propEq)("status", 1)).length;
+  };
+
+  var itemsSelected = function itemsSelected(items) {
+    return items.filter((0, _ramda.prop)("guestId")).length;
+  };
+
+  return {
+    view: function view(_ref2) {
+      var _ref2$attrs = _ref2.attrs,
+          data = _ref2$attrs.data,
+          state = _ref2$attrs.state;
+      return m(".event-info", m(".frow column-start height-100 justify-evenly", [m("h3.heading", "Hosted by: ".concat(data.event.hostId.name)), m(".events-map-container", {
+        style: {
+          width: "100%",
+          height: "250px"
+        },
+        oncreate: setupMap,
+        onupdate: setupMap
+      }), m("label", "".concat(data.event.location)), m("h3.heading", "Guests: Invited ".concat(invitedGuests(data.guests), " , Accepted  ").concat(acceptedGuests(data.guests), " , Total: ").concat(data.guests.length)), m("h3.heading", "Items: Total ".concat(data.items.length, ", selected: ").concat(itemsSelected(data.items))), m("h3.heading", "Notes: ".concat(data.event.notes)), isMember && m("button.required-field", {
+        onclick: function onclick(e) {
+          return state.modal.isShowing("settings");
+        }
+      }, "Event Settings")]));
+    }
+  };
+};
+
+exports.EventInfo = EventInfo;
+});
+
+;require.register("Pages/Event/event-items.js", function(exports, require, module) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.EventItems = void 0;
+
+var _Utils = require("Utils");
+
+var _cjs = require("@mithril-icons/clarity/cjs");
+
+var _ramda = require("ramda");
+
+var isUserItem = function isUserItem(mdl) {
+  return function (item) {
+    return mdl.User.objectId == item.guestId;
+  };
+};
+
+var getUserFromId = function getUserFromId(id) {
+  return function (guests) {
+    return (0, _ramda.pluck)("name", guests.filter((0, _ramda.propEq)("guestId", id)));
+  };
+};
+
+var EventItems = function EventItems(_ref) {
+  var _ref$attrs = _ref.attrs,
+      validate = _ref$attrs.validate,
+      addItem = _ref$attrs.addItem,
+      updateItem = _ref$attrs.updateItem,
+      deleteItem = _ref$attrs.deleteItem,
+      isMember = _ref$attrs.isMember;
+  return {
+    view: function view(_ref2) {
+      var _ref2$attrs = _ref2.attrs,
+          mdl = _ref2$attrs.mdl,
+          data = _ref2$attrs.data,
+          state = _ref2$attrs.state;
+      return m(".event-items-section", [isMember && m("form.frow row event-input-group", [m("input.col-xs-1-2", {
+        placeholder: "name",
+        value: state.items.name,
+        oncreate: _Utils.autoFocus,
+        oninput: function oninput(e) {
+          return state.items.name = e.target.value;
+        },
+        onchange: function onchange(e) {
+          return state.items.name = state.items.name.trim();
+        },
+        onblur: function onblur(e) {
+          return validate("items")(state.items);
+        },
+        type: "text"
+      }), m("input.col-xs-1-4", {
+        placeholder: "quantity",
+        value: state.items.quantity,
+        oninput: function oninput(e) {
+          return state.items.quantity = e.target.value.trim();
+        },
+        onblur: function onblur(e) {
+          return validate("items")(state.items);
+        },
+        type: "number",
+        inputMode: "number",
+        pattern: "[0-9]*"
+      }), m("button.btn-".concat((0, _Utils.getTheme)(mdl), ".col-xs-1-5.button-none"), {
+        onclick: function onclick(e) {
+          return addItem(mdl);
+        }
+      }, "Add"), state.items.error() && m("code.error-field", state.items.error().name), state.items.error() && m("code.error-field", state.items.error().quantity)]), m(".event-items", data.items.map(function (item) {
+        return m(".event-items-item", m(".frow items-start", [m(".frow col-xs-2-3", m("h3.frow col-xs-1-1", item.name), m("label.frow col-xs-1-1", item.guestId ? [m("span.clickable.frow row-start pt-10", isUserItem(mdl)(item) && m(_cjs.MinusCircleLine, {
+          onclick: function onclick(e) {
+            item.guestId = null;
+            state.items.updateGuest(true);
+            updateItem(mdl)(item);
+          },
+          class: "smaller"
+        }), getUserFromId(item.guestId)(data.guests))] : m("i.clickable pt-10", {
+          onclick: function onclick(e) {
+            item.guestId = mdl.User.objectId;
+            state.items.updateGuest(true);
+            updateItem(mdl)(item);
+          }
+        }, "click to select item"))), m(".col-xs-1-3 frow items-center", [isUserItem(mdl)(item) && m(".events-remove-item", m("span.clickable", m(_cjs.RemoveLine, {
+          class: "smaller",
+          onclick: function onclick(e) {
+            return deleteItem(mdl)(item.objectId);
+          }
+        }))), m("h3.col-xs-1-3", item.quantity), m(".col-xs-1-3 ", [isUserItem(mdl)(item) && [m(".col-xs-1-3", m("span.clickable", m(_cjs.AngleLine, {
+          class: "smaller",
+          onclick: function onclick(e) {
+            item.quantity++;
+            updateItem(mdl)(item);
+          }
+        }))), m(".col-xs-1-3", m("span.clickable.smaller", m(_cjs.AngleLine, {
+          class: "decrement",
+          onclick: function onclick(e) {
+            item.quantity > 0 && item.quantity--;
+            updateItem(mdl)(item);
+          }
+        })))]])])]));
+      }))]);
+    }
+  };
+};
+
+exports.EventItems = EventItems;
+});
+
+;require.register("Pages/Event/event-page.js", function(exports, require, module) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.Event = void 0;
+
+var _Utils = require("Utils");
+
+var _ramda = require("ramda");
+
+var _mapboxGl = _interopRequireDefault(require("mapbox-gl/dist/mapbox-gl.js"));
+
+var _Http = require("Http");
+
+var _Components = require("Components");
+
+var _cjs = require("@mithril-icons/clarity/cjs");
+
+var _data = _interopRequireDefault(require("data.task"));
+
+var _validations = require("./validations");
+
+var _components = require("./components");
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var Event = function Event(_ref) {
+  var mdl = _ref.attrs.mdl;
+  var state = {
+    error: {},
+    status: "loading",
+    selected: Stream(null),
+    settings: {
+      show: Stream(false)
+    },
+    modal: {
+      isShowing: Stream(false),
+      newHost: Stream(null)
+    },
+    info: {
+      show: Stream(false),
+      isShowing: Stream(true),
+      map: {
+        status: Stream(false)
+      }
+    },
+    guests: {
+      name: "",
+      show: Stream(false),
+      isShowing: Stream(false),
+      status: Stream("success"),
+      isSubmitted: Stream(false),
+      error: Stream(null)
+    },
+    items: {
+      name: "",
+      quantity: "",
+      show: Stream(false),
+      isShowing: Stream(false),
+      error: Stream(null),
+      status: Stream("success"),
+      isSubmitted: Stream(false),
+      updateGuest: Stream(false)
+    },
+    comments: {
+      message: "",
+      show: Stream(false),
+      isShowing: Stream(false),
+      error: Stream(null),
+      status: Stream("success"),
+      isSubmitted: Stream(false)
+    }
+  };
+  var data = {
+    event: {},
+    guests: [],
+    items: [],
+    comments: []
+  };
+
+  var showTab = function showTab(tab) {
+    state.info.isShowing(false);
+    state.guests.isShowing(false);
+    state.comments.isShowing(false);
+    state.items.isShowing(false);
+    state[tab].isShowing(true);
+    tab == "info" && mdl.Events.fetch(true);
+  };
+
+  var validate = function validate(field) {
+    return function (input) {
+      var onSuccess = function onSuccess(input) {
+        state[field].status("success");
+        state[field].error(null);
+      };
+
+      var onError = function onError(error) {
+        state[field].status("failed");
+        state[field].error(error);
+      };
+
+      var validateTask = {
+        items: _validations.validateItemTask
+      };
+      state[field].isSubmitted() && validateTask[field](input)(data).fork(onError, onSuccess);
+    };
+  };
+
+  var updateEventView = function updateEventView(_ref2) {
+    var event = _ref2.event,
+        guests = _ref2.guests,
+        items = _ref2.items,
+        comments = _ref2.comments;
+    data.event = event;
+    data.guests = guests;
+    data.comments = comments;
+    data.items = items;
+    state.error = {};
+    state.status = "success";
+    state.modal.isShowing(null);
+    state.modal.newHost(null);
+    guests.filter((0, _ramda.propEq)("guestId", mdl.User.objectId)).map(function (_ref3) {
+      var updated = _ref3.updated,
+          status = _ref3.status;
+      return mdl.Events.isMember(updated || status == 1);
+    });
+  };
+
+  var load = function load(_ref4) {
+    var mdl = _ref4.attrs.mdl;
+    mdl.Events.fetch(false);
+
+    var onError = function onError(error) {
+      state.error = (0, _Utils.jsonCopy)(error);
+      state.status = "failed";
+      console.log("load error", state, data, error);
+    };
+
+    (0, _Http.loadEventTask)(_Http.HTTP)(mdl)(mdl.Events.currentEventId()).fork(onError, updateEventView);
+  };
+
+  var deleteEvent = function deleteEvent(invite) {
+    var onError = function onError(error) {
+      state.error = (0, _Utils.jsonCopy)(error);
+      state.status = "failed";
+      console.log("delete event failed", error);
+    };
+
+    var onSuccess = function onSuccess() {
+      state.error = {};
+      state.status = "success";
+      var name = (0, _Utils.hyphenize)(mdl.User.name);
+      mdl.Invites.fetch(true);
+      var date = M(data.event.start).format("YYYY-MM-DD");
+      m.route.set("/".concat(name, "/").concat(date));
+    };
+
+    (0, _Http.deleteEventTask)(_Http.HTTP)(mdl)(invite.eventId).fork(onError, onSuccess);
+  };
+
+  var leaveEvent = function leaveEvent(invite) {
+    var onError = function onError(error) {
+      state.error = (0, _Utils.jsonCopy)(error);
+      state.status = "failed";
+      console.log("delete event failed", error);
+    };
+
+    var onSuccess = function onSuccess() {
+      state.error = {};
+      state.status = "success";
+      var name = (0, _Utils.hyphenize)(mdl.User.name);
+      mdl.Invites.fetch(true);
+      var date = M(data.event.start).format("YYYY-MM-DD");
+      m.route.set("/".concat(name, "/").concat(date));
+    };
+
+    data.items.filter((0, _ramda.propEq)("guestId", mdl.User.objectId)).map((0, _ramda.set)((0, _ramda.lensProp)("guestId"), null)).traverse((0, _Http.updateItemTask)(_Http.HTTP)(mdl), _data.default.of).chain((0, _ramda.traverse)(_data.default.of, (0, _Http.updateItemToGuestTask)(_Http.HTTP)(mdl))).chain(function () {
+      return (0, _Http.deleteInviteTask)(_Http.HTTP)(mdl)(invite.objectId);
+    }).fork(onError, onSuccess);
+  };
+
+  var assignNewHost = function assignNewHost() {
+    var onError = function onError(error) {
+      state.error = (0, _Utils.jsonCopy)(error);
+      state.status = "failed";
+      console.log("assign new host failed", error);
+    };
+
+    var hostId = state.modal.newHost();
+    (0, _Http.updateEventHostTask)(_Http.HTTP)(mdl)(data.event.eventId)(hostId).chain(function () {
+      return data.guests.traverse(function (guest) {
+        return (0, _Http.updateInviteTask)(_Http.HTTP)(mdl)(guest.objectId)({
+          hostId: hostId
+        });
+      }, _data.default.of);
+    }).chain(function (_) {
+      return (0, _Http.loadEventTask)(_Http.HTTP)(mdl)(mdl.Events.currentEventId());
+    }).fork(onError, updateEventView);
+  };
+
+  var assignNewHostAndLeaveEvent = function assignNewHostAndLeaveEvent() {
+    var onError = function onError(error) {
+      state.error = (0, _Utils.jsonCopy)(error);
+      state.status = "failed";
+      console.log("delete event failed", error);
+    };
+
+    var onSuccess = function onSuccess() {
+      leaveEvent((0, _ramda.find)((0, _ramda.propEq)("guestId", mdl.User.objectId), data.guests));
+    };
+
+    var hostId = state.modal.newHost();
+    (0, _Http.updateEventHostTask)(_Http.HTTP)(mdl)(data.event.eventId)(hostId).chain(function () {
+      return data.guests.traverse(function (guest) {
+        return (0, _Http.updateInviteTask)(_Http.HTTP)(mdl)(guest.objectId)({
+          hostId: hostId
+        });
+      }, _data.default.of);
+    }).fork(onError, onSuccess);
+  };
+
+  var otherGuests = function otherGuests(guests) {
+    return (0, _ramda.without)(guests.filter((0, _ramda.propEq)("guestId", mdl.User.objectId)), guests);
+  };
+
+  var isHost = function isHost(guests) {
+    return guests.filter((0, _ramda.propEq)("hostId", mdl.User.objectId)).any();
+  };
+
+  var isLast = function isLast(guests) {
+    return !otherGuests(guests).filter((0, _ramda.propEq)("status", 1)).any();
+  };
+
+  var invite = function invite(guests) {
+    return (0, _ramda.find)((0, _ramda.propEq)("guestId", mdl.User.objectId), guests);
+  };
+
+  var deleteInvite = function deleteInvite(mdl) {
+    isLast(data.guests) ? state.modal.isShowing("isLast") : isHost(data.guests) ? state.modal.isShowing("isHost") : leaveEvent(invite(data.guests));
+  };
+
+  var updateItem = function updateItem(mdl) {
+    return function (item) {
+      var onError = function onError(error) {
+        state.items.error((0, _Utils.jsonCopy)(error));
+        state.items.status("failed");
+        console.log("update item failed", error);
+      };
+
+      var onSuccess = function onSuccess(eventData) {
+        state.items.name = "";
+        state.items.quantity = "";
+        state.items.updateGuest(false);
+        updateEventView(eventData);
+        state.items.isSubmitted(false);
+      };
+
+      state.items.isSubmitted(true);
+      (0, _Http.updateItemTask)(_Http.HTTP)(mdl)(item).chain(function (item) {
+        return state.items.updateGuest() ? (0, _Http.updateItemToGuestTask)(_Http.HTTP)(mdl)(item) : _data.default.of(item);
+      }).chain(function (_) {
+        return (0, _Http.loadEventTask)(_Http.HTTP)(mdl)(mdl.Events.currentEventId());
+      }).fork(onError, onSuccess);
+    };
+  };
+
+  var deleteItem = function deleteItem(mdl) {
+    return function (itemId) {
+      var onError = function onError(error) {
+        state.error = (0, _Utils.jsonCopy)(error);
+        state.status = "failed";
+        console.log("delete item failed", error);
+      };
+
+      (0, _Http.deleteItemTask)(_Http.HTTP)(mdl)(itemId).chain(function (_) {
+        return (0, _Http.loadEventTask)(_Http.HTTP)(mdl)(mdl.Events.currentEventId());
+      }).fork(onError, updateEventView);
+    };
+  };
+
+  var deleteComment = function deleteComment(mdl) {
+    return function (commentId) {
+      var onError = function onError(error) {
+        state.error = (0, _Utils.jsonCopy)(error);
+        state.status = "failed";
+        console.log("delete comment failed", error);
+      };
+
+      (0, _Http.deleteCommentTask)(_Http.HTTP)(mdl)(commentId).chain(function (_) {
+        return (0, _Http.loadEventTask)(_Http.HTTP)(mdl)(mdl.Events.currentEventId());
+      }).fork(onError, updateEventView);
+    };
+  };
+
+  var addItem = function addItem(mdl) {
+    var onError = function onError(error) {
+      state.items.error((0, _Utils.jsonCopy)(error));
+      console.log("add item failed", error);
+      state.items.status("failed");
+    };
+
+    var onSuccess = function onSuccess(eventData) {
+      state.items.name = "";
+      state.items.quantity = "";
+      state.items.error(null);
+      state.items.isSubmitted(false);
+      updateEventView(eventData);
+    };
+
+    var item = {
+      eventId: mdl.Events.currentEventId(),
+      name: state.items.name,
+      quantity: parseInt(state.items.quantity)
+    };
+    state.items.isSubmitted(true);
+    (0, _validations.validateItemTask)(item)(data).chain((0, _Http.addItemToEventTask)(_Http.HTTP)(mdl)(mdl.Events.currentEventId())).chain(function (_) {
+      return (0, _Http.loadEventTask)(_Http.HTTP)(mdl)(mdl.Events.currentEventId());
+    }).fork(onError, onSuccess);
+  };
+
+  var sendMessage = function sendMessage(mdl) {
+    var onError = function onError(error) {
+      state.comments.error((0, _Utils.jsonCopy)(error));
+      console.log("add item failed", error);
+      state.comments.status("failed");
+    };
+
+    var onSuccess = function onSuccess(eventData) {
+      state.comments.message = "";
+      state.comments.error(null);
+      state.comments.isSubmitted(false);
+      updateEventView(eventData);
+    };
+
+    var comment = {
+      message: state.comments.message,
+      name: mdl.User.name,
+      guestId: mdl.User.objectId,
+      eventId: mdl.Events.currentEventId()
+    };
+    state.comments.isSubmitted(true);
+    comment.message && (0, _validations.validateCommentTask)(comment).chain((0, _Http.addCommentTask)(_Http.HTTP)(mdl)).chain(function (_) {
+      return (0, _Http.loadEventTask)(_Http.HTTP)(mdl)(mdl.Events.currentEventId());
+    }).fork(onError, onSuccess);
+  };
+
+  var sendInvite = function sendInvite(mdl) {
+    var onError = function onError(error) {
+      // console.log("error", state, error)
+      state.guests.error(error);
+      state.guests.status("failed");
+    };
+
+    var onSuccess = function onSuccess(eventData) {
+      state.guests.email = "";
+      state.guests.error(null);
+      updateEventView(eventData);
+    }; //move to Validations
+
+
+    var hasBeenInvited = data.guests.filter((0, _ramda.propEq)("email", state.guests.email));
+
+    if (hasBeenInvited.any()) {
+      state.guests.error("Guest Has Already Been Invited");
+      return state.guests.status("failed");
+    }
+
+    state.guests.error(null);
+    (0, _Http.sendInviteTask)(_Http.HTTP)(mdl)(state.guests.email, data.event).chain(function (_) {
+      return (0, _Http.loadEventTask)(_Http.HTTP)(mdl)(mdl.Events.currentEventId());
+    }).fork(onError, onSuccess);
+  };
+
+  var setupMap = function setupMap(_ref5) {
+    var dom = _ref5.dom;
+    _mapboxGl.default.accessToken = "pk.eyJ1IjoiYm9hemJsYWtlIiwiYSI6ImNqdWJ4OGk4YzBpYXU0ZG5wNDI1OGM0eTIifQ.5UV0HkEGPiKUzFdbgdr5ww";
+
+    try {
+      var coords = JSON.parse(data.event.latlong);
+
+      var createMarker = function createMarker() {
+        return new _mapboxGl.default.Marker().setLngLat(coords).addTo(map);
+      };
+
+      var map = new _mapboxGl.default.Map({
+        container: dom,
+        center: coords,
+        zoom: 15,
+        style: "mapbox://styles/mapbox/streets-v11?optimize=true"
+      });
+      state.info.map.status(true);
+      createMarker();
+    } catch (error) {
+      state.info.map.status(false);
+      return;
+    }
+  };
+
+  return {
+    oninit: load,
+    onupdate: function onupdate(_ref6) {
+      var mdl = _ref6.attrs.mdl;
+      return mdl.Events.fetch() && load({
+        attrs: {
+          mdl: mdl
+        }
+      });
+    },
+    view: function view() {
+      // console.log(data.event)
+      return m(".event-page", [state.status == "loading" && m(".", "Fetching Event..."), state.status == "failed" && m(".code", state.error.message), state.status == "success" && m(".width-100", [m(".event-page-heading width-100", [state.modal.isShowing() == "isLast" && m(_Components.Modal, {
+        mdl: mdl
+      }, [{
+        header: m("h2.frow.text-center", "Your The Last to Leave! Click Delete if you are sure you want to Delete this Event!"),
+        body: m(_cjs.WarningStandardLine),
+        footer: m(".frow", [m("button.col-xs-1-2.required-field", {
+          onclick: function onclick(e) {
+            return deleteEvent(data.guests[0]);
+          }
+        }, "Delete"), m("button.col-xs-1-2", {
+          onclick: function onclick(e) {
+            return state.modal.isShowing(null);
+          }
+        }, "go back to event")])
+      }]), state.modal.isShowing() == "isHost" && m(_Components.Modal, {
+        mdl: mdl
+      }, [{
+        header: m("h2.frow.text-center", "Your the Host! to leave this event you need to assign a new host"),
+        body: m("ul.frow direction-column", otherGuests(data.guests).filter((0, _ramda.propEq)("status", 1)).map(function (_ref7) {
+          var name = _ref7.name,
+              guestId = _ref7.guestId;
+          return m(".frow row justify-start", m(".col-xs-1-2", name), m("span.col-xs-1-2", m("input", {
+            id: guestId,
+            type: "radio",
+            name: "find-host",
+            oninput: function oninput(e) {
+              return state.modal.newHost(e.target.id);
+            }
+          })));
+        })),
+        footer: m(".frow ", [m("button.col-xs-1-2", {
+          disabled: !state.modal.newHost(),
+          onclick: function onclick(e) {
+            return assignNewHostAndLeaveEvent();
+          }
+        }, "Assign new Host and leave Event"), m("button.col-xs-1-2", {
+          onclick: function onclick(e) {
+            return state.modal.isShowing(null);
+          }
+        }, "Cancel and return to event")])
+      }]), state.modal.isShowing() == "newHost" && m(_Components.Modal, {
+        mdl: mdl
+      }, [{
+        header: m("h2.frow.text-center", "Select the new host"),
+        body: m("ul.frow direction-column", otherGuests(data.guests).filter((0, _ramda.propEq)("status", 1)).map(function (_ref8) {
+          var name = _ref8.name,
+              guestId = _ref8.guestId;
+          return m(".frow row justify-start mb-10", m(".col-xs-1-2", name), m("span.col-xs-1-2", m("input", {
+            id: guestId,
+            type: "radio",
+            name: "find-host",
+            oninput: function oninput(e) {
+              return state.modal.newHost(e.target.id);
+            }
+          })));
+        })),
+        footer: m(".frow ", [m("button.col-xs-1-2", {
+          disabled: !state.modal.newHost(),
+          onclick: function onclick(e) {
+            return assignNewHost();
+          }
+        }, "Assign new Host"), m("button.col-xs-1-2", {
+          onclick: function onclick(e) {
+            return state.modal.isShowing(null);
+          }
+        }, "Cancel and return to event")])
+      }]), state.modal.isShowing() == "settings" && m(_Components.Modal, {
+        mdl: mdl
+      }, [{
+        header: m("h2.frow.text-center", "Event Settings"),
+        body: m(".frow row-start", [m("button.btn-".concat((0, _Utils.getTheme)(mdl)), {
+          onclick: function onclick(e) {
+            return deleteInvite(mdl);
+          }
+        }, data.guests.length == 1 ? "Delete Event" : "Leave Event"), isHost(data.guests) && [m("button.btn-".concat((0, _Utils.getTheme)(mdl)), {
+          disabled: isLast(data.guests),
+          onclick: function onclick(e) {
+            return state.modal.isShowing("newHost");
+          }
+        }, "Change Host"), m("button.btn-".concat((0, _Utils.getTheme)(mdl)), {
+          onclick: function onclick(e) {
+            mdl.Events.updateEvent(true);
+            state.modal.isShowing("editEvent");
+          }
+        }, "Edit")]]),
+        footer: [m("button.btn-".concat((0, _Utils.getTheme)(mdl)), {
+          onclick: function onclick(e) {
+            state.modal.isShowing(null);
+          }
+        }, "Back To Event")]
+      }]), state.modal.isShowing() == "editEvent" && mdl.Events.updateEvent() && m(_Components.Modal, {
+        mdl: mdl
+      }, [{
+        header: m("h2.frow.text-center", "Edit Event"),
+        body: m(_Components.Editor, {
+          mdl: mdl,
+          id: data.event.eventId,
+          event: data.event,
+          invites: data.guests
+        }),
+        footer: [m("button.btn-".concat((0, _Utils.getTheme)(mdl)), {
+          onclick: function onclick(e) {
+            state.modal.isShowing("settings");
+            mdl.Events.updateEvent(false);
+          }
+        }, "Back To Settings"), m("button.btn-".concat((0, _Utils.getTheme)(mdl)), {
+          onclick: function onclick(e) {
+            mdl.Events.updateEvent(false);
+            state.modal.isShowing(null);
+          }
+        }, "Back To Event")]
+      }]), m("h1.event-page-title.text-center", data.event.title), m(".frow row width-100", m("h3.event-page-subheading.col-xs-1-2", "".concat(M(data.event.start).format("ddd MM-DD-YYYY"))), m("h3.event-page-subheading.col-xs-1-2", "".concat(data.event.startTime, " - ").concat(data.event.endTime))), m("nav.navbar-tab-section-".concat((0, _Utils.getTheme)(mdl)), m(".frow row width-100", ["info", "guests", "comments", "items"].map(function (tab) {
+        return m("button.navbar-tab-".concat((0, _Utils.getTheme)(mdl), ".col-xs-1-4"), {
+          class: state[tab].isShowing() ? "navbar-tab-selected" : "",
+          onclick: function onclick(e) {
+            return showTab(tab);
+          }
+        }, tab);
+      })))]), m("section.event-view-section", [state.info.isShowing() && m(_components.EventInfo, {
+        mdl: mdl,
+        data: data,
+        isMember: mdl.Events.isMember(),
+        state: state,
+        setupMap: setupMap,
+        otherGuests: otherGuests
+      }), state.guests.isShowing() && m(_components.EventGuests, {
+        mdl: mdl,
+        data: data,
+        state: state,
+        sendInvite: sendInvite,
+        isMember: mdl.Events.isMember()
+      }), state.items.isShowing() && m(_components.EventItems, {
+        mdl: mdl,
+        data: data,
+        isMember: mdl.Events.isMember(),
+        state: state,
+        validate: validate,
+        addItem: addItem,
+        updateItem: updateItem,
+        deleteItem: deleteItem
+      }), state.comments.isShowing() && m(_components.EventComments, {
+        mdl: mdl,
+        data: data,
+        isMember: mdl.Events.isMember(),
+        state: state,
+        validate: validate,
+        sendMessage: sendMessage,
+        deleteComment: deleteComment
+      })])])]);
+    }
+  };
+};
+
+exports.Event = Event;
+});
+
+;require.register("Pages/Event/validations.js", function(exports, require, module) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.validateCommentTask = exports.validateItemTask = void 0;
+
+var _ramda = require("ramda");
+
+var _data = require("data.validation");
+
+var _Utils = require("Utils");
+
+var ValidateItems = (0, _data.Success)((0, _ramda.curryN)(2, _ramda.identity));
+var ValidateGuests = (0, _data.Success)((0, _ramda.curryN)(2, _ramda.identity));
+var ValidateComments = (0, _data.Success)((0, _ramda.curryN)(1, _ramda.identity));
+var quantityLens = (0, _ramda.lensProp)("quantity");
+var nameLense = (0, _ramda.lensProp)("name");
+var emailLense = (0, _ramda.lensProp)("email");
+var messageLense = (0, _ramda.lensProp)("message");
+var NAME_REQUIRED_MSG = "A Name is required";
+var NAME_UNIQ_MSG = "This item has been added already";
+var QUANTITY_REQUIRED_MSG = "A Quantity is required";
+var QUANTITY_MIN_MSG = "Quantity must be greater than 0";
+var EMAIL_REQUIRED_MSG = "An Email is required";
+var MAX_TEXTAREA_LENGTH = "Message Limit is 250 characters";
+
+var validateComment = function validateComment(data) {
+  return (0, _data.Success)(data).apLeft((0, _Utils.validate)((0, _Utils.maxLength)(250), messageLense, EMAIL_REQUIRED_MSG, data));
+};
+
+var validateItemName = function validateItemName(data) {
+  return function (items) {
+    return (0, _data.Success)(data).apLeft((0, _Utils.validate)(_Utils.isRequired, nameLense, NAME_REQUIRED_MSG, data)).apLeft((0, _Utils.validate)((0, _Utils.isUniq)((0, _ramda.pluck)("name", items)), nameLense, NAME_UNIQ_MSG, data));
+  };
+};
+
+var validateItemQuantity = function validateItemQuantity(data) {
+  return (0, _data.Success)(data).apLeft((0, _Utils.validate)(_Utils.isRequired, quantityLens, QUANTITY_REQUIRED_MSG, data)).apLeft((0, _Utils.validate)((0, _ramda.max)(0), quantityLens, QUANTITY_MIN_MSG, data));
+};
+
+var validateItemTask = function validateItemTask(item) {
+  return function (data) {
+    return ValidateItems.ap(validateItemName(item)(data.items)).ap(validateItemQuantity(item)).failureMap(_ramda.mergeAll).toTask();
+  };
+};
+
+exports.validateItemTask = validateItemTask;
+
+var validateCommentTask = function validateCommentTask(data) {
+  return ValidateComments.ap(validateComment(data)).failureMap(_ramda.mergeAll).toTask();
+};
+
+exports.validateCommentTask = validateCommentTask;
+});
+
+;require.register("Pages/home.js", function(exports, require, module) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.Home = void 0;
+
+var _Components = require("Components");
+
+var _Models = require("Models");
+
+var _Utils = require("Utils");
+
+var _Styles = require("Styles");
+
+var toDayViewModel = function toDayViewModel(dayViewModel, invite) {
+  dayViewModel["".concat(invite.start.format("HH"), ":00")].push(invite);
+  return dayViewModel;
+};
+
+var createDayVM = function createDayVM(mdl) {
+  return function (invites) {
+    return invites.reduce(toDayViewModel, (0, _Models.dayModel)(mdl, mdl.selectedDate()));
+  };
+};
+
+var getSelectedDayInvites = function getSelectedDayInvites(mdl) {
+  return function (invites) {
+    return invites.filter(function (i) {
+      return (0, _Utils.datesAreSame)(i.start)(mdl.selectedDate())("YYYY-MM-DD");
+    });
+  };
+};
+
+var Home = function Home() {
+  return {
+    view: function view(_ref) {
+      var mdl = _ref.attrs.mdl;
+      return m(".home-page", (".frow", mdl.Invites.state.status == "loading" && m("p.full-width", "FETCHING EVENTS..."), mdl.Invites.state.status == "failed" && m("p.full-width", "FAILED TO FETCH EVENTS"), mdl.Invites.state.status == "success" && [m(_Components.Calendar, {
+        mdl: mdl,
+        date: mdl.selectedDate(),
+        invites: mdl.Invites.withRSVP()
+      }), m(".frow.max-width", [m("".concat(mdl.Events.createNewEvent() ? ".col-xs-1-1" : ".col-xs-2-3"), m("button.btn-".concat((0, _Utils.getTheme)(mdl), ".max-width.height-100"), {
+        // key: new Date(),
+        onclick: function onclick(e) {
+          return mdl.Events.createNewEvent(!mdl.Events.createNewEvent());
+        }
+      }, mdl.Events.createNewEvent() ? m("", {
+        oncreate: (0, _Styles.Animate)(_Styles.shutterInLeft),
+        onbeforeremove: (0, _Styles.Animate)(_Styles.shutterOutLeft)
+      }, "Cancel") : m("", {
+        oncreate: (0, _Styles.Animate)(_Styles.shutterInLeft),
+        onbeforeremove: (0, _Styles.Animate)(_Styles.shutterOutLeft)
+      }, "Create New Event"))), !mdl.Events.createNewEvent() && m("col-xs-1-3", m("button.btn-".concat((0, _Utils.getTheme)(mdl), ".max-width.height-100"), {
+        oncreate: (0, _Styles.Animate)(_Styles.shutterInRight),
+        onbeforeremove: (0, _Styles.Animate)(_Styles.shutterOutRight),
+        onclick: function onclick(e) {
+          return mdl.Day.listView(!mdl.Day.listView());
+        }
+      }, mdl.Day.listView() ? "Hour View" : "List View"))]), mdl.Events.createNewEvent() ? m(_Components.Editor, {
+        oncreate: (0, _Styles.AnimatePage)(_Styles.shutterInTop, {
+          delay: 1
+        }),
+        onbeforeremove: (0, _Styles.AnimatePage)(_Styles.shutterOutTop, {
+          delay: 2
+        }),
+        mdl: mdl
+      }) : [m(_Components.Day, {
+        oncreate: (0, _Styles.AnimatePage)(_Styles.fadeInUp),
+        onbeforeremove: (0, _Styles.AnimatePage)(_Styles.shutterOutDown, {
+          delay: 2
+        }),
+        mdl: mdl,
+        day: createDayVM(mdl)(getSelectedDayInvites(mdl)(mdl.Invites.withRSVP())),
+        invites: getSelectedDayInvites(mdl)(mdl.Invites.withRSVP())
+      })]]));
+    }
+  };
+};
+
+exports.Home = Home;
+});
+
+;require.register("Pages/index.js", function(exports, require, module) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _home = require("./home.js");
+
+Object.keys(_home).forEach(function (key) {
+  if (key === "default" || key === "__esModule") return;
+  Object.defineProperty(exports, key, {
+    enumerable: true,
+    get: function get() {
+      return _home[key];
+    }
+  });
+});
+
+var _eventPage = require("./Event/event-page");
+
+Object.keys(_eventPage).forEach(function (key) {
+  if (key === "default" || key === "__esModule") return;
+  Object.defineProperty(exports, key, {
+    enumerable: true,
+    get: function get() {
+      return _eventPage[key];
+    }
+  });
+});
+
+var _loginUser = require("./Auth/login-user");
+
+Object.keys(_loginUser).forEach(function (key) {
+  if (key === "default" || key === "__esModule") return;
+  Object.defineProperty(exports, key, {
+    enumerable: true,
+    get: function get() {
+      return _loginUser[key];
+    }
+  });
+});
+
+var _registerUser = require("./Auth/register-user");
+
+Object.keys(_registerUser).forEach(function (key) {
+  if (key === "default" || key === "__esModule") return;
+  Object.defineProperty(exports, key, {
+    enumerable: true,
+    get: function get() {
+      return _registerUser[key];
+    }
+  });
+});
+});
+
+;require.register("Routes/authenticated-routes.js", function(exports, require, module) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+
+var _Components = require("Components");
+
+var _Pages = require("Pages");
+
+var AuthenticatedRoutes = [{
+  id: "day-planner",
+  name: "Day Planner",
+  route: "/:username/:date",
+  position: ["toolbar"],
+  group: ["authenticated"],
+  children: [],
+  options: [],
+  onmatch: function onmatch(mdl, args, path, fullroute, isAnchor) {
+    var date = M(args.date).clone();
+    mdl.selectedDate(date);
+  },
+  component: function component(mdl) {
+    return m(_Components.Layout, {
+      mdl: mdl
+    }, m(_Pages.Home, {
+      mdl: mdl
+    }));
+  }
+}, {
+  id: "event",
+  name: "Event",
+  route: "/:username/events/:title/",
+  position: ["toolbar"],
+  group: ["authenticated"],
+  children: [],
+  options: [],
+  onmatch: function onmatch(mdl, args, path, fullroute, isAnchor) {},
+  component: function component(mdl) {
+    return m(_Components.Layout, {
+      mdl: mdl
+    }, m(_Pages.Event, {
+      mdl: mdl
+    }));
+  }
+}, {
+  id: "logout",
+  name: "",
+  route: "/logout",
+  position: [],
+  group: ["authenticated", "admin"],
+  children: [],
+  options: [],
+  onmatch: function onmatch(mdl, args, path, fullroute, isAnchor) {
+    localStorage.clear();
+    sessionStorage.clear();
+    mdl.state.isAuth(false);
+    mdl.user = {};
+    m.route.set(m.route.get());
+    console.log("loggout", mdl);
+  },
+  component: function component(mdl) {
+    return m(_Pages.Home, {
+      mdl: mdl
+    });
+  }
+}];
+var _default = AuthenticatedRoutes;
+exports.default = _default;
+});
+
+;require.register("Routes/index.js", function(exports, require, module) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+
+var _authenticatedRoutes = _interopRequireDefault(require("./authenticated-routes.js"));
+
+var _mainRoutes = _interopRequireDefault(require("./main-routes.js"));
+
+var _ramda = require("ramda");
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var Routes = (0, _ramda.flatten)([_mainRoutes.default, _authenticatedRoutes.default]);
+var _default = Routes;
+exports.default = _default;
+});
+
+;require.register("Routes/main-routes.js", function(exports, require, module) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+
+var _Pages = require("Pages");
+
+var _Components = require("Components");
+
+var Routes = [{
+  id: "login",
+  name: "Account Login",
+  route: "/login",
+  isNav: false,
+  group: [],
+  children: [],
+  options: [],
+  onmatch: function onmatch(mdl, args, path, fullroute) {},
+  component: function component(mdl) {
+    return m(_Components.AuthLayout, {
+      mdl: mdl
+    }, m(_Pages.Login, {
+      mdl: mdl
+    }));
+  }
+}, {
+  id: "register",
+  name: "Register Account",
+  route: "/register",
+  isNav: false,
+  group: [],
+  children: [],
+  options: [],
+  onmatch: function onmatch(mdl, args, path, fullroute) {},
+  component: function component(mdl) {
+    return m(_Components.AuthLayout, {
+      mdl: mdl
+    }, m(_Pages.Register, {
+      mdl: mdl
+    }));
+  }
+}];
+var _default = Routes;
+exports.default = _default;
+});
+
+;require.register("Styles/animations.js", function(exports, require, module) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.rotateCenter = exports.focusIn = exports.focusInContract = exports.shutterOutRight = exports.shutterInRight = exports.shutterOutLeft = exports.shutterInLeft = exports.shutterInBottom = exports.shutterOutBottom = exports.shutterOutTop = exports.shutterInTop = exports.puffOutCenter = exports.shake = exports.slideInDown = exports.slideOutUp = exports.slideOutRight = exports.slideOutLeft = exports.slideInLeft = exports.slideInRight = exports.fadeOutDown = exports.fadeOutUp = exports.fadeInDown = exports.fadeInUp = exports.fadeOut = exports.fadeIn = exports.popIn = void 0;
+var popIn = [{
+  transform: "scale(0)",
+  opacity: 1
+}, {
+  transform: "scale(1)",
+  opacity: 1
+}, {
+  transform: "scale(0.8)",
+  opacity: 1
+}, {
+  transform: "scale(1)",
+  opacity: 1
+}];
+exports.popIn = popIn;
+var fadeIn = [{
+  opacity: 0
+}, {
+  opacity: 1
+}];
+exports.fadeIn = fadeIn;
+var fadeOut = [{
+  opacity: 1
+}, {
+  opacity: 0
+}];
+exports.fadeOut = fadeOut;
+var fadeInUp = [{
+  opacity: 0,
+  transform: "translate3d(0, 40%, 0)"
+}, {
+  opacity: 1,
+  transform: "translate3d(0, 0, 0)"
+}];
+exports.fadeInUp = fadeInUp;
+var fadeInDown = [{
+  opacity: 0,
+  transform: "translate3d(0, 0, 0)"
+}, {
+  opacity: 1,
+  transform: "translate3d(0, 10px, 0)"
+}];
+exports.fadeInDown = fadeInDown;
+var fadeOutUp = [{
+  opacity: 1,
+  transform: "translate3d(0, 0, 0)"
+}, {
+  opacity: 0,
+  transform: "translate3d(0, -40%, 0)"
+}];
+exports.fadeOutUp = fadeOutUp;
+var fadeOutDown = [{
+  opacity: 1,
+  transform: "translate3d(0, -10px, 0)"
+}, {
+  opacity: 0,
+  transform: "translate3d(0, 0, 0)"
+}];
+exports.fadeOutDown = fadeOutDown;
+var slideInRight = [{
+  transform: "translate3d(-50%, 0, 0)"
+}, {
+  transform: "translate3d(0, 0, 0)",
+  visibility: "visible"
+}];
+exports.slideInRight = slideInRight;
+var slideInLeft = [{
+  transform: "translate3d(80%, 0, 0)",
+  visibility: "visible"
+}, {
+  transform: "translate3d(0, 0, 0)"
+}];
+exports.slideInLeft = slideInLeft;
+var slideOutLeft = [{
+  transform: "translate3d(0, 0, 0)"
+}, {
+  visibility: "hidden",
+  transform: "translate3d(100%, 0, 0)"
+}];
+exports.slideOutLeft = slideOutLeft;
+var slideOutRight = [{
+  transform: "translate3d(0, 0, 0)"
+}, {
+  visibility: "hidden",
+  transform: "translate3d(100%, 0, 0)"
+}];
+exports.slideOutRight = slideOutRight;
+var slideOutUp = [{
+  transform: "translate3d(0, 0, 0)"
+}, {
+  visibility: "hidden",
+  transform: "translate3d(0, 10%, 0)"
+}];
+exports.slideOutUp = slideOutUp;
+var slideInDown = [{
+  transform: "translate3d(0, -10%, 0)"
+}, {
+  transform: "translate3d(0, 0, 0)",
+  visibility: "visible"
+}];
+exports.slideInDown = slideInDown;
+var shake = [{
+  "-webkit-transform": "rotate(-15deg)",
+  offset: 0.0,
+  transform: "rotate(-15deg)"
+}, {
+  "-webkit-transform": "rotate(15deg)",
+  offset: 0.2,
+  transform: "rotate(15deg)"
+}, {
+  "-webkit-transform": "rotate(-18deg)",
+  offset: 0.4,
+  transform: "rotate(-18deg)"
+}, {
+  "-webkit-transform": "rotate(18deg)",
+  offset: 0.6,
+  transform: "rotate(18deg)"
+}, {
+  "-webkit-transform": "rotate(-22deg)",
+  offset: 0.8,
+  transform: "rotate(-22deg)"
+}];
+exports.shake = shake;
+var puffOutCenter = [{
+  "-webkit-transform": "scale(1)",
+  transform: "scale(1)",
+  filter: "blur(0)",
+  opacity: 1
+}, {
+  "-webkit-transform": "scale(2)",
+  transform: "scale(2)",
+  filter: "blur(4px)",
+  opacity: 0
+}];
+exports.puffOutCenter = puffOutCenter;
+var shutterInTop = [{
+  "-webkit-transform": "rotateX(-100deg)",
+  transform: " rotateX(-100deg)",
+  "-webkit-transform-origin": "top",
+  "transform-origin": "top",
+  opacity: 0
+}, {
+  "-webkit-transform": " rotateX(0deg)",
+  transform: " rotateX(0deg)",
+  "-webkit-transform-origin": "top",
+  "transform-origin": "top",
+  opacity: 1
+}];
+exports.shutterInTop = shutterInTop;
+var shutterOutTop = [{
+  "-webkit-transform": "rotateX(0deg)",
+  transform: " rotateX(0deg)",
+  "-webkit-transform-origin": "top",
+  "transform-origin": "top",
+  opacity: 1
+}, {
+  "-webkit-transform": " rotateX(70deg)",
+  transform: " rotateX(70deg)",
+  "-webkit-transform-origin": "top",
+  "transform-origin": "top",
+  opacity: 0
+}];
+exports.shutterOutTop = shutterOutTop;
+var shutterOutBottom = [{
+  "-webkit-transform": "rotateX(0deg)",
+  transform: " rotateX(0deg)",
+  "-webkit-transform-origin": "bottom",
+  "transform-origin": "bottom",
+  opacity: 1
+}, {
+  "-webkit-transform": " rotateX(-70deg)",
+  transform: " rotateX(-70deg)",
+  "-webkit-transform-origin": "bottom",
+  "transform-origin": "bottom",
+  opacity: 0
+}];
+exports.shutterOutBottom = shutterOutBottom;
+var shutterInBottom = [{
+  "-webkit-transform": "rotateX(100deg)",
+  transform: " rotateX(100deg)",
+  "-webkit-transform-origin": "bottom",
+  "transform-origin": "bottom",
+  opacity: 0
+}, {
+  "-webkit-transform": " rotateX(0deg)",
+  transform: " rotateX(0deg)",
+  "-webkit-transform-origin": "bottom",
+  "transform-origin": "bottom",
+  opacity: 1
+}];
+exports.shutterInBottom = shutterInBottom;
+var shutterInLeft = [{
+  "-webkit-transform": "rotateY(100deg)",
+  transform: " rotateY(100deg)",
+  "-webkit-transform-origin": "left",
+  "transform-origin": "left",
+  opacity: 0
+}, {
+  "-webkit-transform": " rotateY(0deg)",
+  transform: " rotateY(0deg)",
+  "-webkit-transform-origin": "left",
+  "transform-origin": "left",
+  opacity: 1
+}];
+exports.shutterInLeft = shutterInLeft;
+var shutterOutLeft = [{
+  "-webkit-transform": "rotateY(0deg)",
+  transform: " rotateY(0deg)",
+  "-webkit-transform-origin": "left",
+  "transform-origin": "left",
+  opacity: 1
+}, {
+  "-webkit-transform": " rotateY(-70deg)",
+  transform: " rotateY(-70deg)",
+  "-webkit-transform-origin": "left",
+  "transform-origin": "left",
+  opacity: 0
+}];
+exports.shutterOutLeft = shutterOutLeft;
+var shutterInRight = [{
+  "-webkit-transform": "rotateY(-100deg)",
+  transform: " rotateY(-100deg)",
+  "-webkit-transform-origin": "right",
+  "transform-origin": "right",
+  opacity: 0
+}, {
+  "-webkit-transform": " rotateY(0deg)",
+  transform: " rotateY(0deg)",
+  "-webkit-transform-origin": "right",
+  "transform-origin": "right",
+  opacity: 1
+}];
+exports.shutterInRight = shutterInRight;
+var shutterOutRight = [{
+  "-webkit-transform": "rotateY(0deg)",
+  transform: " rotateY(0deg)",
+  "-webkit-transform-origin": "right",
+  "transform-origin": "right",
+  opacity: 1
+}, {
+  "-webkit-transform": " rotateY(70deg)",
+  transform: " rotateY(70deg)",
+  "-webkit-transform-origin": "right",
+  "transform-origin": "right",
+  opacity: 0
+}];
+exports.shutterOutRight = shutterOutRight;
+var focusInContract = [{
+  letterSpacing: "1em",
+  filter: "blur(12px)",
+  opacity: 0
+}, {
+  filter: "blur(0)",
+  opacity: 1
+}];
+exports.focusInContract = focusInContract;
+var focusIn = [{
+  filter: "blur(12px)",
+  opacity: 0
+}, {
+  filter: "blur(0)",
+  opacity: 1,
+  visibility: "visible"
+}];
+exports.focusIn = focusIn;
+var rotateCenter = [{
+  "-webkit-transform": "rotate(0)",
+  transform: "rotate(0)"
+}, {
+  "-webkit-transform": "rotate(360deg)",
+  transform: "rotate(360deg)"
+}];
+exports.rotateCenter = rotateCenter;
+});
+
+;require.register("Styles/animo.js", function(exports, require, module) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = exports.animate = void 0;
+
+function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
+
+function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(Object(source), true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
+
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
+var VENDOR_TRANSFORMS = ["mozTransform", "msTransform", "oTransform", "transform", "webkitTransform"];
+var VENDOR_TRANSITIONS = ["mozTransition", "msTransition", "oTransition", "transition", "webkitTransition"];
+var VENDOR_PREFIXED_LISTENERS = {
+  animation: {
+    animationEnd: "animationend",
+    transitionEnd: "transitionend"
+  },
+  OAnimation: {
+    animationEnd: "oAnimationEnd",
+    transitionEnd: "oTransitionEnd"
+  },
+  MozAnimation: {
+    animationEnd: "animationend",
+    transitionEnd: "transitionend"
+  },
+  WebkitAnimation: {
+    animationEnd: "webkitAnimationEnd",
+    transitionEnd: "webkitTransitionEnd"
+  }
+};
+
+var whichVendor = function whichVendor() {
+  var el = document.createElement("fakeelement");
+
+  for (var a in VENDOR_PREFIXED_LISTENERS) {
+    if (el.style[a] !== undefined) {
+      return VENDOR_PREFIXED_LISTENERS[a];
+    }
+
+    return VENDOR_PREFIXED_LISTENERS.animation;
+  }
+};
+
+var animo = function animo(element) {
+  var options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
+  var state = {
+    iteration: 0
+  };
+  var defaultProps = {
+    iterate: 1,
+    isAnimation: false,
+    onComplete: function onComplete() {},
+    onIteration: function onIteration() {},
+    onMount: function onMount() {}
+  };
+  return new Promise(function (resolve, reject) {
+    if (!element) {
+      return reject("could not find element");
+    }
+
+    var originalStyles = _objectSpread({}, element.style);
+
+    var props = Object.freeze(_objectSpread(_objectSpread({}, defaultProps), options));
+    var vendor = whichVendor();
+    var animoEl = {
+      css: function css(styles) {
+        element.setAttribute("style", JSON.stringify(styles));
+      },
+      reset: function reset() {
+        element.setAttribute("style", JSON.stringify(originalStyles));
+      },
+      transform: function transform(styleString) {
+        VENDOR_TRANSFORMS.forEach(function (transform) {
+          element.style[transform] = styleString;
+        });
+      },
+      transition: function transition(styleString) {
+        VENDOR_TRANSITIONS.forEach(function (transition) {
+          element.style[transition] = styleString;
+        });
+      }
+    };
+
+    var performOnMount = function performOnMount() {
+      return new Promise(function (resolve, reject) {
+        props.onMount(_objectSpread(_objectSpread({}, animoEl), {}, {
+          raw: element
+        })); // TODO: actually confirm updates rather than
+        // delaying and blindly resolving
+
+        setTimeout(function () {
+          resolve();
+        }, 1);
+      });
+    };
+
+    var animationStep = function animationStep(event) {
+      element.removeEventListener(vendor.transitionEnd, animationStep);
+
+      if (state.iteration === props.iterate) {
+        props.onComplete(_objectSpread(_objectSpread({}, animoEl), {}, {
+          raw: element
+        }));
+        setTimeout(function () {
+          resolve(element);
+        }, 1);
+        return;
+      }
+
+      props.onIteration(_objectSpread(_objectSpread({}, animoEl), {}, {
+        raw: element
+      }));
+      element.addEventListener(vendor.transitionEnd, animationStep);
+      state.iteration++;
+    };
+
+    if (!props.isAnimation) {
+      element.addEventListener(vendor.transitionEnd, animationStep);
+    } else {
+      element.addEventListener(vendor.animationEnd, function () {
+        props.onComplete(_objectSpread(_objectSpread({}, animoEl), {}, {
+          raw: element
+        }));
+        setTimeout(function () {
+          resolve(element);
+        }, 1);
+        return;
+      });
+    }
+
+    performOnMount().then(animationStep);
+  });
+};
+
+var animate = function animate(el, options) {
+  var defaultProps = {
+    classNames: ["animated"],
+    keep: false
+  };
+
+  var props = _objectSpread(_objectSpread({}, defaultProps), options);
+
+  if (!Array.isArray(props.classNames)) {
+    props.classNames = [props.classNames];
+  }
+
+  return new animo(el, {
+    isAnimation: true,
+    onComplete: function onComplete(element) {
+      if (!props.keep) {
+        props.classNames.forEach(function (classname) {
+          el.classList.remove(classname);
+        });
+      }
+    },
+    onIteration: function onIteration(element) {
+      props.classNames.forEach(function (classname) {
+        el.classList.add(classname);
+      });
+    }
+  });
+};
+
+exports.animate = animate;
+var _default = Animo;
+exports.default = _default;
+});
+
+;require.register("Styles/index.js", function(exports, require, module) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+var _exportNames = {
+  AnimatePage: true,
+  Animate: true,
+  AnimateChildren: true,
+  createKeyframeAnimation: true
+};
+exports.createKeyframeAnimation = exports.AnimateChildren = exports.Animate = exports.AnimatePage = void 0;
+
+var _animations = require("./animations.js");
+
+Object.keys(_animations).forEach(function (key) {
+  if (key === "default" || key === "__esModule") return;
+  if (Object.prototype.hasOwnProperty.call(_exportNames, key)) return;
+  Object.defineProperty(exports, key, {
+    enumerable: true,
+    get: function get() {
+      return _animations[key];
+    }
+  });
+});
+
+function _toConsumableArray(arr) { return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _unsupportedIterableToArray(arr) || _nonIterableSpread(); }
+
+function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
+
+function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
+
+function _iterableToArray(iter) { if (typeof Symbol !== "undefined" && Symbol.iterator in Object(iter)) return Array.from(iter); }
+
+function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) return _arrayLikeToArray(arr); }
+
+function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
+
+function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
+
+function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(Object(source), true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
+
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
+var defaults = {
+  duration: 700,
+  easing: "ease-in-out",
+  fill: "forwards"
+};
+
+function transitionEndPromise(element) {
+  var transitionEnded = function transitionEnded(e) {
+    // console.log("transitionEnded", element, e)
+    if (e.target !== element) return;
+    element.removeEventListener("transitionend", transitionEnded);
+  };
+
+  return new Promise(function () {
+    return element.addEventListener("transitionend", transitionEnded);
+  });
+}
+
+var AnimatePage = function AnimatePage(animation, opts) {
+  return function (_ref) {
+    var dom = _ref.dom;
+    // let origStyles = jsonCopy(dom.style)
+    // dom.style.position = "absolute"
+    // dom.style.top = -19
+    // dom.style.width = "100%"
+    Animate(animation, opts)({
+      dom: dom
+    }); // Animate(animation)({ dom })
+  };
+};
+
+exports.AnimatePage = AnimatePage;
+
+var Animate = function Animate(animation, opts) {
+  return function (_ref2) {
+    var dom = _ref2.dom;
+    return dom.animate(animation, _objectSpread(_objectSpread({}, defaults), opts)).finished.then(transitionEndPromise(dom));
+  };
+};
+
+exports.Animate = Animate;
+
+var AnimateChildren = function AnimateChildren(animation, pause) {
+  return function (_ref3) {
+    var dom = _ref3.dom;
+
+    var children = _toConsumableArray(dom.children);
+
+    children.map(function (child, idx) {
+      child.style.opacity = 0;
+      setTimeout(function () {
+        child.style.opacity = 1;
+        Animate(animation)({
+          dom: child
+        });
+      }, pause());
+    });
+  };
+};
+
+exports.AnimateChildren = AnimateChildren;
+
+function ease(v) {
+  var pow = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 4;
+  return 1 - Math.pow(1 - v, pow);
+}
+
+function calculateCollapsedScale(el) {
+  // The menu title can act as the marker for the collapsed state.
+  var collapsed = document.getElementById("scale-me").getBoundingClientRect(); // Whereas the menu as a whole (title plus items) can act as
+  // a proxy for the expanded state.
+
+  var expanded = el.getBoundingClientRect();
+  return {
+    x: collapsed.width / expanded.width,
+    y: collapsed.height / expanded.height
+  };
+}
+
+var createKeyframeAnimation = function createKeyframeAnimation(isEntrance) {
+  return function (_ref4) {
+    var dom = _ref4.dom;
+    var animation = [];
+    var inverseAnimation = []; // Figure out the size of the element when collapsed.
+
+    var _calculateCollapsedSc = calculateCollapsedScale(dom),
+        x = _calculateCollapsedSc.x,
+        y = _calculateCollapsedSc.y;
+
+    for (var step = 0; step <= 100; step++) {
+      // Remap the step value to an eased one.
+      var easedStep = ease(step / 100); // Calculate the scale of the element.
+
+      var xScale = x + (1 - x) * easedStep;
+      var yScale = y + (1 - y) * easedStep;
+      animation.push({
+        transform: "scale(".concat(xScale, ", ").concat(yScale, ")")
+      }); // And now the inverse for the contents.
+
+      var invXScale = 1 / xScale;
+      var invYScale = 1 / yScale;
+      inverseAnimation.push({
+        transform: "scale(".concat(invXScale, ", ").concat(invYScale, ")")
+      });
+    }
+
+    return isEntrance ? animation : inverseAnimation;
+  };
+};
+
+exports.createKeyframeAnimation = createKeyframeAnimation;
+});
+
+;require.register("Utils/geolocation.js", function(exports, require, module) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.getMyLocationTask = exports.getBoundsFromLatLong = void 0;
+
+var _ramda = require("ramda");
+
+var _data = _interopRequireDefault(require("data.task"));
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _unsupportedIterableToArray(arr, i) || _nonIterableRest(); }
+
+function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
+
+function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
+
+function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
+
+function _iterableToArrayLimit(arr, i) { if (typeof Symbol === "undefined" || !(Symbol.iterator in Object(arr))) return; var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"] != null) _i["return"](); } finally { if (_d) throw _e; } } return _arr; }
+
+function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
+
+var toBoundsUrlString = function toBoundsUrlString(_ref) {
+  var lat_min = _ref.lat_min,
+      lon_min = _ref.lon_min,
+      lat_max = _ref.lat_max,
+      lon_max = _ref.lon_max;
+  return encodeURIComponent("".concat(lon_min, ",").concat(lat_min, ",").concat(lon_max, ",").concat(lat_max));
+};
+
+var getBoundsFromLatLong = function getBoundsFromLatLong(mdl) {
+  return function (_ref2) {
+    var _ref3 = _slicedToArray(_ref2, 2),
+        latitude = _ref3[0],
+        longitude = _ref3[1];
+
+    var lat_change = mdl.User.profile.searchRadius / 111 || 20 / 111;
+    var lon_change = Math.abs(Math.cos(latitude * (Math.PI / 180)));
+    return toBoundsUrlString({
+      lat_min: latitude - lat_change,
+      lon_min: longitude - lon_change,
+      lat_max: latitude + lat_change,
+      lon_max: longitude + lon_change
+    });
+  };
+};
+
+exports.getBoundsFromLatLong = getBoundsFromLatLong;
+
+var getMyLocationTask = function getMyLocationTask(mdl) {
+  return new _data.default(function (rej, res) {
+    return navigator.permissions ? // Permission API is implemented
+    navigator.permissions.query({
+      name: "geolocation"
+    }).then(function (permission) {
+      return (// is geolocation granted?
+        permission.state === "granted" ? navigator.geolocation.getCurrentPosition(function (pos) {
+          return res(pos.coords);
+        }) : res(null)
+      );
+    }) : // Permission API was not implemented
+    res(mdl.Map.defaultBounds);
+  }) // .map(prop("coords"))
+  .map((0, _ramda.props)(["latitude", "longitude"])).map(function (coords) {
+    mdl.Map.locale(coords);
+    return getBoundsFromLatLong(mdl)(coords);
+  }).map(mdl.Map.bounds);
+};
+
+exports.getMyLocationTask = getMyLocationTask;
+});
+
+;require.register("Utils/index.js", function(exports, require, module) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+var _exportNames = {
+  log: true,
+  autoFocus: true,
+  getTheme: true,
+  stackInvites: true,
+  debounce: true,
+  inviteOptions: true,
+  getInviteStatusColor: true,
+  hyphenize: true,
+  rand: true,
+  randomPause: true,
+  Pause: true,
+  NoOp: true,
+  nameFromRoute: true,
+  jsonCopy: true,
+  isSideBarActive: true,
+  range: true,
+  isEqual: true
+};
+exports.isEqual = exports.range = exports.isSideBarActive = exports.jsonCopy = exports.nameFromRoute = exports.NoOp = exports.Pause = exports.randomPause = exports.rand = exports.hyphenize = exports.getInviteStatusColor = exports.inviteOptions = exports.debounce = exports.stackInvites = exports.getTheme = exports.autoFocus = exports.log = void 0;
+
+var _localStorage = require("./local-storage.js");
+
+Object.keys(_localStorage).forEach(function (key) {
+  if (key === "default" || key === "__esModule") return;
+  if (Object.prototype.hasOwnProperty.call(_exportNames, key)) return;
+  Object.defineProperty(exports, key, {
+    enumerable: true,
+    get: function get() {
+      return _localStorage[key];
+    }
+  });
+});
+
+var _geolocation = require("./geolocation.js");
+
+Object.keys(_geolocation).forEach(function (key) {
+  if (key === "default" || key === "__esModule") return;
+  if (Object.prototype.hasOwnProperty.call(_exportNames, key)) return;
+  Object.defineProperty(exports, key, {
+    enumerable: true,
+    get: function get() {
+      return _geolocation[key];
+    }
+  });
+});
+
+var _validations = require("./validations");
+
+Object.keys(_validations).forEach(function (key) {
+  if (key === "default" || key === "__esModule") return;
+  if (Object.prototype.hasOwnProperty.call(_exportNames, key)) return;
+  Object.defineProperty(exports, key, {
+    enumerable: true,
+    get: function get() {
+      return _validations[key];
+    }
+  });
+});
+
+var _timeFns = require("./time-fns.js");
+
+Object.keys(_timeFns).forEach(function (key) {
+  if (key === "default" || key === "__esModule") return;
+  if (Object.prototype.hasOwnProperty.call(_exportNames, key)) return;
+  Object.defineProperty(exports, key, {
+    enumerable: true,
+    get: function get() {
+      return _timeFns[key];
+    }
+  });
+});
+
+function _toConsumableArray(arr) { return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _unsupportedIterableToArray(arr) || _nonIterableSpread(); }
+
+function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
+
+function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
+
+function _iterableToArray(iter) { if (typeof Symbol !== "undefined" && Symbol.iterator in Object(iter)) return Array.from(iter); }
+
+function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) return _arrayLikeToArray(arr); }
+
+function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
+
+var log = function log(m) {
+  return function (v) {
+    console.log(m, v);
+    return v;
+  };
+};
+
+exports.log = log;
+
+var autoFocus = function autoFocus(_ref) {
+  var dom = _ref.dom;
+  return dom.focus();
+};
+
+exports.autoFocus = autoFocus;
+
+var getTheme = function getTheme(mdl) {
+  return mdl.User.profile.isDarkTheme ? "dark" : "light";
+};
+
+exports.getTheme = getTheme;
+
+var stackInvites = function stackInvites(idx) {
+  var bIdx = 140;
+  var lIdx = -5;
+  var bottom = idx * 140 + bIdx;
+  var left = idx * 3 + lIdx;
+  return {
+    style: {
+      left: "".concat(left, "px"),
+      bottom: "".concat(bottom, "px")
+    }
+  };
+};
+
+exports.stackInvites = stackInvites;
+
+var debounce = function debounce(wait) {
+  return function (func, immediate) {
+    console.log(wait);
+    var timeout;
+    return function () {
+      var context = this,
+          args = arguments;
+
+      var later = function later() {
+        timeout = null;
+        if (!immediate) func.apply(context, args);
+      };
+
+      var callNow = immediate && !timeout;
+      clearTimeout(timeout);
+      timeout = setTimeout(later, wait);
+      if (callNow) func.apply(context, args);
+    };
+  };
+};
+
+exports.debounce = debounce;
+var inviteOptions = ["decline", "accept", "maybe"];
+exports.inviteOptions = inviteOptions;
+
+var getInviteStatusColor = function getInviteStatusColor(status) {
+  return getComputedStyle(document.body).getPropertyValue("--".concat(inviteOptions[status], "-invite"));
+};
+
+exports.getInviteStatusColor = getInviteStatusColor;
+
+var hyphenize = function hyphenize(strWithSpaces) {
+  return strWithSpaces.replace(/\s/g, "-");
+};
+
+exports.hyphenize = hyphenize;
+
+var secureImg = function secureImg(url) {
+  return url.match(/(https)./) ? url : url.replace("http", "https");
+};
+
+var rand = function rand(min, max) {
+  return Math.floor(Math.random() * (max - min) + min);
+};
+
+exports.rand = rand;
+
+var randomPause = function randomPause() {
+  return Math.random() * 1000;
+};
+
+exports.randomPause = randomPause;
+
+var Pause = function Pause(n) {
+  return function () {
+    return n * 1000;
+  };
+};
+
+exports.Pause = Pause;
+
+var NoOp = function NoOp() {};
+
+exports.NoOp = NoOp;
+
+var nameFromRoute = function nameFromRoute(route) {
+  return route.split("/")[1].toUpperCase();
+};
+
+exports.nameFromRoute = nameFromRoute;
+
+var jsonCopy = function jsonCopy(data) {
+  return JSON.parse(JSON.stringify(data));
+};
+
+exports.jsonCopy = jsonCopy;
+
+var isSideBarActive = function isSideBarActive(mdl) {
+  return mdl.settings.profile !== "desktop" && mdl.status.sidebar;
+};
+
+exports.isSideBarActive = isSideBarActive;
+
+var range = function range(size) {
+  return _toConsumableArray(Array(size).keys());
+};
+
+exports.range = range;
+
+var isEqual = function isEqual(a, b) {
+  return JSON.stringify(a) == JSON.stringify(b);
+};
+
+exports.isEqual = isEqual;
+});
+
+;require.register("Utils/local-storage.js", function(exports, require, module) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.setSessionsTask = exports.setUserSession = exports.setUserToken = exports.session = exports.locals = void 0;
+
+var _data = _interopRequireDefault(require("data.task"));
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var newTaskFromPromise = function newTaskFromPromise(p) {
+  return new _data.default(function (res, rej) {
+    return p.then(res, rej);
+  });
+};
+
+var locals = {
+  getTask: function getTask(key) {
+    return newTaskFromPromise(new Promise(function (_, res) {
+      return localStorage.getItem(key) ? res(JSON.parse(localStorage.getItem(key))) : res(null);
+    } // hack just for now
+    ));
+  },
+  setTask: function setTask(key) {
+    return function (value) {
+      return newTaskFromPromise(new Promise(function (res) {
+        return res(localStorage.setItem(key, value));
+      }));
+    };
+  }
+};
+exports.locals = locals;
+var session = {
+  getTask: function getTask(key) {
+    return newTaskFromPromise(new Promise(function (_, res) {
+      return sessionStorage.getItem(key) ? res(JSON.parse(sessionStorage.getItem(key))) : res(null);
+    } // hack just for now
+    ));
+  },
+  setTask: function setTask(key) {
+    return function (value) {
+      return newTaskFromPromise(new Promise(function (res) {
+        return res(sessionStorage.setItem(key, value));
+      }));
+    };
+  }
+};
+exports.session = session;
+
+var setUserToken = function setUserToken(sessionToken) {
+  return sessionStorage.setItem("shindigit-user-session-token", sessionToken);
+};
+
+exports.setUserToken = setUserToken;
+
+var setUserSession = function setUserSession(user) {
+  return sessionStorage.setItem("shindigit-user", JSON.stringify(user));
+};
+
+exports.setUserSession = setUserSession;
+
+var setSessionsTask = function setSessionsTask(mdl) {
+  setUserSession(mdl.User);
+  setUserToken(mdl.User.sessionToken);
+  return _data.default.of(mdl);
+};
+
+exports.setSessionsTask = setSessionsTask;
+});
+
+;require.register("Utils/time-fns.js", function(exports, require, module) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.firstInviteHour = exports.shortDateString = exports.toHourViewModel = exports.getFullDate = exports.fromFullDate = exports.monthsOfTheYear = exports.daysOfTheWeekFrom = exports.daysOfTheWeek = exports.isToday = exports.datesAreSame = exports.getHoursInDay = exports.getTimeFormat = exports.getMin = exports.getHour = exports.pad0Left = exports.pad00Min = exports.padding = void 0;
+
+var _index = require("./index");
+
+var _ramda = require("ramda");
+
+var padding = function padding(d) {
+  return d.toString().length == 1 ? pad0Left(d) : d;
+};
+
+exports.padding = padding;
+
+var pad00Min = function pad00Min(num) {
+  return "".concat(num, ":00");
+};
+
+exports.pad00Min = pad00Min;
+
+var pad0Left = function pad0Left(num) {
+  return "0".concat(num);
+};
+
+exports.pad0Left = pad0Left;
+
+var getHour = function getHour(time) {
+  return time.split(":")[0];
+};
+
+exports.getHour = getHour;
+
+var getMin = function getMin(time) {
+  return time.split(":")[1];
+};
+
+exports.getMin = getMin;
+
+var getTimeFormat = function getTimeFormat(mdl) {
+  return mdl.User.profile.is24Hrs ? "HH:mm" : "h:mm a";
+}; //need to fix to work for 12 hrs
+
+
+exports.getTimeFormat = getTimeFormat;
+
+var getHoursInDay = function getHoursInDay(format) {
+  return (0, _index.range)(24).map(function (n) {
+    // console.log("n", n, M().hour(n).format('HH'))
+    return M().hour(n).format("HH");
+  }).map(pad00Min);
+};
+
+exports.getHoursInDay = getHoursInDay;
+
+var datesAreSame = function datesAreSame(first) {
+  return function (second) {
+    return function (format) {
+      var f = M(first).format(format);
+      var s = M(second).format(format);
+      return M(f).isSame(M(s));
+    };
+  };
+};
+
+exports.datesAreSame = datesAreSame;
+
+var isToday = function isToday(someDate) {
+  var today = new Date();
+  var date = new Date(someDate.toString());
+  return date.getDate() == today.getDate() && date.getMonth() == today.getMonth() && date.getFullYear() == today.getFullYear();
+};
+
+exports.isToday = isToday;
+var daysOfTheWeek = ["Sunday", "Monday", "Teusday", "Wednesday", "Thursday", "Friday", "Saturday"];
+exports.daysOfTheWeek = daysOfTheWeek;
+
+var getFirstDay = function getFirstDay(idx, weeks) {
+  return weeks[idx];
+};
+
+var getNextDay = function getNextDay(week, weeks) {
+  var lastDay = week[week.length - 1];
+  var nextDayIdx = weeks.indexOf(lastDay) + 1 > 6 ? 0 : weeks.indexOf(lastDay) + 1 < 0 ? 6 : weeks.indexOf(lastDay) + 1;
+  return weeks[nextDayIdx];
+};
+
+var toStartOf = function toStartOf(idx, weeks) {
+  return function (week, day) {
+    if (week.length == 7) return week;
+    week.length > 0 ? week.push(getNextDay(week, weeks)) : week.push(getFirstDay(idx, weeks));
+    return week;
+  };
+};
+
+var daysOfTheWeekFrom = function daysOfTheWeekFrom(idx) {
+  return daysOfTheWeek.reduce(toStartOf(idx, daysOfTheWeek), []);
+};
+
+exports.daysOfTheWeekFrom = daysOfTheWeekFrom;
+var monthsOfTheYear = ["January", "Febuary", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+exports.monthsOfTheYear = monthsOfTheYear;
+
+var fromFullDate = function fromFullDate(date) {
+  var d = new Date(date);
+  return {
+    day: padding(d.getDate()),
+    month: padding(d.getMonth() + 1),
+    year: d.getFullYear(),
+    hour: padding(d.getHours()),
+    min: padding(d.getMinutes())
+  };
+};
+
+exports.fromFullDate = fromFullDate;
+
+var getFullDate = function getFullDate(_ref, startHour, startMin) {
+  var year = _ref.year,
+      month = _ref.month,
+      day = _ref.day;
+  console.log("getFullDate", new Date(year, month - 1, day, startHour, startMin));
+  return new Date(year, month - 1, day, startHour, startMin);
+};
+
+exports.getFullDate = getFullDate;
+
+var toHourViewModel = function toHourViewModel(date) {
+  return function (mdl, hour) {
+    if (!mdl[date][hour]) {
+      mdl[date][hour] = {};
+    }
+
+    return mdl;
+  };
+};
+
+exports.toHourViewModel = toHourViewModel;
+
+var shortDateString = function shortDateString(_ref2) {
+  var year = _ref2.year,
+      month = _ref2.month,
+      day = _ref2.day;
+  return "".concat(year, "-").concat(padding(month), "-").concat(padding(day));
+};
+
+exports.shortDateString = shortDateString;
+var firstInviteHour = (0, _ramda.compose)(_ramda.head, (0, _ramda.sort)(function (a, b) {
+  return a - b;
+}), (0, _ramda.map)(function (mStart) {
+  return mStart && parseInt(mStart.format("HH"));
+}), (0, _ramda.pluck)("start"));
+exports.firstInviteHour = firstInviteHour;
+});
+
+;require.register("Utils/validations.js", function(exports, require, module) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.isUniq = exports.isEqual = exports.isNilOrEmptyOrAtom = exports.allCaps = exports.onlyNumeric = exports.urlFormat = exports.phoneFormat = exports.onlyAlphaNumericSpaceSpecial = exports.onlyAlphaNumericSpaceUnderscore = exports.onlyAlphaNumericSpace = exports.onlyAlphaNumericUnderscore = exports.onlyAlphaNumeric = exports.onlyAlpha = exports.emailFormat = exports.maxSize = exports.maxLength = exports.isNullOrEmpty = exports.isNotNullOrEmpty = exports.IsNotNilOrZero = exports.IsNotNil = exports.isRequired = exports.validate = exports.getOrElse = void 0;
+
+var _ramda = require("ramda");
+
+var _data = require("data.validation");
+
+var getOrElse = function getOrElse(val) {
+  return function (x) {
+    return x.getOrElse(val);
+  };
+};
+
+exports.getOrElse = getOrElse;
+var validate = (0, _ramda.curry)(function (rule, lens, msg, data) {
+  return rule((0, _ramda.view)(lens, data)) ? (0, _data.Success)(data) : (0, _data.Failure)([(0, _ramda.set)(lens, msg, {})]);
+});
+exports.validate = validate;
+var isRequired = (0, _ramda.compose)(_ramda.not, _ramda.isEmpty);
+exports.isRequired = isRequired;
+var IsNotNil = (0, _ramda.compose)(_ramda.not, _ramda.isNil);
+exports.IsNotNil = IsNotNil;
+
+var IsNotNilOrZero = function IsNotNilOrZero(data) {
+  return IsNotNil(data) || data == 0;
+};
+
+exports.IsNotNilOrZero = IsNotNilOrZero;
+
+var isNotNullOrEmpty = function isNotNullOrEmpty(data) {
+  return !isNullOrEmpty(data);
+};
+
+exports.isNotNullOrEmpty = isNotNullOrEmpty;
+
+var isNullOrEmpty = function isNullOrEmpty(data) {
+  return (0, _ramda.isNil)(data) || (0, _ramda.isEmpty)(data);
+};
+
+exports.isNullOrEmpty = isNullOrEmpty;
+
+var maxLength = function maxLength(max) {
+  return (0, _ramda.compose)((0, _ramda.gte)(max), _ramda.length);
+};
+
+exports.maxLength = maxLength;
+var maxSize = (0, _ramda.curry)(function (max, value) {
+  return (0, _ramda.gte)(max, value);
+});
+exports.maxSize = maxSize;
+var emailFormat = (0, _ramda.test)(/@/);
+exports.emailFormat = emailFormat;
+var onlyAlpha = (0, _ramda.test)(/^[a-zA-Z]*$/);
+exports.onlyAlpha = onlyAlpha;
+var onlyAlphaNumeric = (0, _ramda.test)(/^[a-zA-Z0-9]*$/);
+exports.onlyAlphaNumeric = onlyAlphaNumeric;
+var onlyAlphaNumericUnderscore = (0, _ramda.test)(/^[a-zA-Z0-9_]*$/);
+exports.onlyAlphaNumericUnderscore = onlyAlphaNumericUnderscore;
+var onlyAlphaNumericSpace = (0, _ramda.test)(/^[a-zA-Z0-9\s]*$/);
+exports.onlyAlphaNumericSpace = onlyAlphaNumericSpace;
+var onlyAlphaNumericSpaceUnderscore = (0, _ramda.test)(/^[a-zA-Z0-9_\s]*$/);
+exports.onlyAlphaNumericSpaceUnderscore = onlyAlphaNumericSpaceUnderscore;
+var onlyAlphaNumericSpaceSpecial = (0, _ramda.test)(/^[a-zA-Z0-9_.~!*''();:@&=+$,/?#[%-\]+\s]*$/);
+exports.onlyAlphaNumericSpaceSpecial = onlyAlphaNumericSpaceSpecial;
+var phoneFormat = (0, _ramda.test)(/^[0-9]{3}-[0-9]{3}-[0-9]{4}$/);
+exports.phoneFormat = phoneFormat;
+var urlFormat = (0, _ramda.test)(/^[a-zA-Z0-9_.~!*''();:@&=+$,/?#[%-\]+]*$/);
+exports.urlFormat = urlFormat;
+var onlyNumeric = (0, _ramda.test)(/^[0-9]*$/);
+exports.onlyNumeric = onlyNumeric;
+
+var allCaps = function allCaps(str) {
+  return str.toUpperCase() === str;
+};
+
+exports.allCaps = allCaps;
+
+var isNilOrEmptyOrAtom = function isNilOrEmptyOrAtom(item) {
+  return (0, _ramda.isNil)(item) || (0, _ramda.isEmpty)(item) || item === "{$type:atom}";
+};
+
+exports.isNilOrEmptyOrAtom = isNilOrEmptyOrAtom;
+
+var isEqual = function isEqual(input1) {
+  return function (input2) {
+    return input2 === input1;
+  };
+};
+
+exports.isEqual = isEqual;
+
+var isUniq = function isUniq(xs) {
+  return function (x) {
+    return (0, _ramda.not)(xs.includes(x));
+  };
+};
+
+exports.isUniq = isUniq;
+});
+
+;require.register("index.js", function(exports, require, module) {
+"use strict";
+
+var _Utils = require("Utils");
+
+var _App = _interopRequireDefault(require("./App.js"));
+
+var _Models = _interopRequireDefault(require("Models"));
+
+var _Fp = require("Fp");
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+_Fp.Fp.configure();
+
+var root = document.body;
+var winW = window.innerWidth;
+
+if (module.hot) {
+  module.hot.accept();
+}
+
+if ('development' == "development") {
+  console.log("Looks like we are in development mode!");
+} else {
+  if ("serviceWorker" in navigator) {
+    window.addEventListener("load", function () {
+      navigator.serviceWorker.register("./service-worker.js").then(function (registration) {
+        console.log("⚙️ SW registered: ", registration);
+      }).catch(function (registrationError) {
+        console.log("🧟 SW registration failed: ", registrationError);
+      });
+    });
+  }
+} // set display profiles
+
+
+var getProfile = function getProfile(w) {
+  if (w < 668) return "phone";
+  if (w < 920) return "tablet";
+  return "desktop";
+};
+
+var checkWidth = function checkWidth(winW) {
+  var w = window.innerWidth;
+
+  if (winW !== w) {
+    winW = w;
+    var lastProfile = _Models.default.Settings.profile;
+    _Models.default.Settings.profile = getProfile(w);
+    if (lastProfile != _Models.default.Settings.profile) m.redraw();
+  }
+
+  return requestAnimationFrame(checkWidth);
+};
+
+_Models.default.Settings.profile = getProfile(winW);
+checkWidth(winW);
+
+if (sessionStorage.getItem("shindigit-user")) {
+  _Models.default.User = JSON.parse(sessionStorage.getItem("shindigit-user"));
+
+  _Models.default.State.isAuth(true);
+
+  _Models.default.User.profile && _Models.default.State.is24Hrs(_Models.default.User.profile.is24Hrs);
+  (0, _Utils.getMyLocationTask)(_Models.default).fork((0, _Utils.log)("location err"), (0, _Utils.log)("location: "));
+
+  if (localStorage.getItem("shindigit-eventId")) {
+    _Models.default.Events.currentEventId(localStorage.getItem("shindigit-eventId"));
+
+    _Models.default.Events.currentEventStart(localStorage.getItem("shindigit-eventStart"));
+
+    _Models.default.selectedDate(localStorage.getItem("shindigit-eventStart"));
+  }
+} else {
+  m.route.set("/logout");
+}
+
+m.route(root, "/login", (0, _App.default)(_Models.default));
+});
+
+;require.register("initialize.js", function(exports, require, module) {
+"use strict";
+
+document.addEventListener("DOMContentLoaded", function () {
+  return require("./index.js");
+});
+});
+
+;require.alias("process/browser.js", "process");process = require('process');require.register("___globals___", function(exports, require, module) {
+  
+
+// Auto-loaded modules from config.npm.globals.
+window.m = require("mithril");
+window.Stream = require("mithril-stream");
+window.M = require("moment");
+
+
+});})();require('___globals___');
+
+require('initialize');
+//# sourceMappingURL=app.js.map

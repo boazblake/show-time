@@ -1,20 +1,22 @@
-import { hyphenize, getMyLocationTask } from "Utils"
+import { log, hyphenize, getMyLocationTask, setSessionsTask } from "Utils"
 import { validateUserRegistrationTask } from "./Validations"
 import {
   HTTP,
   loginTask,
   registerTask,
   createProfileTask,
-  relateProfileToUserTask,
+  getUserProfileTask,
 } from "Http"
 
-const data = {
+const Data = () => ({
   name: "",
   email: "",
   password: "",
   confirmEmail: "",
   confirmPassword: "",
-}
+})
+
+let data = Data()
 
 const state = {
   isSubmitted: false,
@@ -25,6 +27,7 @@ const state = {
 }
 
 const resetState = () => {
+  data = Data()
   state.errors = {}
   state.httpError = undefined
   state.isSubmitted = false
@@ -46,42 +49,39 @@ const validate = () => {
 }
 
 export const registerUser = (mdl) => (data) => {
-  const onError = (errors) => {
-    if (errors) {
-      state.errors = errors
-      state.errorMsg(errors.message)
-      state.showErrorMsg(true)
-      console.log("failed - state", state, errors)
+  const onError = ({ error }) => {
+    console.log("hiuh", error)
+    if (error) {
+      state.errors = JSON.stringify(error)
+      state.errorMsg(error)
+      console.log("failed - state", state.errors)
     } else {
       state.errorMsg("There seems to be a problem please contact web support")
-      state.showErrorMsg(true)
-      console.log("failed - state", state)
+      console.log("failed - state", JSON.stringify(state))
     }
+    state.showErrorMsg(true)
   }
 
   const onSuccess = (mdl) => (data) => {
     state.errors = null
-    sessionStorage.setItem("shindigit-user-token", mdl.User["user-token"])
-    sessionStorage.setItem("shindigit-user", JSON.stringify(mdl.User))
-    m.route.set(`/${hyphenize(mdl.User.name)}/${M().format("YYYY-MM-DD")}`)
+    console.log(data)
+    return m.route.set(
+      `/${hyphenize(mdl.User.name)}/${M().format("YYYY-MM-DD")}`
+    )
   }
+
   state.isSubmitted = true
   validateUserRegistrationTask(data)
     .chain(registerTask(HTTP)(mdl))
+    .chain(createProfileTask(HTTP)(mdl)(data))
     .chain((_) =>
       loginTask(HTTP)(mdl)({
         email: data.email,
         password: data.password,
-      })
-        .chain((_) => createProfileTask(HTTP)(mdl))
-        .chain((profile) => {
-          mdl.User.profile = profile
-          return relateProfileToUserTask(HTTP)(mdl)(mdl.User.objectId)(
-            profile.objectId
-          )
-        })
-        .chain((_) => getMyLocationTask(mdl))
+      }).chain(() => getUserProfileTask(HTTP)(mdl)(mdl.User.objectId))
     )
+    .chain((_) => getMyLocationTask(mdl))
+    .chain((_) => setSessionsTask(mdl))
     .fork(onError, onSuccess(mdl))
 }
 
@@ -92,8 +92,9 @@ const RegisterUser = () => {
         id: "reg-name",
         type: "text",
         placeholder: "Full Name",
-        onblur: (e) => validate(),
-        oninput: (e) => (data.name = e.target.value.trim()),
+        onchange: (e) => validate(),
+        oninput: (e) => (data.name = e.target.value),
+        onblur: (e) => (data.name = data.name.trim()),
         value: data.name,
       }),
       state.errors && errors.name && m("span.error-field", errors.name),
@@ -102,8 +103,9 @@ const RegisterUser = () => {
         id: "reg-email",
         type: "email",
         placeholder: "Email",
-        onblur: (e) => validate(),
-        oninput: (e) => (data.email = e.target.value.trim()),
+        onchange: (e) => validate(),
+        oninput: (e) => (data.email = e.target.value),
+        onblur: (e) => (data.email = data.email.trim()),
         value: data.email,
       }),
       state.errors && errors.email && m("span.error-field", errors.email),
@@ -112,8 +114,9 @@ const RegisterUser = () => {
         id: "confirmEmail",
         type: "email",
         placeholder: "Confirm Email",
-        onblur: (e) => validate(),
-        oninput: (e) => (data.confirmEmail = e.target.value.trim()),
+        onchange: (e) => validate(),
+        oninput: (e) => (data.confirmEmail = e.target.value),
+        onblur: (e) => (data.confirmEmail = data.confirmEmail.trim()),
         value: data.confirmEmail,
       }),
       state.errors &&
@@ -124,8 +127,9 @@ const RegisterUser = () => {
         id: "reg-pass",
         type: "password",
         placeholder: "Password",
-        onblur: (e) => validate(),
-        oninput: (e) => (data.password = e.target.value.trim()),
+        onchange: (e) => validate(),
+        oninput: (e) => (data.password = e.target.value),
+        onblur: (e) => (data.password = data.password.trim()),
         value: data.password,
       }),
       state.errors && errors.password && m("span.error-field", errors.password),
@@ -134,8 +138,9 @@ const RegisterUser = () => {
         id: "pass-confirm",
         type: "password",
         placeholder: "Confirm Password",
-        onblur: (e) => validate(),
-        oninput: (e) => (data.confirmPassword = e.target.value.trim()),
+        onchange: (e) => validate(),
+        oninput: (e) => (data.confirmPassword = e.target.value),
+        onblur: (e) => (data.confirmPassword = data.confirmPassword.trim()),
         value: data.confirmPassword,
       }),
       state.errors &&

@@ -10,6 +10,7 @@ export const Hamburger = () => {
     }
 
     const onSuccess = (invites) => {
+      console.log(invites)
       mdl.Invites.fetch(false)
       mdl.Invites.state.error = null
       let forNewInvite = (i) => !i.updated && i.status == 2
