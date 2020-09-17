@@ -828,11 +828,6 @@
     lodash "^4.17.19"
     to-fast-properties "^2.0.0"
 
-"@ionic-native/core@4":
-  version "4.20.0"
-  resolved "https://registry.yarnpkg.com/@ionic-native/core/-/core-4.20.0.tgz#5877f45136add6f04a4d744012d1fcdc3f634774"
-  integrity sha512-8ppRT4zXKwtalv9HJomLQjDnMfPAiKdNUQSSKpwZePmI+8TpYRL7UNr0o0hmjiTXx1oGcKQFzHpDc1M2yeR3BA==
-
 "@ionic/cli-framework-prompts@1.0.4":
   version "1.0.4"
   resolved "https://registry.yarnpkg.com/@ionic/cli-framework-prompts/-/cli-framework-prompts-1.0.4.tgz#c1ddc292bd51a0129fdfd2425eaf16666cb83980"

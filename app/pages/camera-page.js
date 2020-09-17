@@ -1,4 +1,4 @@
-import { Camera } from "@ionic-native/core/index"
+import { Camera } from "@ionic/core"
 console.log(Camera)
 export const CameraPage = () => {
   return {

@@ -13,7 +13,6 @@
     "build": "yarn run build:pre && brunch build --production LOGGY_STACKS=1"
   },
   "dependencies": {
-    "@ionic-native/core": "4",
     "@ionic/core": "^5.3.2",
     "ionic": "^5.4.16",
     "mithril": "^2.0.4",
