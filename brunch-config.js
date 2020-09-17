@@ -7,10 +7,10 @@ exports.files = {
     },
   },
   stylesheets: {
-    order: {
-      before: ["./imports.scss"],
-      after: ["app.css"],
-    },
+    // order: {
+    //   // before: ["./imports.scss"],
+    //   after: ["app.css"],
+    // },
     joinTo: {
       "app.css": [
         (path) => path.includes(".scss"),
@@ -28,12 +28,12 @@ exports.modules = {
 }
 
 exports.plugins = {
-  sass: {
-    precision: 8,
-    mode: "native",
-    sourceMapEmbed: true,
-    includePaths: [],
-  },
+  // sass: {
+  //   precision: 8,
+  //   mode: "native",
+  //   sourceMapEmbed: true,
+  //   includePaths: [],
+  // },
   imagemin: {
     plugins: {
       "imagemin-gifsicle": true,
@@ -58,7 +58,6 @@ exports.plugins = {
   copycat: {
     fonts: [
       // "app/assets/fonts",
-      "node_modules/@mithril-icons/clarity",
     ],
     images: ["app/assets/images"],
     verbose: true, //shows each file that is copied to the destination directory
@@ -82,20 +81,11 @@ exports.plugins = {
 
 exports.paths = {
   public: "docs",
-  watched: [
-    "app",
-    "app/Utils",
-    "app/Styles",
-    "app/Pages",
-    "app/assets",
-    "app/Models",
-    "app/Http",
-    "app/Fp",
-  ],
+  watched: ["app", "app/Components", "app/Pages", "app/assets", "app/Models"],
 }
 
 exports.npm = {
   enabled: true,
-  globals: { m: "mithril", Stream: "mithril-stream", M: "moment" },
+  globals: { m: "mithril", Stream: "mithril-stream" },
   styles: {},
 }

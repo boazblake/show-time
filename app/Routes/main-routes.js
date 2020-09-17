@@ -1,27 +1,42 @@
-import { Login, Register } from "Pages"
-import { AuthLayout } from "Components"
+import { Home, Alarm, CameraPage } from "Pages"
+import { Layout } from "Components"
+
 const Routes = [
   {
-    id: "login",
-    name: "Account Login",
-    route: "/login",
+    id: "home",
+    name: "home",
+    icon: "home",
+    route: "/home",
     isNav: false,
     group: [],
     children: [],
     options: [],
     onmatch: (mdl, args, path, fullroute) => {},
-    component: (mdl) => m(AuthLayout, { mdl }, m(Login, { mdl })),
+    component: (mdl) => m(Layout, { mdl }, m(Home, { mdl })),
   },
   {
-    id: "register",
-    name: "Register Account",
-    route: "/register",
+    id: "alarm",
+    name: "alarm",
+    icon: "alarm-outline",
+    route: "/alarm",
     isNav: false,
     group: [],
     children: [],
     options: [],
     onmatch: (mdl, args, path, fullroute) => {},
-    component: (mdl) => m(AuthLayout, { mdl }, m(Register, { mdl })),
+    component: (mdl) => m(Layout, { mdl }, m(Alarm, { mdl })),
+  },
+  {
+    id: "camera",
+    name: "camera",
+    icon: "camera-outline",
+    route: "/camera",
+    isNav: false,
+    group: [],
+    children: [],
+    options: [],
+    onmatch: (mdl, args, path, fullroute) => {},
+    component: (mdl) => m(Layout, { mdl }, m(CameraPage, { mdl })),
   },
 ]
 
