@@ -1,5 +1,3 @@
-import { Camera } from "@ionic/core"
-console.log(Camera)
 export const CameraPage = () => {
   return {
     view: ({ attrs: { mdl } }) => {

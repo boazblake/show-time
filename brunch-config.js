@@ -28,12 +28,20 @@ exports.modules = {
 }
 
 exports.plugins = {
-  // sass: {
-  //   precision: 8,
-  //   mode: "native",
-  //   sourceMapEmbed: true,
-  //   includePaths: [],
-  // },
+  uglify: {
+    mangle: false,
+    compress: {
+      global_defs: {
+        DEBUG: false,
+      },
+    },
+  },
+  sass: {
+    precision: 8,
+    mode: "native",
+    sourceMapEmbed: true,
+    includePaths: [],
+  },
   imagemin: {
     plugins: {
       "imagemin-gifsicle": true,
@@ -87,5 +95,4 @@ exports.paths = {
 exports.npm = {
   enabled: true,
   globals: { m: "mithril", Stream: "mithril-stream" },
-  styles: {},
 }
