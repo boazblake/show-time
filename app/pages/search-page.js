@@ -2,31 +2,12 @@
 import http from "../Http.js"
 import {
   filterShowForUnselected,
-  // updateUserShowsTask,
   addUserShowsTask,
   onError,
-  // updateShowStatus
-} from "./fns.js"
+  } from "./fns.js"
 
-const onSuccess = (mdl) => (d) => {
-  console.log(mdl.user.shows(), d, mdl.data.shows())
-  mdl.user.shows(d)
-  // updating the mdl.data with show details from the user list and the search results list.
-  // mdl.data.shows(updateShowStatus(mdl.user.shows())(mdl.data.shows()))
-}
-
-// const updateUserShows = (mdl) => (show, list) =>
-//   updateUserShowsTask(http)(show)(list).fork(
-//     onError(mdl)("search"),
-//     onSuccess(mdl)
-//   )
-
-const addUserShows = (mdl) => (show, list) =>  addUserShowsTask(mdl)(http)(show)(list).fork(
-    onError(mdl)("search"),
-    onSuccess(mdl)
-    )
-
-
+const addUserShows = (mdl) => (show, list) =>
+  addUserShowsTask(mdl)(http)(show)(list).fork(onError(mdl)("search"), mdl.user.shows )
 
 export const SearchPage = () => {
   return {

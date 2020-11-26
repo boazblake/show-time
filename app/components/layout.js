@@ -34,7 +34,6 @@ const SearchToolBar = () => {
 
 
 const Toolbar = ({ attrs: { mdl } }) => {
-  console.log(mdl.state.route.name)
   return {
     view: ({ attrs: { mdl } }) =>
        m("ion-header", m("ion-toolbar",

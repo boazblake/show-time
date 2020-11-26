@@ -40,7 +40,7 @@ const formatLinks = links =>
     ]
   ).map(makeHttps)
 
-const toEpisodeViewModel = ({
+const toEpisoprodiewModel = ({
   name,
   season,
   number,
@@ -128,7 +128,7 @@ export const updateShowStatus = shows => data =>
   )
 
 export const getShows = http =>
-  http.getTask(http.backendlessUrl("devshows?pagesize=100"))
+  http.getTask(http.backendlessUrl("prodshows?pagesize=100"))
 
 export const searchShowsTask = mdl => http =>
   http
@@ -173,26 +173,26 @@ export const toDto = (mdl, show, listType) =>
   )(listType)
 
 export const addUserShowsTask = mdl => http => show => list =>   http
-  .postTask(http.backendlessUrl("devshows"), toDto(mdl, show, list))
+  .postTask(http.backendlessUrl("prodshows"), toDto(mdl, show, list))
   .chain(_ => getShows(http))
   .map(mdl.user.shows)
 
 export const updateUserShowsTask = mdl => http => show => list =>
   http
     .putTask(
-      http.backendlessUrl(`devshows\\${show.objectId}`),
+      http.backendlessUrl(`prodshows\\${show.objectId}`),
       toDto(mdl, show, list)
     )
     .chain(_ => getShows(http))
 
 export const deleteShowTask = http => id =>
   http
-    .deleteTask(http.backendlessUrl(`devshows/${id}`))
+    .deleteTask(http.backendlessUrl(`prodshows/${id}`))
     .chain(_ => getShows(http))
 
 export const updateShowDetailsTask = mdl => http => dto =>
   http
-    .putTask(http.backendlessUrl(`devshows/${mdl.data.details().objectId}`), {
+    .putTask(http.backendlessUrl(`prodshows/${mdl.data.details().objectId}`), {
       body: dto
     })
     .chain(({ objectId }) => getShowDetailsTask(mdl)(http)(objectId))
@@ -203,7 +203,7 @@ const getShowDetails = mdl => http => show =>
     .map(toDetailsViewModel(show))
 
 const findShowInDbTask = http => id =>
-  http.getTask(http.backendlessUrl(`devshows/${id}`))
+  http.getTask(http.backendlessUrl(`prodshows/${id}`))
 
 export const getShowDetailsTask = mdl => http => id =>
   findShowInDbTask(http)(id).chain(getShowDetails(mdl)(http))
@@ -217,4 +217,4 @@ export const filterShowForUnselected = mdl => {
 }
 
 export const getEpisodeTask = http => episodeUrl =>
-  http.getTask(episodeUrl).map(toEpisodeViewModel)
+  http.getTask(episodeUrl).map(toEpisoprodiewModel)
