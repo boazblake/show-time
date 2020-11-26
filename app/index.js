@@ -24,6 +24,5 @@ if (process.env.NODE_ENV == "development") {
   }
 }
 
-console.log(App(Model))
 
 m.route(root, "/home", App(Model))

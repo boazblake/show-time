@@ -14,8 +14,14 @@
     "build": "yarn run build:pre && brunch build --production"
   },
   "dependencies": {
+    "@babel/plugin-transform-runtime": "^7.12.1",
+    "@capacitor/android": "2.4.1",
     "@capacitor/core": "2.4.1",
+    "@capacitor/ios": "2.4.1",
+    "@ionic-native/camera": "^5.30.0",
+    "@ionic-native/core": "^5.30.0",
     "@ionic/core": "^5.3.3",
+    "data.task": "^3.1.2",
     "mithril": "^2.0.4",
     "mithril-stream": "^2.0.0",
     "ramda": "^0.27.1"

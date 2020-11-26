@@ -1,5 +1,5 @@
 import { actionSheetController } from "@ionic/core"
-import Routes from "../Routes/index.js"
+import Routes from "../routes/index.js"
 
 const showSettings = (mdl) => {
   const showAction = (e) => {

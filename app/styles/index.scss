@@ -1,4 +1,3 @@
-
 :root {
   --blue: #042532;
   --indigo: #6610f2;
@@ -16,15 +15,15 @@
   --primary: #007bff;
   --secondary: #6c757d;
   --success: #28a745;
-  --lime: #afd275;;
+  --lime: #afd275;
   --info: #17a2b8;
   --warning: #ffc107;
   --danger: #dc3545;
   --light: #f8f9fa;
   --dark: #343a40;
   --accept-invite: #28a745;
-  --decline-invite:#E85D75;
-  --maybe-invite:  #4281A4;
+  --decline-invite: #e85d75;
+  --maybe-invite: #4281a4;
   --breakpoint-xs: 0;
   --breakpoint-sm: 576px;
   --breakpoint-md: 768px;
@@ -32,58 +31,51 @@
   --breakpoint-xl: 1200px;
 }
 
+// *,
+// *:before,
+// *:after {
+//   box-sizing: border-box;
+// }
 
-*,
-*:before,
-*:after {
-  box-sizing: border-box;
-}
+// body,
+// html {
+//   scroll-behavior: smooth;
+//   margin: 0;
+//   overflow: hidden;
+//   position: fixed;
+//   -webkit-text-size-adjust: 100%;
+//   padding: env(safe-area-inset-top)
+//             env(safe-area-inset-left)
+//             env(safe-area-inset-bottom)
+//             env(safe-area-inset-right);
+// }
 
-body,
-html {
-  scroll-behavior: smooth;
-  margin: 0;
-  overflow: hidden;
-  position: fixed;
-  -webkit-text-size-adjust: 100%;
-  padding: env(safe-area-inset-top)
-            env(safe-area-inset-left)
-            env(safe-area-inset-bottom)
-            env(safe-area-inset-right);
-}
+// body {
+//   max-height: 100vh;
+// }
 
-body {
-  max-height: 100vh;
-}
+// html > * {
+//   box-sizing: border-box;
+//   font-family: 'Montserrat', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+//   touch-action: manipulation;
+// }
 
-html > * {
-  box-sizing: border-box;
-  font-family: 'Montserrat', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
-  touch-action: manipulation;
-}
+// a {
+//   text-decoration: none;
+// }
 
+// @media screen and (min-width: 600px) and (max-width: 899px) {
 
-a {
-  text-decoration: none;
-}
+// }
 
+// @media screen and (min-width: 900px) and (max-width: 1199px) {
 
+// }
 
-@media screen and (min-width: 600px) and (max-width: 899px) {
+// @media screen and (min-width: 1200px) and (max-width: 1399px) {
 
+// }
 
+// @media screen and (min-width: 1400px) {
 
-}
-
-@media screen and (min-width: 900px) and (max-width: 1199px) {
-
-
-}
-
-@media screen and (min-width: 1200px) and (max-width: 1399px) {
-
-}
-
-@media screen and (min-width: 1400px) {
-
-}
+// }

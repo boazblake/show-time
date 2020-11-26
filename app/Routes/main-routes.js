@@ -1,5 +1,5 @@
-import { Home, Alarm, CameraPage } from "Pages"
-import { Layout } from "Components"
+import { Home, Alarm, CameraPage } from "pages"
+import { Layout } from "components"
 
 const Routes = [
   {

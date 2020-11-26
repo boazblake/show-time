@@ -1,4 +1,4 @@
-import Routes from "./Routes/index"
+import Routes from "./routes/index"
 
 const toRoutes = (mdl) => (acc, route) => {
   acc[route.route] = {

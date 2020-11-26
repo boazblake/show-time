@@ -52,12 +52,20 @@ exports.plugins = {
     pattern: /\.(gif|jpg|jpeg|jpe|jif|jfif|jfi|png|svg|svgz)$/,
   },
   babel: {
+    // ignore: [/^(vendor)/, /^node_modules\/(?!@ionic)/],
+  //   plugins:[
+  //   ["@babel/plugin-transform-runtime",
+  //     {
+  //       "regenerator": true
+  //     }
+  //   ]
+  // ],
     presets: [
       [
         "@babel/preset-env",
         {
           targets: {
-            browsers: ["last 2 versions"],
+            esmodules: true,
           },
         },
       ],
@@ -89,10 +97,11 @@ exports.plugins = {
 
 exports.paths = {
   public: "docs",
-  watched: ["app", "app/Components", "app/Pages", "app/assets", "app/Models"],
+  watched: ["app", "app/components", "app/pages", "app/assets", "app/Models"],
 }
 
 exports.npm = {
+  compilers: ['babel-brunch'],
   enabled: true,
   globals: { m: "mithril", Stream: "mithril-stream" },
 }
