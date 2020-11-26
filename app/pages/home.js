@@ -24,8 +24,7 @@ export const Home = () => {
   return {
     oninit: ({ attrs: { mdl } }) => getShowsTask(mdl)(http),
     view: ({ attrs: { mdl } }) => {
-      return m('ion-content',
-        m('ion-list',
+      return  m('ion-list',
           filterShowsByListType(mdl).map(
             show =>
               show.listStatus == mdl.state.currentList() &&
@@ -47,7 +46,7 @@ export const Home = () => {
                 }, 'Delete'))
             )
         )
-      ))
+      )
     },
   }
 }

@@ -1,4 +1,11 @@
 import Routes from "../routes/index.js"
+import http from "../Http.js"
+import { searchShowsTask, onError } from "../pages/fns.js"
+
+  const searchShows = (mdl) =>
+    searchShowsTask(mdl)(http).fork(onError(mdl)("search"), mdl.data.shows)
+
+
 
 const HomeToolBar = () => {
   return {
@@ -11,10 +18,17 @@ const HomeToolBar = () => {
 
 const SearchToolBar = () => {
   return {
-    view: () =>
-
-     m('.search', 'search')
-
+    view: ({attrs:{mdl}}) =>
+      m('ion-searchbar',
+        {
+          animated: true,
+          'show-cancel-button':"focus" ,
+          placeholder: 'Search for a show',
+           value: mdl.state.query(),
+            oninput: (e) => mdl.state.query(e.target.value),
+            onchange: () => searchShows(mdl)
+        }
+      )
   }
 }
 

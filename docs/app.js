@@ -433,7 +433,13 @@ exports.Layout = void 0;
 
 var _index = _interopRequireDefault(require("../routes/index.js"));
 
+var _Http = _interopRequireDefault(require("../Http.js"));
+
+var _fns = require("../pages/fns.js");
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var searchShows = mdl => (0, _fns.searchShowsTask)(mdl)(_Http.default).fork((0, _fns.onError)(mdl)("search"), mdl.data.shows);
 
 var HomeToolBar = () => {
   return {
@@ -455,24 +461,38 @@ var HomeToolBar = () => {
 
 var SearchToolBar = () => {
   return {
-    view: () => m('.search', 'search')
-  };
-};
-
-var Toolbar = (_ref2) => {
-  var {
-    attrs: {
-      mdl
-    }
-  } = _ref2;
-  console.log(mdl.state.route.name);
-  return {
-    view: (_ref3) => {
+    view: (_ref2) => {
       var {
         attrs: {
           mdl
         }
-      } = _ref3;
+      } = _ref2;
+      return m('ion-searchbar', {
+        animated: true,
+        'show-cancel-button': "focus",
+        placeholder: 'Search for a show',
+        value: mdl.state.query(),
+        oninput: e => mdl.state.query(e.target.value),
+        onchange: () => searchShows(mdl)
+      });
+    }
+  };
+};
+
+var Toolbar = (_ref3) => {
+  var {
+    attrs: {
+      mdl
+    }
+  } = _ref3;
+  console.log(mdl.state.route.name);
+  return {
+    view: (_ref4) => {
+      var {
+        attrs: {
+          mdl
+        }
+      } = _ref4;
       return m("ion-header", m("ion-toolbar", mdl.state.route.name == 'home' && m(HomeToolBar, {
         mdl
       }), mdl.state.route.name == 'search' && m(SearchToolBar, {
@@ -484,12 +504,12 @@ var Toolbar = (_ref2) => {
 
 var Footer = () => {
   return {
-    view: (_ref4) => {
+    view: (_ref5) => {
       var {
         attrs: {
           mdl
         }
-      } = _ref4;
+      } = _ref5;
       return m("ion-footer", m("ion-tab-bar", m("ion-tabs", [_index.default.map(r => m("ion-tab", {
         tab: "".concat(r.route)
       })), m("ion-tab-bar", {
@@ -510,13 +530,13 @@ var Footer = () => {
 
 var Layout = () => {
   return {
-    view: (_ref5) => {
+    view: (_ref6) => {
       var {
         attrs: {
           mdl
         },
         children
-      } = _ref5;
+      } = _ref6;
       return m("ion-app", [m(Toolbar, {
         mdl
       }), m("ion-content", children), m(Footer, {
@@ -620,7 +640,7 @@ exports.Alarm = Alarm;
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.getEpisodeTask = exports.filterShowsByListType = exports.getShowDetailsTask = exports.updateShowDetailsTask = exports.deleteShowTask = exports.updateUserShowsTask = exports.addUserShowsTask = exports.toDto = exports.showListSelection = exports.propIsDefined = exports.searchShowsTask = exports.getShows = exports.updateShowStatus = exports.onError = exports.toDbModel = exports.toSearchViewModel = exports.getEpisodeLink = exports.formatError = exports.log = void 0;
+exports.getEpisodeTask = exports.filterShowForUnselected = exports.filterShowsByListType = exports.getShowDetailsTask = exports.updateShowDetailsTask = exports.deleteShowTask = exports.updateUserShowsTask = exports.addUserShowsTask = exports.toDto = exports.showListSelection = exports.propIsDefined = exports.searchShowsTask = exports.getShows = exports.updateShowStatus = exports.onError = exports.toDbModel = exports.toSearchViewModel = exports.getEpisodeLink = exports.formatError = exports.log = void 0;
 
 var _ramda = require("ramda");
 
@@ -819,6 +839,13 @@ var filterShowsByListType = mdl => (0, _ramda.filter)((0, _ramda.propEq)("listSt
 
 exports.filterShowsByListType = filterShowsByListType;
 
+var filterShowForUnselected = mdl => {
+  var selected = (0, _ramda.pluck)('tvmazeId', mdl.user.shows());
+  return mdl.data.shows().filter(show => !selected.includes(show.tvmazeId));
+};
+
+exports.filterShowForUnselected = filterShowForUnselected;
+
 var getEpisodeTask = http => episodeUrl => http.getTask(episodeUrl).map(toEpisodeViewModel);
 
 exports.getEpisodeTask = getEpisodeTask;
@@ -863,14 +890,14 @@ var Home = () => {
           mdl
         }
       } = _ref2;
-      return m('ion-content', m('ion-list', (0, _fns.filterShowsByListType)(mdl).map(show => show.listStatus == mdl.state.currentList() && m('ion-item-sliding', m('ion-item', m('ion-avatar', m('ion-img', {
+      return m('ion-list', (0, _fns.filterShowsByListType)(mdl).map(show => show.listStatus == mdl.state.currentList() && m('ion-item-sliding', m('ion-item', m('ion-avatar', m('ion-img', {
         src: show.image
       })), m('ion-label', m('h2', show.name), m('h3', show.listStatus), m('p', show.notes))), m('ion-item-options', {
         side: 'end'
       }, m('ion-item-option', {
         color: 'danger',
         onclick: () => deleteShow(mdl)(show)
-      }, 'Delete'))))));
+      }, 'Delete')))));
     }
   };
 };
@@ -933,6 +960,25 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.SearchPage = void 0;
 
+var _Http = _interopRequireDefault(require("../Http.js"));
+
+var _fns = require("./fns.js");
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var onSuccess = mdl => d => {
+  console.log(mdl.user.shows(), d, mdl.data.shows());
+  mdl.user.shows(d); // updating the mdl.data with show details from the user list and the search results list.
+  // mdl.data.shows(updateShowStatus(mdl.user.shows())(mdl.data.shows()))
+}; // const updateUserShows = (mdl) => (show, list) =>
+//   updateUserShowsTask(http)(show)(list).fork(
+//     onError(mdl)("search"),
+//     onSuccess(mdl)
+//   )
+
+
+var addUserShows = mdl => (show, list) => (0, _fns.addUserShowsTask)(mdl)(_Http.default)(show)(list).fork((0, _fns.onError)(mdl)("search"), onSuccess(mdl));
+
 var SearchPage = () => {
   return {
     view: (_ref) => {
@@ -941,7 +987,13 @@ var SearchPage = () => {
           mdl
         }
       } = _ref;
-      return m(".search", 'SEARCH');
+      return m(".search", m('ion-list', (0, _fns.filterShowForUnselected)(mdl).map(show => m('ion-item-sliding', m('ion-item', m('ion-avatar', m('ion-img', {
+        src: show.image
+      })), m('ion-label', m('h2', show.name))), m('ion-item-options', {
+        side: 'start'
+      }, mdl.user.lists().map(list => m('ion-item-option', {
+        onclick: e => addUserShows(mdl)(show, list)
+      }, list)))))));
     }
   };
 };

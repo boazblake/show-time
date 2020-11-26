@@ -172,11 +172,10 @@ export const toDto = (mdl, show, listType) =>
     updateListStatus(show)
   )(listType)
 
-export const addUserShowsTask = mdl => http => show => list =>
-  http
-    .postTask(http.backendlessUrl("devshows"), toDto(mdl, show, list))
-    .chain(_ => getShows(http))
-    .map(mdl.user.shows)
+export const addUserShowsTask = mdl => http => show => list =>   http
+  .postTask(http.backendlessUrl("devshows"), toDto(mdl, show, list))
+  .chain(_ => getShows(http))
+  .map(mdl.user.shows)
 
 export const updateUserShowsTask = mdl => http => show => list =>
   http
@@ -211,6 +210,11 @@ export const getShowDetailsTask = mdl => http => id =>
 
 export const filterShowsByListType = mdl =>
   filter(propEq("listStatus", mdl.state.currentList()), mdl.user.shows())
+
+export const filterShowForUnselected = mdl => {
+  let selected = pluck('tvmazeId',mdl.user.shows())
+  return mdl.data.shows().filter(show=> !selected.includes(show.tvmazeId))
+}
 
 export const getEpisodeTask = http => episodeUrl =>
   http.getTask(episodeUrl).map(toEpisodeViewModel)
