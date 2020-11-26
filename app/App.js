@@ -1,12 +1,11 @@
-import Routes from "./routes/index"
 
 const toRoutes = (mdl) => (acc, route) => {
   acc[route.route] = {
     onmatch: (args, path, fullroute) => {
-      if (route.group.includes("authenticated") && !mdl.State.isAuth()) {
+      if (route.group.includes("authenticated") && !mdl.state.isAuth()) {
         m.route.set(m.route.get())
       }
-      mdl.State.route = route
+      mdl.state.route = route
       route.onmatch(mdl, args, path, fullroute)
     },
     render: () => route.component(mdl),
@@ -14,6 +13,6 @@ const toRoutes = (mdl) => (acc, route) => {
   return acc
 }
 
-const App = (mdl) => Routes.reduce(toRoutes(mdl), {})
+const App = (mdl) => mdl.Routes.reduce(toRoutes(mdl), {})
 
 export default App

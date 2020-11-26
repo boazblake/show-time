@@ -1,4 +1,4 @@
-import { Home, Alarm, CameraPage } from "pages"
+import { Home, Alarm, SearchPage } from "pages"
 import { Layout } from "components"
 
 const Routes = [
@@ -14,30 +14,18 @@ const Routes = [
     onmatch: (mdl, args, path, fullroute) => {},
     component: (mdl) => m(Layout, { mdl }, m(Home, { mdl })),
   },
-  {
-    id: "alarm",
-    name: "alarm",
-    icon: "alarm-outline",
-    route: "/alarm",
+    {
+    id: "search",
+    name: "search",
+    icon: "search-outline",
+    route: "/search",
     isNav: false,
     group: [],
     children: [],
     options: [],
     onmatch: (mdl, args, path, fullroute) => {},
-    component: (mdl) => m(Layout, { mdl }, m(Alarm, { mdl })),
-  },
-  {
-    id: "camera",
-    name: "camera",
-    icon: "camera-outline",
-    route: "/camera",
-    isNav: false,
-    group: [],
-    children: [],
-    options: [],
-    onmatch: (mdl, args, path, fullroute) => {},
-    component: (mdl) => m(Layout, { mdl }, m(CameraPage, { mdl })),
-  },
+    component: (mdl) => m(Layout, { mdl }, m(SearchPage, { mdl })),
+  }
 ]
 
 export default Routes

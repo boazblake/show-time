@@ -1,67 +1,53 @@
-import { Plugins , ActionSheetOptionStyle} from '@capacitor/core';
 
-const { Modals } = Plugins;
+import http from "../Http.js"
+import {
+  getShows,
+  filterShowsByListType,
+  deleteShowTask,
+  onError
+} from "./fns.js"
+import { isEmpty } from "ramda"
 
-async function showAlert() {
-  let alertRet = await Modals.alert({
-    title: 'Stop',
-    message: 'this is an error'
-  });
-}
-
-async function showConfirm() {
-  let confirmRet = await Modals.confirm({
-    title: 'Confirm',
-    message: 'Are you sure you\'d like to press the red button?'
-  });
-  console.log('Confirm ret', confirmRet);
-}
-
-async function showPrompt() {
-  let promptRet = await Modals.prompt({
-    title: 'Hello',
-    message: 'What\'s your name?'
-  });
-  console.log('Prompt ret', promptRet);
-}
-
-async function showActions(state) {
-  let promptRet = await Modals.showActions({
-    title: 'Photo Options',
-    message: 'Select an option to perform',
-    options: [
-      {
-        title: 'Upload'
-      },
-      {
-        title: 'Share'
-      },
-      {
-        title: 'Remove',
-        style: ActionSheetOptionStyle.Destructive
+ const deleteShow = (mdl) => (show) =>
+    deleteShowTask(http)(show.objectId).fork(
+      onError(mdl)("details"),
+      (updatedShows) => {
+        m.route.set("/home")
+        mdl.user.shows(updatedShows)
       }
-    ]
-  })
+    )
 
-  switch (promptRet.index) {
-    case 0:
-      showConfirm()
-      break;
-    case 1:
-      showPrompt()
-      break;
-    case 2:
-      showAlert()
-    default:
-      break;
-  }
-}
+const getShowsTask = (mdl) => (http) =>
+  getShows(http).fork(mdl.errors, mdl.user.shows)
 
 export const Home = () => {
-  const state = {}
   return {
+    oninit: ({ attrs: { mdl } }) => getShowsTask(mdl)(http),
     view: ({ attrs: { mdl } }) => {
-      return m(".home", m('ion-button', {onclick: e => showActions(state)},"HOME"))
+      return m('ion-content',
+        m('ion-list',
+          filterShowsByListType(mdl).map(
+            show =>
+              show.listStatus == mdl.state.currentList() &&
+              m('ion-item-sliding',
+                m('ion-item',
+                m('ion-avatar', m('ion-img', { src: show.image })),
+                m('ion-label',
+                  m('h2', show.name),
+                  m('h3', show.listStatus),
+                  m('p', show.notes)
+                ),
+              ),
+              m('ion-item-options', {
+                side: 'end',
+              },
+                m('ion-item-option', {
+                  color: 'danger',
+                  onclick: ()=> deleteShow(mdl)(show)
+                }, 'Delete'))
+            )
+        )
+      ))
     },
   }
 }

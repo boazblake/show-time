@@ -1,72 +1,33 @@
-import { actionSheetController } from "@ionic/core"
 import Routes from "../routes/index.js"
 
-const showSettings = (mdl) => {
-  const showAction = (e) => {
-    const actionSheet = actionSheetController
-      .create({
-        header: "Albums",
-        buttons: [
-          { text: "Delete", role: "destructive" },
-          { text: "Share" },
-          { text: "Play" },
-          { text: "Favorite" },
-          { text: "Cancel", role: "cancel" },
-        ],
-      })
-      .then((x) => {
-        console.log(x)
-        x.present()
-      })
+const HomeToolBar = () => {
+  return {
+    view: ({attrs:{mdl}}) =>
+     m("ion-segment", {"value":mdl.state.currentList()},
+      mdl.user.lists().map(list => m("ion-segment-button", {onclick: () => mdl.state.currentList(list),  "value": list }, list))
+    )
   }
-  showAction()
 }
 
-const Menu = () => {
+const SearchToolBar = () => {
   return {
     view: () =>
-      m("ion-menu", { "content-id": "main-content" }, [
-        m(
-          "ion-header",
-          m("ion-toolbar", { color: "primary" }, m("ion-title", "Menu"))
-        ),
-        m(
-          "ion-content",
-          m("ion-list", [
-            m("ion-list-header", " Navigate "),
-            m(
-              "ion-menu-toggle",
-              { "auto-hide": "false" },
-              m("ion-item", { button: "" }, [
-                m("ion-icon", { slot: "start", name: "home" }),
-                m("ion-label", " Home "),
-              ])
-            ),
-          ])
-        ),
-      ]),
+
+     m('.search', 'search')
+
   }
 }
 
-const Toolbar = () => {
-  return {
-    view: ({ attrs: { mdl } }) => {
-      return m("ion-header", m("ion-toolbar", [m("ion-title", m.route.get())]))
-    },
-  }
-}
 
-const Router = () => {
+const Toolbar = ({ attrs: { mdl } }) => {
+  console.log(mdl.state.route.name)
   return {
-    view: ({ attrs: { mdl } }) => {
-      return m(
-        "ion-router",
-        Routes.map((r) => {
-          console.log(r)
-          return m("ion-route", { url: `/#!/${r.name}` })
-        })
-      )
-    },
+    view: ({ attrs: { mdl } }) =>
+       m("ion-header", m("ion-toolbar",
+         mdl.state.route.name == 'home' && m(HomeToolBar, {mdl}),
+         mdl.state.route.name == 'search' && m(SearchToolBar, {mdl})
+      ))
+    ,
   }
 }
 
@@ -78,14 +39,14 @@ const Footer = () => {
         m(
           "ion-tab-bar",
           m("ion-tabs", [
-            Routes.map((r) => m("ion-tab", { tab: `/#!/${r.name}` })),
+            Routes.map((r) => m("ion-tab", { tab: `${r.route}` })),
             m("ion-tab-bar", { slot: "bottom" }, [
               Routes.map((r) =>
                 m(
                   "ion-tab-button",
                   {
                     onclick: () => m.route.set(r.route),
-                    tab: `/#!/${r.name}`,
+                    tab: `${r.route}`,
                   },
                   [m("ion-label", r.name), m("ion-icon", { name: r.icon })]
                 )
@@ -114,7 +75,7 @@ export const Layout = () => {
     view: ({ attrs: { mdl }, children }) => {
       return m("ion-app", [
         m(Toolbar, { mdl }),
-        m("ion-contents", children),
+        m("ion-content", children),
         m(Footer, { mdl }),
       ])
     },

@@ -157,18 +157,14 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.default = void 0;
 
-var _index = _interopRequireDefault(require("./routes/index"));
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
 var toRoutes = mdl => (acc, route) => {
   acc[route.route] = {
     onmatch: (args, path, fullroute) => {
-      if (route.group.includes("authenticated") && !mdl.State.isAuth()) {
+      if (route.group.includes("authenticated") && !mdl.state.isAuth()) {
         m.route.set(m.route.get());
       }
 
-      mdl.State.route = route;
+      mdl.state.route = route;
       route.onmatch(mdl, args, path, fullroute);
     },
     render: () => route.component(mdl)
@@ -176,7 +172,7 @@ var toRoutes = mdl => (acc, route) => {
   return acc;
 };
 
-var App = mdl => _index.default.reduce(toRoutes(mdl), {});
+var App = mdl => mdl.Routes.reduce(toRoutes(mdl), {});
 
 var _default = App;
 exports.default = _default;
@@ -374,6 +370,38 @@ var _default = Model;
 exports.default = _default;
 });
 
+;require.register("components/action-sheet.js", function(exports, require, module) {
+"use strict";
+
+var _core = require("@ionic/core");
+
+var showSettings = mdl => {
+  var showAction = e => {
+    var actionSheet = _core.actionSheetController.create({
+      header: "Albums",
+      buttons: [{
+        text: "Delete",
+        role: "destructive"
+      }, {
+        text: "Share"
+      }, {
+        text: "Play"
+      }, {
+        text: "Favorite"
+      }, {
+        text: "Cancel",
+        role: "cancel"
+      }]
+    }).then(x => {
+      console.log(x);
+      x.present();
+    });
+  };
+
+  showAction();
+};
+});
+
 ;require.register("components/index.js", function(exports, require, module) {
 "use strict";
 
@@ -403,56 +431,11 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.Layout = void 0;
 
-var _core = require("@ionic/core");
-
 var _index = _interopRequireDefault(require("../routes/index.js"));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-var showSettings = mdl => {
-  var showAction = e => {
-    var actionSheet = _core.actionSheetController.create({
-      header: "Albums",
-      buttons: [{
-        text: "Delete",
-        role: "destructive"
-      }, {
-        text: "Share"
-      }, {
-        text: "Play"
-      }, {
-        text: "Favorite"
-      }, {
-        text: "Cancel",
-        role: "cancel"
-      }]
-    }).then(x => {
-      console.log(x);
-      x.present();
-    });
-  };
-
-  showAction();
-};
-
-var Menu = () => {
-  return {
-    view: () => m("ion-menu", {
-      "content-id": "main-content"
-    }, [m("ion-header", m("ion-toolbar", {
-      color: "primary"
-    }, m("ion-title", "Menu"))), m("ion-content", m("ion-list", [m("ion-list-header", " Navigate "), m("ion-menu-toggle", {
-      "auto-hide": "false"
-    }, m("ion-item", {
-      button: ""
-    }, [m("ion-icon", {
-      slot: "start",
-      name: "home"
-    }), m("ion-label", " Home ")]))]))])
-  };
-};
-
-var Toolbar = () => {
+var HomeToolBar = () => {
   return {
     view: (_ref) => {
       var {
@@ -460,30 +443,29 @@ var Toolbar = () => {
           mdl
         }
       } = _ref;
-      return m("ion-header", m("ion-toolbar", [m("ion-title", m.route.get())]));
+      return m("ion-segment", {
+        "value": mdl.state.currentList()
+      }, mdl.user.lists().map(list => m("ion-segment-button", {
+        onclick: () => mdl.state.currentList(list),
+        "value": list
+      }, list)));
     }
   };
 };
 
-var Router = () => {
+var SearchToolBar = () => {
   return {
-    view: (_ref2) => {
-      var {
-        attrs: {
-          mdl
-        }
-      } = _ref2;
-      return m("ion-router", _index.default.map(r => {
-        console.log(r);
-        return m("ion-route", {
-          url: "/#!/".concat(r.name)
-        });
-      }));
-    }
+    view: () => m('.search', 'search')
   };
 };
 
-var Footer = () => {
+var Toolbar = (_ref2) => {
+  var {
+    attrs: {
+      mdl
+    }
+  } = _ref2;
+  console.log(mdl.state.route.name);
   return {
     view: (_ref3) => {
       var {
@@ -491,13 +473,30 @@ var Footer = () => {
           mdl
         }
       } = _ref3;
+      return m("ion-header", m("ion-toolbar", mdl.state.route.name == 'home' && m(HomeToolBar, {
+        mdl
+      }), mdl.state.route.name == 'search' && m(SearchToolBar, {
+        mdl
+      })));
+    }
+  };
+};
+
+var Footer = () => {
+  return {
+    view: (_ref4) => {
+      var {
+        attrs: {
+          mdl
+        }
+      } = _ref4;
       return m("ion-footer", m("ion-tab-bar", m("ion-tabs", [_index.default.map(r => m("ion-tab", {
-        tab: "/#!/".concat(r.name)
+        tab: "".concat(r.route)
       })), m("ion-tab-bar", {
         slot: "bottom"
       }, [_index.default.map(r => m("ion-tab-button", {
         onclick: () => m.route.set(r.route),
-        tab: "/#!/".concat(r.name)
+        tab: "".concat(r.route)
       }, [m("ion-label", r.name), m("ion-icon", {
         name: r.icon
       })])), m("ion-tab-button", {
@@ -511,16 +510,16 @@ var Footer = () => {
 
 var Layout = () => {
   return {
-    view: (_ref4) => {
+    view: (_ref5) => {
       var {
         attrs: {
           mdl
         },
         children
-      } = _ref4;
+      } = _ref5;
       return m("ion-app", [m(Toolbar, {
         mdl
-      }), m("ion-contents", children), m(Footer, {
+      }), m("ion-content", children), m(Footer, {
         mdl
       })]);
     }
@@ -615,54 +614,214 @@ var Alarm = () => {
 exports.Alarm = Alarm;
 });
 
-;require.register("pages/camera-page.js", function(exports, require, module) {
+;require.register("pages/fns.js", function(exports, require, module) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.CameraPage = void 0;
+exports.getEpisodeTask = exports.filterShowsByListType = exports.getShowDetailsTask = exports.updateShowDetailsTask = exports.deleteShowTask = exports.updateUserShowsTask = exports.addUserShowsTask = exports.toDto = exports.showListSelection = exports.propIsDefined = exports.searchShowsTask = exports.getShows = exports.updateShowStatus = exports.onError = exports.toDbModel = exports.toSearchViewModel = exports.getEpisodeLink = exports.formatError = exports.log = void 0;
 
-var _core = require("@capacitor/core");
+var _ramda = require("ramda");
 
-var initCamera = () => {
-  var state = {
-    data: null,
-    error: null
-  };
-
-  var onSuccess = image => {
-    console.log('image', image);
-    state.data = image;
-  };
-
-  var onError = e => {
-    state.error = e;
-  };
-
-  _core.Plugins.Camera.getPhoto({
-    quality: 90,
-    allowEditing: true,
-    resultType: _core.CameraResultType.Uri
-  }).then(onSuccess, onError);
+var log = m => v => {
+  console.log(m, v);
+  return v;
 };
 
-var CameraPage = () => {
+exports.log = log;
+
+var formatError = error => JSON.parse(JSON.stringify(error));
+
+exports.formatError = formatError;
+
+var getEpisodeLink = path => links => (0, _ramda.view)((0, _ramda.lensPath)([path, "href"]), links);
+
+exports.getEpisodeLink = getEpisodeLink;
+
+var formatLinks = links => (0, _ramda.without)([undefined], [getEpisodeLink("previousepisode")(links), getEpisodeLink("nextepisode")(links)]).map(makeHttps);
+
+var toEpisodeViewModel = (_ref) => {
+  var {
+    name,
+    season,
+    number,
+    airdate,
+    image,
+    _links
+  } = _ref;
   return {
-    view: (_ref) => {
-      var {
-        attrs: {
-          mdl
-        }
-      } = _ref;
-      return m(".camera", m('ion-button', {
-        onclick: initCamera
-      }, 'Camera'));
-    }
+    name,
+    season,
+    number,
+    airdate,
+    image: image && (makeHttps(image.original) || makeHttps(image.medium)),
+    links: formatLinks(_links)
   };
 };
 
-exports.CameraPage = CameraPage;
+var toDetailsViewModel = (_ref2) => {
+  var {
+    image,
+    tvmazeId,
+    objectId,
+    listStatus,
+    name,
+    notes
+  } = _ref2;
+  return (_ref3) => {
+    var {
+      webChannel,
+      network,
+      status,
+      genres,
+      premiered,
+      summary,
+      _links
+    } = _ref3;
+    return {
+      name,
+      notes,
+      genre: (0, _ramda.join)(" ", genres),
+      premiered,
+      summary,
+      links: formatLinks(_links),
+      image,
+      tvmazeId,
+      objectId,
+      listStatus,
+      webChannel: webChannel && webChannel.name,
+      network: network && network.name,
+      status
+    };
+  };
+};
+
+var makeHttps = (0, _ramda.replace)("http", "https");
+
+var toSearchViewModel = (_ref4) => {
+  var {
+    name,
+    image,
+    id
+  } = _ref4;
+  return {
+    image: image && (makeHttps(image.original) || makeHttps(image.medium)),
+    tvmazeId: id,
+    name
+  };
+};
+
+exports.toSearchViewModel = toSearchViewModel;
+
+var toDbModel = (_ref5) => {
+  var {
+    listStatus,
+    notes,
+    name,
+    tvmazeId,
+    image
+  } = _ref5;
+  return {
+    image,
+    listStatus,
+    notes,
+    name,
+    tvmazeId
+  };
+};
+
+exports.toDbModel = toDbModel;
+
+var onError = mdl => type => error => mdl.errors[type](error);
+
+exports.onError = onError;
+
+var rejectWithAttr = attr => value => (0, _ramda.reject)((0, _ramda.propEq)(attr, value));
+
+var updateResults = result => show => {
+  if (show) {
+    return (0, _ramda.assoc)("objectId", show.objectId, (0, _ramda.set)((0, _ramda.lensProp)("listStatus"), (0, _ramda.prop)("listStatus", show), result));
+  } else {
+    return result;
+  }
+};
+
+var updateShowStatus = shows => data => data.map(r => (0, _ramda.compose)(updateResults(r), (0, _ramda.find)((0, _ramda.propEq)("tvmazeId", r.tvmazeId)))(shows));
+
+exports.updateShowStatus = updateShowStatus;
+
+var getShows = http => http.getTask(http.backendlessUrl("devshows?pagesize=100"));
+
+exports.getShows = getShows;
+
+var searchShowsTask = mdl => http => http.getTask(http.searchUrl(mdl.state.query())).map((0, _ramda.pluck)("show")).map((0, _ramda.map)(toSearchViewModel)).map(rejectWithAttr("image")(null)).map(updateShowStatus(mdl.user.shows()));
+
+exports.searchShowsTask = searchShowsTask;
+
+var itemSelected = mdl => result => (0, _ramda.equals)((0, _ramda.prop)("tvmazeId", result), mdl.state.searchItem.showMenu());
+
+var propIsDefined = attr => (0, _ramda.compose)(_ramda.not, (0, _ramda.propEq)(attr, undefined));
+
+exports.propIsDefined = propIsDefined;
+
+var showListSelection = mdl => (0, _ramda.anyPass)([itemSelected(mdl), propIsDefined("objectId")]);
+
+exports.showListSelection = showListSelection;
+
+var updateListStatus = show => listType => (0, _ramda.over)((0, _ramda.lensProp)("listStatus"), () => listType, show);
+
+var createBody = dto => ({
+  body: dto
+});
+
+var updateOrder = mdl => show => {
+  show.order = (0, _ramda.filter)((0, _ramda.propEq)("listStatus", show.listStatus), mdl.user.shows()).length;
+  return show;
+};
+
+var toDto = (mdl, show, listType) => (0, _ramda.compose)(createBody, updateOrder(mdl), updateListStatus(show))(listType);
+
+exports.toDto = toDto;
+
+var addUserShowsTask = mdl => http => show => list => http.postTask(http.backendlessUrl("devshows"), toDto(mdl, show, list)).chain(_ => getShows(http)).map(mdl.user.shows);
+
+exports.addUserShowsTask = addUserShowsTask;
+
+var updateUserShowsTask = mdl => http => show => list => http.putTask(http.backendlessUrl("devshows\\".concat(show.objectId)), toDto(mdl, show, list)).chain(_ => getShows(http));
+
+exports.updateUserShowsTask = updateUserShowsTask;
+
+var deleteShowTask = http => id => http.deleteTask(http.backendlessUrl("devshows/".concat(id))).chain(_ => getShows(http));
+
+exports.deleteShowTask = deleteShowTask;
+
+var updateShowDetailsTask = mdl => http => dto => http.putTask(http.backendlessUrl("devshows/".concat(mdl.data.details().objectId)), {
+  body: dto
+}).chain((_ref6) => {
+  var {
+    objectId
+  } = _ref6;
+  return getShowDetailsTask(mdl)(http)(objectId);
+});
+
+exports.updateShowDetailsTask = updateShowDetailsTask;
+
+var getShowDetails = mdl => http => show => http.getTask(http.tvMazeDetailsUrl(show.tvmazeId)).map(toDetailsViewModel(show));
+
+var findShowInDbTask = http => id => http.getTask(http.backendlessUrl("devshows/".concat(id)));
+
+var getShowDetailsTask = mdl => http => id => findShowInDbTask(http)(id).chain(getShowDetails(mdl)(http));
+
+exports.getShowDetailsTask = getShowDetailsTask;
+
+var filterShowsByListType = mdl => (0, _ramda.filter)((0, _ramda.propEq)("listStatus", mdl.state.currentList()), mdl.user.shows());
+
+exports.filterShowsByListType = filterShowsByListType;
+
+var getEpisodeTask = http => episodeUrl => http.getTask(episodeUrl).map(toEpisodeViewModel);
+
+exports.getEpisodeTask = getEpisodeTask;
 });
 
 ;require.register("pages/home.js", function(exports, require, module) {
@@ -673,110 +832,45 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.Home = void 0;
 
-var _core = require("@capacitor/core");
+var _Http = _interopRequireDefault(require("../Http.js"));
 
-function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
+var _fns = require("./fns.js");
 
-function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
+var _ramda = require("ramda");
 
-var {
-  Modals
-} = _core.Plugins;
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-function showAlert() {
-  return _showAlert.apply(this, arguments);
-}
+var deleteShow = mdl => show => (0, _fns.deleteShowTask)(_Http.default)(show.objectId).fork((0, _fns.onError)(mdl)("details"), updatedShows => {
+  m.route.set("/home");
+  mdl.user.shows(updatedShows);
+});
 
-function _showAlert() {
-  _showAlert = _asyncToGenerator(function* () {
-    var alertRet = yield Modals.alert({
-      title: 'Stop',
-      message: 'this is an error'
-    });
-  });
-  return _showAlert.apply(this, arguments);
-}
-
-function showConfirm() {
-  return _showConfirm.apply(this, arguments);
-}
-
-function _showConfirm() {
-  _showConfirm = _asyncToGenerator(function* () {
-    var confirmRet = yield Modals.confirm({
-      title: 'Confirm',
-      message: 'Are you sure you\'d like to press the red button?'
-    });
-    console.log('Confirm ret', confirmRet);
-  });
-  return _showConfirm.apply(this, arguments);
-}
-
-function showPrompt() {
-  return _showPrompt.apply(this, arguments);
-}
-
-function _showPrompt() {
-  _showPrompt = _asyncToGenerator(function* () {
-    var promptRet = yield Modals.prompt({
-      title: 'Hello',
-      message: 'What\'s your name?'
-    });
-    console.log('Prompt ret', promptRet);
-  });
-  return _showPrompt.apply(this, arguments);
-}
-
-function showActions(_x) {
-  return _showActions.apply(this, arguments);
-}
-
-function _showActions() {
-  _showActions = _asyncToGenerator(function* (state) {
-    var promptRet = yield Modals.showActions({
-      title: 'Photo Options',
-      message: 'Select an option to perform',
-      options: [{
-        title: 'Upload'
-      }, {
-        title: 'Share'
-      }, {
-        title: 'Remove',
-        style: _core.ActionSheetOptionStyle.Destructive
-      }]
-    });
-
-    switch (promptRet.index) {
-      case 0:
-        showConfirm();
-        break;
-
-      case 1:
-        showPrompt();
-        break;
-
-      case 2:
-        showAlert();
-
-      default:
-        break;
-    }
-  });
-  return _showActions.apply(this, arguments);
-}
+var getShowsTask = mdl => http => (0, _fns.getShows)(http).fork(mdl.errors, mdl.user.shows);
 
 var Home = () => {
-  var state = {};
   return {
-    view: (_ref) => {
+    oninit: (_ref) => {
       var {
         attrs: {
           mdl
         }
       } = _ref;
-      return m(".home", m('ion-button', {
-        onclick: e => showActions(state)
-      }, "HOME"));
+      return getShowsTask(mdl)(_Http.default);
+    },
+    view: (_ref2) => {
+      var {
+        attrs: {
+          mdl
+        }
+      } = _ref2;
+      return m('ion-content', m('ion-list', (0, _fns.filterShowsByListType)(mdl).map(show => show.listStatus == mdl.state.currentList() && m('ion-item-sliding', m('ion-item', m('ion-avatar', m('ion-img', {
+        src: show.image
+      })), m('ion-label', m('h2', show.name), m('h3', show.listStatus), m('p', show.notes))), m('ion-item-options', {
+        side: 'end'
+      }, m('ion-item-option', {
+        color: 'danger',
+        onclick: () => deleteShow(mdl)(show)
+      }, 'Delete'))))));
     }
   };
 };
@@ -817,18 +911,42 @@ Object.keys(_alarm).forEach(function (key) {
   });
 });
 
-var _cameraPage = require("./camera-page.js");
+var _searchPage = require("./search-page.js");
 
-Object.keys(_cameraPage).forEach(function (key) {
+Object.keys(_searchPage).forEach(function (key) {
   if (key === "default" || key === "__esModule") return;
-  if (key in exports && exports[key] === _cameraPage[key]) return;
+  if (key in exports && exports[key] === _searchPage[key]) return;
   Object.defineProperty(exports, key, {
     enumerable: true,
     get: function get() {
-      return _cameraPage[key];
+      return _searchPage[key];
     }
   });
 });
+});
+
+;require.register("pages/search-page.js", function(exports, require, module) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.SearchPage = void 0;
+
+var SearchPage = () => {
+  return {
+    view: (_ref) => {
+      var {
+        attrs: {
+          mdl
+        }
+      } = _ref;
+      return m(".search", 'SEARCH');
+    }
+  };
+};
+
+exports.SearchPage = SearchPage;
 });
 
 ;require.register("pages/tab.js", function(exports, require, module) {
@@ -903,10 +1021,10 @@ var Routes = [{
     mdl
   }))
 }, {
-  id: "alarm",
-  name: "alarm",
-  icon: "alarm-outline",
-  route: "/alarm",
+  id: "search",
+  name: "search",
+  icon: "search-outline",
+  route: "/search",
   isNav: false,
   group: [],
   children: [],
@@ -914,22 +1032,7 @@ var Routes = [{
   onmatch: (mdl, args, path, fullroute) => {},
   component: mdl => m(_components.Layout, {
     mdl
-  }, m(_pages.Alarm, {
-    mdl
-  }))
-}, {
-  id: "camera",
-  name: "camera",
-  icon: "camera-outline",
-  route: "/camera",
-  isNav: false,
-  group: [],
-  children: [],
-  options: [],
-  onmatch: (mdl, args, path, fullroute) => {},
-  component: mdl => m(_components.Layout, {
-    mdl
-  }, m(_pages.CameraPage, {
+  }, m(_pages.SearchPage, {
     mdl
   }))
 }];
