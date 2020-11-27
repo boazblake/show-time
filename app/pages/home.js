@@ -44,7 +44,7 @@ export const Home = () => {
       return mdl.state.details.selected() ? m(Modal, {mdl})
       : m('ion-list',
           filterShowsByListType(mdl).map(
-            show =>
+            (show) =>
               show.listStatus == mdl.state.currentList() &&
               m('ion-item-sliding',
                 m('ion-item',

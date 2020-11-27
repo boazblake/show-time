@@ -589,6 +589,7 @@ var onError = err => {
 };
 
 var onSuccess = show => {
+  console.log(show);
   state.show = show;
 };
 
@@ -612,38 +613,51 @@ var Modal = () => {
       } = _ref2;
 
       _core.modalController.create({
-        component: dom
+        component: dom,
+        backdropDismiss: false
       }).then(modal => {
         state.modal = modal;
         state.modal.present();
       });
     },
-    onbeforeremove: (_ref3) => {
+    onremove: (_ref3) => {
       var {
         attrs: {
           mdl
         }
       } = _ref3;
+      return state.modal && state.modal.dismiss().then(() => {
+        state.modal = null;
+        state.show = null;
+        dismissModal(mdl);
+      });
+    },
+    onbeforeremove: (_ref4) => {
+      var {
+        attrs: {
+          mdl
+        }
+      } = _ref4;
       return state.modal.dismiss().then(() => {
         state.modal = null;
         state.show = null;
         dismissModal(mdl);
       });
     },
-    view: (_ref4) => {
+    view: (_ref5) => {
       var {
         attrs: {
           mdl
         }
-      } = _ref4;
+      } = _ref5;
       return m('ion-modal-view', state.show && m("ion-header", m("ion-toolbar", m("ion-title", "".concat(state.show.name, " - ").concat(state.show.premiered.split('-')[0], " | ").concat(state.show.network)), m("ion-buttons", {
         "slot": "primary"
       }, m("ion-button", {
-        onclick: e => dismissModal(mdl, state)
+        onclick: e => dismissModal(mdl)
       }, m("ion-icon", {
         "slot": "icon-only",
         "name": "close"
-      }))))), m('ion-content', {
+      }))))), state.show && m('ion-content', {
         padding: true
       }, m('ion-img', {
         style: {
@@ -652,7 +666,8 @@ var Modal = () => {
         src: state.show.image
       }), m('', m.trust(state.show.summary), m('pre', "list status: ".concat(state.show.listStatus)), m('pre', "status: ".concat(state.show.status)), m('ion-textarea', {
         placeholder: 'Notes',
-        value: state.show.notes
+        value: state.show.notes,
+        onkeyup: e => state.show.notes = e.target.value
       }), m('ion-button', {
         onclick: () => updateShowDetails(mdl)({
           notes: state.show.notes
