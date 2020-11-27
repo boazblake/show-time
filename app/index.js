@@ -24,3 +24,4 @@ if (process.env.NODE_ENV == "development") {
   }
 }
 m.route(root, "/home", App(Model))
+m.route.set('/home')
