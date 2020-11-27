@@ -21,7 +21,8 @@ const state = {
   details: {
     selected: Stream(null)
   },
-  currentList: Stream("Watching")
+  currentList: Stream("Watching"),
+  domList: null
 }
 
 const data = {

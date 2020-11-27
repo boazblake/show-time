@@ -2,27 +2,30 @@ import Routes from "../routes/index.js"
 import http from "../Http.js"
 import { searchShowsTask, onError } from "../pages/fns.js"
 
-  const searchShows = (mdl) =>
-    searchShowsTask(mdl)(http).fork(onError(mdl)("search"), mdl.data.shows)
-
-
+const searchShows = (mdl) =>
+  searchShowsTask(mdl)(http).fork(onError(mdl)("search"), mdl.data.shows)
 
 const HomeToolBar = () => {
   return {
     view: ({attrs:{mdl}}) =>
      m("ion-segment", {"value":mdl.state.currentList()},
-      mdl.user.lists().map(list => m("ion-segment-button", {onclick: () => mdl.state.currentList(list),  "value": list }, list))
+       mdl.user.lists().map(list => m("ion-segment-button", {
+         onclick: () => {
+           mdl.state.currentList(list)
+           mdl.state.listDom.closeSlidingItems()
+         }, "value": list
+       }, list))
     )
   }
 }
 
 const SearchToolBar = () => {
   return {
+    onremove: ({ attrs: { mdl } }) => mdl.state.query(null),
     view: ({attrs:{mdl}}) =>
       m('ion-searchbar',
         {
           style: {paddingTop:'12px'},
-          animated:true,
           animated: true,
           'show-cancel-button':"focus" ,
           placeholder: 'Search for a show',
@@ -35,7 +38,7 @@ const SearchToolBar = () => {
 }
 
 
-const Toolbar = ({ attrs: { mdl } }) => {
+const Toolbar = () => {
   return {
     view: ({ attrs: { mdl } }) =>
        m("ion-header", m("ion-toolbar",

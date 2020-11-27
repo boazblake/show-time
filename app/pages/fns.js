@@ -130,7 +130,7 @@ export const updateShowStatus = shows => data =>
   )
 
 export const getShows = http =>
-  http.getTask(http.backendlessUrl("prodshows?pagesize=100"))
+  http.getTask(http.backendlessUrl("devshows?pagesize=100"))
 
 export const searchShowsTask = mdl => http =>
   http
@@ -175,26 +175,26 @@ export const toDto = (mdl, show, listType) =>
   )(listType)
 
 export const addUserShowsTask = mdl => http => show => list =>   http
-  .postTask(http.backendlessUrl("prodshows"), toDto(mdl, show, list))
+  .postTask(http.backendlessUrl("devshows"), toDto(mdl, show, list))
   .chain(_ => getShows(http))
   .map(mdl.user.shows)
 
 export const updateUserShowsTask = mdl => http => show => list =>
   http
     .putTask(
-      http.backendlessUrl(`prodshows\\${show.objectId}`),
+      http.backendlessUrl(`devshows\\${show.objectId}`),
       toDto(mdl, show, list)
     )
     .chain(_ => getShows(http))
 
 export const deleteShowTask = http => id =>
   http
-    .deleteTask(http.backendlessUrl(`prodshows/${id}`))
+    .deleteTask(http.backendlessUrl(`devshows/${id}`))
     .chain(_ => getShows(http))
 
 export const updateShowDetailsTask = mdl => http => dto =>
   http
-    .putTask(http.backendlessUrl(`prodshows/${mdl.state.details.selected().objectId}`), {
+    .putTask(http.backendlessUrl(`devshows/${mdl.state.details.selected().objectId}`), {
       body: dto
     })
     .chain(({ objectId }) => getShowDetailsTask(http)(objectId))
@@ -205,7 +205,7 @@ export const getShowTvMazeDetailsTask = http => show =>
     .map(toDetailsViewModel(show))
 
 const findShowInDbTask = http => id =>
-  http.getTask(http.backendlessUrl(`prodshows/${id}`))
+  http.getTask(http.backendlessUrl(`devshows/${id}`))
 
 export const getShowDetailsTask =  http => id =>
   findShowInDbTask(http)(id).chain(getShowTvMazeDetailsTask(http))

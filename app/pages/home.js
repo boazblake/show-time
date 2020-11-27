@@ -10,22 +10,24 @@ import {
 import { Modal } from 'components'
 
 
+
 const updateUserShows = (mdl) => (show, list) =>
   updateUserShowsTask(mdl)(http)(show)(list).fork(
     onError(mdl)("search"),
     (updatedShows) => {
-        m.route.set("/home")
-        mdl.user.shows(updatedShows)
-      }
+      m.route.set("/home")
+      mdl.user.shows(updatedShows)
+    }
   )
 
- const deleteShow = (mdl) => (show) =>
-    deleteShowTask(http)(show.objectId).fork(
-      onError(mdl)("details"),
-      (updatedShows) => {
-        m.route.set("/home")
-        mdl.user.shows(updatedShows)
-      }
+
+const deleteShow = (mdl) => (show) =>
+  deleteShowTask(http)(show.objectId).fork(
+    onError(mdl)("details"),
+    (updatedShows) => {
+      m.route.set("/home")
+      mdl.user.shows(updatedShows)
+    }
     )
 
 const getShowsTask = (mdl) => (http) =>
@@ -42,14 +44,25 @@ export const Home = () => {
     oninit: ({ attrs: { mdl } }) => getShowsTask(mdl)(http),
     view: ({ attrs: { mdl } }) => {
       return mdl.state.details.selected() ? m(Modal, {mdl})
-      : m('ion-list',
+        : m('ion-list',
+          {
+            oncreate: ({ dom }) => {
+              mdl.state.listDom = dom
+              dom.closeSlidingItems()
+            }
+          },
           filterShowsByListType(mdl).map(
             (show) =>
               show.listStatus == mdl.state.currentList() &&
               m('ion-item-sliding',
                 m('ion-item',
-                  {onclick:() => showModal(mdl, show)},
-                m('ion-avatar', m('ion-img', { src: show.image })),
+                  {
+                    onclick: () => {
+                      showModal(mdl, show)
+                      mdl.state.listDom.closeSlidingItems()
+                    }
+                  },
+                m('ion-thumbnail', m('ion-img', { src: show.image })),
                 m('ion-label',
                   m('h2', show.name),
                   m('h3', show.listStatus),
@@ -61,14 +74,20 @@ export const Home = () => {
                        side: 'start',
                   },
                 m('ion-item-option', {
-                  onclick: ()=> updateUserShows(mdl)(show, otherList(mdl))
+                  onclick: () => {
+                    updateUserShows(mdl)(show, otherList(mdl))
+                    mdl.state.listDom.closeSlidingItems()
+                  }
                 }, `move to ${otherList(mdl)}`)
                 ),
                 m('ion-item-options',
                  m('ion-item-option', {
                   color: 'danger',
                   side: 'end',
-                    onclick: ()=> deleteShow(mdl)(show)
+                   onclick: () => {
+                     deleteShow(mdl)(show)
+                     mdl.state.listDom.closeSlidingItems()
+                   }
                   }, 'Delete'))
             )
         )
