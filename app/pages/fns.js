@@ -197,7 +197,7 @@ export const updateShowDetailsTask = mdl => http => dto =>
     })
     .chain(({ objectId }) => getShowDetailsTask(http)(objectId))
 
-const getShowTvMazeDetails = http => show =>
+export const getShowTvMazeDetailsTask = http => show =>
   http
     .getTask(http.tvMazeDetailsUrl(show.tvmazeId))
     .map(toDetailsViewModel(show))
@@ -206,7 +206,7 @@ const findShowInDbTask = http => id =>
   http.getTask(http.backendlessUrl(`devshows/${id}`))
 
 export const getShowDetailsTask =  http => id =>
-  findShowInDbTask(http)(id).chain(getShowTvMazeDetails(http))
+  findShowInDbTask(http)(id).chain(getShowTvMazeDetailsTask(http))
 
 export const filterShowsByListType = mdl =>
   filter(propEq("listStatus", mdl.state.currentList()), mdl.user.shows())
