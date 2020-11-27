@@ -21,12 +21,14 @@ const SearchToolBar = () => {
     view: ({attrs:{mdl}}) =>
       m('ion-searchbar',
         {
+          style: {paddingTop:'12px'},
+          animated:true,
           animated: true,
           'show-cancel-button':"focus" ,
           placeholder: 'Search for a show',
            value: mdl.state.query(),
             oninput: (e) => mdl.state.query(e.target.value),
-            onchange: () => searchShows(mdl)
+            onkeyup: () => searchShows(mdl)
         }
       )
   }
@@ -46,7 +48,7 @@ const Toolbar = ({ attrs: { mdl } }) => {
 
 const Footer = () => {
   return {
-    view: ({ attrs: { mdl } }) => {
+    view: () => {
       return m(
         "ion-footer",
         m(
@@ -63,17 +65,6 @@ const Footer = () => {
                   },
                   [m("ion-label", r.name), m("ion-icon", { name: r.icon })]
                 )
-              ),
-
-              m(
-                "ion-tab-button",
-                {
-                  onclick: () => showSettings(mdl),
-                },
-                [
-                  m("ion-label", "Settings"),
-                  m("ion-icon", { name: "ellipsis-vertical-outline" }),
-                ]
               ),
             ]),
           ])

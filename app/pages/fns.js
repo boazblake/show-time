@@ -28,17 +28,19 @@ export const log = m => v => {
 
 export const formatError = error => JSON.parse(JSON.stringify(error))
 
-export const getEpisodeLink = path => links =>
-  view(lensPath([path, "href"]), links)
+ const getEpisodeLink = label => path => links =>
+  ({label, href: makeHttps(view(lensPath([path, "href"]), links))})
 
-const formatLinks = links =>
-  without(
-    [undefined],
-    [
-      getEpisodeLink("previousepisode")(links),
-      getEpisodeLink("nextepisode")(links)
-    ]
-  ).map(makeHttps)
+const formatDetailsLinks = links => [
+      getEpisodeLink('previous')("previousepisode")(links),
+      getEpisodeLink('next')("nextepisode")(links)
+    ].filter(ep => !propEq('href', undefined)(ep))
+
+const formatEpisodeLinks = links => [
+      getEpisodeLink('self')('self')(links)
+    ].filter(ep => !propEq('href', undefined)(ep))
+
+
 
 const toEpisodeViewModel = ({
   name,
@@ -53,7 +55,7 @@ const toEpisodeViewModel = ({
   number,
   airdate,
   image: image && (makeHttps(image.original) || makeHttps(image.medium)),
-  links: formatLinks(_links)
+  links: formatEpisodeLinks(_links)
 })
 
 const toDetailsViewModel = ({
@@ -77,7 +79,7 @@ const toDetailsViewModel = ({
   genre: join(" ", genres),
   premiered,
   summary,
-  links: formatLinks(_links),
+  links: formatDetailsLinks(_links),
   image,
   tvmazeId,
   objectId,
@@ -87,7 +89,7 @@ const toDetailsViewModel = ({
   status
 })
 
-const makeHttps = replace("http", "https")
+const makeHttps = url => url && url.replace("http", "https")
 
 export const toSearchViewModel = ({ name, image, id }) => ({
   image: image && (makeHttps(image.original) || makeHttps(image.medium)),
@@ -128,7 +130,7 @@ export const updateShowStatus = shows => data =>
   )
 
 export const getShows = http =>
-  http.getTask(http.backendlessUrl("devshows?pagesize=100"))
+  http.getTask(http.backendlessUrl("prodshows?pagesize=100"))
 
 export const searchShowsTask = mdl => http =>
   http
@@ -173,26 +175,26 @@ export const toDto = (mdl, show, listType) =>
   )(listType)
 
 export const addUserShowsTask = mdl => http => show => list =>   http
-  .postTask(http.backendlessUrl("devshows"), toDto(mdl, show, list))
+  .postTask(http.backendlessUrl("prodshows"), toDto(mdl, show, list))
   .chain(_ => getShows(http))
   .map(mdl.user.shows)
 
 export const updateUserShowsTask = mdl => http => show => list =>
   http
     .putTask(
-      http.backendlessUrl(`devshows\\${show.objectId}`),
+      http.backendlessUrl(`prodshows\\${show.objectId}`),
       toDto(mdl, show, list)
     )
     .chain(_ => getShows(http))
 
 export const deleteShowTask = http => id =>
   http
-    .deleteTask(http.backendlessUrl(`devshows/${id}`))
+    .deleteTask(http.backendlessUrl(`prodshows/${id}`))
     .chain(_ => getShows(http))
 
 export const updateShowDetailsTask = mdl => http => dto =>
   http
-    .putTask(http.backendlessUrl(`devshows/${mdl.state.details.selected().objectId}`), {
+    .putTask(http.backendlessUrl(`prodshows/${mdl.state.details.selected().objectId}`), {
       body: dto
     })
     .chain(({ objectId }) => getShowDetailsTask(http)(objectId))
@@ -203,7 +205,7 @@ export const getShowTvMazeDetailsTask = http => show =>
     .map(toDetailsViewModel(show))
 
 const findShowInDbTask = http => id =>
-  http.getTask(http.backendlessUrl(`devshows/${id}`))
+  http.getTask(http.backendlessUrl(`prodshows/${id}`))
 
 export const getShowDetailsTask =  http => id =>
   findShowInDbTask(http)(id).chain(getShowTvMazeDetailsTask(http))
