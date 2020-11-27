@@ -1,36 +1,77 @@
 import {modalController} from '@ionic/core'
+import http from '../Http'
+import { getShowDetailsTask, updateShowDetailsTask } from '../pages/fns'
 
-const dismissModal = mdl => mdl.state.details.selected(null)
+const state = {
+  show: '',
+  modal: null
+}
+
+const dismissModal = mdl =>
+  mdl.state.details.selected(null)
+
+  const onError = err => {
+    state.error = err
+  }
+  const onSuccess = show => {
+    state.show = show
+  }
+
+
+const updateShowDetails = mdl => update => updateShowDetailsTask(mdl)(http)(update).chain(_=>getShowDetailsTask(http)(mdl.state.details.selected().objectId)).fork(onError, onSuccess)
+
+const getShowDetails = mdl=>
+  getShowDetailsTask(http)(mdl.state.details.selected().objectId).fork(onError, onSuccess)
+
+
 
 export const Modal = () => {
-  const state = {}
   return {
-    onremove: () =>
-      state.modal.dismiss().then(state.modal = null)
-    ,
-    oncreate: ({ dom, attrs:{mdl} }) => {
-      console.log(
-        state,
-        mdl.state.details.selected(),
-      )
-      modalController.create({ component: dom }).then(x => { state.modal = x; state.modal.present()})
+    oninit: ({ attrs: { mdl } }) => getShowDetails(mdl, state),
+    oncreate: ({ dom }) => {
+      modalController
+        .create({ component: dom })
+        .then(modal => { state.modal = modal; state.modal.present() })
     },
+    onbeforeremove: ({ attrs: { mdl } }) =>
+      state.modal.dismiss().then(() => {
+          state.modal = null
+          state.show = null
+          dismissModal(mdl)
+      }),
     view: ({ attrs: { mdl } }) =>
-        m('ion-modal',
+    m('ion-modal-view',
+    state.show &&
         m("ion-header",
           m("ion-toolbar",
-              m("ion-title",
-                mdl.state.details.selected().name
+            m("ion-title",
+              `${state.show.name} - ${state.show.premiered.split('-')[0]} | ${state.show.network}`
               ),
               m("ion-buttons", { "slot": "primary" },
-                m("ion-button", { onclick: e => dismissModal(mdl) },
+                m("ion-button", { onclick: e => dismissModal(mdl, state) },
                   m("ion-icon", { "slot": "icon-only", "name": "close" })
                 )
               )
 
           )),
-         m('ion-content',m('ion-img', {slot: 'fixed', src:mdl.state.details.selected().img}))
-    )
+          m('ion-content', {
+                padding: true
+          },
+            m('ion-img', { style: { width: '50%' }, src: state.show.image }),
+            m('',
+              m.trust(state.show.summary),
+              m('pre', `list status: ${state.show.listStatus}`),
+              m('pre', `status: ${state.show.status}`),
+              m('ion-textarea', { placeholder: 'Notes', value: state.show.notes }),
+              m('ion-button', {onclick:()=>updateShowDetails(mdl)({notes:state.show.notes})}, 'Save note'),
+              m('', JSON.stringify(state.show) ) ,
+            )
+          )
+
+
+
+          ),
+
   }
 }
 

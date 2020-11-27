@@ -41,7 +41,7 @@ export const Home = () => {
   return {
     oninit: ({ attrs: { mdl } }) => getShowsTask(mdl)(http),
     view: ({ attrs: { mdl } }) => {
-      return mdl.state.details.selected() ?  m('ion-content',m(Modal, {mdl}))
+      return mdl.state.details.selected() ? m(Modal, {mdl})
       : m('ion-list',
           filterShowsByListType(mdl).map(
             show =>
@@ -61,7 +61,6 @@ export const Home = () => {
                        side: 'start',
                   },
                 m('ion-item-option', {
-
                   onclick: ()=> updateUserShows(mdl)(show, otherList(mdl))
                 }, `move to ${otherList(mdl)}`)
                 ),
