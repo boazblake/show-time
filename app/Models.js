@@ -23,7 +23,16 @@ const state = {
   },
   currentList: Stream("Watching"),
   domList: null,
-  mode: 'light'
+  mode: 'light',
+  toast: {
+  }
+}
+
+const toast = {
+  show: Stream(false),
+  duration: Stream(2000),
+  status: Stream(null),
+  msg: Stream(null),
 }
 
 const data = {
@@ -34,7 +43,7 @@ const data = {
 const errors = {
   details: Stream(null),
   search: Stream(null),
-  user: Stream(null)
+  user: Stream(null),
 }
 
 const user = {
@@ -43,6 +52,7 @@ const user = {
 }
 
 const Model = {
+  toast,
   Routes,
   state,
   user,

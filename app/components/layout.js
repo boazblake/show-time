@@ -2,6 +2,7 @@ import Routes from "../routes/index.js"
 import http from "../Http.js"
 import { searchShowsTask, onError } from "../pages/fns.js"
 import { showSettings } from './action-sheet'
+import Toast from './toast'
 
 const searchShows = (mdl) =>
   searchShowsTask(mdl)(http).fork(onError(mdl)("search"), mdl.data.shows)
@@ -90,6 +91,7 @@ export const Layout = () => {
         m(Toolbar, { mdl }),
         m("ion-content", children),
         m(Footer, { mdl }),
+        mdl.toast.show() && m(Toast, { mdl }),
       ])
     },
   }

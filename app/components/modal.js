@@ -1,15 +1,22 @@
 import {modalController} from '@ionic/core'
 import http from '../Http'
-import { getShowDetailsTask, updateShowDetailsTask,getEpisodeTask , getShowTvMazeDetailsTask, addUserShowsTask} from '../pages/fns'
+import { getShowDetailsTask, updateShowDetailsTask,getEpisodeTask , getShowTvMazeDetailsTask, addUserShowsTask, makeToast} from '../pages/fns'
 
 const state = {
   show: '',
-  modal: null
+  modal: null,
+  status: null,
 }
 const dismissModal = mdl => mdl.state.details.selected(null)
 
-const onError = err => state.error = err
-const onSuccess = show => state.show = show
+const onError = err => {
+  state.error = err
+}
+
+const onSuccess = show => {
+  state.show = show
+  state.error = null
+}
 
 const addUserShows = (mdl) => (show, list) =>
   addUserShowsTask(mdl)(http)(show)(list)
@@ -19,7 +26,15 @@ const addUserShows = (mdl) => (show, list) =>
 const updateShowDetails = mdl => update =>
   updateShowDetailsTask(mdl)(http)(update)
     .chain(_ => getShowDetailsTask(http)(mdl.state.details.selected().objectId))
-    .fork(onError, onSuccess)
+    .fork(
+      (dto) => {
+      onError(dto)
+      makeToast({ mdl, status: false, msg: err })
+    },
+      (dto) => {
+      onSuccess(dto)
+      makeToast({mdl, status: true, msg:'Show successfully updated'})
+      })
 
 const getShowDetails = mdl =>
   mdl.state.details.selected().objectId
@@ -121,7 +136,7 @@ export const Modal = () => {
               state.show.links.map(ep => m(Episode, {mdl, ep})),
               // m('', JSON.stringify(state.show) ) ,
             )
-          )]
+      )],
         ),
   }
 }

@@ -26,6 +26,20 @@ export const log = m => v => {
   return v
 }
 
+const resetToast = mdl => {
+  mdl.toast.show(false)
+  mdl.toast.msg(null)
+  mdl.toast.status(null)
+
+}
+
+export const makeToast = ({ mdl, status, msg }) => {
+  mdl.toast.show(true)
+  mdl.toast.status(status)
+  mdl.toast.msg(msg)
+  setTimeout(() => resetToast(mdl),  mdl.toast.duration()  )
+}
+
 export const formatError = error => JSON.parse(JSON.stringify(error))
 
  const getEpisodeLink = label => path => links =>
