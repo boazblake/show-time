@@ -141,7 +141,7 @@ export const Modal = () => {
           state.show.listStatus && m('ion-row',
           m('ion-textarea', {
             placeholder: 'Notes', value: state.show.notes,
-            onkeyup: e => state.show.notes = e.target.value
+            onchange: e => state.show.notes = e.target.value
           }),
           m('ion-button', { onclick: () => updateShowDetails(mdl)({ notes: state.show.notes }) }, 'Save note')
           )
