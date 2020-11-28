@@ -3,12 +3,12 @@ import http from "../Http.js"
 import {
   getShows,
   filterShowsByListType,
-  deleteShowTask,
   updateUserShowsTask,
+  deleteShowTask,
   onError
 } from "./fns.js"
 import { Modal } from 'components'
-
+import {sortBy, prop} from 'ramda'
 
 
 const updateUserShows = (mdl) => (show, list) =>
@@ -16,7 +16,7 @@ const updateUserShows = (mdl) => (show, list) =>
     onError(mdl)("search"),
     (updatedShows) => {
       m.route.set("/home")
-      mdl.user.shows(updatedShows)
+      mdl.user.shows(sortBy(prop('name'),updatedShows))
     }
   )
 
@@ -26,7 +26,7 @@ const deleteShow = (mdl) => (show) =>
     onError(mdl)("details"),
     (updatedShows) => {
       m.route.set("/home")
-      mdl.user.shows(updatedShows)
+      mdl.user.shows(sortBy(prop('name'),updatedShows))
     }
     )
 
@@ -51,9 +51,9 @@ export const Home = () => {
               dom.closeSlidingItems()
             }
           },
-          filterShowsByListType(mdl).map(
+          sortBy(prop('name'), filterShowsByListType(mdl)).map(
             (show) =>
-              show.listStatus == mdl.state.currentList() &&
+              // show.listStatus == mdl.state.currentList() &&
               m('ion-item-sliding',
                 m('ion-item',
                   {

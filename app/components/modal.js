@@ -1,16 +1,34 @@
 import {modalController} from '@ionic/core'
 import http from '../Http'
-import { getShowDetailsTask, updateShowDetailsTask,getEpisodeTask , getShowTvMazeDetailsTask, addUserShowsTask, makeToast} from '../pages/fns'
+import {
+  getShowDetailsTask,
+  updateShowDetailsTask,
+  getEpisodeTask,
+  getShowTvMazeDetailsTask,
+  addUserShowsTask,
+  makeToast,
+} from '../pages/fns'
+import {sortBy, prop} from 'ramda'
 
 const state = {
   show: '',
   modal: null,
   status: null,
 }
+
+const updateUserShows = mdl => dto =>
+  mdl.user.shows(
+    sortBy(prop('name'),mdl.user.shows().filter(show => show.tvmazeId !== dto.tvmazeId).concat([dto])
+    ))
+
+
+
 const dismissModal = mdl => mdl.state.details.selected(null)
 
-const onError = err => {
+const onError = mdl => err => {
+  let msg = JSON.parse(JSON.stringify(err)).response.message
   state.error = err
+  makeToast({ mdl, status: false, msg})
 }
 
 const onSuccess = show => {
@@ -20,33 +38,30 @@ const onSuccess = show => {
 
 const addUserShows = (mdl) => (show, list) =>
   addUserShowsTask(mdl)(http)(show)(list)
-    .fork(onError, shows => { mdl.user.shows(shows); dismissModal(mdl) })
+    .fork(onError(mdl), shows => { mdl.user.shows(shows); dismissModal(mdl) })
 
 
 const updateShowDetails = mdl => update =>
   updateShowDetailsTask(mdl)(http)(update)
     .chain(_ => getShowDetailsTask(http)(mdl.state.details.selected().objectId))
-    .fork(
+    .fork(onError(mdl),
       (dto) => {
-      onError(dto)
-      makeToast({ mdl, status: false, msg: err })
-    },
-      (dto) => {
+      updateUserShows(mdl)(dto)
       onSuccess(dto)
       makeToast({mdl, status: true, msg:'Show successfully updated'})
       })
 
 const getShowDetails = mdl =>
   mdl.state.details.selected().objectId
-    ? getShowDetailsTask(http)(mdl.state.details.selected().objectId).fork(onError, onSuccess)
-    : getShowTvMazeDetailsTask(http)(mdl.state.details.selected()).fork(onError, onSuccess)
+    ? getShowDetailsTask(http)(mdl.state.details.selected().objectId).fork(onError(mdl), onSuccess)
+    : getShowTvMazeDetailsTask(http)(mdl.state.details.selected()).fork(onError(mdl), onSuccess)
 
 
 const Episode = () => {
   let data;
   const getEpisode = (mdl) => (episode) =>
     getEpisodeTask(http)(episode).fork(
-      onError,
+      onError(mdl),
       (dto) =>  data = dto
     )
 

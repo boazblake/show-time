@@ -15,10 +15,8 @@ import {
   propEq,
   prop,
   reject,
-  replace,
-  set,
+  set,sortBy,
   view,
-  without
 } from "ramda"
 
 export const log = m => v => {
@@ -78,11 +76,11 @@ const toDetailsViewModel = ({
   objectId,
   listStatus,
   name,
-  notes
+  notes,
 }) => ({
   webChannel,
-  network,
   status,
+  network,
   genres,
   premiered,
   summary,
@@ -145,7 +143,7 @@ export const updateShowStatus = shows => data =>
   )
 
 export const getShows = http =>
-  http.getTask(http.backendlessUrl("prodshows?pagesize=100"))
+  http.getTask(http.backendlessUrl("prodshows?pagesize=100")).map(sortBy(propEq('name')))
 
 export const searchShowsTask = mdl => http =>
   http
@@ -171,7 +169,7 @@ const updateListStatus = show => listType =>
   over(lensProp("listStatus"), () => listType, show)
 
 const createBody = dto => ({
-  body: dto
+  body: toDbModel(dto)
 })
 
 const updateOrder = mdl => show => {
