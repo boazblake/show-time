@@ -63,7 +63,8 @@ export const Home = () => {
                     }
                   },
                 m('ion-thumbnail', m('ion-img', { src: show.image })),
-                m('ion-label',
+                  m('ion-label',
+                  {style:{paddingLeft:'12px'}},
                   m('h2', show.name),
                   m('p', m('i',show.status)),
                   m('p', show.notes)
