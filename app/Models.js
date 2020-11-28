@@ -22,7 +22,8 @@ const state = {
     selected: Stream(null)
   },
   currentList: Stream("Watching"),
-  domList: null
+  domList: null,
+  mode: 'light'
 }
 
 const data = {

@@ -1,6 +1,7 @@
 import Routes from "../routes/index.js"
 import http from "../Http.js"
 import { searchShowsTask, onError } from "../pages/fns.js"
+import { showSettings } from './action-sheet'
 
 const searchShows = (mdl) =>
   searchShowsTask(mdl)(http).fork(onError(mdl)("search"), mdl.data.shows)
@@ -51,7 +52,7 @@ const Toolbar = () => {
 
 const Footer = () => {
   return {
-    view: () => {
+    view: ({attrs:{mdl}}) => {
       return m(
         "ion-footer",
         m(
@@ -69,6 +70,11 @@ const Footer = () => {
                   [m("ion-label", r.name), m("ion-icon", { name: r.icon })]
                 )
               ),
+              m("ion-tab-button",
+              {
+                onclick: () => showSettings(mdl),
+              },
+              [m("ion-label", 'settings'), m("ion-icon", { name: 'ellipsis-vertical-outline' })])
             ]),
           ])
         )

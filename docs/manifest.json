@@ -1,7 +1,7 @@
 {
   "short_name": "ionic-poc",
   "name": "ionic-poc",
-  "icons": ["./images/favicon.ico"],
+  "icons": ["images/favicon.ico"],
   "start_url": "/ionic-poc/#!/home",
   "background_color": "#3367D6",
   "display": "fullscreen",

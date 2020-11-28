@@ -2,30 +2,24 @@ import {modalController} from '@ionic/core'
 import http from '../Http'
 import { getShowDetailsTask, updateShowDetailsTask,getEpisodeTask , getShowTvMazeDetailsTask, addUserShowsTask} from '../pages/fns'
 
-
-
-  const state = {
-    show: '',
-    modal: null
-  }
-
-const dismissModal = mdl =>
-  mdl.state.details.selected(null)
-
-const onError = err => {
-  state.error = err
+const state = {
+  show: '',
+  modal: null
 }
+const dismissModal = mdl => mdl.state.details.selected(null)
 
-const onSuccess = show => {
-  console.log(show)
-  state.show = show
-}
+const onError = err => state.error = err
+const onSuccess = show => state.show = show
 
 const addUserShows = (mdl) => (show, list) =>
-  addUserShowsTask(mdl)(http)(show)(list).fork(onError, shows => { mdl.user.shows(shows); dismissModal(mdl)} )
+  addUserShowsTask(mdl)(http)(show)(list)
+    .fork(onError, shows => { mdl.user.shows(shows); dismissModal(mdl) })
 
 
-const updateShowDetails = mdl => update => updateShowDetailsTask(mdl)(http)(update).chain(_=>getShowDetailsTask(http)(mdl.state.details.selected().objectId)).fork(onError, onSuccess)
+const updateShowDetails = mdl => update =>
+  updateShowDetailsTask(mdl)(http)(update)
+    .chain(_ => getShowDetailsTask(http)(mdl.state.details.selected().objectId))
+    .fork(onError, onSuccess)
 
 const getShowDetails = mdl =>
   mdl.state.details.selected().objectId
@@ -34,25 +28,26 @@ const getShowDetails = mdl =>
 
 
 const Episode = () => {
-  let epsData = undefined
+  let data;
   const getEpisode = (mdl) => (episode) =>
     getEpisodeTask(http)(episode).fork(
       onError,
-      (s) => { console.log(s);(epsData = s)}
+      (dto) =>  data = dto
     )
 
   return {
-    oninit: ({ attrs: { mdl, ep:{ href} } }) => getEpisode(mdl)(href),
+    oninit: ({ attrs: { mdl, ep: { href } } }) => getEpisode(mdl)(href),
+    onremove: () => data = null,
     view: ({ attrs: {  ep:{label} } }) =>
-      epsData &&
+      data &&
       m(".", [
         m('h3',label),
         m("ion-img", {
-          src: epsData.image
+          src: data.image
         }),
         m('ion-item',
-          m('ion-label', epsData.name), m('p', epsData.airdate) ,
-          m('ion-label', 'Season - Ep:'), m('p', `${epsData.season} - ${epsData.number}`)
+          m('ion-label', data.name), m('p', data.airdate) ,
+          m('ion-label', 'Season - Ep:'), m('p', `${data.season} - ${data.number}`)
         )
       ])
   }
@@ -84,7 +79,7 @@ export const Modal = () => {
     view: ({ attrs: { mdl } }) =>
     m('ion-modal-view',
     state.show &&
-        m("ion-header",
+        [m("ion-header",
           m("ion-toolbar",
             m("ion-title",
               `${state.show.name} - ${state.show.premiered.split('-')[0]} | ${state.show.network || state.show.webChannel}`
@@ -98,31 +93,36 @@ export const Modal = () => {
           !state.show.listStatus && m('ion-item',
             m('ion-label', 'Add to: '),
             m("ion-buttons",
-                mdl.user.lists().map(list => m('ion-button', { onclick: e => addUserShows(mdl)(state.show, list) }, list))
+                mdl.user.lists().map(list => m('ion-button.ion-activatable ripple-parent', { onclick: e => addUserShows(mdl)(state.show, list) }, m('ion-ripple'),list))
             )
           )
         ),
-      state.show &&
       m('ion-content', {
                 padding: true
           },
-            m('ion-img', { style: { width: '50%' }, src: state.show.image }),
+        m('ion-grid',
+          m('ion-row',
+            m('ion-col', m('ion-img', { src: state.show.image })),
+            m('ion-col', m.trust(state.show.summary))),
+          m('ion-row',
+            m('ion-col', m('pre', `status: ${state.show.status}`)),
+            m('ion-col', state.show.listStatus && m('pre', `list status: ${state.show.listStatus}`))
+            ),
+          state.show.listStatus && m('ion-row',
+          m('ion-textarea', {
+            placeholder: 'Notes', value: state.show.notes,
+            onkeyup: e => state.show.notes = e.target.value
+          }),
+          m('ion-button', { onclick: () => updateShowDetails(mdl)({ notes: state.show.notes }) }, 'Save note')
+          )
+        ) ,
             m('',
-              m.trust(state.show.summary),
-              m('pre', `status: ${state.show.status}`),
-              state.show.listStatus && [m('pre', `list status: ${state.show.listStatus}`),
-              m('ion-textarea', {
-                placeholder: 'Notes', value: state.show.notes,
-                onkeyup: e => state.show.notes = e.target.value
-              }),
-              m('ion-button', { onclick: () => updateShowDetails(mdl)({ notes: state.show.notes }) }, 'Save note')],
               m('h3', 'Episodes'),
               state.show.links.map(ep => m(Episode, {mdl, ep})),
               // m('', JSON.stringify(state.show) ) ,
             )
-          )
-          ),
-
+          )]
+        ),
   }
 }
 

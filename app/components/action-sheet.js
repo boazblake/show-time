@@ -1,21 +1,19 @@
 import { actionSheetController } from "@ionic/core"
-const showSettings = (mdl) => {
-  const showAction = (e) => {
-    const actionSheet = actionSheetController
+export const showSettings = (mdl) => {
+  const showAction = () => {
+    actionSheetController
       .create({
-        header: "Albums",
+        header: "Settings",
         buttons: [
-          { text: "Delete", role: "destructive" },
-          { text: "Share" },
-          { text: "Play" },
-          { text: "Favorite" },
-          { text: "Cancel", role: "cancel" },
+          {
+            handler: () => {
+              mdl.state.mode = mdl.state.mode == 'light' ? 'dark' : 'light'
+              document.body.classList.toggle('dark')
+              window.matchMedia('(prefers-color-scheme: dark)');
+          }, text: mdl.state.mode == 'light' ? 'Enter Dark Mode' : 'Enter Light Mode'  },
         ],
       })
-      .then((x) => {
-        console.log(x)
-        x.present()
-      })
+      .then(x=> x.present())
   }
   showAction()
 }

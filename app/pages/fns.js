@@ -97,12 +97,13 @@ export const toSearchViewModel = ({ name, image, id }) => ({
   name
 })
 
-export const toDbModel = ({ listStatus, notes, name, tvmazeId, image }) => ({
+export const toDbModel = ({ listStatus, notes, name, tvmazeId, image, status }) => ({
   image,
   listStatus,
   notes,
   name,
-  tvmazeId
+  tvmazeId,
+  status
 })
 
 export const onError = mdl => type => error => mdl.errors[type](error)
