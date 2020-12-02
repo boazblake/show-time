@@ -1,4 +1,3 @@
-
 const toRoutes = (mdl) => (acc, route) => {
   acc[route.route] = {
     onmatch: (args, path, fullroute) => {

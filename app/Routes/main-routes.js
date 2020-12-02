@@ -14,7 +14,7 @@ const Routes = [
     onmatch: (mdl, args, path, fullroute) => {},
     component: (mdl) => m(Layout, { mdl }, m(Home, { mdl })),
   },
-    {
+  {
     id: "search",
     name: "search",
     icon: "search-outline",
@@ -25,7 +25,7 @@ const Routes = [
     options: [],
     onmatch: (mdl, args, path, fullroute) => {},
     component: (mdl) => m(Layout, { mdl }, m(SearchPage, { mdl })),
-  }
+  },
 ]
 
 export default Routes

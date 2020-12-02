@@ -1,8 +1,12 @@
-# Skeleton
+# ShowTime
+## built with mithrilJS and Ionic
 
 install ionic global
 npx cap add [platform]
-yarn start - to debug
-to deploy
-ionic cap sync
-npx cap open [platform]
+to debug:
+  yarn fresh/ start
+to deploy:
+  yarn sync
+  npx cap open [platform]
+
+to update pods: npx cap update ios

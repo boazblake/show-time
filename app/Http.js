@@ -1,4 +1,4 @@
-import { tvMazeApiKey, tvMazeBaseUrl } from "./secrets.js"
+import { tvMazeApiKey, tvMazeBaseUrl } from "./.secrets.js"
 import Task from "data.task"
 import Model from "./Models.js"
 
@@ -33,7 +33,7 @@ const xhrProgress = {
     xhr.onload = onLoad
     xhr.onloadstart = onLoadStart
     xhr.onloadend = onLoadEnd
-  }
+  },
 }
 
 const _http = (mdl) => {
@@ -49,8 +49,8 @@ const headers = (url, args) => {
   return {
     headers: {
       // ...tmdbBearerToken,
-      ...contentType
-    }
+      ...contentType,
+    },
   }
 }
 
@@ -65,24 +65,24 @@ const _task = (url) => (args) =>
 const getTask = (url, args = {}) =>
   _task(url)({
     ...args,
-    method: "GET"
+    method: "GET",
   })
 const postTask = (url, args = {}) =>
   _task(url)({
     ...args,
-    method: "POST"
+    method: "POST",
   })
 const putTask = (url, args = {}) => {
   // console.log(args)
   return _task(url)({
     ...args,
-    method: "PUT"
+    method: "PUT",
   })
 }
 const deleteTask = (url, args = {}) =>
   _task(url)({
     ...args,
-    method: "DELETE"
+    method: "DELETE",
   })
 
 const backEndlessBaseUrl =
@@ -105,7 +105,7 @@ const http = {
   deleteTask,
   searchUrl,
   tvMazeDetailsUrl,
-  backendlessUrl
+  backendlessUrl,
 }
 
 export default http

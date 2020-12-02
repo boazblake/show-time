@@ -1,6 +1,6 @@
 {
   "appId": "boazblake.github.io",
-  "appName": "ionic-poc",
+  "appName": "show-time",
   "bundledWebRuntime": false,
   "npmClient": "yarn",
   "webDir": "docs",
