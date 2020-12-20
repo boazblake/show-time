@@ -1,5 +1,10 @@
 import App from "./App.js"
 import Model from "Models"
+import { ArrayFP } from "./config"
+
+ArrayFP.configure()
+
+console.log([])
 
 const root = document.body
 
@@ -24,7 +29,6 @@ if (process.env.NODE_ENV == "development") {
   }
 }
 if (localStorage.getItem("user")) {
-  console.log("??", JSON.parse(localStorage.getItem("user")))
   Model.user = JSON.parse(localStorage.getItem("user"))
   Model.state.isAuth(true)
   m.route.set("/home")

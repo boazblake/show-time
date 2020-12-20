@@ -212,7 +212,6 @@ export const addUserShowsTask = (mdl) => (http) => (show) => (list) =>
     .postTask(http.backendlessUrl(`data/${mdl.db}`), toDto(mdl, show, list))
     .chain(linkUserToShowTask(mdl)(http))
     .chain((_) => getShows(mdl)(http))
-    .map(mdl.user.shows)
 
 export const updateUserShowsTask = (mdl) => (http) => (show) => (list) =>
   http

@@ -7,11 +7,7 @@ import {
   onError,
 } from "../pages/fns"
 
-const getMoreData = (e) => {
-  console.log(e)
-
-  setTimeout(() => (e.target.disabled = true), 2000)
-}
+const getMoreData = (e) => setTimeout(() => (e.target.disabled = true), 2000)
 
 const showModal = (mdl, show) => mdl.state.details.selected(show)
 

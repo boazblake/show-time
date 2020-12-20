@@ -1,4 +1,5 @@
 import Routes from "./routes"
+import { db } from "./.secrets"
 
 const state = {
   isAuth: Stream(false),
@@ -51,7 +52,7 @@ const user = {
 }
 
 const Model = {
-  db: "prodshows",
+  db,
   toast,
   Routes,
   state,

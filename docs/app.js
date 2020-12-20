@@ -155,7 +155,7 @@ require.register(".secrets.js", function(exports, require, module) {
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.prismaUrl = exports.tvMazeBaseUrl = exports.tvMazeApiKey = exports.tmdbBaseUrl = exports.tmdbAuth = exports.tmdbApiKey = void 0;
+exports.db = exports.prismaUrl = exports.tvMazeBaseUrl = exports.tvMazeApiKey = exports.tmdbBaseUrl = exports.tmdbAuth = exports.tmdbApiKey = void 0;
 var tmdbApiKey = "1e4d78ab60660282c63379725fc9b111";
 exports.tmdbApiKey = tmdbApiKey;
 var tmdbAuth = {
@@ -170,6 +170,8 @@ var tvMazeBaseUrl = "https://api.tvmaze.com";
 exports.tvMazeBaseUrl = tvMazeBaseUrl;
 var prismaUrl = "https://eu1.prisma.sh/boaz-blake-8951e1/whensMyShow/dev";
 exports.prismaUrl = prismaUrl;
+var db = "prodshows";
+exports.db = db;
 });
 
 ;require.register("App.js", function(exports, require, module) {
@@ -345,6 +347,8 @@ exports.default = void 0;
 
 var _routes = _interopRequireDefault(require("./routes"));
 
+var _secrets = require("./.secrets");
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 var state = {
@@ -393,7 +397,7 @@ var user = {
   data: {}
 };
 var Model = {
-  db: "prodshows",
+  db: _secrets.db,
   toast,
   Routes: _routes.default,
   state,
@@ -721,10 +725,7 @@ var _fns = require("../pages/fns");
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-var getMoreData = e => {
-  console.log(e);
-  setTimeout(() => e.target.disabled = true, 2000);
-};
+var getMoreData = e => setTimeout(() => e.target.disabled = true, 2000);
 
 var showModal = (mdl, show) => mdl.state.details.selected(show);
 
@@ -826,7 +827,9 @@ var state = {
   status: null
 };
 
-var updateUserShows = mdl => dto => mdl.user.shows((0, _ramda.sortBy)((0, _ramda.prop)("name"), mdl.user.shows().filter(show => show.tvmazeId !== dto.tvmazeId).concat([dto])));
+var updateUserShows = mdl => dto => {
+  mdl.user.shows = (0, _ramda.sortBy)((0, _ramda.prop)("name"), mdl.user.shows().filter(show => show.tvmazeId !== dto.tvmazeId).concat([dto]));
+};
 
 var dismissModal = mdl => mdl.state.details.selected(null);
 
@@ -846,7 +849,7 @@ var onSuccess = show => {
 };
 
 var addUserShows = mdl => (show, list) => (0, _fns.addUserShowsTask)(mdl)(_Http.default)(show)(list).fork(onError(mdl), shows => {
-  mdl.user.shows(shows);
+  mdl.user.shows = shows;
   dismissModal(mdl);
 });
 
@@ -955,7 +958,7 @@ var Modal = () => {
       }, m("ion-icon", {
         slot: "icon-only",
         name: "close"
-      })))), !state.show.listStatus && m("ion-item", m("ion-label", "Add to: "), m("ion-buttons", mdl.user.lists().map(list => m("ion-button.ion-activatable ripple-parent", {
+      })))), !state.show.listStatus && m("ion-item", m("ion-label", "Add to: "), m("ion-buttons", mdl.user.lists.map(list => m("ion-button.ion-activatable ripple-parent", {
         onclick: e => addUserShows(mdl)(state.show, list)
       }, m("ion-ripple"), list))))), m("ion-content", {
         padding: true
@@ -1022,6 +1025,113 @@ var _default = Toast;
 exports.default = _default;
 });
 
+;require.register("config.js", function(exports, require, module) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.ArrayFP = void 0;
+
+var value = f => {
+  var x = {
+    value: f,
+    writable: true,
+    configurable: true,
+    enumerable: false
+  };
+  return x;
+};
+
+var _flatten = xs => xs.reduce((a, b) => a.concat(b), []);
+
+var configure = _ => {
+  var _fmap = function _fmap(f) {
+    var xs = this;
+    return xs.map(x => f(x)); //avoid index
+  };
+
+  Object.defineProperty(Array.prototype, "fmap", value(_fmap));
+
+  var _empty = _ => [];
+
+  Object.defineProperty(Array.prototype, "empty", value(_empty));
+
+  var _chain = function _chain(f) {
+    return _flatten(this.fmap(f));
+  };
+
+  Object.defineProperty(Array.prototype, "chain", value(_chain));
+
+  var _of = x => [x];
+
+  Object.defineProperty(Array.prototype, "of", value(_of));
+
+  var _ap = function _ap(a2) {
+    return _flatten(this.map(f => a2.map(a => f(a))));
+  };
+
+  Object.defineProperty(Array.prototype, "ap", value(_ap));
+
+  var _traverse = function _traverse(f, point) {
+    var cons_f = (ys, x) => f(x).map(x => y => y.concat(x)).ap(ys);
+
+    return this.reduce(cons_f, point([]));
+  };
+
+  Object.defineProperty(Array.prototype, "traverse", value(_traverse));
+
+  var _any = function _any() {
+    return this.length > 0;
+  };
+
+  Object.defineProperty(Array.prototype, "any", value(_any));
+
+  var _insertAt = function _insertAt(idx, x) {
+    return this.splice(idx, 0, item);
+  };
+
+  Object.defineProperty(Array.prototype, "insertAt", value(_insertAt));
+
+  var _last = function _last() {
+    return this[this.length - 1];
+  };
+
+  Object.defineProperty(Array.prototype, "last", value(_last));
+
+  var _in = function _in(comparer) {
+    for (var i = 0; i < this.length; i++) {
+      if (comparer(this[i])) return true;
+    }
+
+    return false;
+  };
+
+  Object.defineProperty(Array.prototype, "in", value(_in));
+
+  var _pushIfNotExist = function _pushIfNotExist(element, comparer) {
+    if (!this.in(comparer)) {
+      this.push(element);
+    }
+  };
+
+  Object.defineProperty(Array.prototype, "pushIfNotExist", value(_pushIfNotExist));
+
+  var _foldM = function _foldM(point, f) {
+    var go = a => !this.any() ? point(a) : f(a, this.shift()).chain(go);
+
+    return go;
+  };
+
+  Object.defineProperty(Array.prototype, "foldM", value(_foldM));
+};
+
+var ArrayFP = {
+  configure
+};
+exports.ArrayFP = ArrayFP;
+});
+
 ;require.register("index.js", function(exports, require, module) {
 "use strict";
 
@@ -1029,8 +1139,13 @@ var _App = _interopRequireDefault(require("./App.js"));
 
 var _Models = _interopRequireDefault(require("Models"));
 
+var _config = require("./config");
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
+_config.ArrayFP.configure();
+
+console.log([]);
 var root = document.body;
 
 if (module.hot) {
@@ -1052,7 +1167,6 @@ if ('development' == "development") {
 }
 
 if (localStorage.getItem("user")) {
-  console.log("??", JSON.parse(localStorage.getItem("user")));
   _Models.default.user = JSON.parse(localStorage.getItem("user"));
 
   _Models.default.state.isAuth(true);
@@ -1282,7 +1396,7 @@ var linkUserToShowTask = mdl => http => show => http.postTask(http.backendlessUr
   body: [show.objectId]
 });
 
-var addUserShowsTask = mdl => http => show => list => http.postTask(http.backendlessUrl("data/".concat(mdl.db)), toDto(mdl, show, list)).chain(linkUserToShowTask(mdl)(http)).chain(_ => getShows(mdl)(http)).map(mdl.user.shows);
+var addUserShowsTask = mdl => http => show => list => http.postTask(http.backendlessUrl("data/".concat(mdl.db)), toDto(mdl, show, list)).chain(linkUserToShowTask(mdl)(http)).chain(_ => getShows(mdl)(http));
 
 exports.addUserShowsTask = addUserShowsTask;
 
@@ -1672,7 +1786,7 @@ var _components = require("components");
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-var addUserShows = mdl => (show, list) => (0, _fns.addUserShowsTask)(mdl)(_Http.default)(show)(list).fork((0, _fns.onError)(mdl)("search"), mdl.user.shows);
+var addUserShows = mdl => (show, list) => (0, _fns.addUserShowsTask)(mdl)(_Http.default)(show)(list).fork((0, _fns.onError)(mdl)("search"), shows => mdl.user.shows = shows);
 
 var showModal = (mdl, show) => mdl.state.details.selected(show);
 
@@ -1686,6 +1800,9 @@ var SearchPage = () => {
       } = _ref;
       return mdl.state.details.selected() ? m(_components.Modal, {
         mdl
+      }) : mdl.state.isLoading() ? m("ion-spinner", {
+        color: "primary",
+        name: "crescent"
       }) : m("ion-list", {
         oncreate: (_ref2) => {
           var {
@@ -1694,7 +1811,7 @@ var SearchPage = () => {
           mdl.state.listDom = dom;
           dom.closeSlidingItems();
         }
-      }, (0, _fns.filterShowForUnselected)(mdl).map((show, idx) => m("ion-item-sliding", {
+      }, (0, _fns.filterShowForUnselected)(mdl).any() ? (0, _fns.filterShowForUnselected)(mdl).map((show, idx) => m("ion-item-sliding", {
         key: idx
       }, m("ion-item", {
         onclick: () => showModal(mdl, show)
@@ -1715,7 +1832,9 @@ var SearchPage = () => {
           addUserShows(mdl)(show, list);
           mdl.state.listDom.closeSlidingItems();
         }
-      }, list))))));
+      }, list))))) : m(_components.Card, {
+        header: m("ion-card-title", "Search For Shows")
+      }));
     }
   };
 };
@@ -1838,13 +1957,7 @@ var _default = MainRoutes;
 exports.default = _default;
 });
 
-;require.alias("buffer/index.js", "buffer");
-require.alias("events/events.js", "events");
-require.alias("stream-http/index.js", "http");
-require.alias("process/browser.js", "process");
-require.alias("node-browser-modules/node_modules/punycode/punycode.js", "punycode");
-require.alias("querystring-es3/index.js", "querystring");
-require.alias("url/url.js", "url");process = require('process');require.register("___globals___", function(exports, require, module) {
+;require.alias("process/browser.js", "process");process = require('process');require.register("___globals___", function(exports, require, module) {
   
 
 // Auto-loaded modules from config.npm.globals.

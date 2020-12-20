@@ -14,6 +14,16 @@
   }
 }
 
+ion-spinner {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  min-width: 80%;
+  -moz-transform: translateX(-50%) translateY(-50%);
+  -webkit-transform: translateX(-50%) translateY(-50%);
+  transform: translateX(-50%) translateY(-50%) scale(4);
+}
+
 
 /*
  * Dark Colors

@@ -16,16 +16,15 @@ const state = {
   status: null,
 }
 
-const updateUserShows = (mdl) => (dto) =>
-  mdl.user.shows(
-    sortBy(
-      prop("name"),
-      mdl.user
-        .shows()
-        .filter((show) => show.tvmazeId !== dto.tvmazeId)
-        .concat([dto])
-    )
+const updateUserShows = (mdl) => (dto) => {
+  mdl.user.shows = sortBy(
+    prop("name"),
+    mdl.user
+      .shows()
+      .filter((show) => show.tvmazeId !== dto.tvmazeId)
+      .concat([dto])
   )
+}
 
 const dismissModal = (mdl) => mdl.state.details.selected(null)
 
@@ -42,7 +41,7 @@ const onSuccess = (show) => {
 
 const addUserShows = (mdl) => (show, list) =>
   addUserShowsTask(mdl)(http)(show)(list).fork(onError(mdl), (shows) => {
-    mdl.user.shows(shows)
+    mdl.user.shows = shows
     dismissModal(mdl)
   })
 
@@ -160,16 +159,14 @@ export const Modal = () => {
                 m("ion-label", "Add to: "),
                 m(
                   "ion-buttons",
-                  mdl.user
-                    .lists()
-                    .map((list) =>
-                      m(
-                        "ion-button.ion-activatable ripple-parent",
-                        { onclick: (e) => addUserShows(mdl)(state.show, list) },
-                        m("ion-ripple"),
-                        list
-                      )
+                  mdl.user.lists.map((list) =>
+                    m(
+                      "ion-button.ion-activatable ripple-parent",
+                      { onclick: (e) => addUserShows(mdl)(state.show, list) },
+                      m("ion-ripple"),
+                      list
                     )
+                  )
                 )
               )
           ),

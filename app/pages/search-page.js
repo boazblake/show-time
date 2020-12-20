@@ -1,11 +1,11 @@
 import http from "../Http.js"
 import { filterShowForUnselected, addUserShowsTask, onError } from "./fns.js"
-import { Modal } from "components"
+import { Modal, Card } from "components"
 
 const addUserShows = (mdl) => (show, list) =>
   addUserShowsTask(mdl)(http)(show)(list).fork(
     onError(mdl)("search"),
-    mdl.user.shows
+    (shows) => (mdl.user.shows = shows)
   )
 
 const showModal = (mdl, show) => mdl.state.details.selected(show)
@@ -15,6 +15,8 @@ export const SearchPage = () => {
     view: ({ attrs: { mdl } }) => {
       return mdl.state.details.selected()
         ? m(Modal, { mdl })
+        : mdl.state.isLoading()
+        ? m("ion-spinner", { color: "primary", name: "crescent" })
         : m(
             "ion-list",
             {
@@ -23,44 +25,46 @@ export const SearchPage = () => {
                 dom.closeSlidingItems()
               },
             },
-            filterShowForUnselected(mdl).map((show, idx) =>
-              m(
-                "ion-item-sliding",
-                {
-                  key: idx,
-                },
-                m(
-                  "ion-item",
-                  { onclick: () => showModal(mdl, show) },
+            filterShowForUnselected(mdl).any()
+              ? filterShowForUnselected(mdl).map((show, idx) =>
                   m(
-                    "ion-thumbnail",
-                    { style: { "border-radius": "0" } },
-                    m("ion-img", { src: show.image })
-                  ),
-                  m(
-                    "ion-label",
-                    { style: { paddingLeft: "12px" } },
-                    m("h2", show.name)
-                  )
-                ),
-                m(
-                  "ion-item-options",
-                  { side: "start" },
-                  mdl.user.lists.map((list) =>
+                    "ion-item-sliding",
+                    {
+                      key: idx,
+                    },
                     m(
-                      "ion-item-option",
-                      {
-                        onclick: () => {
-                          addUserShows(mdl)(show, list)
-                          mdl.state.listDom.closeSlidingItems()
-                        },
-                      },
-                      list
+                      "ion-item",
+                      { onclick: () => showModal(mdl, show) },
+                      m(
+                        "ion-thumbnail",
+                        { style: { "border-radius": "0" } },
+                        m("ion-img", { src: show.image })
+                      ),
+                      m(
+                        "ion-label",
+                        { style: { paddingLeft: "12px" } },
+                        m("h2", show.name)
+                      )
+                    ),
+                    m(
+                      "ion-item-options",
+                      { side: "start" },
+                      mdl.user.lists.map((list) =>
+                        m(
+                          "ion-item-option",
+                          {
+                            onclick: () => {
+                              addUserShows(mdl)(show, list)
+                              mdl.state.listDom.closeSlidingItems()
+                            },
+                          },
+                          list
+                        )
+                      )
                     )
                   )
                 )
-              )
-            )
+              : m(Card, { header: m("ion-card-title", "Search For Shows") })
           )
     },
   }
