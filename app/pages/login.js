@@ -1,5 +1,6 @@
 import http from "../Http.js"
-import { loginUserTask, updateState, makeToast } from "./fns"
+import { loginUserTask, makeToast } from "./fns"
+import { FormWrap, Card } from "components"
 
 export const Login = ({ attrs: { mdl } }) => {
   const state = {
@@ -21,6 +22,7 @@ export const Login = ({ attrs: { mdl } }) => {
       state.errors = ""
       mdl.state.isAuth(true)
       mdl.user.data = data
+      localStorage.setItem("user", JSON.stringify(mdl.user))
       console.log(mdl)
       m.route.set("/home")
     }
@@ -30,78 +32,54 @@ export const Login = ({ attrs: { mdl } }) => {
 
   return {
     view: () =>
-      m(
-        ".page",
-        m(
-          "ion-card",
+      m(Card, {
+        header: m(
+          "ion-card-title",
+          { color: "primary" },
+          m("h3.ion-text-center", "Login to your account!")
+        ),
+        content: m(
+          FormWrap,
+          { state },
           m(
-            "ion-card-header",
-            m("ion-card-title", m("h3", "Login to your account!"))
+            "ion-item",
+            m("ion-input", {
+              name: "email",
+              type: "email",
+              placeholder: "your@email.com",
+              ngmodel: "",
+              required: "required",
+            })
           ),
           m(
-            "ion-card-content",
-            m(
-              "form",
-              m(
-                "ion-grid",
-                m(
-                  "ion-row",
-                  { color: "primary", "justify-content-center": "" },
-                  m(
-                    "ion-col",
-                    {
-                      "align-self-center": "",
-                      "size-md": "6",
-                      "size-lg": "5",
-                      "size-xs": "12",
-                    },
-                    m(".", updateState(state), [
-                      m(
-                        "ion-item",
-                        m("ion-input", {
-                          name: "email",
-                          type: "email",
-                          placeholder: "your@email.com",
-                          ngmodel: "",
-                          required: "required",
-                        })
-                      ),
-                      m(
-                        "ion-item",
-                        m("ion-input", {
-                          name: "password",
-                          type: "password",
-                          placeholder: "Password",
-                          ngmodel: "",
-                          required: "required",
-                        })
-                      ),
-                    ]),
-                    m(
-                      ".",
-                      m(
-                        "ion-button",
-                        {
-                          size: "large",
-                          expand: "block",
-                          onclick: (e) => loginUser(state),
-                        },
-                        "Login"
-                      ),
-                      m(
-                        m.route.Link,
-                        {
-                          href: "/register",
-                        },
-                        "Need to Register?"
-                      )
-                    )
-                  )
-                )
-              )
-            )
+            "ion-item",
+            m("ion-input", {
+              name: "password",
+              type: "password",
+              placeholder: "Password",
+              ngmodel: "",
+              required: "required",
+            })
           )
-        )
-      ),
+        ),
+        footer: [
+          m(
+            "ion-button",
+            {
+              size: "large",
+              expand: "block",
+              onclick: (e) => loginUser(state),
+            },
+            "Login"
+          ),
+          m(
+            m.route.Link,
+            {
+              href: "/register",
+            },
+            m("ion-text", { color: "warning" }, "Need to Register?")
+          ),
+        ],
+      }),
   }
 }

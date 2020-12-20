@@ -171,7 +171,7 @@ export const searchShowsTask = (mdl) => (http) =>
     .map(pluck("show"))
     .map(map(toSearchViewModel))
     .map(rejectWithAttr("image")(null))
-    .map(updateShowStatus(mdl.user.shows()))
+    .map(updateShowStatus(mdl.user.shows))
 
 const itemSelected = (mdl) => (result) =>
   equals(prop("tvmazeId", result), mdl.state.searchItem.showMenu())
@@ -191,7 +191,7 @@ const createBody = (mdl) => (dto) => ({
 const updateOrder = (mdl) => (show) => {
   show.order = filter(
     propEq("listStatus", show.listStatus),
-    mdl.user.shows()
+    mdl.user.shows
   ).length
   return show
 }
@@ -251,10 +251,10 @@ export const getShowDetailsTask = (mdl) => (http) => (id) =>
   findShowInDbTask(mdl)(http)(id).chain(getShowTvMazeDetailsTask(http))
 
 export const filterShowsByListType = (mdl) =>
-  filter(propEq("listStatus", mdl.state.currentList()), mdl.user.shows())
+  filter(propEq("listStatus", mdl.state.currentList()), mdl.user.shows)
 
 export const filterShowForUnselected = (mdl) => {
-  let selected = pluck("tvmazeId", mdl.user.shows())
+  let selected = pluck("tvmazeId", mdl.user.shows)
   return mdl.data.shows().filter((show) => !selected.includes(show.tvmazeId))
 }
 

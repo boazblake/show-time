@@ -23,6 +23,10 @@ if (process.env.NODE_ENV == "development") {
     })
   }
 }
-
+if (localStorage.getItem("user")) {
+  console.log("??", JSON.parse(localStorage.getItem("user")))
+  Model.user = JSON.parse(localStorage.getItem("user"))
+  Model.state.isAuth(true)
+  m.route.set("/home")
+}
 m.route(root, "/login", App(Model))
-Model.state.isAuth() && m.route.set("/home")

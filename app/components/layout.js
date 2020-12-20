@@ -1,6 +1,6 @@
 import Routes from "../routes/index.js"
 import http from "../Http.js"
-import { searchShowsTask, onError } from "../pages/fns.js"
+import { searchShowsTask, onError, updateState } from "../pages/fns.js"
 import { showSettings } from "./action-sheet"
 import Toast from "./toast"
 
@@ -13,7 +13,7 @@ const HomeToolBar = () => {
       m(
         "ion-segment",
         { value: mdl.state.currentList() },
-        mdl.user.lists().map((list) =>
+        mdl.user.lists.map((list) =>
           m(
             "ion-segment-button",
             {
@@ -99,15 +99,22 @@ const Footer = () => {
   }
 }
 
-export const Layout = () => {
-  return {
-    view: ({ attrs: { mdl }, children }) => {
-      return m("ion-app", [
-        mdl.state.isAuth() && m(Toolbar, { mdl }),
-        m("ion-content", children),
-        mdl.state.isAuth() && m(Footer, { mdl }),
-        mdl.toast.show() && m(Toast, { mdl }),
-      ])
-    },
-  }
+export const Layout = {
+  view: ({ attrs: { mdl }, children }) => {
+    return m("ion-app", [
+      mdl.state.isAuth() && m(Toolbar, { mdl }),
+      m("ion-content", children),
+      mdl.state.isAuth() && m(Footer, { mdl }),
+      mdl.toast.show() && m(Toast, { mdl }),
+    ])
+  },
+}
+
+export const PageWrap = {
+  view: ({ children }) => m(".page", { slot: "fixed" }, children),
+}
+
+export const FormWrap = {
+  view: ({ children, attrs: { state } }) =>
+    m("form", updateState(state), children),
 }

@@ -19,9 +19,11 @@ export const showSettings = (mdl) => {
           {
             text: "Logout",
             handler: () => {
-              mdl.user.shows([])
+              mdl.user.shows = []
               mdl.user.data = {}
               mdl.state.isAuth(false)
+              // localStorage.setItem("user", null)
+              localStorage.removeItem("user")
               m.route.set("/login")
             },
           },

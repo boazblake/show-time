@@ -1,5 +1,5 @@
 import { Login, Register } from "pages"
-import { Layout } from "components"
+import { Layout, PageWrap } from "components"
 
 const MainRoutes = [
   {
@@ -12,7 +12,7 @@ const MainRoutes = [
     children: [],
     options: [],
     onmatch: (mdl, args, path, fullroute) => {},
-    component: (mdl) => m(Layout, { mdl }, m(Login, { mdl })),
+    component: (mdl) => m(Layout, { mdl }, m(PageWrap, m(Login, { mdl }))),
   },
   {
     id: "register",
@@ -24,7 +24,7 @@ const MainRoutes = [
     children: [],
     options: [],
     onmatch: (mdl, args, path, fullroute) => {},
-    component: (mdl) => m(Layout, { mdl }, m(Register, { mdl })),
+    component: (mdl) => m(Layout, { mdl }, m(PageWrap, m(Register, { mdl }))),
   },
 ]
 

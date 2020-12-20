@@ -46,7 +46,7 @@ export const SearchPage = () => {
                 m(
                   "ion-item-options",
                   { side: "start" },
-                  mdl.user.lists().map((list) =>
+                  mdl.user.lists.map((list) =>
                     m(
                       "ion-item-option",
                       {

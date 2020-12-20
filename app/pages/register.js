@@ -1,5 +1,6 @@
 import http from "../Http.js"
-import { registerUserTask, updateState, makeToast } from "./fns"
+import { registerUserTask, makeToast } from "./fns"
+import { FormWrap, Card } from "components"
 
 export const Register = ({ attrs: { mdl } }) => {
   const state = {
@@ -21,6 +22,7 @@ export const Register = ({ attrs: { mdl } }) => {
       state.errors = ""
       mdl.state.isAuth(true)
       mdl.user.data = data
+      localStorage.setItem("user", JSON.stringify(mdl.user))
       m.route.set("/home")
     }
 
@@ -29,98 +31,74 @@ export const Register = ({ attrs: { mdl } }) => {
 
   return {
     view: () =>
-      m(
-        ".page",
-        m(
-          "ion-card",
+      m(Card, {
+        header: m(
+          "ion-card-title",
+          { color: "warning" },
+          m("h3.ion-text-center", "Create An Account")
+        ),
+        content: m(
+          FormWrap,
+          { state },
           m(
-            "ion-card-header",
-            m("ion-card-title", m("h3", "Create your account!"))
+            "ion-item",
+            m("ion-input", {
+              name: "name",
+              type: "text",
+              placeholder: "Name",
+              required: "required",
+              value: state.name,
+            })
           ),
           m(
-            "ion-card-content",
-            m(
-              "form",
-              m(
-                "ion-grid",
-                m(
-                  "ion-row",
-                  { color: "primary", "justify-content-center": "" },
-                  m(
-                    "ion-col",
-                    {
-                      "align-self-center": "",
-                      "size-md": "6",
-                      "size-lg": "5",
-                      "size-xs": "12",
-                    },
-                    m(".", updateState(state), [
-                      m(
-                        "ion-item",
-                        m("ion-input", {
-                          name: "name",
-                          type: "text",
-                          placeholder: "Name",
-                          required: "required",
-                          value: state.name,
-                        })
-                      ),
-                      m(
-                        "ion-item",
-                        m("ion-input", {
-                          name: "email",
-                          type: "email",
-                          placeholder: "your@email.com",
-                          required: "required",
-                          value: state.email,
-                        })
-                      ),
-                      m(
-                        "ion-item",
-                        m("ion-input", {
-                          name: "password",
-                          type: "password",
-                          placeholder: "Password",
-                          required: "required",
-                          value: state.password,
-                        })
-                      ),
-                      m(
-                        "ion-item",
-                        m("ion-input", {
-                          name: "confirm",
-                          type: "password",
-                          placeholder: "Confirn Password",
-                          required: "required",
-                          value: state.cornfim,
-                        })
-                      ),
-                    ]),
-                    m(
-                      ".",
-                      m(
-                        "ion-button",
-                        {
-                          size: "large",
-                          expand: "block",
-                          onclick: () => registerUser(state),
-                        },
-                        "Register"
-                      ),
-                      m(
-                        m.route.Link,
-                        {
-                          href: "/login",
-                        },
-                        "Need to Login?"
-                      )
-                    )
-                  )
-                )
-              )
-            )
+            "ion-item",
+            m("ion-input", {
+              name: "email",
+              type: "email",
+              placeholder: "your@email.com",
+              required: "required",
+              value: state.email,
+            })
+          ),
+          m(
+            "ion-item",
+            m("ion-input", {
+              name: "password",
+              type: "password",
+              placeholder: "Password",
+              required: "required",
+              value: state.password,
+            })
+          ),
+          m(
+            "ion-item",
+            m("ion-input", {
+              name: "confirm",
+              type: "password",
+              placeholder: "Confirn Password",
+              required: "required",
+              value: state.cornfim,
+            })
           )
-        )
-      ),
+        ),
+        footer: [
+          m(
+            "ion-button",
+            {
+              size: "large",
+              expand: "block",
+              onclick: () => registerUser(state),
+            },
+            "Register"
+          ),
+          m(
+            m.route.Link,
+            {
+              href: "/login",
+            },
+            "Need to Login?"
+          ),
+        ],
+      }),
   }
 }

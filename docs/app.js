@@ -388,8 +388,8 @@ var errors = {
   user: Stream(null)
 };
 var user = {
-  shows: Stream([]),
-  lists: Stream(["Watching", "Wishlist"]),
+  shows: [],
+  lists: ["Watching", "Wishlist"],
   data: {}
 };
 var Model = {
@@ -429,9 +429,11 @@ var showSettings = mdl => {
       }, {
         text: "Logout",
         handler: () => {
-          mdl.user.shows([]);
+          mdl.user.shows = [];
           mdl.user.data = {};
-          mdl.state.isAuth(false);
+          mdl.state.isAuth(false); // localStorage.setItem("user", null)
+
+          localStorage.removeItem("user");
           m.route.set("/login");
         }
       }]
@@ -442,6 +444,30 @@ var showSettings = mdl => {
 };
 
 exports.showSettings = showSettings;
+});
+
+;require.register("components/card.js", function(exports, require, module) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.Card = void 0;
+var Card = {
+  view: (_ref) => {
+    var {
+      attrs: {
+        header,
+        content,
+        footer
+      }
+    } = _ref;
+    return m("ion-card", m("ion-card-header", {
+      translucent: true
+    }, header), m("ion-card-content", content), m("ion-card-footer", footer));
+  }
+};
+exports.Card = Card;
 });
 
 ;require.register("components/index.js", function(exports, require, module) {
@@ -489,6 +515,32 @@ Object.keys(_toast).forEach(function (key) {
     }
   });
 });
+
+var _list = require("./list.js");
+
+Object.keys(_list).forEach(function (key) {
+  if (key === "default" || key === "__esModule") return;
+  if (key in exports && exports[key] === _list[key]) return;
+  Object.defineProperty(exports, key, {
+    enumerable: true,
+    get: function get() {
+      return _list[key];
+    }
+  });
+});
+
+var _card = require("./card.js");
+
+Object.keys(_card).forEach(function (key) {
+  if (key === "default" || key === "__esModule") return;
+  if (key in exports && exports[key] === _card[key]) return;
+  Object.defineProperty(exports, key, {
+    enumerable: true,
+    get: function get() {
+      return _card[key];
+    }
+  });
+});
 });
 
 ;require.register("components/layout.js", function(exports, require, module) {
@@ -497,7 +549,7 @@ Object.keys(_toast).forEach(function (key) {
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.Layout = void 0;
+exports.FormWrap = exports.PageWrap = exports.Layout = void 0;
 
 var _index = _interopRequireDefault(require("../routes/index.js"));
 
@@ -523,7 +575,7 @@ var HomeToolBar = () => {
       } = _ref;
       return m("ion-segment", {
         value: mdl.state.currentList()
-      }, mdl.user.lists().map(list => m("ion-segment-button", {
+      }, mdl.user.lists.map(list => m("ion-segment-button", {
         onclick: () => {
           mdl.state.currentList(list);
           mdl.state.listDom.closeSlidingItems();
@@ -610,27 +662,144 @@ var Footer = () => {
   };
 };
 
-var Layout = () => {
+var Layout = {
+  view: (_ref6) => {
+    var {
+      attrs: {
+        mdl
+      },
+      children
+    } = _ref6;
+    return m("ion-app", [mdl.state.isAuth() && m(Toolbar, {
+      mdl
+    }), m("ion-content", children), mdl.state.isAuth() && m(Footer, {
+      mdl
+    }), mdl.toast.show() && m(_toast.default, {
+      mdl
+    })]);
+  }
+};
+exports.Layout = Layout;
+var PageWrap = {
+  view: (_ref7) => {
+    var {
+      children
+    } = _ref7;
+    return m(".page", {
+      slot: "fixed"
+    }, children);
+  }
+};
+exports.PageWrap = PageWrap;
+var FormWrap = {
+  view: (_ref8) => {
+    var {
+      children,
+      attrs: {
+        state
+      }
+    } = _ref8;
+    return m("form", (0, _fns.updateState)(state), children);
+  }
+};
+exports.FormWrap = FormWrap;
+});
+
+;require.register("components/list.js", function(exports, require, module) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.List = void 0;
+
+var _Http = _interopRequireDefault(require("Http"));
+
+var _ramda = require("ramda");
+
+var _fns = require("../pages/fns");
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var getMoreData = e => {
+  console.log(e);
+  setTimeout(() => e.target.disabled = true, 2000);
+};
+
+var showModal = (mdl, show) => mdl.state.details.selected(show);
+
+var otherList = mdl => (0, _ramda.without)([mdl.state.currentList()], mdl.user.lists)[0];
+
+var updateUserShows = mdl => (show, list) => (0, _fns.updateUserShowsTask)(mdl)(_Http.default)(show)(list).fork((0, _fns.onError)(mdl)("search"), updatedShows => {
+  m.route.set("/home");
+  mdl.user.shows = (0, _ramda.sortBy)((0, _ramda.prop)("name"), updatedShows);
+});
+
+var deleteShow = mdl => show => (0, _fns.deleteShowTask)(mdl)(_Http.default)(show.objectId).fork((0, _fns.onError)(mdl)("details"), updatedShows => {
+  m.route.set("/home");
+  mdl.user.shows = (0, _ramda.sortBy)((0, _ramda.prop)("name"), updatedShows);
+});
+
+var List = (_ref) => {
+  var {
+    attrs: {
+      mdl
+    }
+  } = _ref;
   return {
-    view: (_ref6) => {
+    view: (_ref2) => {
       var {
         attrs: {
           mdl
-        },
-        children
-      } = _ref6;
-      return m("ion-app", [mdl.state.isAuth() && m(Toolbar, {
-        mdl
-      }), m("ion-content", children), mdl.state.isAuth() && m(Footer, {
-        mdl
-      }), mdl.toast.show() && m(_toast.default, {
-        mdl
-      })]);
+        }
+      } = _ref2;
+      return m("section.list", {
+        onionInfinite: getMoreData
+      }, m("ion-list", {
+        oncreate: (_ref3) => {
+          var {
+            dom
+          } = _ref3;
+          mdl.state.listDom = dom;
+          dom.closeSlidingItems();
+        }
+      }, (0, _ramda.sortBy)((0, _ramda.prop)("name"), (0, _fns.filterShowsByListType)(mdl)).map(show => m("ion-item-sliding", m("ion-item", {
+        onclick: () => {
+          showModal(mdl, show);
+          mdl.state.listDom.closeSlidingItems();
+        }
+      }, m("ion-thumbnail", m("ion-img", {
+        src: show.image
+      })), m("ion-label", {
+        style: {
+          paddingLeft: "12px"
+        }
+      }, m("h2", show.name), m("p", m("i", show.status)), m("p", show.notes))), m("ion-item-options", {
+        side: "start"
+      }, m("ion-item-option", {
+        onclick: () => {
+          updateUserShows(mdl)(show, otherList(mdl));
+          mdl.state.listDom.closeSlidingItems();
+        }
+      }, "move to ".concat(otherList(mdl)))), m("ion-item-options", m("ion-item-option", {
+        color: "danger",
+        side: "end",
+        onclick: () => {
+          deleteShow(mdl)(show);
+          mdl.state.listDom.closeSlidingItems();
+        }
+      }, "Delete"))))), m("ion-infinite-scroll", {
+        threshold: "100px",
+        id: "infinite-scroll"
+      }, m("ion-infinite-scroll-content", {
+        "loading-spinner": "dots",
+        "loading-text": "Checking for more shows..."
+      })));
     }
   };
 };
 
-exports.Layout = Layout;
+exports.List = List;
 });
 
 ;require.register("components/modal.js", function(exports, require, module) {
@@ -882,8 +1051,16 @@ if ('development' == "development") {
   }
 }
 
+if (localStorage.getItem("user")) {
+  console.log("??", JSON.parse(localStorage.getItem("user")));
+  _Models.default.user = JSON.parse(localStorage.getItem("user"));
+
+  _Models.default.state.isAuth(true);
+
+  m.route.set("/home");
+}
+
 m.route(root, "/login", (0, _App.default)(_Models.default));
-_Models.default.state.isAuth() && m.route.set("/home");
 });
 
 ;require.register("initialize.js", function(exports, require, module) {
@@ -1072,7 +1249,7 @@ var getShows = mdl => http => http.getTask(http.backendlessUrl("data/".concat(md
 
 exports.getShows = getShows;
 
-var searchShowsTask = mdl => http => http.getTask(http.searchUrl(mdl.state.query())).map((0, _ramda.pluck)("show")).map((0, _ramda.map)(toSearchViewModel)).map(rejectWithAttr("image")(null)).map(updateShowStatus(mdl.user.shows()));
+var searchShowsTask = mdl => http => http.getTask(http.searchUrl(mdl.state.query())).map((0, _ramda.pluck)("show")).map((0, _ramda.map)(toSearchViewModel)).map(rejectWithAttr("image")(null)).map(updateShowStatus(mdl.user.shows));
 
 exports.searchShowsTask = searchShowsTask;
 
@@ -1093,7 +1270,7 @@ var createBody = mdl => dto => ({
 });
 
 var updateOrder = mdl => show => {
-  show.order = (0, _ramda.filter)((0, _ramda.propEq)("listStatus", show.listStatus), mdl.user.shows()).length;
+  show.order = (0, _ramda.filter)((0, _ramda.propEq)("listStatus", show.listStatus), mdl.user.shows).length;
   return show;
 };
 
@@ -1138,12 +1315,12 @@ var getShowDetailsTask = mdl => http => id => findShowInDbTask(mdl)(http)(id).ch
 
 exports.getShowDetailsTask = getShowDetailsTask;
 
-var filterShowsByListType = mdl => (0, _ramda.filter)((0, _ramda.propEq)("listStatus", mdl.state.currentList()), mdl.user.shows());
+var filterShowsByListType = mdl => (0, _ramda.filter)((0, _ramda.propEq)("listStatus", mdl.state.currentList()), mdl.user.shows);
 
 exports.filterShowsByListType = filterShowsByListType;
 
 var filterShowForUnselected = mdl => {
-  var selected = (0, _ramda.pluck)("tvmazeId", mdl.user.shows());
+  var selected = (0, _ramda.pluck)("tvmazeId", mdl.user.shows);
   return mdl.data.shows().filter(show => !selected.includes(show.tvmazeId));
 };
 
@@ -1194,8 +1371,6 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.Home = void 0;
 
-var _ramda = require("ramda");
-
 var _Http = _interopRequireDefault(require("../Http.js"));
 
 var _fns = require("./fns.js");
@@ -1204,21 +1379,7 @@ var _components = require("components");
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-var updateUserShows = mdl => (show, list) => (0, _fns.updateUserShowsTask)(mdl)(_Http.default)(show)(list).fork((0, _fns.onError)(mdl)("search"), updatedShows => {
-  m.route.set("/home");
-  mdl.user.shows((0, _ramda.sortBy)((0, _ramda.prop)("name"), updatedShows));
-});
-
-var deleteShow = mdl => show => (0, _fns.deleteShowTask)(mdl)(_Http.default)(show.objectId).fork((0, _fns.onError)(mdl)("details"), updatedShows => {
-  m.route.set("/home");
-  mdl.user.shows((0, _ramda.sortBy)((0, _ramda.prop)("name"), updatedShows));
-});
-
-var getShowsTask = mdl => http => (0, _fns.getShows)(mdl)(http).fork(_fns.onError, mdl.user.shows);
-
-var showModal = (mdl, show) => mdl.state.details.selected(show);
-
-var otherList = mdl => (0, _ramda.without)([mdl.state.currentList()], mdl.user.lists())[0];
+var getShowsTask = mdl => http => (0, _fns.getShows)(mdl)(http).fork(_fns.onError, shows => mdl.user.shows = shows);
 
 var Home = () => {
   return {
@@ -1238,40 +1399,9 @@ var Home = () => {
       } = _ref2;
       return mdl.state.details.selected() ? m(_components.Modal, {
         mdl
-      }) : m("ion-list", {
-        oncreate: (_ref3) => {
-          var {
-            dom
-          } = _ref3;
-          mdl.state.listDom = dom;
-          dom.closeSlidingItems();
-        }
-      }, (0, _ramda.sortBy)((0, _ramda.prop)("name"), (0, _fns.filterShowsByListType)(mdl)).map(show => m("ion-item-sliding", m("ion-item", {
-        onclick: () => {
-          showModal(mdl, show);
-          mdl.state.listDom.closeSlidingItems();
-        }
-      }, m("ion-thumbnail", m("ion-img", {
-        src: show.image
-      })), m("ion-label", {
-        style: {
-          paddingLeft: "12px"
-        }
-      }, m("h2", show.name), m("p", m("i", show.status)), m("p", show.notes))), m("ion-item-options", {
-        side: "start"
-      }, m("ion-item-option", {
-        onclick: () => {
-          updateUserShows(mdl)(show, otherList(mdl));
-          mdl.state.listDom.closeSlidingItems();
-        }
-      }, "move to ".concat(otherList(mdl)))), m("ion-item-options", m("ion-item-option", {
-        color: "danger",
-        side: "end",
-        onclick: () => {
-          deleteShow(mdl)(show);
-          mdl.state.listDom.closeSlidingItems();
-        }
-      }, "Delete")))));
+      }) : m(_components.List, {
+        mdl
+      });
     }
   };
 };
@@ -1351,6 +1481,8 @@ var _Http = _interopRequireDefault(require("../Http.js"));
 
 var _fns = require("./fns");
 
+var _components = require("components");
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 var Login = (_ref) => {
@@ -1382,6 +1514,7 @@ var Login = (_ref) => {
       state.errors = "";
       mdl.state.isAuth(true);
       mdl.user.data = data;
+      localStorage.setItem("user", JSON.stringify(mdl.user));
       console.log(mdl);
       m.route.set("/home");
     };
@@ -1390,33 +1523,35 @@ var Login = (_ref) => {
   };
 
   return {
-    view: () => m(".page", m("ion-card", m("ion-card-header", m("ion-card-title", m("h3", "Login to your account!"))), m("ion-card-content", m("form", m("ion-grid", m("ion-row", {
-      color: "primary",
-      "justify-content-center": ""
-    }, m("ion-col", {
-      "align-self-center": "",
-      "size-md": "6",
-      "size-lg": "5",
-      "size-xs": "12"
-    }, m(".", (0, _fns.updateState)(state), [m("ion-item", m("ion-input", {
-      name: "email",
-      type: "email",
-      placeholder: "your@email.com",
-      ngmodel: "",
-      required: "required"
-    })), m("ion-item", m("ion-input", {
-      name: "password",
-      type: "password",
-      placeholder: "Password",
-      ngmodel: "",
-      required: "required"
-    }))]), m(".", m("ion-button", {
-      size: "large",
-      expand: "block",
-      onclick: e => loginUser(state)
-    }, "Login"), m(m.route.Link, {
-      href: "/register"
-    }, "Need to Register?")))))))))
+    view: () => m(_components.Card, {
+      header: m("ion-card-title", {
+        color: "primary"
+      }, m("h3.ion-text-center", "Login to your account!")),
+      content: m(_components.FormWrap, {
+        state
+      }, m("ion-item", m("ion-input", {
+        name: "email",
+        type: "email",
+        placeholder: "your@email.com",
+        ngmodel: "",
+        required: "required"
+      })), m("ion-item", m("ion-input", {
+        name: "password",
+        type: "password",
+        placeholder: "Password",
+        ngmodel: "",
+        required: "required"
+      }))),
+      footer: [m("ion-button", {
+        size: "large",
+        expand: "block",
+        onclick: e => loginUser(state)
+      }, "Login"), m(m.route.Link, {
+        href: "/register"
+      }, m("ion-text", {
+        color: "warning"
+      }, "Need to Register?"))]
+    })
   };
 };
 
@@ -1434,6 +1569,8 @@ exports.Register = void 0;
 var _Http = _interopRequireDefault(require("../Http.js"));
 
 var _fns = require("./fns");
+
+var _components = require("components");
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -1466,6 +1603,7 @@ var Register = (_ref) => {
       state.errors = "";
       mdl.state.isAuth(true);
       mdl.user.data = data;
+      localStorage.setItem("user", JSON.stringify(mdl.user));
       m.route.set("/home");
     };
 
@@ -1473,45 +1611,45 @@ var Register = (_ref) => {
   };
 
   return {
-    view: () => m(".page", m("ion-card", m("ion-card-header", m("ion-card-title", m("h3", "Create your account!"))), m("ion-card-content", m("form", m("ion-grid", m("ion-row", {
-      color: "primary",
-      "justify-content-center": ""
-    }, m("ion-col", {
-      "align-self-center": "",
-      "size-md": "6",
-      "size-lg": "5",
-      "size-xs": "12"
-    }, m(".", (0, _fns.updateState)(state), [m("ion-item", m("ion-input", {
-      name: "name",
-      type: "text",
-      placeholder: "Name",
-      required: "required",
-      value: state.name
-    })), m("ion-item", m("ion-input", {
-      name: "email",
-      type: "email",
-      placeholder: "your@email.com",
-      required: "required",
-      value: state.email
-    })), m("ion-item", m("ion-input", {
-      name: "password",
-      type: "password",
-      placeholder: "Password",
-      required: "required",
-      value: state.password
-    })), m("ion-item", m("ion-input", {
-      name: "confirm",
-      type: "password",
-      placeholder: "Confirn Password",
-      required: "required",
-      value: state.cornfim
-    }))]), m(".", m("ion-button", {
-      size: "large",
-      expand: "block",
-      onclick: () => registerUser(state)
-    }, "Register"), m(m.route.Link, {
-      href: "/login"
-    }, "Need to Login?")))))))))
+    view: () => m(_components.Card, {
+      header: m("ion-card-title", {
+        color: "warning"
+      }, m("h3.ion-text-center", "Create An Account")),
+      content: m(_components.FormWrap, {
+        state
+      }, m("ion-item", m("ion-input", {
+        name: "name",
+        type: "text",
+        placeholder: "Name",
+        required: "required",
+        value: state.name
+      })), m("ion-item", m("ion-input", {
+        name: "email",
+        type: "email",
+        placeholder: "your@email.com",
+        required: "required",
+        value: state.email
+      })), m("ion-item", m("ion-input", {
+        name: "password",
+        type: "password",
+        placeholder: "Password",
+        required: "required",
+        value: state.password
+      })), m("ion-item", m("ion-input", {
+        name: "confirm",
+        type: "password",
+        placeholder: "Confirn Password",
+        required: "required",
+        value: state.cornfim
+      }))),
+      footer: [m("ion-button", {
+        size: "large",
+        expand: "block",
+        onclick: () => registerUser(state)
+      }, "Register"), m(m.route.Link, {
+        href: "/login"
+      }, "Need to Login?")]
+    })
   };
 };
 
@@ -1572,7 +1710,7 @@ var SearchPage = () => {
         }
       }, m("h2", show.name))), m("ion-item-options", {
         side: "start"
-      }, mdl.user.lists().map(list => m("ion-item-option", {
+      }, mdl.user.lists.map(list => m("ion-item-option", {
         onclick: () => {
           addUserShows(mdl)(show, list);
           mdl.state.listDom.closeSlidingItems();
@@ -1677,9 +1815,9 @@ var MainRoutes = [{
   onmatch: (mdl, args, path, fullroute) => {},
   component: mdl => m(_components.Layout, {
     mdl
-  }, m(_pages.Login, {
+  }, m(_components.PageWrap, m(_pages.Login, {
     mdl
-  }))
+  })))
 }, {
   id: "register",
   name: "register",
@@ -1692,15 +1830,21 @@ var MainRoutes = [{
   onmatch: (mdl, args, path, fullroute) => {},
   component: mdl => m(_components.Layout, {
     mdl
-  }, m(_pages.Register, {
+  }, m(_components.PageWrap, m(_pages.Register, {
     mdl
-  }))
+  })))
 }];
 var _default = MainRoutes;
 exports.default = _default;
 });
 
-;require.alias("process/browser.js", "process");process = require('process');require.register("___globals___", function(exports, require, module) {
+;require.alias("buffer/index.js", "buffer");
+require.alias("events/events.js", "events");
+require.alias("stream-http/index.js", "http");
+require.alias("process/browser.js", "process");
+require.alias("node-browser-modules/node_modules/punycode/punycode.js", "punycode");
+require.alias("querystring-es3/index.js", "querystring");
+require.alias("url/url.js", "url");process = require('process');require.register("___globals___", function(exports, require, module) {
   
 
 // Auto-loaded modules from config.npm.globals.

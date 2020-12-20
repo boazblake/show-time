@@ -45,8 +45,8 @@ const errors = {
 }
 
 const user = {
-  shows: Stream([]),
-  lists: Stream(["Watching", "Wishlist"]),
+  shows: [],
+  lists: ["Watching", "Wishlist"],
   data: {},
 }
 
