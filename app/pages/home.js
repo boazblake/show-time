@@ -20,7 +20,7 @@ const updateUserShows = (mdl) => (show, list) =>
   )
 
 const deleteShow = (mdl) => (show) =>
-  deleteShowTask(http)(show.objectId).fork(
+  deleteShowTask(mdl)(http)(show.objectId).fork(
     onError(mdl)("details"),
     (updatedShows) => {
       m.route.set("/home")
@@ -29,7 +29,7 @@ const deleteShow = (mdl) => (show) =>
   )
 
 const getShowsTask = (mdl) => (http) =>
-  getShows(http).fork(mdl.errors, mdl.user.shows)
+  getShows(mdl)(http).fork(onError, mdl.user.shows)
 
 const showModal = (mdl, show) => mdl.state.details.selected(show)
 

@@ -16,6 +16,15 @@ export const showSettings = (mdl) => {
                 ? "Enter Dark Mode"
                 : "Enter Light Mode",
           },
+          {
+            text: "Logout",
+            handler: () => {
+              mdl.user.shows([])
+              mdl.user.data = {}
+              mdl.state.isAuth(false)
+              m.route.set("/login")
+            },
+          },
         ],
       })
       .then((x) => x.present())

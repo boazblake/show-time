@@ -49,7 +49,7 @@ const addUserShows = (mdl) => (show, list) =>
 const updateShowDetails = (mdl) => (update) =>
   updateShowDetailsTask(mdl)(http)(update)
     .chain((_) =>
-      getShowDetailsTask(http)(mdl.state.details.selected().objectId)
+      getShowDetailsTask(mdl)(http)(mdl.state.details.selected().objectId)
     )
     .fork(onError(mdl), (dto) => {
       updateUserShows(mdl)(dto)
@@ -59,7 +59,7 @@ const updateShowDetails = (mdl) => (update) =>
 
 const getShowDetails = (mdl) =>
   mdl.state.details.selected().objectId
-    ? getShowDetailsTask(http)(mdl.state.details.selected().objectId).fork(
+    ? getShowDetailsTask(mdl)(http)(mdl.state.details.selected().objectId).fork(
         onError(mdl),
         onSuccess
       )

@@ -1,31 +1,31 @@
-import { Home, Alarm, SearchPage } from "pages"
+import { Login, Register } from "pages"
 import { Layout } from "components"
 
-const Routes = [
+const MainRoutes = [
   {
-    id: "home",
-    name: "home",
-    icon: "home",
-    route: "/home",
+    id: "login",
+    name: "login",
+    icon: "login",
+    route: "/login",
     isNav: false,
     group: [],
     children: [],
     options: [],
     onmatch: (mdl, args, path, fullroute) => {},
-    component: (mdl) => m(Layout, { mdl }, m(Home, { mdl })),
+    component: (mdl) => m(Layout, { mdl }, m(Login, { mdl })),
   },
   {
-    id: "search",
-    name: "search",
-    icon: "search-outline",
-    route: "/search",
+    id: "register",
+    name: "register",
+    icon: "register",
+    route: "/register",
     isNav: false,
     group: [],
     children: [],
     options: [],
     onmatch: (mdl, args, path, fullroute) => {},
-    component: (mdl) => m(Layout, { mdl }, m(SearchPage, { mdl })),
+    component: (mdl) => m(Layout, { mdl }, m(Register, { mdl })),
   },
 ]
 
-export default Routes
+export default MainRoutes

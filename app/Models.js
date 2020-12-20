@@ -1,5 +1,4 @@
-import Routes from './routes'
-
+import Routes from "./routes"
 
 const state = {
   isAuth: Stream(false),
@@ -7,25 +6,24 @@ const state = {
   paginate: {
     page: Stream(1),
     total_pages: Stream(0),
-    total_results: Stream(0)
+    total_results: Stream(0),
   },
   query: Stream(""),
   isLoading: Stream(false),
   loadingProgress: {
     max: Stream(null),
-    value: Stream(null)
+    value: Stream(null),
   },
   searchItem: {
-    showMenu: Stream(false)
+    showMenu: Stream(false),
   },
   details: {
-    selected: Stream(null)
+    selected: Stream(null),
   },
   currentList: Stream("Watching"),
   domList: null,
-  mode: 'light',
-  toast: {
-  }
+  mode: "light",
+  toast: {},
 }
 
 const toast = {
@@ -37,7 +35,7 @@ const toast = {
 
 const data = {
   shows: Stream([]),
-  details: Stream(null)
+  details: Stream(null),
 }
 
 const errors = {
@@ -48,16 +46,18 @@ const errors = {
 
 const user = {
   shows: Stream([]),
-  lists: Stream(["Watching", "Wishlist"])
+  lists: Stream(["Watching", "Wishlist"]),
+  data: {},
 }
 
 const Model = {
+  db: "prodshows",
   toast,
   Routes,
   state,
   user,
   data,
-  errors
+  errors,
 }
 
 export default Model

@@ -23,5 +23,6 @@ if (process.env.NODE_ENV == "development") {
     })
   }
 }
-m.route(root, "/home", App(Model))
-m.route.set("/home")
+
+m.route(root, "/login", App(Model))
+Model.state.isAuth() && m.route.set("/home")
