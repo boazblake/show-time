@@ -1628,7 +1628,6 @@ var Login = (_ref) => {
       mdl.state.isAuth(true);
       mdl.user.data = data;
       localStorage.setItem("user", JSON.stringify(mdl.user));
-      console.log(mdl);
       m.route.set("/home");
     };
 
