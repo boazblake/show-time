@@ -1145,7 +1145,6 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 _config.ArrayFP.configure();
 
-console.log([]);
 var root = document.body;
 
 if (module.hot) {

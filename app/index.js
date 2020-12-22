@@ -4,8 +4,6 @@ import { ArrayFP } from "./config"
 
 ArrayFP.configure()
 
-console.log([])
-
 const root = document.body
 
 if (module.hot) {

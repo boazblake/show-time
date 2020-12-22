@@ -99,6 +99,9 @@ exports.plugins = {
       js: true,
       assets: false,
     },
+    // port: [3333],
+    keyPath: "",
+    certPath: "",
     forcewss: true,
   },
 }
