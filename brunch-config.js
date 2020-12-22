@@ -53,13 +53,13 @@ exports.plugins = {
   },
   babel: {
     // ignore: [/^(vendor)/, /^node_modules\/(?!@ionic)/],
-  //   plugins:[
-  //   ["@babel/plugin-transform-runtime",
-  //     {
-  //       "regenerator": true
-  //     }
-  //   ]
-  // ],
+    //   plugins:[
+    //   ["@babel/plugin-transform-runtime",
+    //     {
+    //       "regenerator": true
+    //     }
+    //   ]
+    // ],
     presets: [
       [
         "@babel/preset-env",
@@ -93,6 +93,14 @@ exports.plugins = {
     },
   },
   "@babel": { presets: ["env"] },
+  autoReload: {
+    enabled: {
+      css: true,
+      js: true,
+      assets: false,
+    },
+    forcewss: true,
+  },
 }
 
 exports.paths = {
@@ -101,7 +109,7 @@ exports.paths = {
 }
 
 exports.npm = {
-  compilers: ['babel-brunch'],
+  compilers: ["babel-brunch"],
   enabled: true,
   globals: { m: "mithril", Stream: "mithril-stream" },
 }
