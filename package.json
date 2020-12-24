@@ -32,7 +32,7 @@
   "devDependencies": {
     "@babel/plugin-transform-spread": "^7.7.4",
     "@capacitor/cli": "2.4.1",
-    "auto-reload-brunch": "^2.7.1",
+    "auto-reload-brunch": "git://github.com/boazblake/auto-reload-brunch",
     "babel-brunch": "7.0.1",
     "brunch": "3.0.0",
     "clean-css-brunch": "3.0.0",

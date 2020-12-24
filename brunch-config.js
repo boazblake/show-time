@@ -100,8 +100,8 @@ exports.plugins = {
       assets: false,
     },
     // port: [3333],
-    keyPath: "key",
-    certPath: "cert",
+    // keyPath: "app",
+    // certPath: "app",
     forcewss: true,
   },
 }
