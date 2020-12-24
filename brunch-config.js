@@ -102,7 +102,7 @@ exports.plugins = {
     // port: [3333],
     // keyPath: "app",
     // certPath: "app",
-    forcewss: process.env.NODE_ENV != "development" && true,
+    forcewss: process.env.NODE_ENV == "development" && false,
   },
 }
 

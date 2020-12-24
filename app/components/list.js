@@ -31,82 +31,80 @@ const deleteShow = (mdl) => (show) =>
     }
   )
 
-export const List = ({ attrs: { mdl } }) => {
-  return {
-    view: ({ attrs: { mdl } }) =>
+export const List = () => ({
+  view: ({ attrs: { mdl } }) =>
+    m(
+      "section.list",
+      { onionInfinite: getMoreData },
       m(
-        "section.list",
-        { onionInfinite: getMoreData },
-        m(
-          "ion-list",
-          {
-            oncreate: ({ dom }) => {
-              mdl.state.listDom = dom
-              dom.closeSlidingItems()
-            },
+        "ion-list",
+        {
+          oncreate: ({ dom }) => {
+            mdl.state.listDom = dom
+            dom.closeSlidingItems()
           },
-          sortBy(prop("name"), filterShowsByListType(mdl)).map((show) =>
+        },
+        sortBy(prop("name"), filterShowsByListType(mdl)).map((show) =>
+          m(
+            "ion-item-sliding",
             m(
-              "ion-item-sliding",
+              "ion-item",
+              {
+                onclick: () => {
+                  showModal(mdl, show)
+                  mdl.state.listDom.closeSlidingItems()
+                },
+              },
+              m("ion-thumbnail", m("ion-img", { src: show.image })),
               m(
-                "ion-item",
+                "ion-label",
+                { style: { paddingLeft: "12px" } },
+                m("h2", show.name),
+                m("p", m("i", show.status)),
+                m("p", show.notes)
+              )
+            ),
+            m(
+              "ion-item-options",
+              {
+                side: "start",
+              },
+              m(
+                "ion-item-option",
                 {
                   onclick: () => {
-                    showModal(mdl, show)
+                    updateUserShows(mdl)(show, otherList(mdl))
                     mdl.state.listDom.closeSlidingItems()
                   },
                 },
-                m("ion-thumbnail", m("ion-img", { src: show.image })),
-                m(
-                  "ion-label",
-                  { style: { paddingLeft: "12px" } },
-                  m("h2", show.name),
-                  m("p", m("i", show.status)),
-                  m("p", show.notes)
-                )
-              ),
+                `move to ${otherList(mdl)}`
+              )
+            ),
+            m(
+              "ion-item-options",
               m(
-                "ion-item-options",
+                "ion-item-option",
                 {
-                  side: "start",
+                  color: "danger",
+                  side: "end",
+                  onclick: () => {
+                    deleteShow(mdl)(show)
+                    mdl.state.listDom.closeSlidingItems()
+                  },
                 },
-                m(
-                  "ion-item-option",
-                  {
-                    onclick: () => {
-                      updateUserShows(mdl)(show, otherList(mdl))
-                      mdl.state.listDom.closeSlidingItems()
-                    },
-                  },
-                  `move to ${otherList(mdl)}`
-                )
-              ),
-              m(
-                "ion-item-options",
-                m(
-                  "ion-item-option",
-                  {
-                    color: "danger",
-                    side: "end",
-                    onclick: () => {
-                      deleteShow(mdl)(show)
-                      mdl.state.listDom.closeSlidingItems()
-                    },
-                  },
-                  "Delete"
-                )
+                "Delete"
               )
             )
           )
-        ),
-        m(
-          "ion-infinite-scroll",
-          { threshold: "100px", id: "infinite-scroll" },
-          m("ion-infinite-scroll-content", {
-            "loading-spinner": "dots",
-            "loading-text": "Checking for more shows...",
-          })
         )
       ),
-  }
-}
+      m(
+        "ion-infinite-scroll",
+        { threshold: "100px", id: "infinite-scroll" },
+        m("ion-infinite-scroll-content", {
+          "loading-spinner": "dots",
+          "loading-text": "Checking for more shows...",
+        })
+      )
+    ),
+})

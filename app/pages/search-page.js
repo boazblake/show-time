@@ -64,7 +64,12 @@ export const SearchPage = () => {
                     )
                   )
                 )
-              : m(Card, { header: m("ion-card-title", "Search For Shows") })
+              : // m(Card, {
+                // header: [],
+                // content:
+                m("ion-slides", m("ion-slide", "Search For Shows"))
+            //   footer: [],
+            // })
           )
     },
   }

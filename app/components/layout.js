@@ -37,11 +37,12 @@ const SearchToolBar = () => {
       m("ion-searchbar", {
         style: { paddingTop: "12px" },
         animated: true,
-        "show-cancel-button": "focus",
+        "show-cancel-button": "never",
         placeholder: "Search for a show",
         value: mdl.state.query(),
         oninput: (e) => mdl.state.query(e.target.value),
         onkeyup: () => searchShows(mdl),
+        onionClear: (e) => mdl.state.query(mdl.data.shows([])),
       }),
   }
 }
