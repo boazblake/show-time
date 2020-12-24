@@ -12,7 +12,7 @@ const HomeToolBar = () => {
     view: ({ attrs: { mdl } }) =>
       m(
         "ion-segment",
-        { value: mdl.state.currentList() },
+        { scrollable: true, value: mdl.state.currentList() },
         mdl.user.lists.map((list) =>
           m(
             "ion-segment-button",

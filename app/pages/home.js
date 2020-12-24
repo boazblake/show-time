@@ -8,8 +8,7 @@ const getShowsTask = (mdl) => (http) =>
 export const Home = () => {
   return {
     oninit: ({ attrs: { mdl } }) => getShowsTask(mdl)(http),
-    view: ({ attrs: { mdl } }) => {
-      return mdl.state.details.selected() ? m(Modal, { mdl }) : m(List, { mdl })
-    },
+    view: ({ attrs: { mdl } }) =>
+      mdl.state.details.selected() ? m(Modal, { mdl }) : m(List, { mdl }),
   }
 }
