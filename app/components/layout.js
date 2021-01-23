@@ -1,4 +1,4 @@
-import Routes from "../routes/index.js"
+import Routes from "../routes"
 import http from "../Http.js"
 import { searchShowsTask, onError, updateState } from "../pages/fns.js"
 import { showSettings } from "./action-sheet"
