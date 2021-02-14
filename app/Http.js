@@ -1,4 +1,4 @@
-import { tvMazeApiKey, tvMazeBaseUrl } from "./.secrets.js"
+import { backEndlessBaseUrl, tvMazeBaseUrl } from "./.secrets.js"
 import Task from "data.task"
 import Model from "./Models.js"
 
@@ -84,9 +84,6 @@ const deleteTask = (url, args = {}) =>
     ...args,
     method: "DELETE",
   })
-
-const backEndlessBaseUrl =
-  "https://api.backendless.com/7F421158-889B-FD93-FF62-1ACDCD07AD00/1D9BEF3E-0CCC-D6C6-FF60-1A0B849A3E00/"
 
 const tvMazeSearchUrl = (baseUrl) => (query) =>
   `${baseUrl}/search/shows?q=${query}`
