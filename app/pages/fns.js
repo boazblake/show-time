@@ -107,7 +107,7 @@ const toDetailsViewModel = ({
   status,
 })
 
-const makeHttps = (url) => url && url.replace("http", "https")
+const makeHttps = (url) => url && url.replace("http:", "https:")
 
 export const toSearchViewModel = ({ name, image, id }) => ({
   image: image && (makeHttps(image.original) || makeHttps(image.medium)),
